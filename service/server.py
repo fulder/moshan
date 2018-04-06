@@ -18,7 +18,7 @@ log = Log().get_logger(__name__)
 @app.route("/watch-history", methods=["post"])
 @swag_from("swagger/movie.yml")
 def add_movie():
-    user_id = 1
+    user_id = request.headers.get("user_id")
     data = request.get_json(silent=True)
     movie_id = data["movie_id"]
 
@@ -31,7 +31,7 @@ def add_movie():
 @app.route("/watch-history", methods=["get"])
 @swag_from("swagger/movie.yml")
 def get_watch_history():
-    user_id = 1
+    user_id = request.headers.get("user_id")
     watch_history = watch_histories.get_watch_history(user_id)
 
     data = WatchHistoryDto().create(watch_history)
@@ -42,7 +42,7 @@ def get_watch_history():
 @app.route("/watch-history", methods=["delete"])
 @swag_from("swagger/movie.yml")
 def remove_movie():
-    user_id = 1
+    user_id = request.headers.get("user_id")
     data = request.get_json(silent=True)
     movie_id = data["movie_id"]
 
