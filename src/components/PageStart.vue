@@ -13,7 +13,6 @@
               <a :href="`https://www.themoviedb.org/movie/${movie.id}`">
                 <img :src="`http://image.tmdb.org/t/p/w200/${movie.poster_path}`" width="270px" height="400px" />
               </a>
-              <v-btn color="primary" @click.native="addMovie(movie.id)">Primary</v-btn>
             </span>
           </transition-group>
         </v-layout>
@@ -23,8 +22,8 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import _ from 'lodash'
+import Vue from 'vue';
+import _ from 'lodash';
 
 export default {
   name: 'page-start',
@@ -34,7 +33,7 @@ export default {
       currentPageLoaded: 1,
       searchString: '',
       filteredMovies: []
-    }
+    };
   },
   created() {
     Vue.axios
@@ -47,13 +46,13 @@ export default {
         }
       )
       .then(response => {
-        this.movies = response.data.results
-        this.filteredMovies = response.data.results
-      })
+        this.movies = response.data.results;
+        this.filteredMovies = response.data.results;
+      });
   },
   watch: {
     searchString: function() {
-      this.searchMovies()
+      this.searchMovies();
     }
   },
   methods: {
@@ -69,34 +68,35 @@ export default {
           }
         )
         .then(response => {
-          this.movies = this.movies.concat(response.data.results)
+          this.movies = this.movies.concat(response.data.results);
           this.filteredMovies = this.filteredMovies.concat(
             response.data.results
-          )
-          this.currentPageLoaded++
-        })
+          );
+          this.currentPageLoaded++;
+        });
     },
     onScroll() {
       let pos =
         (document.documentElement.scrollTop || document.body.scrollTop) +
-        document.documentElement.offsetHeight
-      let max = document.documentElement.scrollHeight
-      if (pos == max) {
-        this.loadMore()
+        document.documentElement.offsetHeight;
+      let max = document.documentElement.scrollHeight;
+      if (pos >= max) {
+        this.loadMore();
       }
     },
     addMovie(movieId) {
-      Vue.axios.post(`http://localhost:5000/watch-history`, {movie_id: movieId}, {})
+      Vue.axios
+        .post(`http://localhost:5000/watch-history`, { movie_id: movieId }, {})
         .then(response => console.log('response', response))
-        .catch(error => console.log('error', error))
+        .catch(error => console.log('error', error));
     },
     searchMovies: _.debounce(function() {
       this.filteredMovies = this.movies.filter(movie =>
         movie.title.toLowerCase().includes(this.searchString)
-      )
+      );
     }, 200)
   }
-}
+};
 </script>
 
 <style scoped>
