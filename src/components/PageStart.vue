@@ -8,13 +8,10 @@
           </v-flex>
         </v-layout>
         <v-layout row wrap>
-          <transition-group name="movie" tag="p">
-            <span v-for="movie in filteredMovies" v-bind:key="movie.id" class="list-movie">
-              <a :href="`https://www.themoviedb.org/movie/${movie.id}`">
-                <img :src="`http://image.tmdb.org/t/p/w200/${movie.poster_path}`" width="270px" height="400px" />
-              </a>
-            </span>
-          </transition-group>
+              <v-flex xs4 v-for="movie in filteredMovies" v-bind:key="movie.id">
+                  <img :src="`http://image.tmdb.org/t/p/w200/${movie.poster_path}`" width="270px" height="400px" />
+                  <v-btn color="primary" class="add-movie-button" @click.native="addMovie(movie.id)">+</v-btn>
+            </v-flex>
         </v-layout>
       </v-container>
     </v-flex>
@@ -29,51 +26,30 @@ export default {
   name: 'page-start',
   data() {
     return {
-      movies: [],
       currentPageLoaded: 1,
-      searchString: '',
-      filteredMovies: []
+      searchString: ''
     };
   },
   created() {
-    Vue.axios
-      .get(
-        'http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc',
-        {
-          params: {
-            api_key: '667cd61fb50d8c5fff3ac5f37fd760b7'
-          }
-        }
-      )
-      .then(response => {
-        this.movies = response.data.results;
-        this.filteredMovies = response.data.results;
-      });
+    console.log('creatign')
+    this.$store.dispatch('startPageModule/loadMovies')
   },
   watch: {
     searchString: function() {
       this.searchMovies();
     }
   },
+  computed: {
+    movies() {
+      return this.$store.state.startPageModule.movies
+    },
+    filteredMovies() {
+      return this.$store.state.startPageModule.filteredMovies
+    }
+  },
   methods: {
     loadMore() {
-      Vue.axios
-        .get(
-          `http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=${this
-            .currentPageLoaded + 1}`,
-          {
-            params: {
-              api_key: '667cd61fb50d8c5fff3ac5f37fd760b7'
-            }
-          }
-        )
-        .then(response => {
-          this.movies = this.movies.concat(response.data.results);
-          this.filteredMovies = this.filteredMovies.concat(
-            response.data.results
-          );
-          this.currentPageLoaded++;
-        });
+      this.$store.dispatch('startPageModule/loadMoreMovies')
     },
     onScroll() {
       let pos =
@@ -86,7 +62,7 @@ export default {
     },
     addMovie(movieId) {
       Vue.axios
-        .post(`http://localhost:5000/watch-history`, { movie_id: movieId }, {})
+        .post(`http://localhost:8080/watch-history`, { movie_id: movieId }, {})
         .then(response => console.log('response', response))
         .catch(error => console.log('error', error));
     },
@@ -116,5 +92,8 @@ img {
 .movie-leave-to {
   opacity: 0;
   transform: translateY(30px);
+}
+
+.add-movie-button {
 }
 </style>

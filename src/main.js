@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import './stylus/main.styl'
+import storeFactory from '../store'
 
 import App from './App'
 import router from './router'
@@ -13,10 +14,14 @@ Vue.use(VueAxios, axios)
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 
+const store = storeFactory()
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })
