@@ -75,6 +75,13 @@ const StartPageModule = {
           commit(types.LOAD_MORE_MOVIES_SUCCESS, response.data)
         });
     },
+    addMovie({ commit, state }, movieId) {
+      const userId = localStorage.getItem('user_id')
+      Vue.axios
+        .post(`http://localhost:8080/${userId}/watch-history/${movieId}`, {}, { headers: { user_id: userId } })
+        .then(response => console.log('response', response))
+        .catch(error => console.log('error', error));
+    },
     setCurrentPageLoaded({ commit, state }, pageNumber) {
       commit(this.SET_CURRENT_PAGE, pageNumber)
     }

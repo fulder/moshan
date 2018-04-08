@@ -13,7 +13,7 @@
                   <img :src="`http://image.tmdb.org/t/p/w200/${movie.poster_path}`" width="270px" height="400px" />
                 </a>
                 <v-btn color="primary" class="add-movie-button" @click.native="addMovie(movie.id)">Add</v-btn>
-                <v-btn color="primary" class="add-movie-button" @click.native="addMovie(movie.id)">Remove</v-btn>
+                <v-btn color="primary" class="add-movie-button" @click.native="removeMovie(movie.id)">Remove</v-btn>
             </v-flex>
         </v-layout>
       </v-container>
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import _ from 'lodash';
 
 export default {
@@ -66,10 +65,7 @@ export default {
       }
     },
     addMovie(movieId) {
-      Vue.axios
-        .post(`http://localhost:8080/watch-history`, { movie_id: movieId }, {})
-        .then(response => console.log('response', response))
-        .catch(error => console.log('error', error));
+      this.$store.dispatch('startPageModule/addMovie', movieId)
     },
     searchMovies: _.debounce(function() {
       this.filteredMovies = this.movies.filter(movie =>

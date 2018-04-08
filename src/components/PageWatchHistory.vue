@@ -1,7 +1,7 @@
 <template>
   <v-layout v-scroll="onScroll" mt-5>
     <v-flex xs12 sm8 offset-sm2>
-      asdfasdfasdf
+      MVOIES
       {{movies}}
 
       <v-list two-line>
@@ -26,7 +26,6 @@ export default {
   name: 'page-watch-history',
   data() {
     return {
-      movies: []
     }
   },
   created() {
