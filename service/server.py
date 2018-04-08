@@ -15,13 +15,9 @@ watch_histories = WatchHistories()
 log = Log().get_logger(__name__)
 
 
-@app.route("/watch-history", methods=["post"])
+@app.route("/<user_id>/watch-history/<movie_id>", methods=["post"])
 @swag_from("swagger/movie.yml")
-def add_movie():
-    user_id = request.headers.get("user_id")
-    data = request.get_json(silent=True)
-    movie_id = data["movie_id"]
-
+def add_movie(user_id, movie_id):
     watch_history = watch_histories.get_watch_history(user_id)
     watch_history.add_movie(movie_id)
     log.info("Added movie: {} for user: {}".format(movie_id, user_id))
