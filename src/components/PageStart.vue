@@ -8,9 +8,12 @@
           </v-flex>
         </v-layout>
         <v-layout row wrap>
-              <v-flex xs4 v-for="movie in filteredMovies" v-bind:key="movie.id">
+              <v-flex xs3 v-for="movie in filteredMovies" v-bind:key="movie.id">
+                <a :href="`https://www.themoviedb.org/movie/${movie.id}`">
                   <img :src="`http://image.tmdb.org/t/p/w200/${movie.poster_path}`" width="270px" height="400px" />
-                  <v-btn color="primary" class="add-movie-button" @click.native="addMovie(movie.id)">+</v-btn>
+                </a>
+                <v-btn color="primary" class="add-movie-button" @click.native="addMovie(movie.id)">Add</v-btn>
+                <v-btn color="primary" class="add-movie-button" @click.native="addMovie(movie.id)">Remove</v-btn>
             </v-flex>
         </v-layout>
       </v-container>
@@ -26,13 +29,12 @@ export default {
   name: 'page-start',
   data() {
     return {
-      currentPageLoaded: 1,
       searchString: ''
     };
   },
   created() {
-    console.log('creatign')
-    this.$store.dispatch('startPageModule/loadMovies')
+    console.log('creatign');
+    this.$store.dispatch('startPageModule/loadMovies');
   },
   watch: {
     searchString: function() {
@@ -41,15 +43,18 @@ export default {
   },
   computed: {
     movies() {
-      return this.$store.state.startPageModule.movies
+      return this.$store.state.startPageModule.movies;
     },
     filteredMovies() {
-      return this.$store.state.startPageModule.filteredMovies
+      return this.$store.state.startPageModule.filteredMovies;
+    },
+    currentPageLoaded() {
+      return this.$store.state.startPageModule.currentPageLoaded
     }
   },
   methods: {
     loadMore() {
-      this.$store.dispatch('startPageModule/loadMoreMovies')
+      this.$store.dispatch('startPageModule/loadMoreMovies');
     },
     onScroll() {
       let pos =
