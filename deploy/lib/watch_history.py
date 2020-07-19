@@ -35,15 +35,15 @@ class WatchHistory(core.Stack):
             self,
             "watch_history",
             partition_key=Attribute(name="client_id", type=AttributeType.STRING),
-            sort_key=Attribute(name="item_id", type=AttributeType.NUMBER),
+            sort_key=Attribute(name="item_id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
         )
-        self.watch_history_table.add_global_secondary_index(
-            partition_key=Attribute(name="rating", type=AttributeType.NUMBER),
+        self.watch_history_table.add_local_secondary_index(
+            sort_key=Attribute(name="rating", type=AttributeType.NUMBER),
             index_name="rating"
         )
-        self.watch_history_table.add_global_secondary_index(
-            partition_key=Attribute(name="date_watched", type=AttributeType.NUMBER),
+        self.watch_history_table.add_local_secondary_index(
+            sort_key=Attribute(name="date_watched", type=AttributeType.STRING),
             index_name="date_watched"
         )
 
