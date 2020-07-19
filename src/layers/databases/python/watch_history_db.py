@@ -1,7 +1,7 @@
 import os
 
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 
 import logger
 
@@ -53,7 +53,7 @@ def update_item(client_id, collection_id, item_id, data):
     )
 
 
-def get_watch_history(client_id, collection_id, index_name=None):
+def get_watch_history(client_id, index_name=None):
     res = _get_table().query(
         IndexName=index_name,
         KeyConditionExpression=Key('client_id').eq(client_id)
@@ -62,6 +62,21 @@ def get_watch_history(client_id, collection_id, index_name=None):
     log.debug(f"get_watch_history res: {res}")
 
     if not res["Items"]:
-        raise NotFoundError(f"Watch list for client with id: {client_id} not found")
+        raise NotFoundError(f"Watch history for client with id: {client_id} not found")
+
+    return res["Item"]
+
+
+def get_watch_history_by_collection(client_id, collection_id, index_name=None):
+    res = _get_table().query(
+        IndexName=index_name,
+        KeyConditionExpression=Key("client_id").eq(client_id),
+        FilterExpression=Attr("collection_id").eq(collection_id)
+    )
+
+    log.debug(f"get_watch_history_by_collection res: {res}")
+
+    if not res["Items"]:
+        raise NotFoundError(f"Watch history for client with id: {client_id} and collection: {collection_id} not found")
 
     return res["Item"]
