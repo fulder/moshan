@@ -46,6 +46,10 @@ class WatchHistory(core.Stack):
             sort_key=Attribute(name="date_watched", type=AttributeType.STRING),
             index_name="date_watched"
         )
+        self.watch_history_table.add_local_secondary_index(
+            sort_key=Attribute(name="collection_id", type=AttributeType.STRING),
+            index_name="collection_id"
+        )
 
     def _create_lambdas_config(self):
         self.lambdas_config = {
