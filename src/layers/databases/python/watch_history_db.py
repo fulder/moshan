@@ -53,7 +53,7 @@ def update_item(client_id, collection_id, item_id, data):
     )
 
 
-def get_watch_history(client_id, index_name=None):
+def get_watch_history(client_id, collection_id, index_name=None):
     res = _get_table().query(
         IndexName=index_name,
         KeyConditionExpression=Key('client_id').eq(client_id)
@@ -62,8 +62,6 @@ def get_watch_history(client_id, index_name=None):
     log.debug(f"get_watch_history res: {res}")
 
     if not res["Items"]:
-        raise NotFoundError(f"Anime with mal_id: {mal_id} not found")
-
-    return res["Items"][0]
+        raise NotFoundError(f"Watch list for client with id: {client_id} not found")
 
     return res["Item"]
