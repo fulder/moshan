@@ -96,3 +96,37 @@ def test_handler_limit_and_start(mocked_watch_history_handler):
     assert MOCK_ARGS == (TEST_CLIENT_ID,)
     assert MOCK_KWARGS == {'index_name': None, 'limit': 200, 'start': 23}
     assert ret == {'body': '[{"collection_name": "ANIME", "item_id": 123}]', 'statusCode': 200}
+
+
+def test_handler_invalid_limit_type(mocked_watch_history_handler):
+    mocked_watch_history_handler.watch_history_db.get_watch_history = mock_func
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "queryStringParameters": {
+            "limit": "ABC",
+        }
+    }
+
+    ret = mocked_watch_history_handler.handle(event, None)
+
+    assert ret == {'body': '{"message": "Invalid limit type"}', 'statusCode': 400}
+
+
+def test_handler_invalid_start_type(mocked_watch_history_handler):
+    mocked_watch_history_handler.watch_history_db.get_watch_history = mock_func
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "queryStringParameters": {
+            "start": "ABC",
+        }
+    }
+
+    ret = mocked_watch_history_handler.handle(event, None)
+
+    assert ret == {'body': '{"message": "Invalid start type"}', 'statusCode': 400}
