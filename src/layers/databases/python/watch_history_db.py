@@ -3,7 +3,6 @@ import time
 from datetime import datetime
 
 import boto3
-from boto3.dynamodb.conditions import Attr, Key
 from dynamodb_json import json_util
 
 import logger
