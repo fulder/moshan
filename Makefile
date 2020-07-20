@@ -4,12 +4,6 @@ test:
 	PYTHONPATH=./src/layers/utils/python:./src/lambdas/:./src/layers/databases/python \
 		pytest test/unittest --cov-report html --cov=src -vv
 
-.PHONY: format
-format:
-	pip install yapf isort
-	find . -name '*.py' -exec yapf -i -vv {} \+
-	isort -rc .
-
 .PHONY: apitest
 apitest:
 	PYTHONPATH=test pytest test/apitest -vv
