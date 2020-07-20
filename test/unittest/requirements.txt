@@ -1,1 +1,4 @@
+pytest
+pytest-cov
+pytest-html
 python-json-logger
