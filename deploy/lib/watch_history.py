@@ -67,6 +67,21 @@ class WatchHistory(core.Stack):
                 ],
                 "timeout": 3
             },
+            "api-watch_history_by_collection": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "DATABASE_NAME": self.watch_history_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                },
+                "concurrent_executions": 100,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:GetItem"],
+                        resources=[self.watch_history_table.table_arn]
+                    )
+                ],
+                "timeout": 3
+            },
         }
 
     def _create_layers(self):
@@ -151,6 +166,11 @@ class WatchHistory(core.Stack):
                 "method": "GET",
                 "route": "/watch-history",
                 "target_lambda": self.lambdas["api-watch_history"]
+            },
+            "watch_history_by_collection": {
+                "method": "GET",
+                "route": "/watch-history/collection/{collection_name}",
+                "target_lambda": self.lambdas["api-watch_history_by_collection"]
             }
         }
 
