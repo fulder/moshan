@@ -4,12 +4,14 @@ from datetime import datetime
 
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
+from dynamodb_json import json_util
 
 import logger
 
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 
 table = None
+client = None
 
 log = logger.get_logger(__name__)
 
@@ -22,11 +24,22 @@ class NotFoundError(Error):
     pass
 
 
+class InvalidStartOffset(Error):
+    pass
+
+
 def _get_table():
     global table
     if table is None:
         table = boto3.resource("dynamodb").Table(DATABASE_NAME)
     return table
+
+
+def _get_client():
+    global client
+    if client is None:
+        client = boto3.client("dynamodb")
+    return client
 
 
 def add_item(client_id, collection_id, item_id, data):
@@ -62,30 +75,59 @@ def update_item(client_id, collection_id, item_id, data):
     )
 
 
-def get_watch_history(client_id, index_name=None):
-    res = _get_table().query(
-        IndexName=index_name,
-        KeyConditionExpression=Key('client_id').eq(client_id)
-    )
+def get_watch_history(client_id, index_name=None, collection_name=None, limit=100, start=1):
+    start_page = 0
+    res = []
 
-    log.debug(f"get_watch_history res: {res}")
+    if start <= 0:
+        raise InvalidStartOffset
 
-    if not res["Items"]:
-        raise NotFoundError(f"Watch history for client with id: {client_id} not found")
+    total_pages = 0
+    for p in _watch_history_generator(client_id, limit=limit, collection_name=collection_name, index_name=index_name):
+        total_pages += 1
+        start_page += 1
+        if start_page == start:
+            res = p
 
-    return res["Item"]
+    if start > start_page:
+        raise InvalidStartOffset
+
+    log.debug(f"get_episodes response: {res}")
+
+    if not res:
+        raise NotFoundError(f"Watch history for client with id: {client_id} and collection: {collection_name} not found")
+
+    return {
+        "items": res,
+        "total_pages": total_pages
+    }
 
 
-def get_watch_history_by_collection(client_id, collection_id, index_name=None):
-    res = _get_table().query(
-        IndexName=index_name,
-        KeyConditionExpression=Key("client_id").eq(client_id),
-        FilterExpression=Attr("collection_id").eq(collection_id)
-    )
+def _watch_history_generator(client_id, limit, collection_name=None, index_name=None):
+    paginator = _get_client().get_paginator('query')
 
-    log.debug(f"get_watch_history_by_collection res: {res}")
+    query_kwargs = {
+        "TableName": DATABASE_NAME,
+        "KeyConditionExpression": "client_id = :client_id",
+        "ExpressionAttributeValues": {
+            ":client_id": {"S": client_id}
+        },
+        "Limit": limit,
+        "ScanIndexForward": False
+    }
 
-    if not res["Items"]:
-        raise NotFoundError(f"Watch history for client with id: {client_id} and collection: {collection_id} not found")
+    if index_name:
+        query_kwargs["IndexName"] = index_name
+    if collection_name:
+        query_kwargs["FilterExpression"] = "collection_name = :collection_name"
+        query_kwargs["ExpressionAttributeValues"][":collection_name"] = {"S": collection_name}
 
-    return res["Item"]
+    log.debug(f"Query kwargs: {query_kwargs}")
+
+    page_iterator = paginator.paginate(**query_kwargs)
+
+    for p in page_iterator:
+        items = []
+        for i in p["Items"]:
+            items.append(json_util.loads(i))
+        yield items
