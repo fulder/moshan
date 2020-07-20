@@ -108,7 +108,7 @@ def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
     }
 
 
-def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
+def test_get_watch_history_by_with_start(mocked_watch_history_db):
     global MOCK_RETURN
     MOCK_RETURN = [
         {"Items": [{"collection_name": "ANIME", "item_id": 123}]},
