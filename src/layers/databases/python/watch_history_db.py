@@ -1,5 +1,6 @@
 import os
 import time
+from datetime import datetime
 
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
@@ -29,6 +30,7 @@ def _get_table():
 
 
 def add_item(client_id, collection_id, item_id, data):
+    data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     update_item(client_id, collection_id, item_id, data)
 
 
@@ -40,6 +42,7 @@ def delete_item(client_id, collection_id, item_id):
 def update_item(client_id, collection_id, item_id, data):
     data["item_id"] = item_id
     data["collection_id"] = collection_id
+    data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
