@@ -75,7 +75,7 @@ def update_item(client_id, collection_name, item_id, data):
     )
 
 
-def get_watch_history(client_id, index_name=None, collection_name=None, limit=100, start=1):
+def get_watch_history(client_id, collection_name=None, index_name=None, limit=100, start=1):
     start_page = 0
     res = []
 
