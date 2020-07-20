@@ -1,4 +1,5 @@
 import os
+import time
 
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
@@ -28,6 +29,11 @@ def _get_table():
 
 
 def add_item(client_id, collection_id, item_id, data):
+    update_item(client_id, collection_id, item_id, data)
+
+
+def delete_item(client_id, collection_id, item_id):
+    data = {"deleted_at": int(time.time())}
     update_item(client_id, collection_id, item_id, data)
 
 
