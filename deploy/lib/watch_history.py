@@ -19,7 +19,6 @@ BUILD_FOLDER = os.path.join(CURRENT_DIR, "..", "..", "build")
 
 
 class WatchHistory(core.Stack):
-
     def __init__(self, app: core.App, id: str, **kwargs) -> None:
         super().__init__(app, id, **kwargs)
         self.layers = {}

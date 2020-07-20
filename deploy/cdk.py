@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from aws_cdk import core
 
-from lib.watch_history import WatchHistory
 from lib.utils import clean_pycache
+from lib.watch_history import WatchHistory
 
 clean_pycache()
 

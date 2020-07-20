@@ -1,8 +1,8 @@
-from flasgger import swag_from, Swagger
-from flask import Flask, request, Response, jsonify
-from flask_cors import CORS
+from flask import Flask, Response, jsonify, request
 
 from domain.watch_histories import WatchHistories
+from flasgger import Swagger, swag_from
+from flask_cors import CORS
 from service.dto.watch_history_dto import WatchHistoryDto
 from utils.log import Log
 

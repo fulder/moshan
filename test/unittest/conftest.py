@@ -1,5 +1,6 @@
 import os
 from unittest.mock import MagicMock
+
 import pytest
 
 os.environ["LOG_LEVEL"] = "DEBUG"
