@@ -42,19 +42,19 @@ def _get_client():
     return client
 
 
-def add_item(client_id, collection_id, item_id, data):
+def add_item(client_id, collection_name, item_id, data):
     data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    update_item(client_id, collection_id, item_id, data)
+    update_item(client_id, collection_name, item_id, data)
 
 
-def delete_item(client_id, collection_id, item_id):
+def delete_item(client_id, collection_name, item_id):
     data = {"deleted_at": int(time.time())}
-    update_item(client_id, collection_id, item_id, data)
+    update_item(client_id, collection_name, item_id, data)
 
 
-def update_item(client_id, collection_id, item_id, data):
+def update_item(client_id, collection_name, item_id, data):
     data["item_id"] = item_id
-    data["collection_id"] = collection_id
+    data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     items = ','.join(f'#{k}=:{k}' for k in data)
