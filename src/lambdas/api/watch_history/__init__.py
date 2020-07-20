@@ -8,6 +8,7 @@ log = logger.get_logger("watch_history")
 
 ALLOWED_SORT = ["rating", "date_watched", "state"]
 
+
 def handle(event, context):
     auth_header = event["headers"]["authorization"]
     client_id = jwt_utils.get_client_id(auth_header)
@@ -23,7 +24,22 @@ def handle(event, context):
             "body": json.dumps({"error": f"Invalid sort specified. Allowed values: {ALLOWED_SORT}"})
         }
 
-    watch_history = watch_history_db.get_watch_history(client_id, index_name=sort)
+    limit = 100
+    start = 1
 
+    query_params = event.get("queryStringParameters")
+    if query_params and "limit" in query_params:
+        limit = query_params.get("limit")
+    if query_params and "start" in query_params:
+        start = query_params.get("start")
 
+    try:
+        limit = int(limit)
+    except ValueError:
+        return {"statusCode": 400, "body": json.dumps({"message": "Invalid limit type"})}
+    try:
+        start = int(start)
+    except ValueError:
+        return {"statusCode": 400, "body": json.dumps({"message": "Invalid start type"})}
 
+    watch_history = watch_history_db.get_watch_history(client_id, index_name=sort, limit=limit, start=start)
