@@ -1,5 +1,6 @@
 import json
 
+import decimal_encoder
 import logger
 import jwt_utils
 import watch_history_db
@@ -43,3 +44,5 @@ def handle(event, context):
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid start type"})}
 
     watch_history = watch_history_db.get_watch_history(client_id, index_name=sort, limit=limit, start=start)
+
+    return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
