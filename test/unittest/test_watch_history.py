@@ -76,3 +76,23 @@ def test_handler_sort(mocked_watch_history_handler):
     assert MOCK_ARGS == (TEST_CLIENT_ID,)
     assert MOCK_KWARGS == {'index_name': 'date_watched', 'limit': 100, 'start': 1}
     assert ret == {'body': '[{"collection_name": "ANIME", "item_id": 123}]', 'statusCode': 200}
+
+
+def test_handler_limit_and_start(mocked_watch_history_handler):
+    mocked_watch_history_handler.watch_history_db.get_watch_history = mock_func
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "queryStringParameters": {
+            "limit": "200",
+            "start": "23"
+        }
+    }
+
+    ret = mocked_watch_history_handler.handle(event, None)
+
+    assert MOCK_ARGS == (TEST_CLIENT_ID,)
+    assert MOCK_KWARGS == {'index_name': None, 'limit': 200, 'start': 23}
+    assert ret == {'body': '[{"collection_name": "ANIME", "item_id": 123}]', 'statusCode': 200}
