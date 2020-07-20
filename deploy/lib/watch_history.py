@@ -52,7 +52,7 @@ class WatchHistory(core.Stack):
 
     def _create_lambdas_config(self):
         self.lambdas_config = {
-            "api-get_watch_history": {
+            "api-watch_history": {
                 "layers": ["utils", "databases"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
@@ -147,10 +147,10 @@ class WatchHistory(core.Stack):
         )
 
         routes = {
-            "get_watch_history": {
+            "watch_history": {
                 "method": "GET",
                 "route": "/watch-history",
-                "target_lambda": self.lambdas["api-get_watch_history"]
+                "target_lambda": self.lambdas["api-watch_history"]
             }
         }
 
