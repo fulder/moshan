@@ -9,7 +9,7 @@ MOCK_RETURN = []
 TEST_CLIENT_ID = "TEST_CLIENT_ID"
 
 
-def mocked_func(**kwargs):
+def mock_func(**kwargs):
     global UPDATE_VALUES
     UPDATE_VALUES = kwargs
 
@@ -24,7 +24,7 @@ def test_get_watch_history(mocked_watch_history_db):
     ]
     m = MagicMock()
     mocked_watch_history_db.client.get_paginator.return_value = m
-    m.paginate = mocked_func
+    m.paginate = mock_func
 
     mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID)
 
@@ -45,7 +45,7 @@ def test_get_watch_history_changed_limit(mocked_watch_history_db):
     ]
     m = MagicMock()
     mocked_watch_history_db.client.get_paginator.return_value = m
-    m.paginate = mocked_func
+    m.paginate = mock_func
 
     mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, limit=10)
 
@@ -65,7 +65,7 @@ def test_get_watch_history_by_collection_name(mocked_watch_history_db):
     ]
     m = MagicMock()
     mocked_watch_history_db.client.get_paginator.return_value = m
-    m.paginate = mocked_func
+    m.paginate = mock_func
 
     mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, collection_name="ANIME", limit=10)
 
@@ -89,7 +89,7 @@ def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
     ]
     m = MagicMock()
     mocked_watch_history_db.client.get_paginator.return_value = m
-    m.paginate = mocked_func
+    m.paginate = mock_func
 
     mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, collection_name="ANIME", index_name="test_index",
                                               limit=10)
@@ -116,7 +116,7 @@ def test_get_watch_history_by_with_start(mocked_watch_history_db):
     ]
     m = MagicMock()
     mocked_watch_history_db.client.get_paginator.return_value = m
-    m.paginate = mocked_func
+    m.paginate = mock_func
 
     ret = mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, collection_name="ANIME", index_name="test_index",
                                                     limit=1, start=2)
@@ -152,7 +152,7 @@ def test_get_watch_history_too_large_start_index(mocked_watch_history_db):
     ]
     m = MagicMock()
     mocked_watch_history_db.client.get_paginator.return_value = m
-    m.paginate = mocked_func
+    m.paginate = mock_func
     with pytest.raises(mocked_watch_history_db.InvalidStartOffset):
         mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, start=10)
 
@@ -176,7 +176,7 @@ def test_get_watch_history_by_collection_not_found(mocked_watch_history_db):
 
 
 def test_add_item(mocked_watch_history_db):
-    mocked_watch_history_db.table.update_item = mocked_func
+    mocked_watch_history_db.table.update_item = mock_func
 
     data = {
         "first": "1",
@@ -206,7 +206,7 @@ def test_add_item(mocked_watch_history_db):
 
 
 def test_delete_item(mocked_watch_history_db):
-    mocked_watch_history_db.table.update_item = mocked_func
+    mocked_watch_history_db.table.update_item = mock_func
 
     mocked_watch_history_db.delete_item(TEST_CLIENT_ID, "MOVIE", "123123")
 
