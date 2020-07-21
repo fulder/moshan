@@ -26,4 +26,5 @@ def handle(event, context):
     elif method == "POST":
         pass
     elif method == "DELETE":
-        pass
+        watch_history_db.delete_item(client_id, collection_name, item_id)
+        return {"statusCode": 204}

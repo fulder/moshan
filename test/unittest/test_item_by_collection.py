@@ -10,8 +10,8 @@ TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJjbGllbnRfaWQiOiJUR
 
 
 @patch("api.item_by_collection.watch_history_db.get_item")
-def test_handler_get(mocked_get_watch_history):
-    mocked_get_watch_history.return_value = {"collection_name": "ANIME", "item_id": 123}
+def test_handler_get(mocked_get):
+    mocked_get.return_value = {"collection_name": "ANIME", "item_id": 123}
 
     event = {
         "headers": {
@@ -33,8 +33,8 @@ def test_handler_get(mocked_get_watch_history):
 
 
 @patch("api.item_by_collection.watch_history_db.get_item")
-def test_handler_get_not_found(mocked_get_watch_history):
-    mocked_get_watch_history.side_effect = NotFoundError
+def test_handler_get_not_found(mocked_get):
+    mocked_get.side_effect = NotFoundError
 
     event = {
         "headers": {
@@ -53,3 +53,26 @@ def test_handler_get_not_found(mocked_get_watch_history):
 
     ret = handle(event, None)
     assert ret == {'statusCode': 404}
+
+
+@patch("api.item_by_collection.watch_history_db.delete_item")
+def test_handler_delete(mocked_delete):
+    mocked_delete.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "DELETE"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "ANIME",
+            "item_id": "123"
+        }
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 204}
