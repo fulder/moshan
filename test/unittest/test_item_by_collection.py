@@ -76,3 +76,26 @@ def test_handler_delete(mocked_delete):
 
     ret = handle(event, None)
     assert ret == {'statusCode': 204}
+
+
+@patch("api.item_by_collection.watch_history_db.update_item")
+def test_handler_post(mocked_post):
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "ANIME",
+            "item_id": "123"
+        }
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 204}
