@@ -94,6 +94,11 @@ def test_handler_post(mocked_post):
         "pathParameters": {
             "collection_name": "ANIME",
             "item_id": "123"
+        },
+        "body": {
+            "rating": 3,
+            "overview": "My overview",
+            "review": "My review"
         }
     }
 
