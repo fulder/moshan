@@ -236,3 +236,10 @@ def test_get_item(mocked_watch_history_db):
     ret = mocked_watch_history_db.get_item(TEST_CLIENT_ID, "MOVIE", "123123")
 
     assert ret == {'collection_name': 'ANIME', 'item_id': 123}
+
+
+def test_get_item_not_found(mocked_watch_history_db):
+    mocked_watch_history_db.table.query.return_value = {"Items": []}
+
+    with pytest.raises(mocked_watch_history_db.NotFoundError):
+        mocked_watch_history_db.get_item(TEST_CLIENT_ID, "MOVIE", "123123")
