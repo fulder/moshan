@@ -1,5 +1,3 @@
-import json
-from decimal import Decimal
 from unittest.mock import patch
 
 from api.item_by_collection import handle
@@ -104,3 +102,29 @@ def test_handler_post(mocked_post):
 
     ret = handle(event, None)
     assert ret == {'statusCode': 204}
+
+
+@patch("api.item_by_collection.watch_history_db.update_item")
+def test_handler_post_validation_failure(mocked_post):
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "ANIME",
+            "item_id": "123"
+        },
+        "body": {
+            "rating": "ABC",
+        }
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 400, 'body': '{"message": "Invalid post schema", "error": "\'ABC\' is not of type \'integer\'"}'}
