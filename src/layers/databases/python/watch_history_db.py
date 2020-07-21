@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 import boto3
+from boto3.dynamodb.conditions import Key, Attr
 from dynamodb_json import json_util
 
 import logger
@@ -51,6 +52,18 @@ def delete_item(client_id, collection_name, item_id):
     update_item(client_id, collection_name, item_id, data)
 
 
+def get_item(client_id, collection_name, item_id):
+    res = _get_table().query(
+        KeyConditionExpression=Key("client_id").eq(client_id) & Key("item_id").eq(item_id),
+        FilterExpression=Attr("collection_name").eq(collection_name)
+    )
+
+    if not res["Items"]:
+        raise NotFoundError(f"Item with id: {item_id} not found. Collection name: {collection_name}")
+
+    return res["Items"][0]
+
+
 def update_item(client_id, collection_name, item_id, data):
     data["item_id"] = item_id
     data["collection_name"] = collection_name
@@ -94,7 +107,8 @@ def get_watch_history(client_id, collection_name=None, index_name=None, limit=10
     log.debug(f"get_episodes response: {res}")
 
     if not res:
-        raise NotFoundError(f"Watch history for client with id: {client_id} and collection: {collection_name} not found")
+        raise NotFoundError(
+            f"Watch history for client with id: {client_id} and collection: {collection_name} not found")
 
     return {
         "items": res,
