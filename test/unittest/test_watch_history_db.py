@@ -225,3 +225,14 @@ def test_delete_item(mocked_watch_history_db):
         ":item_id": "123123",
         ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
+
+
+def test_get_item(mocked_watch_history_db):
+    global MOCK_RETURN
+    MOCK_RETURN = {"Items": [{"collection_name": "ANIME", "item_id": 123}]}
+
+    mocked_watch_history_db.table.query = mock_func
+
+    ret = mocked_watch_history_db.get_item(TEST_CLIENT_ID, "MOVIE", "123123")
+
+    assert ret == {'collection_name': 'ANIME', 'item_id': 123}
