@@ -128,3 +128,30 @@ def test_handler_post_validation_failure(mocked_post):
 
     ret = handle(event, None)
     assert ret == {'statusCode': 400, 'body': '{"message": "Invalid post schema", "error": "\'ABC\' is not of type \'integer\'"}'}
+
+
+@patch("api.item_by_collection.watch_history_db.update_item")
+def test_handler_post_block_additional_properties(mocked_post):
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "ANIME",
+            "item_id": "123"
+        },
+        "body": {
+            "rating": 1,
+            "werid_property": "123"
+        }
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 400, 'body': '{"message": "Invalid post schema", "error": "Additional properties are not allowed (\'werid_property\' was unexpected)"}'}
