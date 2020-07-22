@@ -9,7 +9,7 @@ TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJjbGllbnRfaWQiOiJUR
 
 @patch("api.item_by_collection.watch_history_db.get_item")
 def test_handler_get(mocked_get):
-    mocked_get.return_value = {"collection_name": "ANIME", "item_id": 123}
+    mocked_get.return_value = {"collection_name": "anime", "item_id": 123}
 
     event = {
         "headers": {
@@ -21,13 +21,13 @@ def test_handler_get(mocked_get):
             }
         },
         "pathParameters": {
-            "collection_name": "ANIME",
+            "collection_name": "anime",
             "item_id": "123"
         }
     }
 
     ret = handle(event, None)
-    assert ret == {'body': '{"collection_name": "ANIME", "item_id": 123}', 'statusCode': 200}
+    assert ret == {'body': '{"collection_name": "anime", "item_id": 123}', 'statusCode': 200}
 
 
 @patch("api.item_by_collection.watch_history_db.get_item")
@@ -44,7 +44,7 @@ def test_handler_get_not_found(mocked_get):
             }
         },
         "pathParameters": {
-            "collection_name": "ANIME",
+            "collection_name": "anime",
             "item_id": "123"
         }
     }
@@ -67,7 +67,7 @@ def test_handler_delete(mocked_delete):
             }
         },
         "pathParameters": {
-            "collection_name": "ANIME",
+            "collection_name": "anime",
             "item_id": "123"
         }
     }
@@ -90,7 +90,7 @@ def test_handler_post(mocked_post):
             }
         },
         "pathParameters": {
-            "collection_name": "ANIME",
+            "collection_name": "anime",
             "item_id": "123"
         },
         "body": {
@@ -118,7 +118,7 @@ def test_handler_post_validation_failure(mocked_post):
             }
         },
         "pathParameters": {
-            "collection_name": "ANIME",
+            "collection_name": "anime",
             "item_id": "123"
         },
         "body": {
@@ -144,7 +144,7 @@ def test_handler_post_block_additional_properties(mocked_post):
             }
         },
         "pathParameters": {
-            "collection_name": "ANIME",
+            "collection_name": "anime",
             "item_id": "123"
         },
         "body": {
