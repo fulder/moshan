@@ -155,3 +155,24 @@ def test_handler_post_block_additional_properties(mocked_post):
 
     ret = handle(event, None)
     assert ret == {'statusCode': 400, 'body': '{"message": "Invalid post schema", "error": "Additional properties are not allowed (\'werid_property\' was unexpected)"}'}
+
+
+def test_handler_invalid_collection_name():
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "INVALID",
+            "item_id": "123"
+        }
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 400, 'body': '{"message": "Invalid collection name, allowed values: [\'anime\', \'show\', \'movie\']"}'}
+
