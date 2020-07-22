@@ -12,7 +12,7 @@ def test_get_watch_history_invalid_auth():
 
 
 def test_post_item():
+    res = requests.get(f"{API_URL}/watch-history/collection/invalid/123", headers=BASE_HEADERS)
 
-    res = requests.post(f"{API_URL}/watch-history/", headers=BASE_HEADERS)
-
-    assert res.status_code == 200
+    assert res.status_code == 400
+    assert res.json() == {'message': "Invalid collection name, allowed values: ['anime', 'show', 'movie']"}
