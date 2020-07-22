@@ -12,7 +12,8 @@
       "date_watched": [
         "2020-01-01 10:00:00",
         "2020-01-02 11:00:00"
-      ]
+      ],
+      "status": "following"
     }
   ],
   "additionalProperties": false,
@@ -48,6 +49,18 @@
         "type": "string",
         "format": "date-time"
       }
+    },
+    "status": {
+      "$id": "#/properties/status",
+      "type": "string",
+      "title": "Watch status",
+      "description": "Watch status of the item",
+      "enum": [
+        "finished",
+        "following",
+        "watching",
+        "dropped"
+      ]
     }
   }
 }
