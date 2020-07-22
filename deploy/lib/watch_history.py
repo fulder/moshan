@@ -190,16 +190,16 @@ class WatchHistory(core.Stack):
                 "route": "/watch-history/collection/{collection_name}",
                 "target_lambda": self.lambdas["api-watch_history_by_collection"]
             },
-            "get_item_by_collection": {
+            "item_by_collection": {
                 "method": ["GET", "POST", "DELETE"],
-                "route": "/watch-history/collection/{collection_name}",
-                "target_lambda": self.lambdas["api-watch_history_by_collection"]
+                "route": "/watch-history/collection/{collection_name}/{item_id}",
+                "target_lambda": self.lambdas["api-item_by_collection"]
             }
 
         }
 
         for r in routes:
-            for m in routes["method"]:
+            for m in routes[r]["method"]:
                 integration = HttpIntegration(
                     self,
                     f"{m}_{r}_integration",
