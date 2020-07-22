@@ -10,7 +10,7 @@ from aws_cdk.aws_iam import PolicyStatement, Role, ServicePrincipal, ManagedPoli
 from aws_cdk.aws_lambda import LayerVersion, Runtime, Function, Code
 from aws_cdk.core import Duration
 
-from deploy.lib.utils import clean_pycache
+from .utils import clean_pycache
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 LAMBDAS_DIR = os.path.join(CURRENT_DIR, "..", "..", "src", "lambdas")
@@ -77,6 +77,21 @@ class WatchHistory(core.Stack):
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:GetItem"],
+                        resources=[self.watch_history_table.table_arn]
+                    )
+                ],
+                "timeout": 3
+            },
+            "api-item_by_collection": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "DATABASE_NAME": self.watch_history_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                },
+                "concurrent_executions": 100,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:GetItem", "dynamodb:PutItem"],
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
@@ -163,36 +178,43 @@ class WatchHistory(core.Stack):
 
         routes = {
             "watch_history": {
-                "method": "GET",
+                "method": ["GET"],
                 "route": "/watch-history",
                 "target_lambda": self.lambdas["api-watch_history"]
             },
             "watch_history_by_collection": {
-                "method": "GET",
+                "method": ["GET"],
+                "route": "/watch-history/collection/{collection_name}",
+                "target_lambda": self.lambdas["api-watch_history_by_collection"]
+            },
+            "get_item_by_collection": {
+                "method": ["GET", "POST", "DELETE"],
                 "route": "/watch-history/collection/{collection_name}",
                 "target_lambda": self.lambdas["api-watch_history_by_collection"]
             }
+
         }
 
         for r in routes:
-            integration = HttpIntegration(
-                self,
-                f"{r}_integration",
-                http_api=http_api,
-                integration_type=HttpIntegrationType.LAMBDA_PROXY,
-                integration_uri=routes[r]["target_lambda"].function_arn,
-                method=getattr(HttpMethod, routes[r]["method"]),
-                payload_format_version=PayloadFormatVersion.VERSION_2_0,
-            )
-            CfnRoute(
-                self,
-                r,
-                api_id=http_api.http_api_id,
-                route_key=f"{routes[r]['method']} {routes[r]['route']}",
-                authorization_type="JWT",
-                authorizer_id=authorizer.ref,
-                target="integrations/" + integration.integration_id
-            )
+            for m in routes["method"]:
+                integration = HttpIntegration(
+                    self,
+                    f"{r}_integration",
+                    http_api=http_api,
+                    integration_type=HttpIntegrationType.LAMBDA_PROXY,
+                    integration_uri=routes[r]["target_lambda"].function_arn,
+                    method=getattr(HttpMethod, m),
+                    payload_format_version=PayloadFormatVersion.VERSION_2_0,
+                )
+                CfnRoute(
+                    self,
+                    r,
+                    api_id=http_api.http_api_id,
+                    route_key=f"{m} {routes[r]['route']}",
+                    authorization_type="JWT",
+                    authorizer_id=authorizer.ref,
+                    target="integrations/" + integration.integration_id
+                )
 
             routes[r]["target_lambda"].add_permission(
                 f"{r}_apigateway_invoke",
