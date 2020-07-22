@@ -186,10 +186,11 @@ def test_add_item(mocked_watch_history_db):
 
     assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID}
     assert UPDATE_VALUES[
-               "UpdateExpression"] == "SET #first=:first,#second=:second,#created_at=:created_at,#item_id=:item_id,#collection_name=:collection_name,#updated_at=:updated_at"
+               "UpdateExpression"] == "SET #first=:first,#second=:second,#created_at=:created_at,#item_id=:item_id,#collection_name=:collection_name,#updated_at=:updated_at,#deleted_at=:deleted_at"
     assert UPDATE_VALUES["ExpressionAttributeNames"] == {
         "#collection_name": "collection_name",
         "#created_at": "created_at",
+        "#deleted_at": "deleted_at",
         "#first": "first",
         "#item_id": "item_id",
         "#second": "second",
@@ -198,6 +199,7 @@ def test_add_item(mocked_watch_history_db):
     assert UPDATE_VALUES["ExpressionAttributeValues"] == {
         ":collection_name": "MOVIE",
         ":created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        ":deleted_at": None,
         ":first": "1",
         ":item_id": "123123",
         ":second": "2",
