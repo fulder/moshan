@@ -164,7 +164,7 @@ class WatchHistory(core.Stack):
                 )
 
     def _create_gateway(self):
-        http_api = HttpApi(self, "history", create_default_stage=False)
+        http_api = HttpApi(self, "watch-history", create_default_stage=False)
 
         authorizer = CfnAuthorizer(
             self,
