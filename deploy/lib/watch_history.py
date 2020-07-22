@@ -86,7 +86,7 @@ class WatchHistory(core.Stack):
                 "layers": ["utils", "databases"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
-                    "LOG_LEVEL": "INFO",
+                    "LOG_LEVEL": "DEBUG",
                 },
                 "concurrent_executions": 100,
                 "policies": [
