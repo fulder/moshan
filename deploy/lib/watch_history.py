@@ -199,7 +199,7 @@ class WatchHistory(core.Stack):
             for m in routes["method"]:
                 integration = HttpIntegration(
                     self,
-                    f"{r}_integration",
+                    f"{m}_{r}_integration",
                     http_api=http_api,
                     integration_type=HttpIntegrationType.LAMBDA_PROXY,
                     integration_uri=routes[r]["target_lambda"].function_arn,
@@ -208,7 +208,7 @@ class WatchHistory(core.Stack):
                 )
                 CfnRoute(
                     self,
-                    r,
+                    f"{m}_{r}",
                     api_id=http_api.http_api_id,
                     route_key=f"{m} {routes[r]['route']}",
                     authorization_type="JWT",
