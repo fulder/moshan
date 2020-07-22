@@ -61,7 +61,7 @@ class WatchHistory(core.Stack):
                 "concurrent_executions": 100,
                 "policies": [
                     PolicyStatement(
-                        actions=["dynamodb:GetItem"],
+                        actions=["dynamodb:Query"],
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
@@ -76,7 +76,7 @@ class WatchHistory(core.Stack):
                 "concurrent_executions": 100,
                 "policies": [
                     PolicyStatement(
-                        actions=["dynamodb:GetItem"],
+                        actions=["dynamodb:Query"],
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
@@ -91,7 +91,7 @@ class WatchHistory(core.Stack):
                 "concurrent_executions": 100,
                 "policies": [
                     PolicyStatement(
-                        actions=["dynamodb:GetItem", "dynamodb:PutItem"],
+                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
