@@ -68,6 +68,7 @@ def update_item(client_id, collection_name, item_id, data):
     data["item_id"] = item_id
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data["deleted_at"] = None
 
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
