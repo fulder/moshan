@@ -86,7 +86,7 @@ def test_handler_post(mocked_post):
         },
         "requestContext": {
             "http": {
-                "method": "POST"
+                "method": "PATCH"
             }
         },
         "pathParameters": {
@@ -114,7 +114,7 @@ def test_handler_post_validation_failure(mocked_post):
         },
         "requestContext": {
             "http": {
-                "method": "POST"
+                "method": "PATCH"
             }
         },
         "pathParameters": {
@@ -140,7 +140,7 @@ def test_handler_post_block_additional_properties(mocked_post):
         },
         "requestContext": {
             "http": {
-                "method": "POST"
+                "method": "PATCH"
             }
         },
         "pathParameters": {
@@ -176,3 +176,25 @@ def test_handler_invalid_collection_name():
     ret = handle(event, None)
     assert ret == {'statusCode': 400, 'body': '{"message": "Invalid collection name, allowed values: [\'anime\', \'show\', \'movie\']"}'}
 
+
+# @patch("api.item_by_collection.watch_history_db.update_item")
+# def test_handler_post_without_body(mocked_post):
+#     mocked_post.return_value = True
+#
+#     event = {
+#         "headers": {
+#             "authorization": TEST_JWT
+#         },
+#         "requestContext": {
+#             "http": {
+#                 "method": "POST"
+#             }
+#         },
+#         "pathParameters": {
+#             "collection_name": "anime",
+#             "item_id": "123"
+#         }
+#     }
+#
+#     ret = handle(event, None)
+#     assert ret == {'statusCode': 204}

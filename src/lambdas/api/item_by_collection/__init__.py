@@ -10,7 +10,7 @@ log = logger.get_logger("watch_history")
 
 ALLOWED_SORT = ["rating", "date_watched", "state"]
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
+PATCH_SCHEMA_PATH = os.path.join(CURRENT_DIR, "patch.json")
 
 COLLECTION_NAMES = ["anime", "show", "movie"]
 
@@ -30,9 +30,9 @@ def handle(event, context):
 
     if method == "GET":
         return _get_item(client_id, collection_name, item_id)
-    elif method == "POST":
+    elif method == "PATCH":
         body = event.get("body")
-        return _post_item(client_id, collection_name, item_id, body)
+        return _patch_item(client_id, collection_name, item_id, body)
     elif method == "DELETE":
         return _delete_item(client_id, collection_name, item_id)
 
@@ -45,9 +45,9 @@ def _get_item(client_id, collection_name, item_id):
         return {"statusCode": 404}
 
 
-def _post_item(client_id, collection_name, item_id, body):
+def _patch_item(client_id, collection_name, item_id, body):
     try:
-        schema.validate_schema(POST_SCHEMA_PATH, body)
+        schema.validate_schema(PATCH_SCHEMA_PATH, body)
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
     watch_history_db.update_item(client_id, collection_name, item_id, body)
