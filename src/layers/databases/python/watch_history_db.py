@@ -43,15 +43,12 @@ def _get_client():
 
 
 def add_item(client_id, collection_name, item_id):
+    data = {}
     try:
         get_item(client_id, collection_name, item_id)
-        return
     except NotFoundError:
-        pass
+        data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    data = {
-        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
     update_item(client_id, collection_name, item_id, data)
 
 
