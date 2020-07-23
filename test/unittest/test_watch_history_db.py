@@ -252,6 +252,8 @@ def test_update_item(mocked_watch_history_db):
 
 
 def test_delete_item(mocked_watch_history_db):
+    global UPDATE_VALUES
+    UPDATE_VALUES = {}
     mocked_watch_history_db.table.update_item = mock_func
 
     mocked_watch_history_db.delete_item(TEST_CLIENT_ID, "MOVIE", "123123")
@@ -273,6 +275,31 @@ def test_delete_item(mocked_watch_history_db):
         },
         'UpdateExpression': 'SET #deleted_at=:deleted_at,#collection_name=:collection_name,#updated_at=:updated_at'
     }
+
+
+def test_add_item_exists(mocked_watch_history_db):
+    global UPDATE_VALUES
+    UPDATE_VALUES = {}
+    mocked_watch_history_db.table.update_item = mock_func
+    mocked_watch_history_db.table.query.return_value = {
+        "Items": [{"item_data"}]
+    }
+
+    mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
+
+    assert UPDATE_VALUES == {
+        'ExpressionAttributeNames': {
+            '#collection_name': 'collection_name',
+            '#updated_at': 'updated_at'
+        },
+        'ExpressionAttributeValues': {
+            ':collection_name': 'MOVIE',
+            ':updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        },
+        'Key': {
+            'client_id': TEST_CLIENT_ID, 'item_id': '123123'},
+        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'}
+
 
 def test_get_item(mocked_watch_history_db):
     global MOCK_RETURN

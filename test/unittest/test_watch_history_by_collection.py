@@ -227,7 +227,7 @@ def test_handler_post_with_empty_body(mocked_post):
     assert ret == {'body': 'Invalid post body', 'statusCode': 400}
 
 
-@patch("api.watch_history_by_collection.watch_history_db.update_item")
+@patch("api.watch_history_by_collection.watch_history_db.add_item")
 @patch("api.watch_history_by_collection.anime_api.post_anime")
 def test_handler_post(mocked_post_anime, mocked_post):
     mocked_post_anime.return_value = True
