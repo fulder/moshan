@@ -7,4 +7,5 @@
 
 # Deploy
 
+* `export ANIME_API_URL=<ANIME_API_URL>`
 * `cdk deploy`
