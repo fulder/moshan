@@ -79,7 +79,10 @@ def _post_collection_item(client_id, collection_name, body, token):
 
     item_id = None
     if collection_name == "anime":
-        item_id = anime_api.post_anime(body["item_add_id"], token)
+        try:
+            item_id = anime_api.post_anime(body["item_add_id"], token)
+        except anime_api.HttpError as e:
+            return {"statusCode": 503, "body": json.dumps({"message": "Error during anime post", "error": str(e)})}
     elif collection_name == "show":
         return {"statusCode": 501}  # TODO: Implement
     elif collection_name == "movie":
