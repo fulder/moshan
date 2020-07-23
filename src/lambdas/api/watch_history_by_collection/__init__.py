@@ -97,5 +97,5 @@ def _post_collection_item(client_id, collection_name, body, token):
     elif collection_name == "movie":
         return {"statusCode": 501}  # TODO: Implement
 
-    watch_history_db.add_item(client_id, collection_name, item_id, body)
+    watch_history_db.add_item(client_id, collection_name, item_id)
     return {"statusCode": 204}

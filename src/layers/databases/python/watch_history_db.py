@@ -42,8 +42,10 @@ def _get_client():
     return client
 
 
-def add_item(client_id, collection_name, item_id, data):
-    data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def add_item(client_id, collection_name, item_id):
+    data = {
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
     update_item(client_id, collection_name, item_id, data)
 
 
