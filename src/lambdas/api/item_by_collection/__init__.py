@@ -8,7 +8,6 @@ import watch_history_db
 
 log = logger.get_logger("watch_history")
 
-ALLOWED_SORT = ["rating", "date_watched", "state"]
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 PATCH_SCHEMA_PATH = os.path.join(CURRENT_DIR, "patch.json")
 

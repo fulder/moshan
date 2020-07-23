@@ -9,7 +9,7 @@ import watch_history_db
 
 log = logger.get_logger("watch_history")
 
-ALLOWED_SORT = ["rating", "date_watched", "state"]
+
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
 
@@ -35,10 +35,10 @@ def _get_watch_history(client_id, collection_name, query_params):
     if query_params:
         sort = query_params.get("sort")
 
-    if sort and sort not in ALLOWED_SORT:
+    if sort and sort not in schema.ALLOWED_SORT:
         return {
             "statusCode": 400,
-            "body": json.dumps({"error": f"Invalid sort specified. Allowed values: {ALLOWED_SORT}"})
+            "body": json.dumps({"error": f"Invalid sort specified. Allowed values: {schema.ALLOWED_SORT}"})
         }
 
     limit = 100
