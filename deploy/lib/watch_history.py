@@ -186,7 +186,7 @@ class WatchHistory(core.Stack):
                 "target_lambda": self.lambdas["api-watch_history"]
             },
             "watch_history_by_collection": {
-                "method": ["GET"],
+                "method": ["GET", "POST"],
                 "route": "/watch-history/collection/{collection_name}",
                 "target_lambda": self.lambdas["api-watch_history_by_collection"]
             },
