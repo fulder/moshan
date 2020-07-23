@@ -1,4 +1,5 @@
 import json
+import os
 
 import decimal_encoder
 import logger
@@ -9,6 +10,8 @@ import watch_history_db
 log = logger.get_logger("watch_history")
 
 ALLOWED_SORT = ["rating", "date_watched", "state"]
+CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
 
 
 def handle(event, context):
@@ -69,3 +72,7 @@ def _post_collection_item(client_id, collection_name, body):
             "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})
         }
 
+    try:
+        schema.validate_schema(POST_SCHEMA_PATH, body)
+    except schema.ValidationException as e:
+        return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
