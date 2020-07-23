@@ -94,7 +94,7 @@ def update_item(client_id, collection_name, item_id, data, ignore_existing=False
         "ExpressionAttributeValues": expression_attribute_values
     }
     if ignore_existing:
-        update_item_args["ConditionExpression"] = Attr("client_id").not_exists()
+        update_item_args["ConditionExpression"] = Attr("client_id").not_exists() & Attr("item_id").not_exists()
 
     _get_table().update_item(**update_item_args)
 
