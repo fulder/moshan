@@ -6,9 +6,9 @@ import logger
 import jwt_utils
 import schema
 import watch_history_db
+import anime_api
 
 log = logger.get_logger("watch_history")
-
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
@@ -27,7 +27,7 @@ def handle(event, context):
         return _get_watch_history(client_id, collection_name, query_params)
     elif method == "POST":
         body = event.get("body")
-        return _post_collection_item(client_id, collection_name, body)
+        return _post_collection_item(client_id, collection_name, body, auth_header)
 
 
 def _get_watch_history(client_id, collection_name, query_params):
@@ -65,7 +65,7 @@ def _get_watch_history(client_id, collection_name, query_params):
         return {"statusCode": 404}
 
 
-def _post_collection_item(client_id, collection_name, body):
+def _post_collection_item(client_id, collection_name, body, token):
     if collection_name not in schema.COLLECTION_NAMES:
         return {
             "statusCode": 400,
@@ -76,3 +76,15 @@ def _post_collection_item(client_id, collection_name, body):
         schema.validate_schema(POST_SCHEMA_PATH, body)
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
+
+    item_id = None
+    if collection_name == "anime":
+        item_id = anime_api.post_anime(body["item_add_id"], token)
+    elif collection_name == "show":
+        return {"statusCode": 501}  # TODO: Implement
+    elif collection_name == "movie":
+        return {"statusCode": 501}  # TODO: Implement
+
+    watch_history_db.add_item(client_id, collection_name, item_id, body)
+    return {"statusCode": 204}
+
