@@ -15,7 +15,7 @@ class HttpError(Error):
 
 def post_anime(mal_id, token):
     res = requests.post(f"{ANIME_API_URL}/anime?mal_id={mal_id}", headers={"Authorization": token})
-    if res.status_code != 204:
+    if res.status_code != 202:
         raise HttpError(f"Invalid response: {res.status_code}")
 
     return res.json()["anime_id"]
