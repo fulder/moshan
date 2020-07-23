@@ -67,16 +67,16 @@ def get_item(client_id, collection_name, item_id):
 
 
 def update_item(client_id, collection_name, item_id, data):
-    data["item_id"] = item_id
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    if "deleted_at" not in data:
-        data["deleted_at"] = None
 
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
     expression_attribute_names = {f'#{k}': k for k in data}
     expression_attribute_values = {f':{k}': v for k, v in data.items()}
+
+    if "deleted_at" not in data:
+        update_expression += " REMOVE deleted_at"
 
     log.debug("Running update_item")
     log.debug(f"Update expression: {update_expression}")
