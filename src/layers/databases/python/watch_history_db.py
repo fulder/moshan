@@ -82,6 +82,7 @@ def update_item(client_id, collection_name, item_id, data):
     log.debug(f"Update expression: {update_expression}")
     log.debug(f"Expression attribute names: {expression_attribute_names}")
     log.debug(f"Expression attribute values: {expression_attribute_values}")
+    log.debug(f"Client ID: {client_id}")
 
     _get_table().update_item(
         Key={"client_id": client_id},
