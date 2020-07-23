@@ -3,6 +3,7 @@ import json
 import decimal_encoder
 import logger
 import jwt_utils
+import schema
 import watch_history_db
 
 log = logger.get_logger("watch_history")
@@ -21,6 +22,9 @@ def handle(event, context):
     if method == "GET":
         query_params = event.get("queryStringParameters")
         return _get_watch_history(client_id, collection_name, query_params)
+    elif method == "POST":
+        body = event.get("body")
+        return _post_collection_item(client_id, collection_name, body)
 
 
 def _get_watch_history(client_id, collection_name, query_params):
@@ -56,3 +60,12 @@ def _get_watch_history(client_id, collection_name, query_params):
         return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
         return {"statusCode": 404}
+
+
+def _post_collection_item(client_id, collection_name, body):
+    if collection_name not in schema.COLLECTION_NAMES:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})
+        }
+

@@ -12,8 +12,6 @@ ALLOWED_SORT = ["rating", "date_watched", "state"]
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 PATCH_SCHEMA_PATH = os.path.join(CURRENT_DIR, "patch.json")
 
-COLLECTION_NAMES = ["anime", "show", "movie"]
-
 
 def handle(event, context):
     log.debug(f"Received event: {event}")
@@ -25,8 +23,8 @@ def handle(event, context):
     collection_name = event["pathParameters"].get("collection_name")
     item_id = event["pathParameters"].get("item_id")
 
-    if collection_name not in COLLECTION_NAMES:
-        return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {COLLECTION_NAMES}"})}
+    if collection_name not in schema.COLLECTION_NAMES:
+        return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
 
     if method == "GET":
         return _get_item(client_id, collection_name, item_id)

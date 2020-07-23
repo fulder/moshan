@@ -5,6 +5,7 @@ import logger
 
 log = logger.get_logger(__name__)
 
+COLLECTION_NAMES = ["anime", "show", "movie"]
 
 class ValidationException(Exception):
     pass
