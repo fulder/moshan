@@ -11,19 +11,24 @@ TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJjbGllbnRfaWQiOiJUR
 
 @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
 def test_handler(mocked_get_watch_history):
-    mocked_get_watch_history.return_value = [{"collection_name": "ANIME", "item_id": Decimal(123)}]
+    mocked_get_watch_history.return_value = [{"collection_name": "anime", "item_id": Decimal(123)}]
 
     event = {
         "headers": {
             "authorization": TEST_JWT
         },
         "pathParameters": {
-            "collection_name": "ANIME"
+            "collection_name": "anime"
+        },
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
         }
     }
 
     ret = handle(event, None)
-    assert ret == {"body": '[{"collection_name": "ANIME", "item_id": 123}]', "statusCode": 200}
+    assert ret == {"body": '[{"collection_name": "anime", "item_id": 123}]', "statusCode": 200}
 
 
 def test_handler_invalid_sort():
@@ -35,7 +40,12 @@ def test_handler_invalid_sort():
             "sort": "INVALID"
         },
         "pathParameters": {
-            "collection_name": "ANIME"
+            "collection_name": "anime"
+        },
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
         }
     }
 
@@ -49,7 +59,7 @@ def test_handler_invalid_sort():
 
 @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
 def test_handler_sort(mocked_get_watch_history):
-    mocked_get_watch_history.return_value = [{"collection_name": "ANIME", "item_id": Decimal(123)}]
+    mocked_get_watch_history.return_value = [{"collection_name": "anime", "item_id": Decimal(123)}]
 
     event = {
         "headers": {
@@ -59,18 +69,23 @@ def test_handler_sort(mocked_get_watch_history):
             "sort": "date_watched"
         },
         "pathParameters": {
-            "collection_name": "ANIME"
+            "collection_name": "anime"
+        },
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
         }
     }
 
     ret = handle(event, None)
 
-    assert ret == {'body': '[{"collection_name": "ANIME", "item_id": 123}]', 'statusCode': 200}
+    assert ret == {'body': '[{"collection_name": "anime", "item_id": 123}]', 'statusCode': 200}
 
 
 @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
 def test_handler_limit_and_start(mocked_get_watch_history):
-    mocked_get_watch_history.return_value = [{"collection_name": "ANIME", "item_id": Decimal(123)}]
+    mocked_get_watch_history.return_value = [{"collection_name": "anime", "item_id": Decimal(123)}]
 
     event = {
         "headers": {
@@ -81,13 +96,18 @@ def test_handler_limit_and_start(mocked_get_watch_history):
             "start": "23"
         },
         "pathParameters": {
-            "collection_name": "ANIME"
+            "collection_name": "anime"
+        },
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
         }
     }
 
     ret = handle(event, None)
 
-    assert ret == {'body': '[{"collection_name": "ANIME", "item_id": 123}]', 'statusCode': 200}
+    assert ret == {'body': '[{"collection_name": "anime", "item_id": 123}]', 'statusCode': 200}
 
 
 def test_handler_invalid_limit_type():
@@ -99,7 +119,12 @@ def test_handler_invalid_limit_type():
             "limit": "ABC",
         },
         "pathParameters": {
-            "collection_name": "ANIME"
+            "collection_name": "anime"
+        },
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
         }
     }
 
@@ -117,7 +142,12 @@ def test_handler_invalid_start_type():
             "start": "ABC",
         },
         "pathParameters": {
-            "collection_name": "ANIME"
+            "collection_name": "anime"
+        },
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
         }
     }
 
@@ -135,7 +165,12 @@ def test_handler_not_found(mocked_get_watch_history):
             "authorization": TEST_JWT
         },
         "pathParameters": {
-            "collection_name": "ANIME"
+            "collection_name": "anime"
+        },
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
         }
     }
 

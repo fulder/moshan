@@ -16,8 +16,15 @@ def handle(event, context):
 
     collection_name = event["pathParameters"].get("collection_name")
 
+    method = event["requestContext"]["http"]["method"]
+
+    if method == "GET":
+        query_params = event.get("queryStringParameters")
+        return _get_watch_history(client_id, collection_name, query_params)
+
+
+def _get_watch_history(client_id, collection_name, query_params):
     sort = None
-    query_params = event.get("queryStringParameters")
     if query_params:
         sort = query_params.get("sort")
 
@@ -29,8 +36,6 @@ def handle(event, context):
 
     limit = 100
     start = 1
-
-    query_params = event.get("queryStringParameters")
     if query_params and "limit" in query_params:
         limit = query_params.get("limit")
     if query_params and "start" in query_params:
@@ -46,9 +51,8 @@ def handle(event, context):
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid start type"})}
 
     try:
-        watch_history = watch_history_db.get_watch_history(client_id, collection_name=collection_name, index_name=sort, limit=limit, start=start)
+        watch_history = watch_history_db.get_watch_history(client_id, collection_name=collection_name, index_name=sort,
+                                                           limit=limit, start=start)
         return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
         return {"statusCode": 404}
-
-
