@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Add new item to collection",
+  "description": "Add a collection item to watch history",
+  "default": {},
+  "examples": [
+    {
+      "item_add_id": 123
+    }
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "item_add_id": {
+      "$id": "#/properties/item_add_id",
+      "type": "integer",
+      "title": "Item add ID",
+      "description": "Item ID to use for the add operation",
+    }
+  }
+}
