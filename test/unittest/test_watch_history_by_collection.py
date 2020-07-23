@@ -2,6 +2,7 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
+from anime_api import HttpError
 from api.watch_history_by_collection import handle
 from schema import ALLOWED_SORT
 from watch_history_db import NotFoundError
@@ -232,3 +233,34 @@ def test_handler_post(mocked_post_anime, mocked_post):
 
     ret = handle(event, None)
     assert ret == {'statusCode': 204}
+
+
+@patch("api.watch_history_by_collection.watch_history_db.update_item")
+@patch("api.watch_history_by_collection.anime_api.post_anime")
+def test_handler_post_anime_api_error(mocked_post_anime, mocked_post):
+    mocked_post_anime.side_effect = HttpError
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "anime",
+            "item_id": "123"
+        },
+        "body": {
+            "item_add_id": 123
+        }
+    }
+
+    ret = handle(event, None)
+    assert ret == {
+        'body': '{"message": "Error during anime post", "error": ""}',
+        'statusCode': 503
+    }
