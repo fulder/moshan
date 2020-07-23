@@ -3,7 +3,6 @@ from datetime import datetime
 from unittest.mock import MagicMock
 
 import pytest
-from boto3.dynamodb.conditions import Attr
 
 UPDATE_VALUES = {}
 MOCK_RETURN = []
@@ -177,45 +176,79 @@ def test_get_watch_history_by_collection_not_found(mocked_watch_history_db):
 
 
 def test_add_item(mocked_watch_history_db):
+    global UPDATE_VALUES
+    UPDATE_VALUES = {}
+    mocked_watch_history_db.table.update_item = mock_func
+    mocked_watch_history_db.table.query.side_effect = mocked_watch_history_db.NotFoundError
+
+    mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
+
+    assert UPDATE_VALUES == {
+        'ExpressionAttributeNames': {
+            '#collection_name': 'collection_name',
+            '#created_at': 'created_at',
+            '#updated_at': 'updated_at'
+        },
+        'ExpressionAttributeValues': {
+            ':collection_name': 'MOVIE',
+            ":created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        },
+        'Key': {
+            'client_id': TEST_CLIENT_ID,
+            'item_id': '123123'},
+        'UpdateExpression': 'SET #created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
+    }
+
+
+def test_add_item_already_exists(mocked_watch_history_db):
+    global UPDATE_VALUES
+    UPDATE_VALUES = {}
+    mocked_watch_history_db.table.update_item = mock_func
+    mocked_watch_history_db.table.query.return_value = {
+        "Items": [{"exists"}]
+    }
+
+    mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
+
+    assert UPDATE_VALUES == {
+        'ExpressionAttributeNames': {
+            '#collection_name': 'collection_name',
+            '#updated_at': 'updated_at'
+        },
+        'ExpressionAttributeValues': {
+            ':collection_name': 'MOVIE',
+            ':updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        },
+        'Key': {
+            'client_id': 'TEST_CLIENT_ID',
+            'item_id': '123123'
+        },
+        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
+    }
+
+
+def test_update_item(mocked_watch_history_db):
+    global UPDATE_VALUES
+    UPDATE_VALUES = {}
     mocked_watch_history_db.table.update_item = mock_func
 
     mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
 
-    assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID, "item_id": "123123"}
-    assert UPDATE_VALUES[
-               "UpdateExpression"] == "SET #created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at"
-    assert UPDATE_VALUES["ExpressionAttributeNames"] == {
-        "#collection_name": "collection_name",
-        "#created_at": "created_at",
-        "#updated_at": "updated_at"
+    assert UPDATE_VALUES == {
+        'ExpressionAttributeNames': {
+            '#collection_name': 'collection_name',
+            '#updated_at': 'updated_at'
+        },
+        'ExpressionAttributeValues': {
+            ':collection_name': 'MOVIE',
+            ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        },
+        'Key': {
+            'client_id': TEST_CLIENT_ID,
+            'item_id': '123123'},
+        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
     }
-    assert UPDATE_VALUES["ExpressionAttributeValues"] == {
-        ":collection_name": "MOVIE",
-        ":created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    assert "ConditionExpression" in UPDATE_VALUES
-    assert UPDATE_VALUES["ConditionExpression"] == Attr("client_id").not_exists() & Attr("item_id").not_exists()
-
-def test_update_item(mocked_watch_history_db):
-    mocked_watch_history_db.table.update_item = mock_func
-
-    mocked_watch_history_db.update_item(TEST_CLIENT_ID, "MOVIE", "123123", {"test_data": "test_data_val"})
-
-    assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID, "item_id": "123123"}
-    assert UPDATE_VALUES[
-               "UpdateExpression"] == "SET #test_data=:test_data,#collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at"
-    assert UPDATE_VALUES["ExpressionAttributeNames"] == {
-        "#collection_name": "collection_name",
-        "#updated_at": "updated_at",
-        "#test_data": "test_data"
-    }
-    assert UPDATE_VALUES["ExpressionAttributeValues"] == {
-        ":test_data": "test_data_val",
-        ":collection_name": "MOVIE",
-        ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    assert "ConditionExpression" not in UPDATE_VALUES
 
 
 def test_delete_item(mocked_watch_history_db):
@@ -223,20 +256,23 @@ def test_delete_item(mocked_watch_history_db):
 
     mocked_watch_history_db.delete_item(TEST_CLIENT_ID, "MOVIE", "123123")
 
-    assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID, "item_id": "123123"}
-    assert UPDATE_VALUES[
-               "UpdateExpression"] == "SET #deleted_at=:deleted_at,#collection_name=:collection_name,#updated_at=:updated_at"
-    assert UPDATE_VALUES["ExpressionAttributeNames"] == {
-        "#collection_name": "collection_name",
-        "#deleted_at": "deleted_at",
-        "#updated_at": "updated_at"
+    assert UPDATE_VALUES == {
+        'ExpressionAttributeNames': {
+            '#collection_name': 'collection_name',
+            '#deleted_at': 'deleted_at',
+            '#updated_at': 'updated_at'
+        },
+        'ExpressionAttributeValues': {
+            ':collection_name': 'MOVIE',
+            ':deleted_at': int(time.time()),
+            ':updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        },
+        'Key': {
+            'client_id': TEST_CLIENT_ID,
+            'item_id': '123123'
+        },
+        'UpdateExpression': 'SET #deleted_at=:deleted_at,#collection_name=:collection_name,#updated_at=:updated_at'
     }
-    assert UPDATE_VALUES["ExpressionAttributeValues"] == {
-        ":collection_name": "MOVIE",
-        ":deleted_at": int(time.time()),
-        ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-
 
 def test_get_item(mocked_watch_history_db):
     global MOCK_RETURN
