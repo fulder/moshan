@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import os
+
 from aws_cdk import core
 
 from lib.utils import clean_pycache
@@ -10,6 +12,10 @@ app = core.App()
 
 env = {"region": "eu-west-1"}
 
-WatchHistory(app, "watch-history", env=env)
+anime_api_url = os.getenv("ANIME_API_URL")
+if anime_api_url is None:
+    raise RuntimeError("Please set the ANIME_API_URL environment variable")
+
+WatchHistory(app, "watch-history", anime_api_url, env=env)
 
 app.synth()
