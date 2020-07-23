@@ -2,7 +2,8 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
-from api.watch_history_by_collection import ALLOWED_SORT, handle
+from api.watch_history_by_collection import handle
+from schema import ALLOWED_SORT
 from watch_history_db import NotFoundError
 
 TEST_CLIENT_ID = "TEST_CLIENT_ID"
@@ -199,4 +200,5 @@ def test_handler_post_without_body(mocked_post):
     }
 
     ret = handle(event, None)
-    assert ret == {'statusCode': 204}
+    assert ret == {'body': '{"message": "Invalid post schema", "error": "Empty validation dict"}',
+                   'statusCode': 400}
