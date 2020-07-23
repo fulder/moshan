@@ -78,7 +78,7 @@ class WatchHistory(core.Stack):
                 "concurrent_executions": 100,
                 "policies": [
                     PolicyStatement(
-                        actions=["dynamodb:Query"],
+                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
