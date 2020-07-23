@@ -46,7 +46,7 @@ def add_item(client_id, collection_name, item_id):
     data = {
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
-    update_item(client_id, collection_name, item_id, data)
+    update_item(client_id, collection_name, item_id, data, ignore_existing=True)
 
 
 def delete_item(client_id, collection_name, item_id):
@@ -66,7 +66,7 @@ def get_item(client_id, collection_name, item_id):
     return res["Items"][0]
 
 
-def update_item(client_id, collection_name, item_id, data):
+def update_item(client_id, collection_name, item_id, data, ignore_existing=False):
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -84,15 +84,19 @@ def update_item(client_id, collection_name, item_id, data):
     log.debug(f"Expression attribute values: {expression_attribute_values}")
     log.debug(f"Client ID: {client_id}")
 
-    _get_table().update_item(
-        Key={
+    update_item_args = {
+        "Key": {
             "client_id": client_id,
             "item_id": item_id,
         },
-        UpdateExpression=update_expression,
-        ExpressionAttributeNames=expression_attribute_names,
-        ExpressionAttributeValues=expression_attribute_values
-    )
+        "UpdateExpression": update_expression,
+        "ExpressionAttributeNames": expression_attribute_names,
+        "ExpressionAttributeValues": expression_attribute_values
+    }
+    if ignore_existing:
+        update_item_args["ConditionExpression"] = Attr("client_id").not_exists()
+
+    _get_table().update_item(**update_item_args)
 
 
 def get_watch_history(client_id, collection_name=None, index_name=None, limit=100, start=1):
