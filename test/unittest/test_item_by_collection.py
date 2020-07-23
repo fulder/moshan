@@ -105,7 +105,7 @@ def test_handler_post(mocked_post):
 
 
 @patch("api.item_by_collection.watch_history_db.update_item")
-def test_handler_post_validation_failure(mocked_post):
+def test_handler_patch_validation_failure(mocked_post):
     mocked_post.return_value = True
 
     event = {
@@ -131,7 +131,7 @@ def test_handler_post_validation_failure(mocked_post):
 
 
 @patch("api.item_by_collection.watch_history_db.update_item")
-def test_handler_post_block_additional_properties(mocked_post):
+def test_handler_patch_block_additional_properties(mocked_post):
     mocked_post.return_value = True
 
     event = {
