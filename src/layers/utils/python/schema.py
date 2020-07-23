@@ -14,9 +14,6 @@ class ValidationException(Exception):
 
 
 def validate_schema(path, input_dict):
-    if input_dict is None:
-        raise ValidationException("Empty validation dict")
-
     with open(path, "r") as f:
         schema = json.load(f)
 

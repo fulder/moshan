@@ -15,7 +15,7 @@
       "$id": "#/properties/item_add_id",
       "type": "integer",
       "title": "Item add ID",
-      "description": "Item ID to use for the add operation",
+      "description": "Item ID to use for the add operation"
     }
   }
 }

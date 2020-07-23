@@ -200,5 +200,35 @@ def test_handler_post_without_body(mocked_post):
     }
 
     ret = handle(event, None)
-    assert ret == {'body': '{"message": "Invalid post schema", "error": "Empty validation dict"}',
-                   'statusCode': 400}
+    assert ret == {
+        'body': '{"message": "Invalid post schema", "error": "None is not of type \'object\'"}',
+        'statusCode': 400
+    }
+
+
+@patch("api.watch_history_by_collection.watch_history_db.update_item")
+@patch("api.watch_history_by_collection.anime_api.post_anime")
+def test_handler_post(mocked_post_anime, mocked_post):
+    mocked_post_anime.return_value = True
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "anime",
+            "item_id": "123"
+        },
+        "body": {
+            "item_add_id": 123
+        }
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 204}
