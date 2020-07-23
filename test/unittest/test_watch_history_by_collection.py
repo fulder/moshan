@@ -201,10 +201,30 @@ def test_handler_post_without_body(mocked_post):
     }
 
     ret = handle(event, None)
-    assert ret == {
-        'body': '{"message": "Invalid post schema", "error": "None is not of type \'object\'"}',
-        'statusCode': 400
+    assert ret == {'body': 'Invalid post body', 'statusCode': 400}
+
+@patch("api.watch_history_by_collection.watch_history_db.update_item")
+def test_handler_post_with_empty_body(mocked_post):
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "anime",
+            "item_id": "123"
+        },
+        "body": ''
     }
+
+    ret = handle(event, None)
+    assert ret == {'body': 'Invalid post body', 'statusCode': 400}
 
 
 @patch("api.watch_history_by_collection.watch_history_db.update_item")
@@ -226,9 +246,7 @@ def test_handler_post(mocked_post_anime, mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": {
-            "item_add_id": 123
-        }
+        "body": '{ "item_add_id": 123 }'
     }
 
     ret = handle(event, None)
@@ -254,9 +272,7 @@ def test_handler_post_anime_api_error(mocked_post_anime, mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": {
-            "item_add_id": 123
-        }
+        "body": '{ "item_add_id": 123 }'
     }
 
     ret = handle(event, None)
@@ -283,9 +299,7 @@ def test_handler_post_invalid_collection(mocked_post):
             "collection_name": "INVALID",
             "item_id": "123"
         },
-        "body": {
-            "item_add_id": 123
-        }
+        "body": '{ "item_add_id": 123 }'
     }
 
     ret = handle(event, None)
@@ -293,3 +307,27 @@ def test_handler_post_invalid_collection(mocked_post):
         'body': '{"message": "Invalid collection name, allowed values: [\'anime\', \'show\', \'movie\']"}',
         'statusCode': 400
     }
+
+
+@patch("api.watch_history_by_collection.watch_history_db.update_item")
+def test_handler_post_invalid_body(mocked_post):
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "INVALID",
+            "item_id": "123"
+        },
+        "body": "INVALID"
+    }
+
+    ret = handle(event, None)
+    assert ret == {'body': 'Invalid post body', 'statusCode': 400}

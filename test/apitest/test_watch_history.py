@@ -21,10 +21,7 @@ from apitest.conftest import API_URL, BASE_HEADERS, ANIME_API_URL
 
 
 def test_post_anime_item():
-    res = requests.post(f"{ANIME_API_URL}/anime?mal_id=21", headers=BASE_HEADERS)
-    anime_id = res.json()["anime_id"]
-
-    res = requests.post(f"{API_URL}/watch-history/collection/anime/{anime_id}", headers=BASE_HEADERS)
+    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"item_add_id": 20}, headers=BASE_HEADERS)
 
     assert res.status_code == 400
     assert res.json() == {'message': "Invalid collection name, allowed values: ['anime', 'show', 'movie']"}

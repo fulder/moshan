@@ -1,5 +1,6 @@
 import json
 import os
+from json import JSONDecodeError
 
 import decimal_encoder
 import logger
@@ -66,6 +67,14 @@ def _get_watch_history(client_id, collection_name, query_params):
 
 
 def _post_collection_item(client_id, collection_name, body, token):
+    try:
+        body = json.loads(body)
+    except (TypeError, JSONDecodeError):
+        return {
+            "statusCode": 400,
+            "body": "Invalid post body"
+        }
+
     if collection_name not in schema.COLLECTION_NAMES:
         return {
             "statusCode": 400,
@@ -90,4 +99,3 @@ def _post_collection_item(client_id, collection_name, body, token):
 
     watch_history_db.add_item(client_id, collection_name, item_id, body)
     return {"statusCode": 204}
-
