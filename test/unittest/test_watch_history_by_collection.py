@@ -177,3 +177,26 @@ def test_handler_not_found(mocked_get_watch_history):
     ret = handle(event, None)
 
     assert ret == {'statusCode': 404}
+
+
+@patch("api.watch_history_by_collection.watch_history_db.update_item")
+def test_handler_post_without_body(mocked_post):
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "anime",
+            "item_id": "123"
+        }
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 204}
