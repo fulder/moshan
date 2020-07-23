@@ -180,21 +180,17 @@ def test_add_item(mocked_watch_history_db):
 
     mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
 
-    assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID}
+    assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID, "item_id": "123123"}
     assert UPDATE_VALUES[
-               "UpdateExpression"] == "SET #created_at=:created_at,#item_id=:item_id,#collection_name=:collection_name,#updated_at=:updated_at,#deleted_at=:deleted_at"
+               "UpdateExpression"] == "SET #created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at"
     assert UPDATE_VALUES["ExpressionAttributeNames"] == {
         "#collection_name": "collection_name",
         "#created_at": "created_at",
-        "#deleted_at": "deleted_at",
-        "#item_id": "item_id",
         "#updated_at": "updated_at"
     }
     assert UPDATE_VALUES["ExpressionAttributeValues"] == {
         ":collection_name": "MOVIE",
         ":created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        ":deleted_at": None,
-        ":item_id": "123123",
         ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
@@ -204,19 +200,17 @@ def test_delete_item(mocked_watch_history_db):
 
     mocked_watch_history_db.delete_item(TEST_CLIENT_ID, "MOVIE", "123123")
 
-    assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID}
+    assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID, "item_id": "123123"}
     assert UPDATE_VALUES[
-               "UpdateExpression"] == "SET #deleted_at=:deleted_at,#item_id=:item_id,#collection_name=:collection_name,#updated_at=:updated_at"
+               "UpdateExpression"] == "SET #deleted_at=:deleted_at,#collection_name=:collection_name,#updated_at=:updated_at"
     assert UPDATE_VALUES["ExpressionAttributeNames"] == {
         "#collection_name": "collection_name",
         "#deleted_at": "deleted_at",
-        "#item_id": "item_id",
         "#updated_at": "updated_at"
     }
     assert UPDATE_VALUES["ExpressionAttributeValues"] == {
         ":collection_name": "MOVIE",
         ":deleted_at": int(time.time()),
-        ":item_id": "123123",
         ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
