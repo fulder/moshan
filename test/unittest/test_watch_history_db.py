@@ -3,6 +3,7 @@ from datetime import datetime
 from unittest.mock import MagicMock
 
 import pytest
+from boto3.dynamodb.conditions import Attr
 
 UPDATE_VALUES = {}
 MOCK_RETURN = []
@@ -193,6 +194,28 @@ def test_add_item(mocked_watch_history_db):
         ":created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
+    assert "ConditionExpression" in UPDATE_VALUES
+    assert UPDATE_VALUES["ConditionExpression"] == Attr("client_id").not_exists() & Attr("item_id").not_exists()
+
+def test_update_item(mocked_watch_history_db):
+    mocked_watch_history_db.table.update_item = mock_func
+
+    mocked_watch_history_db.update_item(TEST_CLIENT_ID, "MOVIE", "123123", {"test_data": "test_data_val"})
+
+    assert UPDATE_VALUES["Key"] == {"client_id": TEST_CLIENT_ID, "item_id": "123123"}
+    assert UPDATE_VALUES[
+               "UpdateExpression"] == "SET #test_data=:test_data,#collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at"
+    assert UPDATE_VALUES["ExpressionAttributeNames"] == {
+        "#collection_name": "collection_name",
+        "#updated_at": "updated_at",
+        "#test_data": "test_data"
+    }
+    assert UPDATE_VALUES["ExpressionAttributeValues"] == {
+        ":test_data": "test_data_val",
+        ":collection_name": "MOVIE",
+        ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    assert "ConditionExpression" not in UPDATE_VALUES
 
 
 def test_delete_item(mocked_watch_history_db):
