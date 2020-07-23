@@ -203,6 +203,7 @@ def test_handler_post_without_body(mocked_post):
     ret = handle(event, None)
     assert ret == {'body': 'Invalid post body', 'statusCode': 400}
 
+
 @patch("api.watch_history_by_collection.watch_history_db.update_item")
 def test_handler_post_with_empty_body(mocked_post):
     mocked_post.return_value = True
@@ -331,3 +332,30 @@ def test_handler_post_invalid_body(mocked_post):
 
     ret = handle(event, None)
     assert ret == {'body': 'Invalid post body', 'statusCode': 400}
+
+
+@patch("api.watch_history_by_collection.watch_history_db.update_item")
+def test_handler_post_invalid_body_schema(mocked_post):
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "anime",
+            "item_id": "123"
+        },
+        "body": '{"invalid": "val"}'
+    }
+
+    ret = handle(event, None)
+    assert ret == {
+        'body': '{"message": "Invalid post schema", "error": "Additional properties are not allowed (\'invalid\' was unexpected)"}',
+        'statusCode': 400
+    }
