@@ -1,6 +1,7 @@
 import json
 import os
 
+import decimal_encoder
 import logger
 import jwt_utils
 import schema
@@ -37,7 +38,7 @@ def handle(event, context):
 def _get_item(client_id, collection_name, item_id):
     try:
         ret = watch_history_db.get_item(client_id, collection_name, item_id)
-        return {"statusCode": 200, "body": json.dumps(ret)}
+        return {"statusCode": 200, "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
         return {"statusCode": 404}
 
