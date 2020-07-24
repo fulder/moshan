@@ -35,14 +35,6 @@ def test_get_watch_history(mocked_watch_history_db):
         "Limit": 100,
         "ScanIndexForward": False,
         'FilterExpression': 'attribute_not_exists(deleted_at)',
-        'AttributesToGet': ['collection_name',
-                            'created_at',
-                            'updated_at',
-                            'item_id',
-                            'rating',
-                            'date_watched',
-                            'status'],
-        "Select": "SPECIFIC_ATTRIBUTES",
     }
 
 
@@ -65,14 +57,6 @@ def test_get_watch_history_changed_limit(mocked_watch_history_db):
         "Limit": 10,
         "ScanIndexForward": False,
         'FilterExpression': 'attribute_not_exists(deleted_at)',
-        'AttributesToGet': ['collection_name',
-                            'created_at',
-                            'updated_at',
-                            'item_id',
-                            'rating',
-                            'date_watched',
-                            'status'],
-        "Select": "SPECIFIC_ATTRIBUTES",
     }
 
 
@@ -97,14 +81,6 @@ def test_get_watch_history_by_collection_name(mocked_watch_history_db):
         "Limit": 10,
         "ScanIndexForward": False,
         "TableName": None,
-        'AttributesToGet': ['collection_name',
-                            'created_at',
-                            'updated_at',
-                            'item_id',
-                            'rating',
-                            'date_watched',
-                            'status'],
-        "Select": "SPECIFIC_ATTRIBUTES",
 
     }
 
@@ -131,15 +107,7 @@ def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
         "Limit": 10,
         "IndexName": "test_index",
         "ScanIndexForward": False,
-        "TableName": None,
-        'AttributesToGet': ['collection_name',
-                            'created_at',
-                            'updated_at',
-                            'item_id',
-                            'rating',
-                            'date_watched',
-                            'status'],
-        "Select": "SPECIFIC_ATTRIBUTES",
+        "TableName": None
     }
 
 
@@ -166,15 +134,7 @@ def test_get_watch_history_by_with_start(mocked_watch_history_db):
         "Limit": 1,
         "IndexName": "test_index",
         "ScanIndexForward": False,
-        "TableName": None,
-        'AttributesToGet': ['collection_name',
-                            'created_at',
-                            'updated_at',
-                            'item_id',
-                            'rating',
-                            'date_watched',
-                            'status'],
-        "Select": "SPECIFIC_ATTRIBUTES",
+        "TableName": None
     }
     assert ret == {
         "items": [{"collection_name": "MOVIE", "item_id": 123}],
