@@ -1,19 +1,19 @@
-# Pre requirements
+[![Build Status](https://travis-ci.com/projectmovio/watch-history-service.svg?branch=master)](https://travis-ci.com/projectmovio/watch-history-service)
+[![Coverage Status](https://coveralls.io/repos/github/projectmovio/watch-history-service/badge.svg?branch=master)](https://coveralls.io/github/projectmovio/watch-history-service?branch=master)
 
-* python3.7
-* pip install -r requirements.txt
+# Testing
 
-# Start server
+## Unittest
 
-* python run_flask.py
-* API base URL: `http://localhost:5000/`
+* `make test`
 
-# API docs
+## Apitest
 
-For api docs go to http://localhost:8083/apidocs
+* `export API_URL=<WATCH_HISTORY_API_URL>`
+* `export TOKEN=<TEST_USER_TOKEN>`
+* `make apitest`
 
-# Running in docker
+# Deploy
 
-* docker build -t watch-history-service:1.0 .
-* docker run -p 8083:8083 -d -t watch-history-service:1.0
-
+* `export ANIME_API_URL=<ANIME_API_URL>`
+* `cdk deploy`
