@@ -33,7 +33,8 @@ def test_get_watch_history(mocked_watch_history_db):
         "KeyConditionExpression": "client_id = :client_id",
         "ExpressionAttributeValues": {":client_id": {"S": "TEST_CLIENT_ID"}},
         "Limit": 100,
-        "ScanIndexForward": False
+        "ScanIndexForward": False,
+        'FilterExpression': 'attribute_not_exists(deleted_at)',
     }
 
 
@@ -54,7 +55,8 @@ def test_get_watch_history_changed_limit(mocked_watch_history_db):
         "KeyConditionExpression": "client_id = :client_id",
         "ExpressionAttributeValues": {":client_id": {"S": "TEST_CLIENT_ID"}},
         "Limit": 10,
-        "ScanIndexForward": False
+        "ScanIndexForward": False,
+        'FilterExpression': 'attribute_not_exists(deleted_at)',
     }
 
 
@@ -74,11 +76,12 @@ def test_get_watch_history_by_collection_name(mocked_watch_history_db):
             ":client_id": {"S": "TEST_CLIENT_ID"},
             ":collection_name": {"S": "ANIME"}
         },
-        "FilterExpression": "collection_name = :collection_name",
+        "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
         "KeyConditionExpression": "client_id = :client_id",
         "Limit": 10,
         "ScanIndexForward": False,
-        "TableName": None
+        "TableName": None,
+
     }
 
 
@@ -99,7 +102,7 @@ def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
             ":client_id": {"S": "TEST_CLIENT_ID"},
             ":collection_name": {"S": "ANIME"}
         },
-        "FilterExpression": "collection_name = :collection_name",
+        "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
         "KeyConditionExpression": "client_id = :client_id",
         "Limit": 10,
         "IndexName": "test_index",
@@ -126,7 +129,7 @@ def test_get_watch_history_by_with_start(mocked_watch_history_db):
             ":client_id": {"S": "TEST_CLIENT_ID"},
             ":collection_name": {"S": "ANIME"}
         },
-        "FilterExpression": "collection_name = :collection_name",
+        "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
         "KeyConditionExpression": "client_id = :client_id",
         "Limit": 1,
         "IndexName": "test_index",

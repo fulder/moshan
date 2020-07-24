@@ -60,7 +60,7 @@ def delete_item(client_id, collection_name, item_id):
 def get_item(client_id, collection_name, item_id):
     res = _get_table().query(
         KeyConditionExpression=Key("client_id").eq(client_id) & Key("item_id").eq(item_id),
-        FilterExpression=Attr("collection_name").eq(collection_name)
+        FilterExpression=Attr("collection_name").eq(collection_name) & Attr("deleted_at").not_exists(),
     )
 
     if not res["Items"]:
@@ -137,13 +137,14 @@ def _watch_history_generator(client_id, limit, collection_name=None, index_name=
             ":client_id": {"S": client_id}
         },
         "Limit": limit,
-        "ScanIndexForward": False
+        "ScanIndexForward": False,
+        "FilterExpression": "attribute_not_exists(deleted_at)"
     }
 
     if index_name:
         query_kwargs["IndexName"] = index_name
     if collection_name:
-        query_kwargs["FilterExpression"] = "collection_name = :collection_name"
+        query_kwargs["FilterExpression"] += " and collection_name = :collection_name"
         query_kwargs["ExpressionAttributeValues"][":collection_name"] = {"S": collection_name}
 
     log.debug(f"Query kwargs: {query_kwargs}")
