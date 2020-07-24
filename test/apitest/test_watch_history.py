@@ -2,7 +2,7 @@ import time
 
 import requests
 
-from apitest.conftest import API_URL, BASE_HEADERS, ANIME_API_URL
+from apitest.conftest import API_URL, BASE_HEADERS
 
 
 # def test_get_watch_history_invalid_auth():
