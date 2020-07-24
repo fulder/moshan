@@ -72,7 +72,7 @@ class WatchHistory(core.Stack):
                 "layers": ["utils", "databases", "api"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
-                    "LOG_LEVEL": "DEBUG",
+                    "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url
                 },
                 "concurrent_executions": 100,
@@ -88,7 +88,7 @@ class WatchHistory(core.Stack):
                 "layers": ["utils", "databases"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
-                    "LOG_LEVEL": "DEBUG",
+                    "LOG_LEVEL": "INFO",
                 },
                 "concurrent_executions": 100,
                 "policies": [
