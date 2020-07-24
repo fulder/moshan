@@ -1,5 +1,6 @@
 import json
 import os
+from json import JSONDecodeError
 
 import decimal_encoder
 import logger
@@ -44,6 +45,14 @@ def _get_item(client_id, collection_name, item_id):
 
 
 def _patch_item(client_id, collection_name, item_id, body):
+    try:
+        body = json.loads(body)
+    except (TypeError, JSONDecodeError):
+        return {
+            "statusCode": 400,
+            "body": "Invalid patch body"
+        }
+
     try:
         schema.validate_schema(PATCH_SCHEMA_PATH, body)
     except schema.ValidationException as e:

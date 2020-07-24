@@ -77,7 +77,7 @@ def test_handler_delete(mocked_delete):
 
 
 @patch("api.item_by_collection.watch_history_db.update_item")
-def test_handler_post(mocked_post):
+def test_handler_patch(mocked_post):
     mocked_post.return_value = True
 
     event = {
@@ -93,11 +93,7 @@ def test_handler_post(mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": {
-            "rating": 3,
-            "overview": "My overview",
-            "review": "My review"
-        }
+        "body": '{"rating": 3, "overview": "My overview", "review": "My review"}'
     }
 
     ret = handle(event, None)
@@ -121,9 +117,7 @@ def test_handler_patch_validation_failure(mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": {
-            "rating": "ABC",
-        }
+        "body": '{"rating": "ABC"}'
     }
 
     ret = handle(event, None)
@@ -147,14 +141,35 @@ def test_handler_patch_block_additional_properties(mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": {
-            "rating": 1,
-            "werid_property": "123"
-        }
+        "body": '{"rating": 1, "werid_property": "123"}'
     }
 
     ret = handle(event, None)
     assert ret == {'statusCode': 400, 'body': '{"message": "Invalid post schema", "error": "Additional properties are not allowed (\'werid_property\' was unexpected)"}'}
+
+
+@patch("api.item_by_collection.watch_history_db.update_item")
+def test_handler_patch_invalid_body_format(mocked_post):
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "PATCH"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "anime",
+            "item_id": "123"
+        },
+        "body": 'INVALID'
+    }
+
+    ret = handle(event, None)
+    assert ret == {'body': 'Invalid patch body', 'statusCode': 400}
 
 
 def test_handler_invalid_collection_name():
