@@ -66,7 +66,7 @@ class WatchHistory(core.Stack):
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
-                "timeout": 3
+                "timeout": 5
             },
             "api-watch_history_by_collection": {
                 "layers": ["utils", "databases", "api"],
@@ -82,7 +82,7 @@ class WatchHistory(core.Stack):
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
-                "timeout": 3
+                "timeout": 10
             },
             "api-item_by_collection": {
                 "layers": ["utils", "databases"],
@@ -97,7 +97,7 @@ class WatchHistory(core.Stack):
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
-                "timeout": 3
+                "timeout": 5
             },
         }
 
