@@ -3,7 +3,15 @@
 
 # Testing
 
+## Unittest
+
 * `make test`
+
+## Apitest
+
+* `export API_URL=<WATCH_HISTORY_API_URL>`
+* `export TOKEN=<TEST_USER_TOKEN>`
+* `make apitest`
 
 # Deploy
 
