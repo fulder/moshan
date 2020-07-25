@@ -26,7 +26,8 @@ else {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         success:function(response) {
-            console.log(response)
+            localStorage.setItem("moshan_access_token", response["access_token"])
+            localStorage.setItem("moshan_refresh_token", response["refresh_token"])
         },
     });
 }
