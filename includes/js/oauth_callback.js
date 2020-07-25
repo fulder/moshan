@@ -18,7 +18,7 @@ request = $.ajax({
         code_verifier: codeVerifier
     },
     success:function(response) {
-        document.getElementById("disp").innerHTML =response;
+        console.log(response)
     },
 });
 
