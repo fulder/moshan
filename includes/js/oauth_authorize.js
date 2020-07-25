@@ -18,5 +18,5 @@ function authorize() {
     authorizeUrl.searchParams.append("redirect_uri", "https://192.168.1.203/MySite/movio/callback.html");
     authorizeUrl.searchParams.append("code_challenge_method", "S256");
 
-    window.location.replace( authorizeUrl.href))
+    window.location.replace(authorizeUrl.href)
 }
