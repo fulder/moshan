@@ -3,8 +3,10 @@ import shutil
 import subprocess
 
 from aws_cdk import core
+from aws_cdk.aws_apigateway import SecurityPolicy
 from aws_cdk.aws_apigatewayv2 import HttpApi, CfnAuthorizer, HttpIntegration, HttpIntegrationType, HttpMethod, \
-    PayloadFormatVersion, CfnRoute, CfnStage, HttpApiMapping
+    PayloadFormatVersion, CfnRoute, CfnStage, HttpApiMapping, DomainName
+from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import PolicyStatement, Role, ServicePrincipal, ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Runtime, Function, Code
@@ -167,6 +169,20 @@ class WatchHistory(core.Stack):
                 )
 
     def _create_gateway(self):
+        cert = Certificate(
+            self,
+            "certificate",
+            domain_name=self.domain_name,
+            validation_method=ValidationMethod.DNS
+        )
+        domain_name = DomainName(
+            self,
+            "domain",
+            domain_name=self.domain_name,
+            certificate=cert,
+            security_policy=SecurityPolicy.TLS_1_2
+        )
+
         http_api = HttpApi(self, "watch-history", create_default_stage=False)
 
         authorizer = CfnAuthorizer(
