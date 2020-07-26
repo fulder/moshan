@@ -17,9 +17,9 @@ else {
         type: "post",
         data: {
             grant_type: "authorization_code",
-            redirect_uri: "https://192.168.1.203/MySite/movio/callback.html",
+            redirect_uri: "https://moshan.tv/callback.html",
             code: code,
-            client_id: "1sf96sadgj6gk91tnkdathrpi0",
+            client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
             code_verifier: codeVerifier
         },
         headers: {

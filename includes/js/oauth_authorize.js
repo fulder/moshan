@@ -31,6 +31,7 @@ function base64URLEncode(str) {
 
 async function authorize() {
     codeVerifier = generateRandomString()
+    console.log(codeVerifier)
 
     codeChallenge = await codeChallengeFromVerifier(codeVerifier)
     state = generateRandomString()
@@ -43,10 +44,10 @@ async function authorize() {
     const authorizeUrl = new URL("https://michal-test.auth.eu-west-1.amazoncognito.com/authorize");
 
     authorizeUrl.searchParams.append("code_challenge", codeChallenge);
-    authorizeUrl.searchParams.append("client_id", "1sf96sadgj6gk91tnkdathrpi0");
+    authorizeUrl.searchParams.append("client_id", "68v5rahd0sdvrmf7fgbq2o1a9u");
     authorizeUrl.searchParams.append("response_type", "code");
     authorizeUrl.searchParams.append("scope", "email openid");
-    authorizeUrl.searchParams.append("redirect_uri", "https://192.168.1.203/MySite/movio/callback.html");
+    authorizeUrl.searchParams.append("redirect_uri", "https://moshan.tv/callback.html");
     authorizeUrl.searchParams.append("code_challenge_method", "S256");
     authorizeUrl.searchParams.append("state", state);
 
