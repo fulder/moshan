@@ -19,9 +19,10 @@ BUILD_FOLDER = os.path.join(CURRENT_DIR, "..", "..", "build")
 
 
 class WatchHistory(core.Stack):
-    def __init__(self, app: core.App, id: str, anime_api_url: str, **kwargs) -> None:
+    def __init__(self, app: core.App, id: str, anime_api_url: str, domain_name: str, **kwargs) -> None:
         super().__init__(app, id, **kwargs)
         self.anime_api_url = anime_api_url
+        self.domain_name = domain_name
         self.layers = {}
         self.lambdas = {}
         self._create_tables()

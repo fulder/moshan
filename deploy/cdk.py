@@ -16,6 +16,10 @@ anime_api_url = os.getenv("ANIME_API_URL")
 if anime_api_url is None:
     raise RuntimeError("Please set the ANIME_API_URL environment variable")
 
-WatchHistory(app, "watch-history", anime_api_url, env=env)
+domain_name = os.getenv("DOMAIN_NAME")
+if domain_name is None:
+    raise RuntimeError("Please set the DOMAIN_NAME environment variable")
+
+WatchHistory(app, "watch-history", anime_api_url, domain_name, env=env)
 
 app.synth()
