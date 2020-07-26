@@ -4,7 +4,7 @@ import subprocess
 
 from aws_cdk import core
 from aws_cdk.aws_apigatewayv2 import HttpApi, CfnAuthorizer, HttpIntegration, HttpIntegrationType, HttpMethod, \
-    PayloadFormatVersion, CfnRoute, CfnStage
+    PayloadFormatVersion, CfnRoute, CfnStage, HttpApiMapping
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import PolicyStatement, Role, ServicePrincipal, ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Runtime, Function, Code
@@ -227,7 +227,7 @@ class WatchHistory(core.Stack):
                 source_arn=f"arn:aws:execute-api:{self.region}:{self.account}:{http_api.http_api_id}/*"
             )
 
-        CfnStage(
+        stage = CfnStage(
             self,
             "live",
             api_id=http_api.http_api_id,
@@ -237,4 +237,12 @@ class WatchHistory(core.Stack):
                 throttling_rate_limit=1
             ),
             stage_name="live"
+        )
+
+        HttpApiMapping(
+            self,
+            "mapping",
+            api=http_api,
+            domain_name=domain_name,
+            stage=stage
         )
