@@ -41,7 +41,7 @@ async function authorize() {
     localStorage.setItem("pkce_code_verifier", codeVerifier);
     localStorage.setItem("pkce_state", state);
     
-    const authorizeUrl = new URL("https://michal-test.auth.eu-west-1.amazoncognito.com/authorize");
+    const authorizeUrl = new URL("https://auth.moshan.tv/authorize");
 
     authorizeUrl.searchParams.append("code_challenge", codeChallenge);
     authorizeUrl.searchParams.append("client_id", "68v5rahd0sdvrmf7fgbq2o1a9u");

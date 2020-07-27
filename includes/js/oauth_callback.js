@@ -13,7 +13,7 @@ else {
     const codeVerifier = localStorage.getItem("pkce_code_verifier");
 
     $.ajax({
-        url: "https://michal-test.auth.eu-west-1.amazoncognito.com/oauth2/token",
+        url: "https://auth.moshan.tv/oauth2/token",
         type: "post",
         data: {
             grant_type: "authorization_code",

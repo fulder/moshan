@@ -20,7 +20,7 @@ else {
 
 function logout() {
     $.ajax({
-        url: "https://michal-test.auth.eu-west-1.amazoncognito.com/logout",
+        url: "https://auth.moshan.tv/logout",
         type: "get",
         data: {
             logout_uri: "https://moshan.tv/index.html",
@@ -42,7 +42,7 @@ function parseJwt(token){
 
 function refreshToken(){
     $.ajax({
-        url: "https://michal-test.auth.eu-west-1.amazoncognito.com/oauth2/token",
+        url: "https://auth.moshan.tv/oauth2/token",
         type: "post",
         data: {
             grant_type: "refresh_token",
