@@ -10,8 +10,13 @@ $.ajax({
     },
     success:function(response) {
         const animeResults = document.getElementById("animeResults")
+
+        console.log(response[0]);
         animeResults.innerText = response
     },
 });
 
 
+function createResultItem(title, poster) {
+    return `<div class="col">$title</div>`
+}
