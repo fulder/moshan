@@ -12,7 +12,7 @@ else {
     document.getElementById("login_status").innerHTML = "Login successful, forwarding back to home page"
     const codeVerifier = localStorage.getItem("pkce_code_verifier");
 
-    request = $.ajax({
+    $.ajax({
         url: "https://michal-test.auth.eu-west-1.amazoncognito.com/oauth2/token",
         type: "post",
         data: {

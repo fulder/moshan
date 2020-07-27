@@ -5,12 +5,16 @@ if (accessToken === null) {
     document.getElementById("loginText").style.display = "none";
 }
 else {
-    document.getElementById("loginButton").style.display = "none";
+    parsedToken = parseJwt(accessToken);
+    currentTimeStamp = Math.floor(Date.now() / 1000)
 
+    if (parsedToken["exp"] < currentTimeStamp) {
+        refreshToken()
+    }
+
+    document.getElementById("loginButton").style.display = "none";
     loginText = document.getElementById("loginText");
     loginText.style.display = "block";
-
-    parsedToken = parseJwt(accessToken);
     loginText.innerText = "Logged in as: " + parsedToken["username"]
 }
 
@@ -21,4 +25,26 @@ function parseJwt(token){
   } catch (e) {
     return null;
   }
+}
+
+function refreshToken(){
+    $.ajax({
+        url: "https://michal-test.auth.eu-west-1.amazoncognito.com/oauth2/token",
+        type: "post",
+        data: {
+            grant_type: "refresh_token",
+            client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
+            refresh_token: localStorage.getItem("moshan_refresh_token")
+        },
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        success:function(response) {
+            localStorage.setItem("moshan_access_token", response["access_token"])
+
+            if(response["refresh_token"] != "undfined") {
+                localStorage.setItem("moshan_refresh_token", response["refresh_token"])
+            }
+        },
+    });
 }
