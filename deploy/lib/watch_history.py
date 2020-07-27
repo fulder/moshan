@@ -5,7 +5,7 @@ import subprocess
 from aws_cdk import core
 from aws_cdk.aws_apigateway import DomainName, SecurityPolicy
 from aws_cdk.aws_apigatewayv2 import HttpApi, CfnAuthorizer, HttpIntegration, HttpIntegrationType, HttpMethod, \
-    PayloadFormatVersion, CfnRoute, CfnStage, HttpApiMapping
+    PayloadFormatVersion, CfnRoute, CfnStage, HttpApiMapping, CorsPreflightOptions
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import PolicyStatement, Role, ServicePrincipal, ManagedPolicy
@@ -183,7 +183,15 @@ class WatchHistory(core.Stack):
             security_policy=SecurityPolicy.TLS_1_2
         )
 
-        http_api = HttpApi(self, "watch-history", create_default_stage=False)
+        http_api = HttpApi(
+            self,
+            "watch-history",
+            create_default_stage=False,
+            cors_preflight=CorsPreflightOptions(
+                allow_methods=[HttpMethod.GET, HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE],
+                allow_origins=["https://moshan.tv"]
+            )
+        )
 
         authorizer = CfnAuthorizer(
             self,
