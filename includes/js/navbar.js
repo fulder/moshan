@@ -2,7 +2,7 @@ accessToken = localStorage.getItem("moshan_access_token")
 
 if (accessToken === null) {
     document.getElementById("loginButton").style.display = "block";
-    document.getElementById("logoutButton").style.display = "none";
+    document.getElementById("profileDropdown").style.display = "none";
     document.getElementById("loginText").style.display = "none";
 }
 else {
@@ -14,10 +14,10 @@ else {
     }
 
     document.getElementById("loginButton").style.display = "none";
-    document.getElementById("logoutButton").style.display = "block";
-    loginText = document.getElementById("loginText");
-    loginText.style.display = "block";
-    loginText.innerText = "Logged in as: " + parsedToken["username"]
+
+    profileDropDown = document.getElementById("profileDropdown");
+    profileDropDown.style.display = "block";
+    profileDropDown.innerHTML = parsedToken["username"]
 }
 
 function logout() {
