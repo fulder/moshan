@@ -9,14 +9,22 @@ $.ajax({
         'Authorization': accessToken
     },
     success:function(response) {
-        const animeResults = document.getElementById("animeResults")
+        animes = JSON.parse(response);
 
-        console.log(response[0]);
-        animeResults.innerText = response
+        resultHTML = ""
+        animes["items"].forEach(createResultItem);
+
+        document.getElementById("animeResults").innerHTML = resultHTML
     },
 });
 
 
-function createResultItem(title, poster) {
-    return `<div class="col">$title</div>`
+function createResultItem(anime) {
+    title = anime["title"];
+    poster = anime["main_picture"]["medium"];
+
+    if (title.length > 15) {
+        title = title.substring(0, 15) + "..."
+    }
+    resultHTML += '<div class="p-2 poster"><img src=' + poster + ' /><p>' + title + '</p></div>'
 }
