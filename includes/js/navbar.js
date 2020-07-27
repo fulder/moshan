@@ -27,7 +27,8 @@ function logout() {
             client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
         }
     });
-
+    localStorage.removeItem("moshan_access_token");
+    localStorage.removeItem("moshan_refresh_token");
 }
 
 
