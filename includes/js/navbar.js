@@ -50,7 +50,7 @@ function refreshToken(){
         success:function(response) {
             localStorage.setItem("moshan_access_token", response["access_token"])
 
-            if(response["refresh_token"] != "undfined") {
+            if(response["refresh_token"] !== undefined) {
                 localStorage.setItem("moshan_refresh_token", response["refresh_token"])
             }
         },
