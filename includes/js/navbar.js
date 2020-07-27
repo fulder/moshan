@@ -18,6 +18,18 @@ else {
     loginText.innerText = "Logged in as: " + parsedToken["username"]
 }
 
+function logout() {
+    $.ajax({
+        url: "https://michal-test.auth.eu-west-1.amazoncognito.com/logout",
+        type: "get",
+        data: {
+            logout_uri: "https://moshan.tv/index.html",
+            client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
+        }
+    });
+
+}
+
 
 function parseJwt(token){
   try {
