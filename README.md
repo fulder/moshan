@@ -16,5 +16,4 @@
 # Deploy
 
 * `export ANIME_API_URL=<ANIME_API_URL>`
-* `export DOMAIN_NAME=<CUSTOM_DOMAIN_NAME>`
 * `cdk deploy`
