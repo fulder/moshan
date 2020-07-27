@@ -3,7 +3,7 @@ const searchString = urlParams.get('search');
 accessToken = localStorage.getItem("moshan_access_token")
 
 $.ajax({
-    url: "https://api.anime.moshan.tv/anime?search=" + searchString,
+    url: "https://api.anime.moshan.tv/v1/anime?search=" + searchString,
     type: "get",
     headers: {
         'Authorization': accessToken
