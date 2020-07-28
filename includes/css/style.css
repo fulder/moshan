@@ -1,0 +1,13 @@
+.poster img {
+    height: 20vh;
+    object-fit: cover;
+}
+
+.poster p {
+    max-width: 130px
+}
+
+body {
+    max-width: 1600px;
+    margin: auto;
+}
