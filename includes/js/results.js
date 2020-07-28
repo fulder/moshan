@@ -22,5 +22,5 @@ $.ajax({
 function createResultItem(anime) {
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
-    resultHTML += '<div class="col-4 col-md-2" ><img class="img-fluid" src=' + poster + ' /><p class="text-truncate">' + title + '</p></div>'
+    resultHTML += '<div class="col-4 col-md-2 border poster"><img class="img-fluid" src=' + poster + '><p class="text-truncate small">' + title + '</p></img></div>'
 }
