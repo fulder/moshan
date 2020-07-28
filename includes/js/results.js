@@ -26,5 +26,5 @@ function createResultItem(anime) {
     if (title.length > 15) {
         title = title.substring(0, 15) + "..."
     }
-    resultHTML += '<div class="p-2 poster"><img src=' + poster + ' /><p>' + title + '</p></div>'
+    resultHTML += '<div class="col-4 col-md-2" ><img class="img-fluid" src=' + poster + ' /><p>' + title + '</p></div>'
 }
