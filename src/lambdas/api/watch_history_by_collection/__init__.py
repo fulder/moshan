@@ -70,6 +70,7 @@ def _post_collection_item(client_id, collection_name, body, token):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
+        log.debug(f"Invalid body: {body}")
         return {
             "statusCode": 400,
             "body": "Invalid post body"
