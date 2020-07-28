@@ -22,9 +22,5 @@ $.ajax({
 function createResultItem(anime) {
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
-
-    if (title.length > 15) {
-        title = title.substring(0, 15) + "..."
-    }
-    resultHTML += '<div class="col-4 col-md-2" ><img class="img-fluid" src=' + poster + ' /><p>' + title + '</p></div>'
+    resultHTML += '<div class="col-4 col-md-2" ><img class="img-fluid" src=' + poster + ' /><p class="text-truncate">' + title + '</p></div>'
 }
