@@ -12,10 +12,7 @@ app = core.App()
 
 env = {"region": "eu-west-1"}
 
-anime_api_url = os.getenv("ANIME_API_URL")
-if anime_api_url is None:
-    raise RuntimeError("Please set the ANIME_API_URL environment variable")
-
+anime_api_url = "https://api.anime.moshan.tv"
 domain_name = "api.watch-history.moshan.tv"
 
 WatchHistory(app, "watch-history", anime_api_url, domain_name, env=env)
