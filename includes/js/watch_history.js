@@ -1,4 +1,4 @@
-getWatchHistory();
+getWatchHistoryByCollection("anime", createAnimeItems);
 
 function getWatchHistory() {
     $.ajax({
@@ -13,7 +13,7 @@ function getWatchHistory() {
     });
 }
 
-function getWatchHistoryByCollection(collection) {
+function getWatchHistoryByCollection(collection, callback) {
     $.ajax({
         url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection,
         type: "get",
@@ -25,4 +25,12 @@ function getWatchHistoryByCollection(collection) {
             callback(response)
         },
     });
+}
+
+function createAnimeItems(response) {
+    resultHTML = ""
+    items = Object.values(response["items"])
+    items.forEach(createHistoryAnimeItem);
+
+    document.getElementById("animeWatchHistory").innerHTML = resultHTML
 }
