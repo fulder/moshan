@@ -68,13 +68,10 @@ def _get_watch_history(client_id, collection_name, query_params, token):
 
         # Fetch anime posters for all items in returned watch_history items
         if collection_name == "anime":
-            ids = []
-            for item in watch_history["items"]:
-                ids.append(item["item_id"])
+            anime = anime_api.get_anime(watch_history.keys(), token)
 
-            posters_response = anime_api.get_posters(ids, token)
-            for anime_id in posters_response:
-                watch_history["items"][anime_id] = posters_response[anime_id]
+            for anime_id in anime:
+                watch_history["items"][anime_id] = anime[anime_id]
 
         return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
