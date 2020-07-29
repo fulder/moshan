@@ -22,6 +22,7 @@ def post_anime(mal_id, token):
 
 
 def get_posters(ids, token):
+    ids = ",".join(ids)
     res = requests.get(f"{ANIME_API_URL}/{ids}/posters", header={"Authorization": token})
     if res.status_code != 200:
         raise HttpError(f"Invalid response: {res.status_code}")
