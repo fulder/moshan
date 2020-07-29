@@ -115,7 +115,7 @@ def get_watch_history(username, collection_name=None, index_name=None, limit=100
     if start > start_page:
         raise InvalidStartOffset
 
-    log.debug(f"get_episodes response: {res}")
+    log.debug(f"get_watch_history response: {res}")
 
     if not res:
         raise NotFoundError(

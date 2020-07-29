@@ -26,13 +26,13 @@ def handle(event, context):
 
     if method == "GET":
         query_params = event.get("queryStringParameters")
-        return _get_watch_history(client_id, collection_name, query_params)
+        return _get_watch_history(client_id, collection_name, query_params, auth_header)
     elif method == "POST":
         body = event.get("body")
         return _post_collection_item(client_id, collection_name, body, auth_header)
 
 
-def _get_watch_history(client_id, collection_name, query_params):
+def _get_watch_history(client_id, collection_name, query_params, token):
     sort = None
     if query_params:
         sort = query_params.get("sort")
@@ -43,7 +43,7 @@ def _get_watch_history(client_id, collection_name, query_params):
             "body": json.dumps({"error": f"Invalid sort specified. Allowed values: {schema.ALLOWED_SORT}"})
         }
 
-    limit = 100
+    limit = 20
     start = 1
     if query_params and "limit" in query_params:
         limit = query_params.get("limit")
@@ -59,9 +59,23 @@ def _get_watch_history(client_id, collection_name, query_params):
     except ValueError:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid start type"})}
 
+    if limit > 20:
+        limit = 20
+
     try:
         watch_history = watch_history_db.get_watch_history(client_id, collection_name=collection_name, index_name=sort,
                                                            limit=limit, start=start)
+
+        # Fetch anime posters for all items in returned watch_history items
+        if collection_name == "anime":
+            ids = []
+            for item in watch_history["items"]:
+                ids.append(item["id"])
+
+            posters_response = anime_api.get_posters(ids, token)
+            for anime_id in posters_response:
+                watch_history["items"][anime_id] = posters_response[anime_id]
+
         return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
         return {"statusCode": 404}
