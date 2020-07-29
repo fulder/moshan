@@ -42,6 +42,10 @@ class WatchHistory(core.Stack):
             billing_mode=BillingMode.PAY_PER_REQUEST,
         )
         self.watch_history_table.add_local_secondary_index(
+            sort_key=Attribute(name="client_id", type=AttributeType.STRING),
+            index_name="client_id"
+        )
+        self.watch_history_table.add_local_secondary_index(
             sort_key=Attribute(name="rating", type=AttributeType.NUMBER),
             index_name="rating"
         )
