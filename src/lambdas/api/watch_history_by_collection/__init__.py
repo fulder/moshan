@@ -70,7 +70,7 @@ def _get_watch_history(client_id, collection_name, query_params, token):
         if collection_name == "anime":
             ids = []
             for item in watch_history["items"]:
-                ids.append(item["id"])
+                ids.append(item["item_id"])
 
             posters_response = anime_api.get_posters(ids, token)
             for anime_id in posters_response:

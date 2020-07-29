@@ -106,7 +106,7 @@ def get_watch_history(username, collection_name=None, index_name=None, limit=100
         raise InvalidStartOffset
 
     total_pages = 0
-    for p in _watch_history_generator(username,limit=limit, collection_name=collection_name, index_name=index_name):
+    for p in _watch_history_generator(username, limit=limit, collection_name=collection_name, index_name=index_name):
         total_pages += 1
         start_page += 1
         if start_page == start:
