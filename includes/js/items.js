@@ -1,34 +1,3 @@
-function addAnime(malId) {
-    $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/anime",
-        type: "post",
-        contentType: 'application/json',
-        dataType: "json",
-        data: JSON.stringify({
-            item_add_id: malId
-        }),
-        headers: {
-            'Authorization': accessToken
-        },
-        error:function(response) {
-            console.log(response);
-        },
-    });
-}
-
-function removeAnime(animeId) {
-    $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/anime/" + animeId,
-        type: "delete",
-        headers: {
-            'Authorization': accessToken
-        },
-        error:function(response) {
-            console.log(response);
-        },
-    });
-}
-
 function createHistoryAnimeItem(anime) {
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
@@ -53,7 +22,7 @@ function createResultItem(anime) {
     // If the item is found in the idMap (i.e. the item is cache'd in moshan anime db)
     // and if it is added to the user watch history, set the button to removeAnime button
     // otherwise create the addAnime button
-    if (idMap[externalId] !== undefined && watchHistory["items"].find(item => item["collection_name"] == "anime" && item["item_id"] == idMap[externalId]) !== undefined) {
+    if (idMap[externalId] !== undefined && watchHistory["items"][idMap[externalId]] !== undefined) {
         resultHTML +='<button id="removeAnimeButton-' + externalId + '" class="btn btn-sm btn-danger d-inline" onclick="removeAnimeWrapper(' + externalId + ')"><i class="fas fa-minus fa-xs"></i></button>'
         resultHTML +='<button id="addAnimeButton-' + externalId + '" class="btn btn-sm btn-success d-none" onclick="addAnimeWrapper(' + externalId + ')"><i class="fas fa-plus fa-xs"></i></button>'
     } else {
