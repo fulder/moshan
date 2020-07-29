@@ -31,9 +31,9 @@ function createResultItem(anime) {
     // and if it is added to the user watch history, set the button to removeAnime button
     // otherwise create the addAnime button
     if (idMap[animeId] !== undefined && watchHistory["items"].find(item => item["collection_name"] == "anime" && item["item_id"] == idMap[animeId]) !== undefined) {
-        resultHTML +='<button class="btn btn-sm btn-danger" onclick="removeAnime(' + idMap[animeId] + ')"><i class="fas fa-minus fa-xs"></i></button>'
+        resultHTML +='<button id="removeAnimeButton-' + animeId '" class="btn btn-sm btn-danger" onclick="removeAnime(' + idMap[animeId] + ')"><i class="fas fa-minus fa-xs"></i></button>'
     } else {
-        resultHTML +='<button class="btn btn-sm btn-success" onclick="addAnime(' + animeId + ')"><i class="fas fa-plus fa-xs"></i></button>'
+        resultHTML +='<button id="addAnimeButton-' + animeId '" class="btn btn-sm btn-success" onclick="addAnime(' + animeId + ')"><i class="fas fa-plus fa-xs"></i></button>'
     }
     resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>'
 }
