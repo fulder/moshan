@@ -71,7 +71,7 @@ def _get_watch_history(client_id, collection_name, query_params, token):
             anime = anime_api.get_anime(watch_history["items"].keys(), token)
 
             for anime_id in anime:
-                watch_history["items"][anime_id] = anime[anime_id]
+                watch_history["items"][anime_id].update(anime[anime_id])
 
         return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
