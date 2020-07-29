@@ -18,7 +18,7 @@ POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
 def handle(event, context):
     log.debug(f"Received event: {event}")
     auth_header = event["headers"]["authorization"]
-    client_id = jwt_utils.get_client_id(auth_header)
+    client_id = jwt_utils.get_username(auth_header)
 
     collection_name = event["pathParameters"].get("collection_name")
 
