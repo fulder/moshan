@@ -137,7 +137,7 @@ def test_get_watch_history_by_with_start(mocked_watch_history_db):
         "TableName": None
     }
     assert ret == {
-        "items": [{"collection_name": "MOVIE", "item_id": 123}],
+        'items': {123: {'collection_name': 'MOVIE'}},
         "total_pages": 2
     }
 
