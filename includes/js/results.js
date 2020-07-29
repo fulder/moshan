@@ -1,5 +1,3 @@
-include("./common/token.js");
-
 const urlParams = new URLSearchParams(window.location.search);
 const searchString = urlParams.get('search');
 

@@ -1,5 +1,3 @@
-include("./common/token.js");
-
 if (parsedToken === null) {
     document.getElementById("loginButton").style.display = "block";
     document.getElementById("profileDropdown").style.display = "none";
