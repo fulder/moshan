@@ -68,7 +68,7 @@ def _get_watch_history(client_id, collection_name, query_params, token):
 
         # Fetch anime posters for all items in returned watch_history items
         if collection_name == "anime":
-            anime = anime_api.get_anime(watch_history.keys(), token)
+            anime = anime_api.get_anime(watch_history["items"].keys(), token)
 
             for anime_id in anime:
                 watch_history["items"][anime_id] = anime[anime_id]
