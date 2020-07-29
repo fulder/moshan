@@ -6,7 +6,7 @@ import pytest
 
 UPDATE_VALUES = {}
 MOCK_RETURN = []
-TEST_CLIENT_ID = "TEST_CLIENT_ID"
+TEST_USERNAME = "TEST_USERNAME"
 
 
 def mock_func(**kwargs):
@@ -26,12 +26,12 @@ def test_get_watch_history(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID)
+    mocked_watch_history_db.get_watch_history(TEST_USERNAME)
 
     assert UPDATE_VALUES == {
         "TableName": None,
-        "KeyConditionExpression": "client_id = :client_id",
-        "ExpressionAttributeValues": {":client_id": {"S": "TEST_CLIENT_ID"}},
+        "KeyConditionExpression": "username = :username",
+        "ExpressionAttributeValues": {":username": {"S": "TEST_USERNAME"}},
         "Limit": 100,
         "ScanIndexForward": False,
         'FilterExpression': 'attribute_not_exists(deleted_at)',
@@ -48,12 +48,12 @@ def test_get_watch_history_changed_limit(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, limit=10)
+    mocked_watch_history_db.get_watch_history(TEST_USERNAME, limit=10)
 
     assert UPDATE_VALUES == {
         "TableName": None,
-        "KeyConditionExpression": "client_id = :client_id",
-        "ExpressionAttributeValues": {":client_id": {"S": "TEST_CLIENT_ID"}},
+        "KeyConditionExpression": "username = :username",
+        "ExpressionAttributeValues": {":username": {"S": "TEST_USERNAME"}},
         "Limit": 10,
         "ScanIndexForward": False,
         'FilterExpression': 'attribute_not_exists(deleted_at)',
@@ -69,15 +69,15 @@ def test_get_watch_history_by_collection_name(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, collection_name="ANIME", limit=10)
+    mocked_watch_history_db.get_watch_history(TEST_USERNAME, collection_name="ANIME", limit=10)
 
     assert UPDATE_VALUES == {
         "ExpressionAttributeValues": {
-            ":client_id": {"S": "TEST_CLIENT_ID"},
+            ":username": {"S": "TEST_USERNAME"},
             ":collection_name": {"S": "ANIME"}
         },
         "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
-        "KeyConditionExpression": "client_id = :client_id",
+        "KeyConditionExpression": "username = :username",
         "Limit": 10,
         "ScanIndexForward": False,
         "TableName": None,
@@ -94,16 +94,16 @@ def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, collection_name="ANIME", index_name="test_index",
+    mocked_watch_history_db.get_watch_history(TEST_USERNAME, collection_name="ANIME", index_name="test_index",
                                               limit=10)
 
     assert UPDATE_VALUES == {
         "ExpressionAttributeValues": {
-            ":client_id": {"S": "TEST_CLIENT_ID"},
+            ":username": {"S": "TEST_USERNAME"},
             ":collection_name": {"S": "ANIME"}
         },
         "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
-        "KeyConditionExpression": "client_id = :client_id",
+        "KeyConditionExpression": "username = :username",
         "Limit": 10,
         "IndexName": "test_index",
         "ScanIndexForward": False,
@@ -121,16 +121,16 @@ def test_get_watch_history_by_with_start(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    ret = mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, collection_name="ANIME", index_name="test_index",
+    ret = mocked_watch_history_db.get_watch_history(TEST_USERNAME, collection_name="ANIME", index_name="test_index",
                                                     limit=1, start=2)
 
     assert UPDATE_VALUES == {
         "ExpressionAttributeValues": {
-            ":client_id": {"S": "TEST_CLIENT_ID"},
+            ":username": {"S": "TEST_USERNAME"},
             ":collection_name": {"S": "ANIME"}
         },
         "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
-        "KeyConditionExpression": "client_id = :client_id",
+        "KeyConditionExpression": "username = :username",
         "Limit": 1,
         "IndexName": "test_index",
         "ScanIndexForward": False,
@@ -144,7 +144,7 @@ def test_get_watch_history_by_with_start(mocked_watch_history_db):
 
 def test_get_watch_history_too_small_start_index(mocked_watch_history_db):
     with pytest.raises(mocked_watch_history_db.InvalidStartOffset):
-        mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, start=0)
+        mocked_watch_history_db.get_watch_history(TEST_USERNAME, start=0)
 
 
 def test_get_watch_history_too_large_start_index(mocked_watch_history_db):
@@ -157,7 +157,7 @@ def test_get_watch_history_too_large_start_index(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
     with pytest.raises(mocked_watch_history_db.InvalidStartOffset):
-        mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, start=10)
+        mocked_watch_history_db.get_watch_history(TEST_USERNAME, start=10)
 
 
 def test_get_watch_history_not_found(mocked_watch_history_db):
@@ -166,7 +166,7 @@ def test_get_watch_history_not_found(mocked_watch_history_db):
     m.paginate.return_value = [{"Items": []}]
 
     with pytest.raises(mocked_watch_history_db.NotFoundError):
-        mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID)
+        mocked_watch_history_db.get_watch_history(TEST_USERNAME)
 
 
 def test_get_watch_history_by_collection_not_found(mocked_watch_history_db):
@@ -175,7 +175,7 @@ def test_get_watch_history_by_collection_not_found(mocked_watch_history_db):
     m.paginate.return_value = [{"Items": []}]
 
     with pytest.raises(mocked_watch_history_db.NotFoundError):
-        mocked_watch_history_db.get_watch_history(TEST_CLIENT_ID, "ANIME")
+        mocked_watch_history_db.get_watch_history(TEST_USERNAME, "ANIME")
 
 
 def test_add_item(mocked_watch_history_db):
@@ -184,7 +184,7 @@ def test_add_item(mocked_watch_history_db):
     mocked_watch_history_db.table.update_item = mock_func
     mocked_watch_history_db.table.query.side_effect = mocked_watch_history_db.NotFoundError
 
-    mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
+    mocked_watch_history_db.add_item(TEST_USERNAME, "MOVIE", "123123")
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
@@ -198,7 +198,7 @@ def test_add_item(mocked_watch_history_db):
             ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
         'Key': {
-            'client_id': TEST_CLIENT_ID,
+            'username': TEST_USERNAME,
             'item_id': '123123'},
         'UpdateExpression': 'SET #created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
     }
@@ -212,7 +212,7 @@ def test_add_item_already_exists(mocked_watch_history_db):
         "Items": [{"exists"}]
     }
 
-    mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
+    mocked_watch_history_db.add_item(TEST_USERNAME, "MOVIE", "123123")
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
@@ -224,7 +224,7 @@ def test_add_item_already_exists(mocked_watch_history_db):
             ':updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
         'Key': {
-            'client_id': 'TEST_CLIENT_ID',
+            'username': 'TEST_USERNAME',
             'item_id': '123123'
         },
         'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
@@ -236,7 +236,7 @@ def test_update_item(mocked_watch_history_db):
     UPDATE_VALUES = {}
     mocked_watch_history_db.table.update_item = mock_func
 
-    mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
+    mocked_watch_history_db.add_item(TEST_USERNAME, "MOVIE", "123123")
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
@@ -248,7 +248,7 @@ def test_update_item(mocked_watch_history_db):
             ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
         'Key': {
-            'client_id': TEST_CLIENT_ID,
+            'username': TEST_USERNAME,
             'item_id': '123123'},
         'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
     }
@@ -259,7 +259,7 @@ def test_delete_item(mocked_watch_history_db):
     UPDATE_VALUES = {}
     mocked_watch_history_db.table.update_item = mock_func
 
-    mocked_watch_history_db.delete_item(TEST_CLIENT_ID, "MOVIE", "123123")
+    mocked_watch_history_db.delete_item(TEST_USERNAME, "MOVIE", "123123")
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
@@ -273,7 +273,7 @@ def test_delete_item(mocked_watch_history_db):
             ':updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
         'Key': {
-            'client_id': TEST_CLIENT_ID,
+            'username': TEST_USERNAME,
             'item_id': '123123'
         },
         'UpdateExpression': 'SET #deleted_at=:deleted_at,#collection_name=:collection_name,#updated_at=:updated_at'
@@ -288,7 +288,7 @@ def test_add_item_exists(mocked_watch_history_db):
         "Items": [{"item_data"}]
     }
 
-    mocked_watch_history_db.add_item(TEST_CLIENT_ID, "MOVIE", "123123")
+    mocked_watch_history_db.add_item(TEST_USERNAME, "MOVIE", "123123")
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
@@ -300,7 +300,7 @@ def test_add_item_exists(mocked_watch_history_db):
             ':updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
         'Key': {
-            'client_id': TEST_CLIENT_ID, 'item_id': '123123'},
+            'username': TEST_USERNAME, 'item_id': '123123'},
         'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'}
 
 
@@ -310,7 +310,7 @@ def test_get_item(mocked_watch_history_db):
 
     mocked_watch_history_db.table.query = mock_func
 
-    ret = mocked_watch_history_db.get_item(TEST_CLIENT_ID, "MOVIE", "123123")
+    ret = mocked_watch_history_db.get_item(TEST_USERNAME, "MOVIE", "123123")
 
     assert ret == {'collection_name': 'ANIME', 'item_id': 123}
 
@@ -319,4 +319,4 @@ def test_get_item_not_found(mocked_watch_history_db):
     mocked_watch_history_db.table.query.return_value = {"Items": []}
 
     with pytest.raises(mocked_watch_history_db.NotFoundError):
-        mocked_watch_history_db.get_item(TEST_CLIENT_ID, "MOVIE", "123123")
+        mocked_watch_history_db.get_item(TEST_USERNAME, "MOVIE", "123123")
