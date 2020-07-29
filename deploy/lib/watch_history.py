@@ -37,7 +37,7 @@ class WatchHistory(core.Stack):
         self.watch_history_table = Table(
             self,
             "watch_history",
-            partition_key=Attribute(name="client_id", type=AttributeType.STRING),
+            partition_key=Attribute(name="username", type=AttributeType.STRING),
             sort_key=Attribute(name="item_id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
         )
