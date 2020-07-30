@@ -1,4 +1,4 @@
-if (parsedToken === null) {
+if (accessToken === null) {
     document.getElementById("loginButton").style.display = "block";
     document.getElementById("profileDropdown").style.display = "none";
     document.getElementById("loginText").style.display = "none";
