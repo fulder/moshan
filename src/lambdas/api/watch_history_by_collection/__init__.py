@@ -16,8 +16,9 @@ POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
 
 
 def handle(event, context):
+    log.debug(f"Received event: {event}")
     auth_header = event["headers"]["authorization"]
-    client_id = jwt_utils.get_client_id(auth_header)
+    client_id = jwt_utils.get_username(auth_header)
 
     collection_name = event["pathParameters"].get("collection_name")
 
@@ -25,13 +26,13 @@ def handle(event, context):
 
     if method == "GET":
         query_params = event.get("queryStringParameters")
-        return _get_watch_history(client_id, collection_name, query_params)
+        return _get_watch_history(client_id, collection_name, query_params, auth_header)
     elif method == "POST":
         body = event.get("body")
         return _post_collection_item(client_id, collection_name, body, auth_header)
 
 
-def _get_watch_history(client_id, collection_name, query_params):
+def _get_watch_history(client_id, collection_name, query_params, token):
     sort = None
     if query_params:
         sort = query_params.get("sort")
@@ -42,7 +43,7 @@ def _get_watch_history(client_id, collection_name, query_params):
             "body": json.dumps({"error": f"Invalid sort specified. Allowed values: {schema.ALLOWED_SORT}"})
         }
 
-    limit = 100
+    limit = 20
     start = 1
     if query_params and "limit" in query_params:
         limit = query_params.get("limit")
@@ -58,9 +59,20 @@ def _get_watch_history(client_id, collection_name, query_params):
     except ValueError:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid start type"})}
 
+    if limit > 20:
+        limit = 20
+
     try:
         watch_history = watch_history_db.get_watch_history(client_id, collection_name=collection_name, index_name=sort,
                                                            limit=limit, start=start)
+
+        # Fetch anime posters for all items in returned watch_history items
+        if collection_name == "anime":
+            anime = anime_api.get_anime(watch_history["items"].keys(), token)
+
+            for anime_id in anime:
+                watch_history["items"][anime_id].update(anime[anime_id])
+
         return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
         return {"statusCode": 404}
@@ -70,6 +82,7 @@ def _post_collection_item(client_id, collection_name, body, token):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
+        log.debug(f"Invalid body: {body}")
         return {
             "statusCode": 400,
             "body": "Invalid post body"

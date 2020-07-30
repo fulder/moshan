@@ -42,24 +42,24 @@ def _get_client():
     return client
 
 
-def add_item(client_id, collection_name, item_id):
+def add_item(username, collection_name, item_id):
     data = {}
     try:
-        get_item(client_id, collection_name, item_id)
+        get_item(username, collection_name, item_id)
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_item(client_id, collection_name, item_id, data)
+    update_item(username, collection_name, item_id, data)
 
 
-def delete_item(client_id, collection_name, item_id):
+def delete_item(username, collection_name, item_id):
     data = {"deleted_at": int(time.time())}
-    update_item(client_id, collection_name, item_id, data)
+    update_item(username, collection_name, item_id, data)
 
 
-def get_item(client_id, collection_name, item_id):
+def get_item(username, collection_name, item_id):
     res = _get_table().query(
-        KeyConditionExpression=Key("client_id").eq(client_id) & Key("item_id").eq(item_id),
+        KeyConditionExpression=Key("username").eq(username) & Key("item_id").eq(item_id),
         FilterExpression=Attr("collection_name").eq(collection_name) & Attr("deleted_at").not_exists(),
     )
 
@@ -69,7 +69,7 @@ def get_item(client_id, collection_name, item_id):
     return res["Items"][0]
 
 
-def update_item(client_id, collection_name, item_id, data):
+def update_item(username, collection_name, item_id, data):
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -85,11 +85,11 @@ def update_item(client_id, collection_name, item_id, data):
     log.debug(f"Update expression: {update_expression}")
     log.debug(f"Expression attribute names: {expression_attribute_names}")
     log.debug(f"Expression attribute values: {expression_attribute_values}")
-    log.debug(f"Client ID: {client_id}")
+    log.debug(f"Client ID: {username}")
 
     _get_table().update_item(
         Key={
-            "client_id": client_id,
+            "username": username,
             "item_id": item_id,
         },
         UpdateExpression=update_expression,
@@ -98,7 +98,7 @@ def update_item(client_id, collection_name, item_id, data):
     )
 
 
-def get_watch_history(client_id, collection_name=None, index_name=None, limit=100, start=1):
+def get_watch_history(username, collection_name=None, index_name=None, limit=100, start=1):
     start_page = 0
     res = []
 
@@ -106,7 +106,7 @@ def get_watch_history(client_id, collection_name=None, index_name=None, limit=10
         raise InvalidStartOffset
 
     total_pages = 0
-    for p in _watch_history_generator(client_id, limit=limit, collection_name=collection_name, index_name=index_name):
+    for p in _watch_history_generator(username, limit=limit, collection_name=collection_name, index_name=index_name):
         total_pages += 1
         start_page += 1
         if start_page == start:
@@ -115,11 +115,11 @@ def get_watch_history(client_id, collection_name=None, index_name=None, limit=10
     if start > start_page:
         raise InvalidStartOffset
 
-    log.debug(f"get_episodes response: {res}")
+    log.debug(f"get_watch_history response: {res}")
 
     if not res:
         raise NotFoundError(
-            f"Watch history for client with id: {client_id} and collection: {collection_name} not found")
+            f"Watch history for client with id: {username} and collection: {collection_name} not found")
 
     return {
         "items": res,
@@ -127,14 +127,14 @@ def get_watch_history(client_id, collection_name=None, index_name=None, limit=10
     }
 
 
-def _watch_history_generator(client_id, limit, collection_name=None, index_name=None):
+def _watch_history_generator(username, limit, collection_name=None, index_name=None):
     paginator = _get_client().get_paginator('query')
 
     query_kwargs = {
         "TableName": DATABASE_NAME,
-        "KeyConditionExpression": "client_id = :client_id",
+        "KeyConditionExpression": "username = :username",
         "ExpressionAttributeValues": {
-            ":client_id": {"S": client_id}
+            ":username": {"S": username}
         },
         "Limit": limit,
         "ScanIndexForward": False,
@@ -152,7 +152,9 @@ def _watch_history_generator(client_id, limit, collection_name=None, index_name=
     page_iterator = paginator.paginate(**query_kwargs)
 
     for p in page_iterator:
-        items = []
+        items = {}
         for i in p["Items"]:
-            items.append(json_util.loads(i))
+            item = json_util.loads(i)
+            item_id = item.pop("item_id")
+            items[item_id] = item
         yield items

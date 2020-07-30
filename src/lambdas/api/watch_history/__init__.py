@@ -12,7 +12,7 @@ ALLOWED_SORT = ["rating", "date_watched", "state"]
 
 def handle(event, context):
     auth_header = event["headers"]["authorization"]
-    client_id = jwt_utils.get_client_id(auth_header)
+    client_id = jwt_utils.get_username(auth_header)
 
     sort = None
     query_params = event.get("queryStringParameters")
