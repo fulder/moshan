@@ -51,5 +51,5 @@ async function authorize() {
     authorizeUrl.searchParams.append("code_challenge_method", "S256");
     authorizeUrl.searchParams.append("state", state);
 
-    window.location.replace(authorizeUrl.href)
+    window.location.href = authorizeUrl.href
 }
