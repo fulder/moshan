@@ -14,3 +14,12 @@ def mocked_watch_history_db():
     watch_history_db.client = MagicMock()
 
     return watch_history_db
+
+
+@pytest.fixture(scope='function')
+def mocked_anime_api():
+    import anime_api
+
+    anime_api.ANIME_API_URL = "https://mocked"
+
+    return anime_api
