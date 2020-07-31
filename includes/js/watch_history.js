@@ -57,5 +57,8 @@ function showConfirmationModal(collectionName, id, title) {
 
 function removeFromWatchHistory() {
     removeItem(removeCollectionName, removeId);
-    animeIdToRemove = "";
+
+    // Cleanup
+    removeCollectionName = "";
+    removeId = "";
 }
