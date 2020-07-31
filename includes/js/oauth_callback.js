@@ -3,13 +3,13 @@ const code = urlParams.get('code');
 const state = urlParams.get('state');
 
 if(code === null) {
-    $("#login_status").innerHTML = "Login <b style='color:red'>failed</b>, forwarding back to home page"
+    document.getElementById("login_status").innerHTML = "Login <b style='color:red'>failed</b>, forwarding back to home page"
 }
 else if (state != localStorage.getItem("pkce_state")) {
-    $("#login_status").innerHTML = "Login <b style='color:red'>failed</b>, forwarding back to home page"
+    document.getElementById("login_status").innerHTML = "Login <b style='color:red'>failed</b>, forwarding back to home page"
 }
 else {
-    $("#login_status").innerHTML = "Login successful, forwarding back to home page"
+    document.getElementById("login_status").innerHTML = "Login successful, forwarding back to home page"
     const codeVerifier = localStorage.getItem("pkce_code_verifier");
 
     $.ajax({
