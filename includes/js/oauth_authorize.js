@@ -44,7 +44,7 @@ async function authorize() {
     authorizeUrl.searchParams.append("client_id", "68v5rahd0sdvrmf7fgbq2o1a9u");
     authorizeUrl.searchParams.append("response_type", "code");
     authorizeUrl.searchParams.append("scope", "email openid");
-    authorizeUrl.searchParams.append("redirect_uri", "https://moshan.tv/callback.html");
+    authorizeUrl.searchParams.append("redirect_uri", "https://" + window.location.hostname + "/callback.html");
     authorizeUrl.searchParams.append("code_challenge_method", "S256");
     authorizeUrl.searchParams.append("state", state);
 
