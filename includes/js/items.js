@@ -1,11 +1,7 @@
 function createHistoryAnimeItem(anime) {
-    console.log(anime);
-
     if (!("title" in anime) || !("main_picture" in anime)) {
         return false;
     }
-
-    console.log(anime);
 
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
