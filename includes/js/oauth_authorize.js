@@ -31,12 +31,9 @@ function base64URLEncode(str) {
 
 async function authorize() {
     codeVerifier = generateRandomString()
-    console.log(codeVerifier)
 
     codeChallenge = await codeChallengeFromVerifier(codeVerifier)
     state = generateRandomString()
-
-    console.log(codeChallenge)
 
     localStorage.setItem("pkce_code_verifier", codeVerifier);
     localStorage.setItem("pkce_state", state);
