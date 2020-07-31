@@ -50,7 +50,7 @@ function showConfirmationModal(collectionName, id, title) {
     removeCollectionName = collectionName
     removeId = id;
 
-    $('removeModalBodyTitle').innerHTML = title
+    $('#removeModalBodyTitle').innerHTML = title
     $('#removalConfirmationModal').modal(show = true)
 
 }
