@@ -1,39 +1,3 @@
-function createHistoryAnimeItem(anime) {
-    if (!("title" in anime) || !("main_picture" in anime)) {
-        return false;
-    }
-
-    title = anime["title"];
-    poster = anime["main_picture"]["medium"];
-    animeId = anime["id"];
-
-    resultHTML += '<div class="col-4 col-md-1 poster mx-md-1 px-md-1">'
-    resultHTML +='<img class="img-fluid" src=' + poster + '>'
-
-    resultHTML +='<button class="btn btn-sm btn-danger d-inline" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-minus fa-xs"></i></button>'
-
-    resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>'
-
-    return true;
-}
-
-function animeWrapper(externalId, type) {
-    addAnimeButton = document.getElementById("addAnimeButton-" + externalId)
-    removeAnimeButton = document.getElementById("removeAnimeButton-" + externalId)
-
-    if (type === "add") {
-        addAnimeButton.className = "btn btn-sm btn-success d-none"
-        removeAnimeButton.className = "btn btn-sm btn-danger d-inline"
-        addAnime(externalId);
-    }
-    else if (type === "remove") {
-        addAnimeButton.className = "btn btn-sm btn-success d-inline"
-        removeAnimeButton.className = "btn btn-sm btn-danger d-none"
-        removeAnime(idMap[externalId]);
-    }
-}
-
-
 function createResultItem(anime) {
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
