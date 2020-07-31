@@ -14,6 +14,7 @@ function createAnimeItems(response) {
 
     res = true;
     for (i = 0; i < items.length; i++) {
+        console.log(i)
         res = res && createHistoryAnimeItem(items[i]);
     }
 

@@ -1,4 +1,6 @@
 function createHistoryAnimeItem(anime) {
+    console.log(anime);
+
     if (!("title" in anime) || !("main_picture" in anime)) {
         return false;
     }
