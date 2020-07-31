@@ -10,10 +10,9 @@ getWatchHistoryByCollection("anime", createAnimeItems);
 
 function createAnimeItems(response) {
     resultHTML = ""
-    items = Object.values(response["items"])
 
     res = true;
-    for (const [animeId, anime] of Object.entries(object1)) {
+    for (const [animeId, anime] of Object.entries(response["items"])) {
         itemCreated = createHistoryAnimeItem(animeId, anime)
         res = res && itemCreated;
     }
