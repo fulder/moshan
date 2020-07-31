@@ -12,10 +12,9 @@ function createAnimeItems(response) {
     resultHTML = ""
     items = Object.values(response["items"])
 
-    console.log(items);
-
     res = true;
     for (i = 0; i < items.length; i++) {
+        console.log(item[i]);
         res = res && createHistoryAnimeItem(items[i]);
     }
 
