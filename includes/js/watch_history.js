@@ -50,7 +50,7 @@ function showConfirmationModal(collectionName, id, title) {
     removeCollectionName = collectionName
     removeId = id;
 
-    $('#removeModalBodyTitle').innerHTML = title
+    $('#removeModalBodyTitle').html(title);
     $('#removalConfirmationModal').modal(show = true)
 
 }
@@ -59,7 +59,7 @@ function removeFromWatchHistory() {
     removeItem(removeCollectionName, removeId);
 
     // Cleanup
-    $('#removeModalBodyTitle').innerHTML = "";
+    $('#removeModalBodyTitle').html("");
     removeCollectionName = "";
     removeId = "";
 }
