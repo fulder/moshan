@@ -59,6 +59,7 @@ function removeFromWatchHistory() {
     removeItem(removeCollectionName, removeId);
 
     // Cleanup
+    $('#removalConfirmationModal').modal(show = false)
     $('#removeModalBodyTitle').html("");
     removeCollectionName = "";
     removeId = "";
