@@ -13,8 +13,8 @@ function createAnimeItems(response) {
     items = Object.values(response["items"])
 
     res = true;
-    for (i = 0; i < items.length; i++) {
-        itemCreated = createHistoryAnimeItem(items[i])
+    for (const [animeId, anime] of Object.entries(object1)) {
+        itemCreated = createHistoryAnimeItem(animeId, anime)
         res = res && itemCreated;
     }
 
@@ -27,14 +27,13 @@ function createAnimeItems(response) {
     document.getElementById("animeWatchHistory").innerHTML = resultHTML
 }
 
-function createHistoryAnimeItem(anime) {
+function createHistoryAnimeItem(animeId, anime) {
     if (!("title" in anime) || !("main_picture" in anime)) {
         return false;
     }
 
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
-    animeId = anime["item_id"];
 
     console.log(anime);
 
