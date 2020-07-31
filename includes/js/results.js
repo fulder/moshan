@@ -31,7 +31,7 @@ function createResultAnimeItem(anime) {
     // If the item is found in the idMap (i.e. the item is cache'd in moshan anime db)
     // and if it is added to the user watch history, set the button to removeAnime button
     // otherwise create the addAnime button
-    if (idMap[externalId] !== undefined && watchHistory["items"][idMap[externalId]] !== undefined) {
+    if (externalId in idMap && idMap[externalId] in watchHistory["items"]) {
         resultHTML +='<button id="removeAnimeButton-' + externalId + '" class="btn btn-sm btn-danger d-inline" onclick="removeAnimeWrapper(' + externalId + ')"><i class="fas fa-minus fa-xs"></i></button>'
         resultHTML +='<button id="addAnimeButton-' + externalId + '" class="btn btn-sm btn-success d-none" onclick="addAnimeWrapper(' + externalId + ')"><i class="fas fa-plus fa-xs"></i></button>'
     } else {
