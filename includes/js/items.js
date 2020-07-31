@@ -1,4 +1,8 @@
-function createHistoryAnimeItem(anime) {
+function createHistoryAnimeItem(anime, resultHTML) {
+    if (!("title" in anime) || !("main_picture" in anime)) {
+        return false;
+    }
+
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
     animeId = anime["id"];
@@ -9,6 +13,8 @@ function createHistoryAnimeItem(anime) {
     resultHTML +='<button class="btn btn-sm btn-danger d-inline" onclick="removeAnime(' + animeId + ')"><i class="fas fa-minus fa-xs"></i></button>'
 
     resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>'
+
+    return true;
 }
 
 function createResultItem(anime) {
