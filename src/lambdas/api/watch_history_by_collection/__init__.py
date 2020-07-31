@@ -75,7 +75,7 @@ def _get_watch_history(client_id, collection_name, query_params, token):
 
         return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
-        return {"statusCode": 404}
+        return {"statusCode": 200, "body": json.dumps({"items": []})}
 
 
 def _post_collection_item(client_id, collection_name, body, token):
