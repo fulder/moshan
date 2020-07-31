@@ -51,14 +51,13 @@ function showConfirmationModal(collectionName, id, title) {
     removeId = id;
 
     $('#removeModalBodyTitle').html(title);
-    $('#removalConfirmationModal').modal(show = true)
-
+    $('#removalConfirmationModal').modal('show');
 }
 
 function removeFromWatchHistory() {
     removeItem(removeCollectionName, removeId);
 
-    $('#removalConfirmationModal').modal(show = false);
+    $('#removalConfirmationModal').modal('hide');
     $(`#poster-${removeCollectionName}-${removeId}`).remove();
 
     // Cleanup
