@@ -61,7 +61,6 @@ function removeFromWatchHistory() {
     $(`#poster-${removeCollectionName}-${removeId}`).remove();
 
     // Cleanup
-
     $('#removeModalBodyTitle').html("");
     removeCollectionName = "";
     removeId = "";
