@@ -1,11 +1,11 @@
 if (accessToken === null) {
-    document.getElementById("loginButton").style.display = "block";
-    document.getElementById("profileDropdown").style.display = "none";
+    $("#loginButton").style.display = "block";
+    $("#profileDropdown").style.display = "none";
 }
 else {
-    document.getElementById("loginButton").style.display = "none";
+    $("#loginButton").style.display = "none";
 
-    profileDropDown = document.getElementById("profileDropdown");
+    profileDropDown = $("#profileDropdown");
     profileDropDown.style.display = "block";
     profileDropDown.innerHTML = parsedToken["username"]
 }
