@@ -36,7 +36,7 @@ function createHistoryAnimeItem(animeId, anime) {
 
     console.log(anime);
 
-    resultHTML += '<div class="col-4 col-md-1 poster mx-md-1 px-md-1">'
+    resultHTML += `<div id="poster-anime-${animeId}" class="col-4 col-md-1 poster mx-md-1 px-md-1">`
     resultHTML += `<img class="img-fluid" src="${poster}">`
 
     resultHTML +=`<button class="btn btn-sm btn-danger d-inline" onclick="showConfirmationModal('anime', '${animeId}', '${title}')"><i class="fas fa-minus fa-xs"></i></button>`;
@@ -58,8 +58,11 @@ function showConfirmationModal(collectionName, id, title) {
 function removeFromWatchHistory() {
     removeItem(removeCollectionName, removeId);
 
+    $('#removalConfirmationModal').modal(show = false);
+    $(`#poster-${removeCollectionName}-${removeId}`).remove();
+
     // Cleanup
-    $('#removalConfirmationModal').modal(show = false)
+
     $('#removeModalBodyTitle').html("");
     removeCollectionName = "";
     removeId = "";
