@@ -17,7 +17,7 @@ else {
         type: "post",
         data: {
             grant_type: "authorization_code",
-            redirect_uri: "https://moshan.tv/callback.html",
+            redirect_uri: "https://" + window.location.hostname + "/callback.html",
             code: code,
             client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
             code_verifier: codeVerifier
