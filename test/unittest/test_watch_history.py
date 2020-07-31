@@ -120,4 +120,4 @@ def test_handler_not_found(mocked_get_watch_history):
 
     ret = handle(event, None)
 
-    assert ret == {'statusCode': 404}
+    assert ret == {'statusCode': 200, "body": '{}'}
