@@ -36,6 +36,8 @@ function createHistoryAnimeItem(anime) {
     poster = anime["main_picture"]["medium"];
     animeId = anime["item_id"];
 
+    console.log(anime);
+
     resultHTML += '<div class="col-4 col-md-1 poster mx-md-1 px-md-1">'
     resultHTML +='<img class="img-fluid" src=' + poster + '>'
 
