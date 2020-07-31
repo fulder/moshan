@@ -1,9 +1,9 @@
 if (accessToken === null) {
-    document.getElementById("logInAlert").className = "alert alert-danger";
+    $("#loginAlert").className = "alert alert-danger";
 }
 else {
-    document.getElementById("logInAlert").className = "d-none";
-    document.getElementById("animeWatchHistory").innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>'
+    $("#loginAlert").className = "d-none";
+    $("#animeWatchHistory").innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>'
 }
 
 getWatchHistoryByCollection("anime", createAnimeItems);
@@ -18,12 +18,12 @@ function createAnimeItems(response) {
     }
 
     if (res) {
-        document.getElementById("itemsLoadingAlert").className = "d-none";
+        $("#itemsLoadingAlert").className = "d-none";
     } else {
-        document.getElementById("itemsLoadingAlert").className = "alert alert-warning";
+        $("#itemsLoadingAlert").className = "alert alert-warning";
     }
 
-    document.getElementById("animeWatchHistory").innerHTML = resultHTML
+    $("#animeWatchHistory").innerHTML = resultHTML
 }
 
 function createHistoryAnimeItem(animeId, anime) {

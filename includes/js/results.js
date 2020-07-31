@@ -3,11 +3,11 @@ const searchString = urlParams.get('search');
 getWatchHistory();
 
 if (accessToken === null) {
-    document.getElementById("logInAlert").className = "alert alert-danger";
+    $("#logInAlert").className = "alert alert-danger";
 }
 else {
-    document.getElementById("logInAlert").className = "d-none";
-    document.getElementById("animeResults").innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>'
+    $("#logInAlert").className = "d-none";
+    $("#animeResults").innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>'
 }
 
 searchAnime(searchString, callback);
@@ -17,7 +17,7 @@ function callback() {
     idMap = animes["id_map"]
     animes["items"].forEach(createResultAnimeItem);
 
-    document.getElementById("animeResults").innerHTML = resultHTML
+    $("#animeResults").innerHTML = resultHTML
 }
 
 function createResultAnimeItem(anime) {
@@ -50,8 +50,8 @@ function removeAnimeWrapper(externalId) {
 }
 
 function animeWrapper(externalId, type) {
-    addAnimeButton = document.getElementById("addAnimeButton-" + externalId)
-    removeAnimeButton = document.getElementById("removeAnimeButton-" + externalId)
+    addAnimeButton = $("#addAnimeButton-" + externalId)
+    removeAnimeButton = $("#removeAnimeButton-" + externalId)
 
     if (type === "add") {
         addAnimeButton.className = "btn btn-sm btn-success d-none"
