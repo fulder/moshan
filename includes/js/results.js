@@ -15,12 +15,12 @@ searchAnime(searchString, callback);
 function callback() {
     resultHTML = ""
     idMap = animes["id_map"]
-    animes["items"].forEach(createResultItem);
+    animes["items"].forEach(createResultAnimeItem);
 
     document.getElementById("animeResults").innerHTML = resultHTML
 }
 
-function createResultItem(anime) {
+function createResultAnimeItem(anime) {
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
     externalId = anime["id"];
@@ -56,11 +56,11 @@ function animeWrapper(externalId, type) {
     if (type === "add") {
         addAnimeButton.className = "btn btn-sm btn-success d-none"
         removeAnimeButton.className = "btn btn-sm btn-danger d-inline"
-        addAnime(externalId);
+        addItem("anime", externalId);
     }
     else if (type === "remove") {
         addAnimeButton.className = "btn btn-sm btn-success d-inline"
         removeAnimeButton.className = "btn btn-sm btn-danger d-none"
-        removeAnime(idMap[externalId]);
+        removeItem("anime", idMap[externalId]);
     }
 }

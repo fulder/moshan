@@ -39,20 +39,23 @@ function createHistoryAnimeItem(anime) {
     resultHTML += '<div class="col-4 col-md-1 poster mx-md-1 px-md-1">'
     resultHTML +='<img class="img-fluid" src=' + poster + '>'
 
-    resultHTML +='<button class="btn btn-sm btn-danger d-inline" onclick="showConfirmationModal(' + animeId + ')"><i class="fas fa-minus fa-xs"></i></button>'
+    resultHTML +='<button class="btn btn-sm btn-danger d-inline" onclick="showConfirmationModal(anime, ' + animeId + ', ' + title + ')"><i class="fas fa-minus fa-xs"></i></button>'
 
     resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>'
 
     return true;
 }
 
-function showConfirmationModal(animeId) {
-    animeIdToRemove = animeId;
+function showConfirmationModal(collectionName, id, title) {
+    removeCollectionName = collectionName
+    removeId = id;
 
+    $('removeModalBodyTitle').innerHTML = title
     $('#removalConfirmationModal').modal(show = true)
+
 }
 
-function removeAnimeWatchHistory() {
-    removeAnime(animeIdToRemove);
+function removeFromWatchHistory() {
+    removeItem(removeCollectionName, removeId);
     animeIdToRemove = "";
 }

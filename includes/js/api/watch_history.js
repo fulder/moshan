@@ -11,9 +11,9 @@ function getWatchHistory() {
     });
 }
 
-function getWatchHistoryByCollection(collection, callback) {
+function getWatchHistoryByCollection(collectionName, callback) {
     $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection,
+        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName,
         type: "get",
         headers: {
             'Authorization': accessToken
@@ -25,9 +25,9 @@ function getWatchHistoryByCollection(collection, callback) {
     });
 }
 
-function removeAnime(animeId) {
+function removeItem(collection, id) {
     $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/anime/" + animeId,
+        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection + '/' + id,
         type: "delete",
         headers: {
             'Authorization': accessToken
@@ -38,14 +38,14 @@ function removeAnime(animeId) {
     });
 }
 
-function addAnime(malId) {
+function addItem(collectionName, id) {
     $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/anime",
+        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName,
         type: "post",
         contentType: 'application/json',
         dataType: "json",
         data: JSON.stringify({
-            item_add_id: malId
+            item_add_id: id
         }),
         headers: {
             'Authorization': accessToken
