@@ -193,7 +193,7 @@ class WatchHistory(core.Stack):
             create_default_stage=False,
             cors_preflight=CorsPreflightOptions(
                 allow_methods=[HttpMethod.GET, HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE],
-                allow_origins=["https://moshan.tv"],
+                allow_origins=["https://moshan.tv", "https://beta.moshan.tv"],
                 allow_headers=["authorization", "content-type"]
             )
         )
