@@ -26,3 +26,22 @@ function createAnimeItems(response) {
 
     document.getElementById("animeWatchHistory").innerHTML = resultHTML
 }
+
+function createHistoryAnimeItem(anime) {
+    if (!("title" in anime) || !("main_picture" in anime)) {
+        return false;
+    }
+
+    title = anime["title"];
+    poster = anime["main_picture"]["medium"];
+    animeId = anime["id"];
+
+    resultHTML += '<div class="col-4 col-md-1 poster mx-md-1 px-md-1">'
+    resultHTML +='<img class="img-fluid" src=' + poster + '>'
+
+    resultHTML +='<button class="btn btn-sm btn-danger d-inline" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-minus fa-xs"></i></button>'
+
+    resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>'
+
+    return true;
+}
