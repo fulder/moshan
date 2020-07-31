@@ -1,4 +1,4 @@
-function createHistoryAnimeItem(anime, resultHTML) {
+function createHistoryAnimeItem(anime) {
     if (!("title" in anime) || !("main_picture" in anime)) {
         return false;
     }

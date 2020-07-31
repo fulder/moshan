@@ -16,7 +16,7 @@ function createAnimeItems(response) {
 
     res = true;
     for (i = 0; i < items.length; i++) {
-        res = res && createHistoryAnimeItem(items[i], resultHTML);
+        res = res && createHistoryAnimeItem(items[i]);
     }
 
     if (res) {
