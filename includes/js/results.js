@@ -1,6 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
 const searchString = urlParams.get('search');
-getWatchHistory();
 
 if (accessToken === null) {
     document.getElementById("logInAlert").className = "alert alert-danger";
