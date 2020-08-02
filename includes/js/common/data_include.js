@@ -14,5 +14,4 @@ $(function(){
       var file = directory + 'includes/html/' + $(this).data('include') + '.html';
       $(this).load(file);
     });
-  });
-}
+});
