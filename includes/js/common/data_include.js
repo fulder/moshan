@@ -2,12 +2,7 @@
 $(function(){
     var path = document.location.pathname;
 
-    // https://stackoverflow.com/a/2161748
-    var scripts= document.getElementsByTagName('script');
-    var path= scripts[scripts.length-1].src
-    var scriptDir= path.split('/').slice(0, -1).join('/')+'/';
-
-    console.log(scriptDir);
+    console.log(document.currentScript);
 
     var includes = $('[data-include]');
     jQuery.each(includes, function(){
