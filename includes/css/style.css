@@ -7,14 +7,6 @@
     object-fit: cover;
 }
 
-.poster button {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    border-style: solid;
-    border-color: black;
-}
-
 body {
     max-width: 1600px;
     margin: auto;
