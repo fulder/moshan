@@ -1,14 +1,14 @@
 .poster img {
-    min-height: 80%;
+    min-height: 85%;
     object-fit: cover;
     border-style: solid;
     border-color: black;
 }
 
 .poster button {
-  position: absolute;
-  top: 80%;
-  left: 5%;
+    position: absolute;
+    top: 80%;
+    left: 5%;
 }
 
 body {
