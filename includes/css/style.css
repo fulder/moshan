@@ -1,5 +1,5 @@
 .poster img {
-    height: 20vh;
+    min-height: 80%;
     object-fit: cover;
     border-style: solid;
     border-color: black;
