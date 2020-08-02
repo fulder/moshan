@@ -13,8 +13,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Moshan scripts -->
+    <script src="./includes/js/common/data_include.js"></script>
     <script src="./includes/js/common/token.js"></script>
-    <script src="./includes/js/include_navbar.js"></script>
+    <script src="./includes/js/common/oauth_authorize.js"></script>
+    <script src="./includes/js/common/navbar.js"></script>
 
     <script src="./includes/js/api/watch_history.js"></script>
 
@@ -28,7 +30,7 @@
     <title>Moshan - Watch History</title>
 </head>
 
-<div id="includedNavbar"></div>
+<div data-include="navbar"></div>
 
 <body>
 <div id="logInAlert" class="alert alert-danger d-none" role="alert">
