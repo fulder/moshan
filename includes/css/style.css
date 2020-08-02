@@ -5,6 +5,12 @@
     border-color: black;
 }
 
+.poster button {
+  position: absolute;
+  top: 80%;
+  left: 5%;
+}
+
 body {
     max-width: 1600px;
     margin: auto;
