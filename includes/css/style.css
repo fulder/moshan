@@ -1,5 +1,8 @@
 .poster {
     position: relative;
+    width: 12.499999995%;
+    flex: 0 0 12.499%;
+    max-width: 12.499%
 }
 
 .poster img {
