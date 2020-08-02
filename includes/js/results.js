@@ -24,7 +24,7 @@ function createResultAnimeItem(anime) {
     poster = anime["main_picture"]["medium"];
     externalId = anime["id"];
 
-    resultHTML += '<div class="col-4 col-md-1 poster">'
+    resultHTML += '<div class="col-4 col-md-2 poster">'
     resultHTML +='<img class="img-fluid" src=' + poster + '>'
     resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>'
 }
