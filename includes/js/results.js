@@ -26,7 +26,6 @@ function createResultAnimeItem(anime) {
 
     resultHTML += '<div class="col-4 col-md-1 mx-md-1 px-md-1 poster">'
     resultHTML +='<img class="img-fluid" src=' + poster + '>'
-    resultHTML +=`<button class="btn btn-sm btn-danger d-inline"><i class="fas fa-minus fa-xs"></i></button>`;
     resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>'
 }
 
