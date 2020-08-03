@@ -1,12 +1,12 @@
 if (accessToken === null) {
-    document.getElementById("loginButton").style.display = "block";
-    document.getElementById("profileDropdown").style.display = "none";
+    document.getElementById("loginButton").classList.remove("d-none");
+    document.getElementById("profileDropdown").classList.add("d-none");
 }
 else {
-    document.getElementById("loginButton").style.display = "none";
+    document.getElementById("loginButton").classList.add("d-none");
+    document.getElementById("profileDropdown").classList.remove("d-none");
 
     profileDropDown = document.getElementById("profileDropdown");
-    profileDropDown.style.display = "block";
     profileDropDown.innerHTML = parsedToken["username"]
 }
 
