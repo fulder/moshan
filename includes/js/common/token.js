@@ -30,10 +30,11 @@ function refreshToken(){
     }
     axios.post("https://auth.moshan.tv/oauth2/token", data, options)
       .then(function (response) {
-         localStorage.setItem("moshan_access_token", response["access_token"])
+         data = response.data;
+         localStorage.setItem("moshan_access_token", data["access_token"])
 
-        if(response["refresh_token"] !== undefined) {
-            localStorage.setItem("moshan_refresh_token", response["refresh_token"])
+        if(data["refresh_token"] !== undefined) {
+            localStorage.setItem("moshan_refresh_token", data["refresh_token"])
         }
       })
       .catch(function (error) {
