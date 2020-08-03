@@ -18,16 +18,17 @@ function parseJwt(token){
 }
 
 function refreshToken(){
-    axios.post("https://auth.moshan.tv/oauth2/token", {
-        data: {
-            grant_type: "refresh_token",
-            client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
-            refresh_token: localStorage.getItem("moshan_refresh_token")
-        },
+    data = {
+        grant_type: "refresh_token",
+        client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
+        refresh_token: localStorage.getItem("moshan_refresh_token")
+    }
+    options = {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-       })
+    }
+    axios.post("https://auth.moshan.tv/oauth2/token", data, options)
       .then(function (response) {
          localStorage.setItem("moshan_access_token", response["access_token"])
 
