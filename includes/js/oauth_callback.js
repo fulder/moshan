@@ -12,13 +12,13 @@ else {
     document.getElementById("login_status").innerHTML = "Login successful, forwarding back to home page"
     const codeVerifier = localStorage.getItem("pkce_code_verifier");
 
-    postData = {
+    postData = new URLSearchParams({
         grant_type: "authorization_code",
         redirect_uri: "https://" + window.location.hostname + "/callback.html",
         code: code,
         client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
         code_verifier: codeVerifier
-    }
+    }).toStrig()
     options = {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
