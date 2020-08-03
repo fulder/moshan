@@ -11,7 +11,7 @@ else {
 
 searchAnime(searchString, callback);
 
-function callback() {
+function callback(animes) {
     resultHTML = ""
     idMap = animes["id_map"]
     animes["items"].forEach(createResultAnimeItem);
