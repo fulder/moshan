@@ -24,7 +24,7 @@ else {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
     }
-    axios.post("https://auth.moshan.tv/oauth2/token", JSON.stringify(postData), options)
+    axios.post("https://auth.moshan.tv/oauth2/token", postData, options)
       .then(function (response) {
          localStorage.setItem("moshan_access_token", response["access_token"])
          localStorage.setItem("moshan_refresh_token", response["refresh_token"])
