@@ -12,7 +12,6 @@ function includeData() {
       console.log(includeDiv);
       var file = '/includes/html/' + includeDiv.getAttribute("data-include") + '.html';
       response = await axios.get(file);
-      console.log(response.data);
       includeDiv.innerHTML = response.data;
     });
 }
