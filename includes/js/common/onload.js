@@ -1,5 +1,5 @@
-window.onload = function() {
-    includeData();
+window.onload = async function() {
+    await includeData();
 
     initNavbar();
 };
