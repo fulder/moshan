@@ -5,6 +5,7 @@ includes.forEach(async function(includeDiv){
   console.log(includeDiv);
   var file = '/includes/html/' + includeDiv.getAttribute("data-include") + '.html';
   fileContent = await axios.get(file);
+  console.log(fileContent);
   includeDiv.innerHtml = fileContent;
 });
 
