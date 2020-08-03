@@ -6,7 +6,7 @@ function getWatchHistory() {
     }
     axios.get("https://api.watch-history.moshan.tv/v1/watch-history", options)
       .then(function (response) {
-        watchHistory = JSON.parse(response.data);
+        watchHistory = response.data;
       })
       .catch(function (error) {
         // handle error
@@ -22,8 +22,7 @@ function getWatchHistoryByCollection(collectionName, callback) {
     }
     axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, options)
       .then(function (response) {
-        response = JSON.parse(response.data);
-            callback(response)
+        callback(response.data)
       })
       .catch(function (error) {
         // handle error
@@ -37,7 +36,7 @@ function removeItem(collection, id) {
             'Authorization': accessToken
         }
     }
-    axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection + '/' + id, options)
+    axios.delete("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection + '/' + id, options)
       .catch(function (error) {
         // handle error
         console.log(error);
@@ -56,8 +55,7 @@ function addItem(collectionName, id) {
     }
     axios.post("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, data, options)
       .then(function (response) {
-        response = JSON.parse(response.data);
-        callback(response)
+        callback(response.data)
       })
       .catch(function (error) {
         // handle error
