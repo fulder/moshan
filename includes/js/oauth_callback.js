@@ -18,7 +18,7 @@ else {
         code: code,
         client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
         code_verifier: codeVerifier
-    }).toStrig()
+    }).toString()
     options = {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
