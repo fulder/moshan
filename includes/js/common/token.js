@@ -18,11 +18,11 @@ function parseJwt(token){
 }
 
 function refreshToken(){
-    data = {
+    data = new URLSearchParams({
         grant_type: "refresh_token",
         client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
         refresh_token: localStorage.getItem("moshan_refresh_token")
-    }
+    }).toString();
     options = {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
