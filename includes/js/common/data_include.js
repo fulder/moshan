@@ -2,6 +2,7 @@
 var includes = document.querySelectorAll('[data-include]');
 
 includes.forEach(async function(includeDiv){
+  console.log(includeDiv);
   var file = '/includes/html/' + includeDiv["data-include"] + '.html';
   fileContent = await axios.get(file);
   includeDiv.innerHtml = fileContent;
