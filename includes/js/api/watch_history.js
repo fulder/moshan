@@ -1,9 +1,10 @@
 function getWatchHistory() {
-    axios.get("https://api.watch-history.moshan.tv/v1/watch-history", {
+    options = {
         headers: {
             'Authorization': accessToken
         }
-      })
+    }
+    axios.get("https://api.watch-history.moshan.tv/v1/watch-history", options)
       .then(function (response) {
         watchHistory = JSON.parse(response);
       })
@@ -14,11 +15,12 @@ function getWatchHistory() {
 }
 
 function getWatchHistoryByCollection(collectionName, callback) {
-    axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, {
+    options = {
         headers: {
             'Authorization': accessToken
         }
-      })
+    }
+    axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, options)
       .then(function (response) {
         response = JSON.parse(response);
             callback(response)
@@ -30,11 +32,12 @@ function getWatchHistoryByCollection(collectionName, callback) {
 }
 
 function removeItem(collection, id) {
-    axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection + '/' + id, {
+    options = {
         headers: {
             'Authorization': accessToken
         }
-      })
+    }
+    axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection + '/' + id, options)
       .catch(function (error) {
         // handle error
         console.log(error);
@@ -42,16 +45,16 @@ function removeItem(collection, id) {
 }
 
 function addItem(collectionName, id) {
-    axios.post(
-        "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, {
+    data = {
+        item_add_id: id
+    }
+    options = {
         headers: {
-            'Authorization': accessToken
+            'Authorization': accessToken,
             'Content-Type': "application/json"
-        },
-        data: {
-            item_add_id: id
         }
-      })
+    }
+    axios.post("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, data, options)
       .then(function (response) {
         response = JSON.parse(response);
             callback(response)
