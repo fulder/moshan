@@ -12,9 +12,8 @@ else {
     document.getElementById("login_status").innerHTML = "Login successful, forwarding back to home page"
     const codeVerifier = localStorage.getItem("pkce_code_verifier");
 
-    $.ajax({
-        url: "https://auth.moshan.tv/oauth2/token",
-        type: "post",
+    axios.post(
+        "https://auth.moshan.tv/oauth2/token",
         data: {
             grant_type: "authorization_code",
             redirect_uri: "https://" + window.location.hostname + "/callback.html",
@@ -22,14 +21,18 @@ else {
             client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
             code_verifier: codeVerifier
         },
-        headers: {
+         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        success:function(response) {
-            localStorage.setItem("moshan_access_token", response["access_token"])
-            localStorage.setItem("moshan_refresh_token", response["refresh_token"])
-        },
-    });
+        }
+      )
+      .then(function (response) {
+         localStorage.setItem("moshan_access_token", response["access_token"])
+         localStorage.setItem("moshan_refresh_token", response["refresh_token"])
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
 }
 
 localStorage.removeItem("pkce_code_verifier");

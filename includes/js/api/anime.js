@@ -1,13 +1,11 @@
 function searchAnime(searchString, callback) {
-    $.ajax({
-        url: "https://api.anime.moshan.tv/v1/anime?search=" + searchString,
-        type: "get",
-        headers: {
-            'Authorization': accessToken
-        },
-        success:function(response) {
-            animes = JSON.parse(response);
-            callback(animes);
-        },
-    });
+    axios.get("https://api.anime.moshan.tv/v1/anime?search=" + searchString)
+      .then(function (response) {
+        animes = JSON.parse(response);
+        callback(animes);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
 }

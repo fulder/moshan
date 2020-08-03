@@ -1,57 +1,57 @@
 function getWatchHistory() {
-    $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history",
-        type: "get",
-        headers: {
+    axios.get("https://api.watch-history.moshan.tv/v1/watch-history", headers: {
             'Authorization': accessToken
-        },
-        success:function(response) {
-            watchHistory = JSON.parse(response);
-        },
-    });
+        })
+      .then(function (response) {
+        watchHistory = JSON.parse(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
 }
 
 function getWatchHistoryByCollection(collectionName, callback) {
-    $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName,
-        type: "get",
-        headers: {
+    axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, headers: {
             'Authorization': accessToken
-        },
-        success:function(response) {
-            response = JSON.parse(response);
+        })
+      .then(function (response) {
+        response = JSON.parse(response);
             callback(response)
-        },
-    });
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
 }
 
 function removeItem(collection, id) {
-    $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection + '/' + id,
-        type: "delete",
-        headers: {
+    axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection + '/' + id,, headers: {
             'Authorization': accessToken
-        },
-        error:function(response) {
-            console.log(response);
-        },
-    });
+        })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
 }
 
 function addItem(collectionName, id) {
-    $.ajax({
-        url: "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName,
-        type: "post",
-        contentType: 'application/json',
-        dataType: "json",
-        data: JSON.stringify({
-            item_add_id: id
-        }),
+    axios.post(
+        "https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName,
         headers: {
             'Authorization': accessToken
+            'Content-Type': "application/json"
         },
-        error:function(response) {
-            console.log(response);
-        },
-    });
+        data: {
+            item_add_id: id
+        }
+      )
+      .then(function (response) {
+        response = JSON.parse(response);
+            callback(response)
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
 }
