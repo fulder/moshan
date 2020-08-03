@@ -12,8 +12,7 @@ else {
     document.getElementById("login_status").innerHTML = "Login successful, forwarding back to home page"
     const codeVerifier = localStorage.getItem("pkce_code_verifier");
 
-    axios.post(
-        "https://auth.moshan.tv/oauth2/token",
+    axios.post("https://auth.moshan.tv/oauth2/token", {
         data: {
             grant_type: "authorization_code",
             redirect_uri: "https://" + window.location.hostname + "/callback.html",
@@ -24,7 +23,7 @@ else {
          headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-      )
+      })
       .then(function (response) {
          localStorage.setItem("moshan_access_token", response["access_token"])
          localStorage.setItem("moshan_refresh_token", response["refresh_token"])
