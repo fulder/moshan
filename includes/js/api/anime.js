@@ -7,7 +7,6 @@ function searchAnime(searchString, callback) {
     }
     axios.get("https://api.anime.moshan.tv/v1/anime?search=" + searchString, options)
       .then(function (response) {
-        console.log(response.data)
         callback(response.data);
       })
       .catch(function (error) {
