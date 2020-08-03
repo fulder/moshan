@@ -1,6 +1,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 
-if ("mal_id" in urlParams) {
+mal_id = urlParams.get("mal_id")
+if (mal_id !== null) {
     getAnimeByMalId(urlParams["mal_id"], createAnime)
 }
 
