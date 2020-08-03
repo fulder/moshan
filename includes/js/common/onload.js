@@ -1,8 +1,8 @@
-window.onload(function() {
+window.onload = function() {
     includeData();
 
     initNavbar();
-});
+};
 
 function includeData() {
     //See: https://stackoverflow.com/a/31837264. Automated loading of html using "data-include" html tag
