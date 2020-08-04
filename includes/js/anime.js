@@ -2,7 +2,7 @@ const urlParams = new URLSearchParams(window.location.search);
 
 mal_id = urlParams.get("mal_id")
 if (mal_id !== null) {
-    getAnimeByMalId(mal_id, createAnime)
+    getAnimeById("mal_id", mal_id, createAnime)
 }
 
 function createAnime(anime) {
