@@ -33,6 +33,7 @@ function createHistoryAnimeItem(animeId, anime) {
 
     title = anime["title"];
     poster = anime["main_picture"]["medium"];
+    externalId = anime["mal_id"]
 
     resultHTML += `<div id="poster-anime-${animeId}" class="col-4 col-md-2 poster">`;
     resultHTML += `<a href="/anime/index.html?mal_id=${externalId}">`;
