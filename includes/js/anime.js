@@ -9,6 +9,7 @@ if (mal_id !== null) {
 
 function createAnime(anime) {
     poster = anime["main_picture"]["large"]
+    title = anime["title"]
 
     resultHTML += '<div class="col-2 item">';
     resultHTML +='<img class="img-fluid" src=' + poster + '>';
