@@ -15,7 +15,7 @@ function searchAnime(searchString, callback) {
       });
 }
 
-function getAnimeById(apiName, id, callback) {
+function getAnimeByApiId(apiName, id, callback) {
     options = {
         headers: {
             'Authorization': accessToken,

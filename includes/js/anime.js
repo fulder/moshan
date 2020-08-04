@@ -7,7 +7,7 @@ if (id !== null){
     getAnimeById(id, createAnime)
 }
 else if (mal_id !== null) {
-    getAnimeById("mal_id", mal_id, createAnime)
+    getAnimeByApiId("mal_id", mal_id, createAnime)
 }
 
 
