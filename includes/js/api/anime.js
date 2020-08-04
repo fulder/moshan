@@ -15,14 +15,14 @@ function searchAnime(searchString, callback) {
       });
 }
 
-function getAnimeByMalId(malId, callback) {
+function getAnimeById(apiName, id, callback) {
     options = {
         headers: {
             'Authorization': accessToken,
             'Content-Type': "application/json"
         }
     }
-    axios.get(`https://api.anime.moshan.tv/v1/anime?mal_id=${malId}`, options)
+    axios.get(`https://api.anime.moshan.tv/v1/anime?${apiName}=${id}`, options)
       .then(function (response) {
         callback(response.data);
       })
