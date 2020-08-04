@@ -1,1 +1,3 @@
-console.log("")
+path = window.location.pathname
+
+console.log(path)
