@@ -1,9 +1,15 @@
 const urlParams = new URLSearchParams(window.location.search);
 
+id = urlParams.get("id")
 mal_id = urlParams.get("mal_id")
-if (mal_id !== null) {
+
+if (id !== null){
+    getAnimeById(id, createAnime)
+}
+else if (mal_id !== null) {
     getAnimeById("mal_id", mal_id, createAnime)
 }
+
 
 function createAnime(anime) {
     poster = anime["main_picture"]["large"]
