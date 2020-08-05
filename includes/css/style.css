@@ -15,26 +15,25 @@ body {
 
 
 
-#synopsis {
+synopsis {
   font-size: 1rem;
   line-height: 1.5;
 }
 
-
-#synopsis #collapse.collapse:not(.show) {
+synopsis #collapse.collapse:not(.show) {
   display: block;
   height: 3rem;
   overflow: hidden;
 }
 
-#synopsis #collapse.collapsing {
+synopsis #collapse.collapsing {
   height: 3rem;
 }
 
-#synopsis a.collapsed::after {
+synopsis a.collapsed::after {
   content: '+ Read More';
 }
 
-#synopsis a:not(.collapsed)::after {
+synopsis a:not(.collapsed)::after {
   content: '- Collapse';
 }
