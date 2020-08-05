@@ -12,28 +12,3 @@ body {
     max-width: 1200px;
     margin: auto;
 }
-
-
-
-synopsis {
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-synopsis p.collapse:not(.show) {
-  display: block;
-  height: 3rem;
-  overflow: hidden;
-}
-
-synopsis p.collapsing {
-  height: 3rem;
-}
-
-synopsis a.collapsed::after {
-  content: '+ Read More';
-}
-
-synopsis a:not(.collapsed)::after {
-  content: '- Collapse';
-}
