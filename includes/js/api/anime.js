@@ -42,7 +42,7 @@ function getAnimeById(id, callback) {
     }
     axios.get(`https://api.anime.moshan.tv/v1/anime/${id}`, options)
       .then(function (response) {
-        callback(response.data[id]);
+        callback(response.data);
       })
       .catch(function (error) {
         // handle error
