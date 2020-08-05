@@ -37,14 +37,12 @@ function createAnime(anime) {
     resultHTML += '<div class="card">';
     resultHTML += '<div id="synopsisCardHeader" class="card-header">';
     resultHTML += `<button class="btn btn-link" data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseOne">Synopsis</button>`;
-    resultHTML += '<div id="collapseSynopsis" class="collapse show" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">'
+    resultHTML += '<div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">'
     resultHTML += `<div class="card-body">`;
     resultHTML += anime['synopsis']
     resultHTML += '</div>';
     resultHTML += '</div>';
     resultHTML += '</div>';
-
-
 
     document.getElementById("anime").innerHTML = resultHTML
 
