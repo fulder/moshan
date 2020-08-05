@@ -13,6 +13,8 @@ else if (mal_id !== null) {
 
 function createAnime(anime) {
     poster = anime["main_picture"]["large"]
+    start_date = anime["start_date"]
+    synopsis = anime["synopsis"]
 
     status = "Airing"
     if ("end_date" in $anime) {
@@ -27,12 +29,12 @@ function createAnime(anime) {
     resultHTML += '</div>';
 
     resultHTML += '<div class="col-md-9 col-8">';
-    resultHTML += `<p><b>Release date</b>: ${anime['start_date']}</p>`;
+    resultHTML += `<p><b>Release date</b>: ${start_date}</p>`;
     resultHTML += `<p><b>Status</b>: ${status}</p>`;
     resultHTML += '</div>';
 
     resultHTML += '<div class="col-md-9 col-12">';
-    resultHTML += `<p>${anime['synopsis']}</p>`;
+    resultHTML += `<p>${synopsis}</p>`;
     resultHTML += '</div>';
     document.getElementById("anime").innerHTML = resultHTML
 
