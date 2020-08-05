@@ -22,7 +22,7 @@ function createAnime(anime) {
 
     document.getElementById("title").innerHTML = anime['title']
 
-    resultHTML = '<div class="col-md-4 col-5 item">';
+    resultHTML = '<div class="col-md-3 col-5 item">';
     resultHTML += `<img class="img-fluid" src="${poster}" />`;
     resultHTML += '</div>';
 
