@@ -12,12 +12,12 @@ TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6IlRFU
 
 
 @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-@patch("api.watch_history_by_collection.anime_api.get_anime")
-def test_handler(mocked_get_anime, mocked_get_watch_history):
+@patch("api.watch_history_by_collection.anime_api.get_animes")
+def test_handler(mocked_get_animes, mocked_get_watch_history):
     mocked_get_watch_history.return_value = {
         "items": {"123": {"collection_name": "anime", "item_id": Decimal(123)}}
     }
-    mocked_get_anime.return_value = {
+    mocked_get_animes.return_value = {
         "123": {
             "title": "anime_title"
         }
