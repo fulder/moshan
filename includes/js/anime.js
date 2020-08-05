@@ -22,18 +22,18 @@ function createAnime(anime) {
 
     document.getElementById("title").innerHTML = anime['title']
 
-    resultHTML = '<div class="col-md-5 col-5 item">';
+    resultHTML = '<div class="col-md-4 col-5 item">';
     resultHTML += `<img class="img-fluid" src="${poster}" />`;
     resultHTML += '</div>';
 
-    resultHTML += '<div class="col-md-5 col-6">';
+    resultHTML += '<div class="col-md-2 col-7">';
     resultHTML += `<p><b>Start Date</b>: ${anime['start_date']}</p>`;
     resultHTML += `<p><b>Status</b>: ${status}</p>`;
     resultHTML += `<button class="btn btn-success">Add</button>`;
     resultHTML += `<button class="btn btn-danger d-none">Remove</button>`;
     resultHTML += '</div>';
 
-    resultHTML += '<div id="synopsisCol" class="col-md-9 col-12">';
+    resultHTML += '<div id="synopsisCol" class="col-12">';
     resultHTML += '<div class="card">';
     resultHTML += '<div id="synopsisCardHeader" class="card-header">';
     resultHTML += `<button class="btn btn-link" data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">Synopsis</button>`;
