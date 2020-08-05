@@ -35,7 +35,7 @@ function createAnime(anime) {
 
     resultHTML += '<div id="synopsisCol" class="mt-2 col-12">';
     resultHTML += '<div class="card">';
-    resultHTML += `<a class="btn" data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">`;
+    resultHTML += `<a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">`;
     resultHTML += '<div id="synopsisCardHeader" class="card-header">Synopsis</div>';
     resultHTML += '</a>';
     resultHTML += '<div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">'
