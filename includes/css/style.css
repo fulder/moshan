@@ -20,13 +20,13 @@ synopsis {
   line-height: 1.5;
 }
 
-synopsis .collapse:not(.show) {
+synopsis p.collapse:not(.show) {
   display: block;
   height: 3rem;
   overflow: hidden;
 }
 
-synopsis .collapsing {
+synopsis p.collapsing {
   height: 3rem;
 }
 
