@@ -14,11 +14,16 @@ else if (mal_id !== null) {
 function createAnime(anime) {
     poster = anime["main_picture"]["large"]
     title = anime["title"]
+    synopsis = anime["synopsis"]
 
     document.getElementById("title").innerHTML = title
 
     resultHTML = '<div class="col-md-3 col-4 item">';
     resultHTML += `<img class="img-fluid" src="${poster}" />`;
+    resultHTML += '</div>';
+
+    resultHTML += '<div class="col-md-2 col-3">';
+    resultHTML += `<p>${synopsis}</p>`;
     resultHTML += '</div>';
     document.getElementById("anime").innerHTML = resultHTML
 
