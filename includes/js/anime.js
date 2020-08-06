@@ -19,49 +19,52 @@ function createAnime(anime) {
         status = "Finished"
     }
 
-
     document.getElementById("title").innerHTML = anime['title']
 
-    resultHTML = '<div class="col-md-3 col-5 item">';
-    resultHTML += `<img class="img-fluid" src="${poster}" />`;
-    resultHTML += '</div>';
+    resultHTML = `
+        <div class="col-md-3 col-5 item">
+            <img class="img-fluid" src="${poster}" />
+        </div>
 
-    resultHTML += '<div class="col-md-3 col-7">';
-    resultHTML += `<p><b>Released</b>: ${anime['start_date']}</p>`;
-    resultHTML += `<p><b>Status</b>: ${status}</p>`;
+        <div class="col-md-3 col-7">
+            <p><b>Released</b>: ${anime['start_date']}</p>
+            <p><b>Status</b>: ${status}</p>
+            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>
+            <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>
 
-    resultHTML += `<button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>`;
-    resultHTML += `<button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>`;
+            <div class="card mt-2">
+                <div class="card-header small">External Links</div>
+                <div class="card-body p-1">
+                    <div class="row">
+                        <div class="col-4">
+                            <a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
+                        </div>
+                        <div id="anidbLink" class="col-4 hidden">
+                            <a href="https://myanimelist.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb_id.png" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    resultHTML += '<div class="card mt-2">'
-    resultHTML += '<div class="card-header small">External Links</div>'
-    resultHTML += '<div class="card-body p-1">'
-    resultHTML += '<div class="row">';
-    resultHTML += '<div class="col-4">';
-    resultHTML += `<a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>`;
-    resultHTML += '</div>';
-    if ("anidb_id" in anime) {
-        resultHTML += '<div class="col-4">';
-        resultHTML += `<a href="https://anidb.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>`;
-        resultHTML += '</div>';
-    }
-    resultHTML += '</div>';
-    resultHTML += '</div>';
-    resultHTML += '</div>';
-    resultHTML += '</div>';
-
-    resultHTML += '<div id="synopsisCol" class="mt-2 col-12">';
-    resultHTML += '<div class="card">';
-    resultHTML += `<a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">`;
-    resultHTML += '<div id="synopsisCardHeader" class="card-header">Synopsis</div>';
-    resultHTML += '</a>';
-    resultHTML += '<div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">'
-    resultHTML += `<div class="card-body">`;
-    resultHTML += anime['synopsis']
-    resultHTML += '</div>';
-    resultHTML += '</div>';
+            <div id="synopsisCol" class="mt-2 col-12">
+                <div class="card">
+                    <a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">
+                        <div id="synopsisCardHeader" class="card-header">Synopsis</div>
+                    </a>
+                    <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
+                        <div class="card-body">${anime['synopsis']}</div>
+                    </div>
+                </div>
+           </div>
+       </div>
+    `;
 
     document.getElementById("anime").innerHTML = resultHTML
+
+    if ("anidb_id" in anime) {
+        document.getElementById("anidbLink").classList.remove("hidden")
+    }
+
 
     // get item from watch history and toggle add/remove buttons
     getItem("anime", anime["id"], animeAdded);
