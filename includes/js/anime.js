@@ -27,7 +27,7 @@ function createAnime(anime) {
     resultHTML += '</div>';
 
     resultHTML += '<div class="col-md-2 col-7">';
-    resultHTML += `<p><b>Start Date</b>: ${anime['start_date']}</p>`;
+    resultHTML += `<p><b>Release Date</b>: ${anime['start_date']}</p>`;
     resultHTML += `<p><b>Status</b>: ${status}</p>`;
     resultHTML += `<button class="btn btn-success">Add</button>`;
     resultHTML += `<button class="btn btn-danger d-none">Remove</button>`;
