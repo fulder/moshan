@@ -20,7 +20,7 @@ function getWatchHistoryByCollection(collectionName, callback) {
             'Authorization': accessToken
         }
     }
-    axios.get("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, options)
+    axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}`, options)
       .then(function (response) {
         callback(response.data)
       })
@@ -30,13 +30,13 @@ function getWatchHistoryByCollection(collectionName, callback) {
       });
 }
 
-function removeItem(collection, id) {
+function removeItem(collectionName, id) {
     options = {
         headers: {
             'Authorization': accessToken
         }
     }
-    axios.delete("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collection + '/' + id, options)
+    axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
       .catch(function (error) {
         // handle error
         console.log(error);
@@ -53,12 +53,29 @@ function addItem(collectionName, id) {
             'Content-Type': "application/json"
         }
     }
-    axios.post("https://api.watch-history.moshan.tv/v1/watch-history/collection/" + collectionName, data, options)
+    axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}`, data, options)
       .then(function (response) {
         callback(response.data)
       })
       .catch(function (error) {
         // handle error
         console.log(error);
+      });
+}
+
+function getItem(collectionName, id, callback) {
+    options = {
+        headers: {
+            'Authorization': accessToken,
+            'Content-Type': "application/json"
+        }
+    }
+    axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
+      .then(function (response) {
+        callback(response.data)
+      })
+      .catch(function (error) {
+        // handle error
+        callback(null)
       });
 }
