@@ -33,7 +33,7 @@ function createAnime(anime) {
             <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>
         </div>
 
-        <div class="col-md-3 col-3">
+        <div class="col-md-3 col-7">
             <div class="card mt-2">
                 <div class="card-header small">External Links</div>
                 <div class="card-body p-1">
