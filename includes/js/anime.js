@@ -35,12 +35,12 @@ function createAnime(anime) {
 
     resultHTML += '<div class="row mt-1">';
     resultHTML += '<div class="col-3">';
-    resultHTML += `<a href="https://myanimelist.net/anime/${anime['mal_id']}"><img class="img-fluid" src="/includes/icons/mal.png" /></a>`;
+    resultHTML += `<a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>`;
     resultHTML += '</div>';
 
     if ("anidb_id" in anime) {
         resultHTML += '<div class="col-3">';
-        resultHTML += `<a href="https://anidb.net/anime/${anime['anidb_id']}"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>`;
+        resultHTML += `<a href="https://anidb.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>`;
         resultHTML += '</div>';
     }
     resultHTML += '</div>';
