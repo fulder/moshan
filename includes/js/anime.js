@@ -24,14 +24,6 @@ function createAnime(anime) {
     resultHTML = `
         <div class="col-md-3 col-5 item">
             <img class="img-fluid" src="${poster}" />
-        </div>
-
-        <div class="col-md-3 col-7">
-            <p><b>Released</b>: ${anime['start_date']}</p>
-            <p><b>Status</b>: ${status}</p>
-            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>
-            <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>
-
             <div class="card mt-2">
                 <div class="card-header small">External Links</div>
                 <div class="card-body p-1">
@@ -45,6 +37,13 @@ function createAnime(anime) {
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="col-md-3 col-7">
+            <p><b>Released</b>: ${anime['start_date']}</p>
+            <p><b>Status</b>: ${status}</p>
+            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>
+            <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>
         </div>
 
         <div id="synopsisCol" class="mt-2 col-12">
