@@ -39,7 +39,7 @@ function createAnime(anime) {
     resultHTML += '</div>';
 
     if ("anidb_id" in anime) {
-        resultHTML = '<div class="col-2">';
+        resultHTML += '<div class="col-2">';
         resultHTML += `<a href="https://anidb.net/anime/${anime['anidb_id']}"><img class="img-fluid external-link" src="/includes/icons/mal.png" /></a>`;
         resultHTML += '</div>';
     }
