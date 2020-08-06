@@ -120,9 +120,9 @@ function createEpisodesList(episodes) {
     episodes["items"].forEach(function(episode) {
         tableHTML += `
             <tr>
-                <td>$episode['episode_number']</td>
-                <td>$episode['title']</td>
-                <td>$episode['air_date']</td>
+                <td>${episode['episode_number']}</td>
+                <td>${episode['title']}</td>
+                <td>${episode['air_date']}</td>
             </tr>
         `
     });
