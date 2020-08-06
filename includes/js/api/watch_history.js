@@ -37,9 +37,9 @@ function removeItem(collectionName, id, callback) {
         }
     }
     axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
-      .then(function (response)) {
+      .then(function (response) {
         callback(response);
-      }
+      })
       .catch(function (error) {
         // handle error
         console.log(error);
