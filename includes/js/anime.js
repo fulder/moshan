@@ -61,14 +61,15 @@ function createAnime(anime) {
        </div>
 
        <div class="mt-2 col-12">
-            <div class="card">
-                <a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">
-                    <div id="synopsisCardHeader" class="card-header">Synopsis</div>
-                </a>
-                <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
-                    <div class="card-body">${anime['synopsis']}</div>
-                </div>
-            </div>
+            <nav aria-label="Episode navigation">
+              <ul id="episodesPages" class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+              </ul>
+            </nav>
        </div>
     `;
 
