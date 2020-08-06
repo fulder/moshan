@@ -34,21 +34,16 @@ function createAnime(anime) {
         </div>
 
         <div class="col-md-3 col-3">
-            <p><b>Released</b>: ${anime['start_date']}</p>
-            <p><b>Status</b>: ${status}</p>
-            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>
-            <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>
-        </div>
-
-        <div class="card mt-2">
-            <div class="card-header small">External Links</div>
-            <div class="card-body p-1">
-                <div class="row">
-                    <div class="col-4">
-                        <a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
-                    </div>
-                    <div id="anidbLink" class="col-4 hidden">
-                        <a href="https://anidb.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
+            <div class="card mt-2">
+                <div class="card-header small">External Links</div>
+                <div class="card-body p-1">
+                    <div class="row">
+                        <div class="col-4">
+                            <a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
+                        </div>
+                        <div id="anidbLink" class="col-4 hidden">
+                            <a href="https://anidb.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
+                        </div>
                     </div>
                 </div>
             </div>
