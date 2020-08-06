@@ -61,15 +61,16 @@ function createAnime(anime) {
        </div>
 
        <div class="mt-2 col-12">
-            <nav aria-label="Episode navigation">
-              <ul id="episodesPages" class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-              </ul>
-            </nav>
+           <table id="episodesTable" class="table table-striped table-hover"></table>
+           <nav aria-label="Episode navigation">
+               <ul id="episodesPages" class="pagination">
+                   <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                   <li class="page-item"><a class="page-link" href="#">1</a></li>
+                   <li class="page-item"><a class="page-link" href="#">2</a></li>
+                   <li class="page-item"><a class="page-link" href="#">3</a></li>
+                   <li class="page-item"><a class="page-link" href="#">Next</a></li>
+               </ul>
+           </nav>
        </div>
     `;
 
@@ -106,5 +107,25 @@ function animeAdded(anime) {
 }
 
 function createEpisodesList(episodes) {
-    console.log(episodes);
+    tableHTML = `
+        <thead>
+            <tr>
+                <th scope="col">Episode</th>
+                <th scope="col">Title</th>
+                <th scope="col">Air Date</th>
+            </tr>
+        </thead>
+    `
+
+    episodes["items"].forEach(function(episode) {
+        tableHTML += `
+            <tr>
+                <td>episode['episode_number']</td>
+                <td>episode['title']</td>
+                <td>episode['air_date']</td>
+            </tr>
+        `
+    });
+
+    document.getElementById("episodesTable").innerHTML = tableHTML
 }
