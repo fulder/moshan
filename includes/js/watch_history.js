@@ -42,23 +42,3 @@ function createHistoryAnimeItem(animeId, anime) {
 
     return true;
 }
-
-function showConfirmationModal(collectionName, id, title) {
-    removeCollectionName = collectionName
-    removeId = id;
-
-    $('#removeModalBodyTitle').html(title);
-    $('#removalConfirmationModal').modal('show');
-}
-
-function removeFromWatchHistory() {
-    removeItem(removeCollectionName, removeId);
-
-    $('#removalConfirmationModal').modal('hide');
-    $(`#poster-${removeCollectionName}-${removeId}`).remove();
-
-    // Cleanup
-    $('#removeModalBodyTitle').html("");
-    removeCollectionName = "";
-    removeId = "";
-}
