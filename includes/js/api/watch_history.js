@@ -30,20 +30,23 @@ function getWatchHistoryByCollection(collectionName, callback) {
       });
 }
 
-function removeItem(collectionName, id) {
+function removeItem(collectionName, id, callback) {
     options = {
         headers: {
             'Authorization': accessToken
         }
     }
     axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
+      .then(function (response)) {
+        callback(response);
+      }
       .catch(function (error) {
         // handle error
         console.log(error);
       });
 }
 
-function addItem(collectionName, id) {
+function addItem(collectionName, id, callback) {
     data = {
         item_add_id: id
     }
