@@ -33,16 +33,20 @@ function createAnime(anime) {
     resultHTML += `<button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>`;
     resultHTML += `<button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>`;
 
+    resultHTML += '<div class="card">'
+    resultHTML += '<div class="card-header">External Links</div>'
+    resultHTML += '<div class="card-body">'
     resultHTML += '<div class="row mt-1">';
     resultHTML += '<div class="col-3">';
     resultHTML += `<a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>`;
     resultHTML += '</div>';
-
     if ("anidb_id" in anime) {
         resultHTML += '<div class="col-3">';
         resultHTML += `<a href="https://anidb.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>`;
         resultHTML += '</div>';
     }
+    resultHTML += '</div>';
+    resultHTML += '</div>';
     resultHTML += '</div>';
     resultHTML += '</div>';
 
