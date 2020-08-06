@@ -40,7 +40,7 @@ function createAnime(anime) {
                             <a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
                         </div>
                         <div id="anidbLink" class="col-4 hidden">
-                            <a href="https://myanimelist.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb_id.png" /></a>
+                            <a href="https://myanimelist.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,6 @@ function createAnime(anime) {
     if ("anidb_id" in anime) {
         document.getElementById("anidbLink").classList.remove("hidden")
     }
-
 
     // get item from watch history and toggle add/remove buttons
     getItem("anime", anime["id"], animeAdded);
