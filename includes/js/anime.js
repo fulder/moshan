@@ -25,7 +25,7 @@ function createAnime(anime) {
     resultHTML += `<img class="img-fluid" src="${poster}" />`;
     resultHTML += '</div>';
 
-    resultHTML += '<div class="col-md-2 col-7">';
+    resultHTML += '<div class="col-md-3 col-7">';
     resultHTML += `<p><b>Released</b>: ${anime['start_date']}</p>`;
     resultHTML += `<p><b>Status</b>: ${status}</p>`;
 
