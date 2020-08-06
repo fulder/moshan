@@ -59,6 +59,17 @@ function createAnime(anime) {
                 </div>
             </div>
        </div>
+
+       <div class="mt-2 col-12">
+            <div class="card">
+                <a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">
+                    <div id="synopsisCardHeader" class="card-header">Synopsis</div>
+                </a>
+                <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
+                    <div class="card-body">${anime['synopsis']}</div>
+                </div>
+            </div>
+       </div>
     `;
 
     document.getElementById("anime").innerHTML = resultHTML
@@ -69,6 +80,8 @@ function createAnime(anime) {
 
     // get item from watch history and toggle add/remove buttons
     getItem("anime", anime["id"], animeAdded);
+
+    getAnimeEpisodes(anime["id"], createEpisodesList);
 }
 
 function itemAdded() {
@@ -89,4 +102,8 @@ function animeAdded(anime) {
     } else {
         itemAdded();
     }
+}
+
+function createEpisodesList(episodes) {
+    console.log(episodes);
 }

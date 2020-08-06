@@ -49,3 +49,20 @@ function getAnimeById(id, callback) {
         console.log(error);
       });
 }
+
+function getAnimeEpisodes(id, callback) {
+    options = {
+        headers: {
+            'Authorization': accessToken,
+            'Content-Type': "application/json"
+        }
+    }
+    axios.get(`https://api.anime.moshan.tv/v1/anime/${id}/episodes`, options)
+      .then(function (response) {
+        callback(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+}
