@@ -4,12 +4,11 @@ id = urlParams.get("id")
 mal_id = urlParams.get("mal_id")
 
 if (id !== null){
-    getAnimeById(id, createAnime)
+    getAnimeById(id, createAnime);
 }
 else if (mal_id !== null) {
-    getAnimeByApiId("mal_id", mal_id, createAnime)
+    getAnimeByApiId("mal_id", mal_id, createAnime);
 }
-
 
 function createAnime(anime) {
     poster = anime["main_picture"]["large"]
@@ -29,8 +28,9 @@ function createAnime(anime) {
     resultHTML += '<div class="col-md-2 col-7">';
     resultHTML += `<p><b>Release Date</b>: ${anime['start_date']}</p>`;
     resultHTML += `<p><b>Status</b>: ${status}</p>`;
-    resultHTML += `<button class="btn btn-success">Add</button>`;
-    resultHTML += `<button class="btn btn-danger d-none">Remove</button>`;
+
+    resultHTML += `<button id"addButton" class="btn btn-success" onclick="addItem('anime', anime['mal_id'])">Add</button>`;
+    resultHTML += `<button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', anime['mal_id'])">Remove</button>`;
     resultHTML += '</div>';
 
     resultHTML += '<div id="synopsisCol" class="mt-2 col-12">';
@@ -46,5 +46,18 @@ function createAnime(anime) {
 
     document.getElementById("anime").innerHTML = resultHTML
 
+    // get item from watch history and toggle add/remove buttons
+    getItem("anime", anime["id"], animeAdded);
+}
+
+function animeAdded(anime) {
     console.log(anime);
+
+    if (anime === null) {
+        document.getElementById("addButton").classList.remove("d-none");
+        document.getElementById("removeButton").classList.add("d-none");
+    } else {
+        document.getElementById("addButton").classList.add("d-none");
+        document.getElementById("removeButton").classList.remove("d-none");
+    }
 }
