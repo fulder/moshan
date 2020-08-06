@@ -29,7 +29,7 @@ function createAnime(anime) {
     resultHTML += `<p><b>Released</b>: ${anime['start_date']}</p>`;
     resultHTML += `<p><b>Status</b>: ${status}</p>`;
 
-    resultHTML += `<button id"addButton" class="btn btn-success" onclick="addItem('anime', anime['mal_id'])">Add</button>`;
+    resultHTML += `<button id="addButton" class="btn btn-success" onclick="addItem('anime', anime['mal_id'])">Add</button>`;
     resultHTML += `<button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', anime['mal_id'])">Remove</button>`;
     resultHTML += '</div>';
 
