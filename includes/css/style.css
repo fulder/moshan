@@ -16,3 +16,11 @@ body {
 #episodesTable {
     table-layout: fixed;
 }
+
+.episode-number-header {
+    width: 40px;
+}
+
+.episode-date-header {
+    width: 100px;
+}
