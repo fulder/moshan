@@ -159,6 +159,9 @@ function loadNextEpisodes() {
 }
 
 function loadEpisodes(page) {
+    if (currentEpisodePage == page) {
+        return
+    }
     document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.remove("active");
 
     currentEpisodePage = page;
