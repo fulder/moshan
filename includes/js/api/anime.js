@@ -50,14 +50,14 @@ function getAnimeById(id, callback) {
       });
 }
 
-function getAnimeEpisodes(id, callback) {
+function getAnimeEpisodes(id, callback, limit=100, start=1) {
     options = {
         headers: {
             'Authorization': accessToken,
             'Content-Type': "application/json"
         }
     }
-    axios.get(`https://api.anime.moshan.tv/v1/anime/${id}/episodes`, options)
+    axios.get(`https://api.anime.moshan.tv/v1/anime/${id}/episodes?limit=${limit}&start=${start}`, options)
       .then(function (response) {
         callback(response.data);
       })

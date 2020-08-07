@@ -1,4 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
+currentEpisodePage = 1;
 
 id = urlParams.get("id")
 mal_id = urlParams.get("mal_id")
@@ -63,13 +64,7 @@ function createAnime(anime) {
        <div class="mt-2 col-12">
            <table id="episodesTable" class="table table-striped table-hover"></table>
            <nav aria-label="Episode navigation">
-               <ul id="episodesPages" class="pagination">
-                   <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                   <li class="page-item"><a class="page-link" href="#">1</a></li>
-                   <li class="page-item"><a class="page-link" href="#">2</a></li>
-                   <li class="page-item"><a class="page-link" href="#">3</a></li>
-                   <li class="page-item"><a class="page-link" href="#">Next</a></li>
-               </ul>
+               <ul id="episodesPages" class="pagination"></ul>
            </nav>
        </div>
     `;
@@ -128,4 +123,31 @@ function createEpisodesList(episodes) {
     });
 
     document.getElementById("episodesTable").innerHTML = tableHTML
+
+    if (document.getElementById("episodesPages").innerHTML === "") {
+        paginationHTML = `<li class="page-item"><a class="page-link" onclick=loadPreviousEpisodes>Previous</a></li>`
+        for (i = 1; i <= episodes["total_pages"]; i++) {
+            paginationHTML += `<li id="episodePage${i}" class="page-item"><a class="page-link" href="loadEpisodes($i)">$i</a></li>`
+        }
+        paginationHTML += `<li class="page-item"><a class="page-link" onclick=loadNextEpisodes>Next</a></li>`
+
+        document.getElementById("episodesPages").innerHTML = paginationHTML;
+    }
+}
+
+function loadPreviousEpisodes() {
+    getAnimeEpisodes(currentPage - 1)
+}
+
+function loadNextEpisodes() {
+    getAnimeEpisodes(currentPage + 1)
+}
+
+function loadEpisodes(page) {
+    document.getElementById("episodesPages").getElementsByTagName("LI")[currentPage].classList.remove("active");
+
+    currentEpisodePage = page;
+    getAnimeEpisodes(anime["id"], createEpisodesList, start=page);
+
+    document.getElementById("episodesPages").getElementsByTagName("LI")[currentPage].classList.add("active");
 }
