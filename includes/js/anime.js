@@ -87,7 +87,7 @@ function createAnime(anime) {
 
 
     // if the anime item is cached
-    if (id !== undefined) {
+    if (id !== null) {
         // get item from watch history and toggle add/remove buttons
         getItem("anime", id, animeAdded);
 
