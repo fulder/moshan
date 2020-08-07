@@ -7,6 +7,8 @@ mal_id = urlParams.get("mal_id")
 episodePage = urlParams.get("episode_page")
 if (episodePage === null) {
     episodePage = 1
+} else {
+    episodePage = parseInt(episodePage);
 }
 
 if (id !== null){
