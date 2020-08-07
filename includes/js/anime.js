@@ -5,6 +5,11 @@ totalPages = 0;
 id = urlParams.get("id")
 mal_id = urlParams.get("mal_id")
 
+episodePage = urlParams.get("episode_page")
+if (episodePage == null) {
+    episodePage = 1
+}
+
 if (id !== null){
     getAnimeById(id, createAnime);
 }
@@ -86,7 +91,7 @@ function createAnime(anime) {
         // get item from watch history and toggle add/remove buttons
         getItem("anime", id, animeAdded);
 
-        getAnimeEpisodes(id, createEpisodesList);
+        getAnimeEpisodes(id, createEpisodesList, episodePage);
     }
 }
 
@@ -134,12 +139,12 @@ function createEpisodesList(episodes) {
     document.getElementById("episodesTable").innerHTML = tableHTML
 
     if (document.getElementById("episodesPages").innerHTML === "") {
-        paginationHTML = `<li class="page-item"><a href="#" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
+        paginationHTML = `<li class="page-item"><a href="?episode_page=1" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
         totalPages = episodes["total_pages"];
         for (i = 1; i <= totalPages; i++) {
-            paginationHTML += `<li id="episodePage${i}" class="page-item"><a href="#" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
+            paginationHTML += `<li id="episodePage${i}" class="page-item"><a href="episode_page=${i}" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
         }
-        paginationHTML += `<li class="page-item"><a href="#" class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
+        paginationHTML += `<li class="page-item"><a href="?episode_page=${totalPages}" class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
 
         document.getElementById("episodesPages").innerHTML = paginationHTML;
         document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.add("active");
