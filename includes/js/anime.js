@@ -124,9 +124,9 @@ function createEpisodesList(episodes) {
     episodes["items"].forEach(function(episode) {
         tableHTML += `
             <tr>
-                <td>${episode['episode_number']}</td>
-                <td class="text-truncate">${episode['title']}</td>
-                <td>${episode['air_date']}</td>
+                <td class="small">${episode['episode_number']}</td>
+                <td class="text-truncate small">${episode['title']}</td>
+                <td class="small">${episode['air_date']}</td>
             </tr>
         `
     });
