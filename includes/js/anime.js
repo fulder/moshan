@@ -70,7 +70,9 @@ function createAnime(anime) {
            <nav aria-label="Episode navigation">
                <ul id="episodesPages" class="pagination"></ul>
            </nav>
-           <table id="episodesTable" class="table table-striped table-hover"></table>
+           <div class="table-responsive">
+               <table id="episodesTable" class="table table-striped table-hover"></table>
+           </div>
        </div>
     `;
 
