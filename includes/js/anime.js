@@ -1,5 +1,4 @@
 const urlParams = new URLSearchParams(window.location.search);
-currentEpisodePage = 1;
 totalPages = 0;
 
 id = urlParams.get("id")
@@ -156,27 +155,27 @@ function createEpisodesList(episodes) {
 }
 
 function loadPreviousEpisodes() {
-    if (currentEpisodePage > 1) {
-        loadEpisodes(currentEpisodePage - 1)
+    if (episodePage > 1) {
+        loadEpisodes(episodePage - 1)
     }
 }
 
 function loadNextEpisodes() {
-    if (currentEpisodePage < totalPages) {
-        loadEpisodes(currentEpisodePage + 1)
+    if (episodePage < totalPages) {
+        loadEpisodes(episodePage + 1)
     }
 }
 
 function loadEpisodes(page) {
-    if (currentEpisodePage == page) {
+    if (episodePage == page) {
         return
     }
-    document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.remove("active");
+    document.getElementById("episodesPages").getElementsByTagName("LI")[episodePage].classList.remove("active");
 
-    currentEpisodePage = page;
-    getAnimeEpisodes(id, createEpisodesList, currentEpisodePage);
+    episodePage = page;
+    getAnimeEpisodes(id, createEpisodesList, episodePage);
 
-    document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.add("active");
+    document.getElementById("episodesPages").getElementsByTagName("LI")[episodePage].classList.add("active");
 
     urlParams.set("episode_page", page)
     history.pushState({}, null, `?${urlParams.toString()}`)
