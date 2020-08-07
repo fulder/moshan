@@ -125,7 +125,7 @@ function createEpisodesList(episodes) {
         tableHTML += `
             <tr>
                 <td>${episode['episode_number']}</td>
-                <td>${episode['title']}</td>
+                <td class="text-truncate">${episode['title']}</td>
                 <td>${episode['air_date']}</td>
             </tr>
         `
