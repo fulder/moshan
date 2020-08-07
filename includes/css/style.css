@@ -24,3 +24,7 @@ body {
 .episode-date-header {
     width: 100px;
 }
+
+#synopsisCardHeader {
+    cursor: pointer;
+}
