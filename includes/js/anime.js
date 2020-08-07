@@ -66,10 +66,10 @@ function createAnime(anime) {
        </div>
 
        <div class="mt-2 col-12">
-           <table id="episodesTable" class="table table-striped table-hover"></table>
            <nav aria-label="Episode navigation">
                <ul id="episodesPages" class="pagination"></ul>
            </nav>
+           <table id="episodesTable" class="table table-striped table-hover"></table>
        </div>
     `;
 
