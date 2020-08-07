@@ -144,13 +144,10 @@ function createEpisodesList(episodes) {
         totalPages = episodes["total_pages"];
         for (i = 1; i <= totalPages; i++) {
             className = "page-item"
-            console.log(i);
-            console.log(episodePage);
-            console.log(i == episodePage);
             if (i == episodePage) {
                 className = "page-item active"
             }
-            paginationHTML += `<li id="episodePage${i}" class=${className}><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
+            paginationHTML += `<li id="episodePage${i}" class="${className}"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
         }
         paginationHTML += `<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
 
