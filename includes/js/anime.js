@@ -119,7 +119,7 @@ function createEpisodesList(episodes) {
     tableHTML = `
         <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col" style="width: 40px">#</th>
                 <th scope="col">Title</th>
                 <th scope="col">Air Date</th>
             </tr>
