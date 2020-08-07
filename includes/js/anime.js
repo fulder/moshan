@@ -142,14 +142,16 @@ function createEpisodesList(episodes) {
         paginationHTML = `<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
 
         totalPages = episodes["total_pages"];
+        className = "page-item"
         for (i = 1; i <= totalPages; i++) {
-            paginationHTML += `<li id="episodePage${i}" class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
+            if (i == episodePage) {
+                className = "page-item active"
+            }
+            paginationHTML += `<li id="episodePage${i}" class=${className}><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
         }
-
         paginationHTML += `<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
 
         document.getElementById("episodesPages").innerHTML = paginationHTML;
-        document.getElementById("episodesPages").getElementsByTagName("LI")[episodePage+1].classList.add("active");
     }
 }
 
