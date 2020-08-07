@@ -145,11 +145,15 @@ function createEpisodesList(episodes) {
 }
 
 function loadPreviousEpisodes() {
-    loadEpisodes(currentEpisodePage - 1)
+    if (currentEpisodePage > 1) {
+        loadEpisodes(currentEpisodePage - 1)
+    }
 }
 
 function loadNextEpisodes() {
-    loadEpisodes(currentEpisodePage + 1)
+    if (currentEpisodePage < document.getElementById("episodesPages").getElementsByTagName("LI").length) {
+        loadEpisodes(currentEpisodePage + 1)
+    }
 }
 
 function loadEpisodes(page) {
