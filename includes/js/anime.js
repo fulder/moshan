@@ -145,18 +145,18 @@ function createEpisodesList(episodes) {
 }
 
 function loadPreviousEpisodes() {
-    getAnimeEpisodes(currentEpisodePage - 1)
+    loadEpisodes(currentEpisodePage - 1)
 }
 
 function loadNextEpisodes() {
-    getAnimeEpisodes(currentEpisodePage + 1)
+    loadEpisodes(currentEpisodePage + 1)
 }
 
 function loadEpisodes(page) {
     document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.remove("active");
 
     currentEpisodePage = page;
-    getAnimeEpisodes(id, createEpisodesList, page);
+    getAnimeEpisodes(id, createEpisodesList, currentEpisodePage);
 
     document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.add("active");
 }
