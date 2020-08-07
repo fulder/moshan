@@ -25,6 +25,10 @@ body {
     width: 100px;
 }
 
+.episode-add-header {
+    width: 40px;
+}
+
 #synopsisCardHeader {
     cursor: pointer;
 }
