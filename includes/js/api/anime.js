@@ -50,7 +50,7 @@ function getAnimeById(id, callback) {
       });
 }
 
-function getAnimeEpisodes(id, callback, limit=100, start=1) {
+function getAnimeEpisodes(id, callback, start=1, limit=100) {
     options = {
         headers: {
             'Authorization': accessToken,

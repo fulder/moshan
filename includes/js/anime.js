@@ -156,7 +156,7 @@ function loadEpisodes(page) {
     document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.remove("active");
 
     currentEpisodePage = page;
-    getAnimeEpisodes(id, createEpisodesList, start=page);
+    getAnimeEpisodes(id, createEpisodesList, page);
 
     document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.add("active");
 }
