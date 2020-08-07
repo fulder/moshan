@@ -133,11 +133,11 @@ function createEpisodesList(episodes) {
     document.getElementById("episodesTable").innerHTML = tableHTML
 
     if (document.getElementById("episodesPages").innerHTML === "") {
-        paginationHTML = `<li class="page-item"><a class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
+        paginationHTML = `<li class="page-item"><a href="#" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
         for (i = 1; i <= episodes["total_pages"]; i++) {
-            paginationHTML += `<li id="episodePage${i}" class="page-item"><a class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
+            paginationHTML += `<li id="episodePage${i}" class="page-item"><a href="#" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
         }
-        paginationHTML += `<li class="page-item"><a class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
+        paginationHTML += `<li class="page-item"><a href="#" class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
 
         document.getElementById("episodesPages").innerHTML = paginationHTML;
         document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.add("active");
