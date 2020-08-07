@@ -85,7 +85,7 @@ function createAnime(anime) {
         // get item from watch history and toggle add/remove buttons
         getItem("anime", id, animeAdded);
 
-        getAnimeEpisodes(id createEpisodesList);
+        getAnimeEpisodes(id, createEpisodesList);
     }
 }
 
