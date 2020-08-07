@@ -1,5 +1,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 currentEpisodePage = 1;
+totalPages = 0;
 
 id = urlParams.get("id")
 mal_id = urlParams.get("mal_id")
@@ -134,7 +135,8 @@ function createEpisodesList(episodes) {
 
     if (document.getElementById("episodesPages").innerHTML === "") {
         paginationHTML = `<li class="page-item"><a href="#" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
-        for (i = 1; i <= episodes["total_pages"]; i++) {
+        totalPages = episodes["total_pages"];
+        for (i = 1; i <= totalPages; i++) {
             paginationHTML += `<li id="episodePage${i}" class="page-item"><a href="#" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
         }
         paginationHTML += `<li class="page-item"><a href="#" class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
@@ -151,7 +153,7 @@ function loadPreviousEpisodes() {
 }
 
 function loadNextEpisodes() {
-    if (currentEpisodePage < document.getElementById("episodesPages").getElementsByTagName("LI").length) {
+    if (currentEpisodePage < totalPages) {
         loadEpisodes(currentEpisodePage + 1)
     }
 }
