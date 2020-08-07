@@ -27,8 +27,7 @@ function createAnime(anime) {
     console.log(anime);
 
     status = "Airing"
-    if ("end_date" in anime) {
-        console.log(anime["end_date"])
+    if ("end_date" in anime && anime["end_date"] !== null) {
         status = "Finished"
     }
 
