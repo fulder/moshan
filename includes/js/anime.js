@@ -31,14 +31,13 @@ function createAnime(anime) {
         status = "Finished"
     }
 
-    document.getElementById("title").innerHTML = anime['title']
-
     resultHTML = `
         <div class="col-md-3 col-5 item">
             <img class="img-fluid" src="${poster}" />
         </div>
 
         <div class="col-md-9 col-7">
+            <h5>${anime['title']}</h5>
             <p><b>Released</b>: ${anime['start_date']}</p>
             <p><b>Status</b>: ${status}</p>
             <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>
@@ -123,6 +122,7 @@ function createEpisodesList(episodes) {
                 <th scope="col" class="episode-number-header">#</th>
                 <th scope="col">Title</th>
                 <th scope="col" class="episode-date-header">Air Date</th>
+                <th scope="col" class="episode-add-header">Add/Del</th>
             </tr>
         </thead>
     `
@@ -133,6 +133,7 @@ function createEpisodesList(episodes) {
                 <td class="small">${episode['episode_number']}</td>
                 <td class="text-truncate small">${episode['title']}</td>
                 <td class="small">${episode['air_date']}</td>
+                <td class="small"></td>
             </tr>
         `
     });
