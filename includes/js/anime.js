@@ -132,6 +132,7 @@ function createEpisodesList(episodes) {
         paginationHTML += `<li class="page-item"><a class="page-link" onclick=loadNextEpisodes>Next</a></li>`
 
         document.getElementById("episodesPages").innerHTML = paginationHTML;
+        document.getElementById("episodesPages").getElementsByTagName("LI")[currentPage].classList.add("active");
     }
 }
 
