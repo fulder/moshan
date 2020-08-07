@@ -12,6 +12,10 @@ else if (mal_id !== null) {
 }
 
 function createAnime(anime) {
+    if ("id" in anime) {
+        id = anime["id"];
+    }
+
     poster = anime["main_picture"]["large"]
     console.log(anime);
 
@@ -75,10 +79,14 @@ function createAnime(anime) {
         document.getElementById("anidbLink").classList.remove("hidden")
     }
 
-    // get item from watch history and toggle add/remove buttons
-    getItem("anime", anime["id"], animeAdded);
 
-    getAnimeEpisodes(anime["id"], createEpisodesList);
+    // if the anime item is cached
+    if (id !== undefined) {
+        // get item from watch history and toggle add/remove buttons
+        getItem("anime", id, animeAdded);
+
+        getAnimeEpisodes(id createEpisodesList);
+    }
 }
 
 function itemAdded() {
@@ -148,7 +156,7 @@ function loadEpisodes(page) {
     document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.remove("active");
 
     currentEpisodePage = page;
-    getAnimeEpisodes(anime["id"], createEpisodesList, start=page);
+    getAnimeEpisodes(id, createEpisodesList, start=page);
 
     document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.add("active");
 }
