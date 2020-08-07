@@ -6,7 +6,7 @@ id = urlParams.get("id")
 mal_id = urlParams.get("mal_id")
 
 episodePage = urlParams.get("episode_page")
-if (episodePage == null) {
+if (episodePage === null) {
     episodePage = 1
 }
 
@@ -152,7 +152,7 @@ function createEpisodesList(episodes) {
         paginationHTML += `<li class="page-item"><a href="?${urlParams.toString()}" class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
 
         document.getElementById("episodesPages").innerHTML = paginationHTML;
-        document.getElementById("episodesPages").getElementsByTagName("LI")[currentEpisodePage].classList.add("active");
+        document.getElementById("episodesPages").getElementsByTagName("LI")[episodePage+1].classList.add("active");
     }
 }
 
