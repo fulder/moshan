@@ -139,18 +139,16 @@ function createEpisodesList(episodes) {
     document.getElementById("episodesTable").innerHTML = tableHTML
 
     if (document.getElementById("episodesPages").innerHTML === "") {
-        currentURL = new URL(window.location.href);
-
-        currentURL.set("episode_page", 1)
+        urlParams.set("episode_page", 1)
         paginationHTML = `<li class="page-item"><a href="${currentURL}" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
 
         totalPages = episodes["total_pages"];
         for (i = 1; i <= totalPages; i++) {
-            currentURL.set("episode_page", i)
+            urlParams.set("episode_page", i)
             paginationHTML += `<li id="episodePage${i}" class="page-item"><a href="${currentURL}" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`
         }
 
-        currentURL.set("episode_page", totalPages)
+        urlParams.set("episode_page", totalPages)
         paginationHTML += `<li class="page-item"><a href="${currentURL}" class="page-link" onclick="loadNextEpisodes()">Next</a></li>`
 
         document.getElementById("episodesPages").innerHTML = paginationHTML;
