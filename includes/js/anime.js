@@ -127,7 +127,7 @@ function createEpisodesList(episodes) {
     if (document.getElementById("episodesPages").innerHTML === "") {
         paginationHTML = `<li class="page-item"><a class="page-link" onclick=loadPreviousEpisodes>Previous</a></li>`
         for (i = 1; i <= episodes["total_pages"]; i++) {
-            paginationHTML += `<li id="episodePage${i}" class="page-item"><a class="page-link" href="loadEpisodes($i)">$i</a></li>`
+            paginationHTML += `<li id="episodePage${i}" class="page-item"><a class="page-link" href="loadEpisodes(>${i})">${i}</a></li>`
         }
         paginationHTML += `<li class="page-item"><a class="page-link" onclick=loadNextEpisodes>Next</a></li>`
 
