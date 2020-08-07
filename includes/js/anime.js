@@ -120,9 +120,9 @@ function createEpisodesList(episodes) {
         <thead>
             <tr>
                 <th scope="col" class="episode-number-header small">#</th>
+                <th scope="col" class="episode-add-header small">+/-</th>
                 <th scope="col" class="small">Title</th>
                 <th scope="col" class="episode-date-header small">Air Date</th>
-                <th scope="col" class="episode-add-header small">Add/Del</th>
             </tr>
         </thead>
     `
@@ -131,9 +131,9 @@ function createEpisodesList(episodes) {
         tableHTML += `
             <tr>
                 <td class="small">${episode['episode_number']}</td>
+                <td class="small"><button type="button" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></button></td>
                 <td class="text-truncate small">${episode['title']}</td>
                 <td class="small">${episode['air_date']}</td>
-                <td class="small"></td>
             </tr>
         `
     });
