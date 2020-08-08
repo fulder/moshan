@@ -81,7 +81,7 @@ function createAnime(anime) {
 
     document.getElementById("anime").innerHTML = resultHTML
 
-    if ("anidb_id" in anime) {
+    if ("anidb_id" in anime && anime["anidb_id"] !== null) {
         document.getElementById("anidbLink").classList.remove("hidden")
     }
 
