@@ -52,7 +52,7 @@ function createAnime(anime) {
                         <div class="col-4">
                             <a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
                         </div>
-                        <div id="anidbLink" class="col-4 hidden">
+                        <div id="anidbLink" class="col-4 d-none">
                             <a href="https://anidb.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
                         </div>
                     </div>
@@ -81,8 +81,8 @@ function createAnime(anime) {
 
     document.getElementById("anime").innerHTML = resultHTML
 
-    if ("anidb_id" in anime && anime["anidb_id"] !== null) {
-        document.getElementById("anidbLink").classList.remove("hidden")
+    if ("anidb_id" in anime) {
+        document.getElementById("anidbLink").classList.remove("d-none")
     }
 
 
