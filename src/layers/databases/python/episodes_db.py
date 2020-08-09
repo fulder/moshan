@@ -107,7 +107,7 @@ def get_episodes(username, item_id, collection_name, limit=100, start=1):
         raise InvalidStartOffset
 
     total_pages = 0
-    for p in _episodes_generator(username, item_id, limit=limit, collection_name=collection_name):
+    for p in _episodes_generator(username, collection_name, item_id, limit=limit):
         total_pages += 1
         start_page += 1
         if start_page == start:
@@ -128,7 +128,7 @@ def get_episodes(username, item_id, collection_name, limit=100, start=1):
     }
 
 
-def _episodes_generator(username, item_id, limit, collection_name=None):
+def _episodes_generator(username, collection_name, item_id, limit):
     paginator = _get_client().get_paginator('query')
 
     query_kwargs = {
@@ -136,16 +136,13 @@ def _episodes_generator(username, item_id, limit, collection_name=None):
         "KeyConditionExpression": "username = :username and item_id = :item_id",
         "ExpressionAttributeValues": {
             ":username": {"S": username},
-            ":item_id": {"S": item_id}
+            ":item_id": {"S": item_id},
+            ":collection_name": {"S": collection_name},
         },
         "Limit": limit,
         "ScanIndexForward": False,
-        "FilterExpression": "attribute_not_exists(deleted_at)",
+        "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
     }
-
-    if collection_name:
-        query_kwargs["FilterExpression"] += " and collection_name = :collection_name"
-        query_kwargs["ExpressionAttributeValues"][":collection_name"] = {"S": collection_name}
 
     log.debug(f"Query kwargs: {query_kwargs}")
 

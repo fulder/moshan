@@ -38,21 +38,16 @@ def test_get_episodes():
     print(res.text)
     assert res.status_code == 200
 
-
     item_res = res.json()
 
-    assert len(item_res["items"]) == 1
+    assert len(item_res["episodes"]) == 1
     assert item_res["total_pages"] == 1
-    assert item_res["items"][0]["collection_name"] == "anime"
-    assert item_res["items"][0]["item_id"] == "23d5d8c1-2ab0-5279-a501-4d248dc9a63c"
-    assert item_res["items"][0]["episode_id"] == "10"
-    assert "created_at" in item_res["items"][0]
-    assert "updated_at" in item_res["items"][0]
+    assert item_res["episodes"][0]["collection_name"] == "anime"
+    assert item_res["episodes"][0]["item_id"] == "23d5d8c1-2ab0-5279-a501-4d248dc9a63c"
+    assert item_res["episodes"][0]["episode_id"] == "10"
+    assert "created_at" in item_res["episodes"][0]
+    assert "updated_at" in item_res["episodes"][0]
     time.sleep(1)
-
-
-
-
 
 
 # def test_post_anime_item():
