@@ -85,7 +85,6 @@ function createAnime(anime) {
         document.getElementById("anidbLink").classList.remove("d-none")
     }
 
-
     // if the anime item is cached
     if (id !== null) {
         // get item from watch history and toggle add/remove buttons
@@ -128,10 +127,12 @@ function createEpisodesList(episodes) {
     `
 
     episodes["items"].forEach(function(episode) {
+        episodeId = ${episode['episode_number']};
         tableHTML += `
             <tr>
-                <td class="small">${episode['episode_number']}</td>
-                <td class="small"><button type="button" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></button></td>
+                <td class="small">${episodeId}</td>
+                <td class="small"><button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button></td>
+                <td class="small"><button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper(${episodeId})"><i class="fa fa-minus"></i></button></td>
                 <td class="text-truncate small">${episode['title']}</td>
                 <td class="small">${episode['air_date']}</td>
             </tr>
@@ -182,4 +183,11 @@ function loadEpisodes(page) {
 
     urlParams.set("episode_page", page)
     history.pushState({}, null, `?${urlParams.toString()}`)
+}
+
+function addEpisodeWrapper(episodeId) {
+    document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
+    document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
+
+    addEpisode("anime", id, episodeId)
 }
