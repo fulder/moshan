@@ -85,7 +85,7 @@ function getItem(collectionName, id, callback) {
 
 function addEpisode(collectionName, itemId, episodeId, callback) {
     data = {
-        episode_id: id
+        episode_id: episodeId
     }
     options = {
         headers: {
