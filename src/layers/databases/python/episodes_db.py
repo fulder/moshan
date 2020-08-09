@@ -99,7 +99,7 @@ def update_episode(username, collection_name, item_id, episode_id, data):
     )
 
 
-def get_episodes(username, item_id, collection_name, limit=100, start=1):
+def get_episodes(username, collection_name, item_id, limit=100, start=1):
     start_page = 0
     res = []
 

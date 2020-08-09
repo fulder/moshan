@@ -26,7 +26,7 @@ def test_get_episodes(mocked_episodes_db):
     mocked_episodes_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    mocked_episodes_db.get_episodes(TEST_USERNAME, 123, "anime")
+    mocked_episodes_db.get_episodes(TEST_USERNAME, "anime", 123)
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeValues': {
@@ -53,7 +53,7 @@ def test_get_episodes_changed_limit(mocked_episodes_db):
     mocked_episodes_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    mocked_episodes_db.get_episodes(TEST_USERNAME, 123, "anime", limit=10)
+    mocked_episodes_db.get_episodes(TEST_USERNAME, "anime", 123, limit=10)
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeValues': {
@@ -80,7 +80,7 @@ def test_get_episodes_by_with_start(mocked_episodes_db):
     mocked_episodes_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    ret = mocked_episodes_db.get_episodes(TEST_USERNAME, 123, "ANIME", limit=1, start=2)
+    ret = mocked_episodes_db.get_episodes(TEST_USERNAME, "ANIME", 123, limit=1, start=2)
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeValues': {
