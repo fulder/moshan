@@ -3,7 +3,6 @@ from unittest.mock import patch
 from api.item_by_collection import handle
 from watch_history_db import NotFoundError
 
-TEST_CLIENT_ID = "TEST_CLIENT_ID"
 TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6IlRFU1RfQ0xJRU5UX0lEIn0.ud_dRdguJwmKv4XO-c4JD-dKGffSvXsxuAxZq9uWV-g"
 
 
