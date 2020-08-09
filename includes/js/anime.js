@@ -40,8 +40,8 @@ function createAnime(anime) {
             <h5>${anime['title']}</h5>
             <p><b>Released</b>: ${anime['start_date']}</p>
             <p><b>Status</b>: ${status}</p>
-            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>
-            <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>
+            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div class="col-md-3 col-7">
