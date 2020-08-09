@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
-  "title": "Post collection item",
-  "description": "Add or update a collection item to watch history",
+  "title": "Update collection item",
+  "description": "Update a collection item information",
   "default": {},
   "examples": [
     {
