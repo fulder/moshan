@@ -133,14 +133,14 @@ def _episodes_generator(username, item_id, limit, collection_name=None):
 
     query_kwargs = {
         "TableName": DATABASE_NAME,
-        "KeyConditionExpression": "username = :username",
+        "KeyConditionExpression": "username = :username and item_id = :item_id",
         "ExpressionAttributeValues": {
             ":username": {"S": username},
             ":item_id": {"S": item_id}
         },
         "Limit": limit,
         "ScanIndexForward": False,
-        "FilterExpression": "attribute_not_exists(deleted_at) and item_id = :item_id",
+        "FilterExpression": "attribute_not_exists(deleted_at)",
     }
 
     if collection_name:

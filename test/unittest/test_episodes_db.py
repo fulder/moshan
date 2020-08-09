@@ -34,9 +34,9 @@ def test_get_episodes(mocked_episodes_db):
             ':item_id': {'S': 123},
             ':username': {'S': 'TEST_USERNAME'}
         },
-        'FilterExpression': 'attribute_not_exists(deleted_at) and item_id = :item_id '
+        'FilterExpression': 'attribute_not_exists(deleted_at) '
                             'and collection_name = :collection_name',
-        'KeyConditionExpression': 'username = :username',
+        'KeyConditionExpression': 'username = :username and item_id = :item_id',
         'Limit': 100,
         'ScanIndexForward': False,
         'TableName': None
@@ -61,9 +61,9 @@ def test_get_episodes_changed_limit(mocked_episodes_db):
             ':item_id': {'S': 123},
             ':username': {'S': 'TEST_USERNAME'}
         },
-        'FilterExpression': 'attribute_not_exists(deleted_at) and item_id = :item_id '
+        'FilterExpression': 'attribute_not_exists(deleted_at) '
                             'and collection_name = :collection_name',
-        'KeyConditionExpression': 'username = :username',
+        'KeyConditionExpression': 'username = :username and item_id = :item_id',
         'Limit': 10,
         'ScanIndexForward': False,
         'TableName': None
@@ -88,9 +88,9 @@ def test_get_episodes_by_with_start(mocked_episodes_db):
             ':item_id': {'S': 123},
             ':username': {'S': 'TEST_USERNAME'}
         },
-        'FilterExpression': 'attribute_not_exists(deleted_at) and item_id = :item_id '
+        'FilterExpression': 'attribute_not_exists(deleted_at) '
                             'and collection_name = :collection_name',
-        'KeyConditionExpression': 'username = :username',
+        'KeyConditionExpression': 'username = :username and item_id = :item_id',
         'Limit': 1,
         'ScanIndexForward': False,
         'TableName': None
