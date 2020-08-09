@@ -29,7 +29,7 @@ def handle(event, context):
         return _get_episodes(username, item_id, collection_name, query_params)
     elif method == "POST":
         body = event.get("body")
-        return _post_episode(username, item_id, collection_name, body, auth_header)
+        return _post_episode(username, item_id, collection_name, body)
 
 
 def _get_episodes(username, item_id, collection_name, query_params):
@@ -56,10 +56,10 @@ def _get_episodes(username, item_id, collection_name, query_params):
         episodes = episodes_db.get_episodes(username, item_id, collection_name, limit=limit, start=start)
         return {"statusCode": 200, "body": json.dumps(episodes, cls=decimal_encoder.DecimalEncoder)}
     except episodes_db.NotFoundError:
-        return {"statusCode": 200, "body": json.dumps({"items": []})}
+        return {"statusCode": 200, "body": json.dumps({"episodes": []})}
 
 
-def _post_episode(username, item_id, collection_name, body, token):
+def _post_episode(username, item_id, collection_name, body):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -80,5 +80,5 @@ def _post_episode(username, item_id, collection_name, body, token):
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
-    episodes_db.add_item(username, item_id, collection_name, body["episode_id"])
+    episodes_db.add_episode(username, item_id, collection_name, body["episode_id"])
     return {"statusCode": 204}
