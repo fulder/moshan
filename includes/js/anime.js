@@ -127,7 +127,7 @@ function createEpisodesList(episodes) {
     `
 
     episodes["items"].forEach(function(episode) {
-        episodeId = ${episode['episode_number']};
+        episodeId = episode['episode_number'];
         tableHTML += `
             <tr>
                 <td class="small">${episodeId}</td>
