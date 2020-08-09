@@ -267,13 +267,13 @@ class WatchHistory(core.Stack):
             },
             "episode_by_id": {
                 "method": ["GET", "PATCH", "DELETE"],
-                "route": "/v1/watch-history/collection/{collection_name}/{item_id}/episodes/{episode_id}",
+                "route": "/v1/watch-history/collection/{collection_name}/{item_id}/episode/{episode_id}",
                 "target_lambda": self.lambdas["api-episode_by_id"]
             },
             "episode_by_collection_item": {
                 "method": ["GET", "POST"],
-                "route": "/v1/watch-history/collection/{collection_name}/{item_id}/episodes",
-                "target_lambda": self.lambdas["api-episodes_by_collection_item"]
+                "route": "/v1/watch-history/collection/{collection_name}/{item_id}/episode",
+                "target_lambda": self.lambdas["api-episode_by_collection_item"]
             }
         }
 
