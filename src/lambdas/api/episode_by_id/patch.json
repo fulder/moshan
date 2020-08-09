@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Update collection episode",
+  "description": "Update episode information",
+  "default": {},
+  "examples": [
+    {
+      "rating": 3,
+      "overview": "My ovweview text",
+      "review": "Very long review about the episode",
+      "date_watched": [
+        "2020-01-01 10:00:00",
+        "2020-01-02 11:00:00"
+      ]
+    }
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "rating": {
+      "$id": "#/properties/rating",
+      "type": "integer",
+      "title": "Rating",
+      "description": "Rate the episode 1-6",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "overview": {
+      "$id": "#/properties/overview",
+      "type": "string",
+      "title": "Overview",
+      "description": "Own overview for the episode",
+      "maxLength": 5000
+    },
+    "review": {
+      "$id": "#/properties/review",
+      "type": "string",
+      "title": "Review",
+      "description": "Review for the episode",
+      "maxLength": 80000
+    },
+    "date_watched": {
+      "$id": "#/properties/name",
+      "type": "array",
+      "title": "Watch date(s)",
+      "description": "One or more dates this episode was watched",
+      "items": {
+        "type": "string",
+        "format": "date-time"
+      }
+    }
+  }
+}
