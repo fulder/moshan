@@ -23,7 +23,7 @@ def handle(event, context):
     method = event["requestContext"]["http"]["method"]
     collection_name = event["pathParameters"].get("collection_name")
     item_id = event["pathParameters"].get("item_id")
-    episode_id = event["pathParameters"].get("item_id")
+    episode_id = event["pathParameters"].get("episode_id")
 
     if collection_name not in schema.COLLECTION_NAMES:
         return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
