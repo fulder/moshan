@@ -199,7 +199,7 @@ def test_handler_post(mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": '{ "episode_id": 123 }'
+        "body": '{ "episode_id": "123" }'
     }
 
     ret = handle(event, None)

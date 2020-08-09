@@ -26,6 +26,7 @@ def test_get_episodes():
     assert res.status_code == 204
     time.sleep(1)
     res = requests.post(f"{API_URL}/watch-history/collection/anime/23d5d8c1-2ab0-5279-a501-4d248dc9a63c/episode", json={"episode_id": "10"}, headers=BASE_HEADERS)
+    print(res.text)
     assert res.status_code == 204
     time.sleep(1)
 
@@ -34,7 +35,9 @@ def test_get_episodes():
     time.sleep(1)
 
     # Assert
+    print(res.text)
     assert res.status_code == 200
+
 
     item_res = res.json()
 
