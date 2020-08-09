@@ -82,3 +82,26 @@ function getItem(collectionName, id, callback) {
         callback(null)
       });
 }
+
+function addEpisode(collectionName, itemId, episodeId, callback) {
+    data = {
+        episode_id: id
+    }
+    options = {
+        headers: {
+            'Authorization': accessToken,
+            'Content-Type': "application/json"
+        }
+    }
+    axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/episode`, data, options)
+      .then(function (response) {
+        console.log(reposnse)
+        if (callback !== null) {
+            callback(response.data)
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+}
