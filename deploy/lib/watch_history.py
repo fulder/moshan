@@ -235,7 +235,6 @@ class WatchHistory(core.Stack):
                 "route": "/v1/watch-history/collection/{collection_name}/{item_id}",
                 "target_lambda": self.lambdas["api-item_by_collection"]
             }
-
         }
 
         for r in routes:
