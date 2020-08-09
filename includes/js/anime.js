@@ -46,7 +46,6 @@ function createAnime(anime) {
 
         <div class="col-md-3 col-7">
             <div class="card mt-2">
-                <div class="card-header small">External Links</div>
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="col-4">
