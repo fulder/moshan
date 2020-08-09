@@ -74,7 +74,7 @@ class WatchHistory(core.Stack):
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
-                "concurrent_executions": 100,
+                "concurrent_executions": 10,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query"],
@@ -90,7 +90,7 @@ class WatchHistory(core.Stack):
                     "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url
                 },
-                "concurrent_executions": 100,
+                "concurrent_executions": 10,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query", "dynamodb:UpdateItem"],
@@ -105,7 +105,7 @@ class WatchHistory(core.Stack):
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
-                "concurrent_executions": 100,
+                "concurrent_executions": 10,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query", "dynamodb:UpdateItem"],
@@ -120,7 +120,7 @@ class WatchHistory(core.Stack):
                     "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO"
                 },
-                "concurrent_executions": 100,
+                "concurrent_executions": 10,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query", "dynamodb:UpdateItem"],
@@ -135,7 +135,7 @@ class WatchHistory(core.Stack):
                     "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO"
                 },
-                "concurrent_executions": 100,
+                "concurrent_executions": 10,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query", "dynamodb:UpdateItem"],
