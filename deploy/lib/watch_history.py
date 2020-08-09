@@ -117,7 +117,7 @@ class WatchHistory(core.Stack):
             "api-episode_by_collection_item": {
                 "layers": ["utils", "databases"],
                 "variables": {
-                    "EPISODES_DATABASE_NAME": self.watch_history_table.episodes_table,
+                    "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO"
                 },
                 "concurrent_executions": 100,
@@ -132,7 +132,7 @@ class WatchHistory(core.Stack):
             "api-episode_by_id": {
                 "layers": ["utils", "databases"],
                 "variables": {
-                    "EPISODES_DATABASE_NAME": self.watch_history_table.episodes_table,
+                    "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO"
                 },
                 "concurrent_executions": 100,
