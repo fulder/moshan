@@ -114,6 +114,36 @@ class WatchHistory(core.Stack):
                 ],
                 "timeout": 5
             },
+            "api-episode_by_collection_item": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "EPISODES_DATABASE_NAME": self.watch_history_table.episodes_table,
+                    "LOG_LEVEL": "INFO"
+                },
+                "concurrent_executions": 100,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
+                        resources=[self.episodes_table.table_arn]
+                    )
+                ],
+                "timeout": 10
+            },
+            "api-episode_by_id": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "EPISODES_DATABASE_NAME": self.watch_history_table.episodes_table,
+                    "LOG_LEVEL": "INFO"
+                },
+                "concurrent_executions": 100,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
+                        resources=[self.episodes_table.table_arn]
+                    )
+                ],
+                "timeout": 10
+            },
         }
 
     def _create_layers(self):
@@ -234,6 +264,16 @@ class WatchHistory(core.Stack):
                 "method": ["GET", "PATCH", "DELETE"],
                 "route": "/v1/watch-history/collection/{collection_name}/{item_id}",
                 "target_lambda": self.lambdas["api-item_by_collection"]
+            },
+            "episode_by_id": {
+                "method": ["GET", "PATCH", "DELETE"],
+                "route": "/v1/watch-history/collection/{collection_name}/{item_id}/episodes/{episode_id}",
+                "target_lambda": self.lambdas["api-episode_by_id"]
+            },
+            "episode_by_collection_item": {
+                "method": ["GET", "POST"],
+                "route": "/v1/watch-history/collection/{collection_name}/{item_id}/episodes",
+                "target_lambda": self.lambdas["api-episodes_by_collection_item"]
             }
         }
 
