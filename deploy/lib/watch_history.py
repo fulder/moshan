@@ -58,6 +58,14 @@ class WatchHistory(core.Stack):
             index_name="state"
         )
 
+        self.episodes_table = Table(
+            self,
+            "episodes",
+            partition_key=Attribute(name="username", type=AttributeType.STRING),
+            sort_key=Attribute(name="item_id", type=AttributeType.STRING),
+            billing_mode=BillingMode.PAY_PER_REQUEST,
+        )
+
     def _create_lambdas_config(self):
         self.lambdas_config = {
             "api-watch_history": {
