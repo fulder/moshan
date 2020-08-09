@@ -51,7 +51,7 @@ def test_handler_limit_and_start(mocked_get_episodes):
             "start": "23"
         },
         "pathParameters": {
-            "collection_name": "test_collection",
+            "collection_name": "anime",
             "item_id": 123
         },
         "requestContext": {
@@ -247,7 +247,7 @@ def test_handler_post_invalid_body(mocked_post):
             }
         },
         "pathParameters": {
-            "collection_name": "INVALID",
+            "collection_name": "anime",
             "item_id": "123"
         },
         "body": "INVALID"

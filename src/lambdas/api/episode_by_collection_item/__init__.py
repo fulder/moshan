@@ -24,6 +24,9 @@ def handle(event, context):
 
     method = event["requestContext"]["http"]["method"]
 
+    if collection_name not in schema.COLLECTION_NAMES:
+        return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
+
     if method == "GET":
         query_params = event.get("queryStringParameters")
         return _get_episodes(username, item_id, collection_name, query_params)
