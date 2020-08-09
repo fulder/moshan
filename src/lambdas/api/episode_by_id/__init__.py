@@ -41,7 +41,8 @@ def _get_episode(username, collection_name, item_id, episode_id):
     try:
         ret = episodes_db.get_episode(username, collection_name, item_id, episode_id)
         return {"statusCode": 200, "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
-    except episodes_db.NotFoundError:
+    except episodes_db.NotFoundError as e:
+        log.debug(f"Not found episode. Error: {e}")
         return {"statusCode": 404}
 
 
