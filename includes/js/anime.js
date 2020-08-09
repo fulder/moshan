@@ -42,6 +42,9 @@ function createAnime(anime) {
             <p><b>Status</b>: ${status}</p>
             <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)">Add</button>
             <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)">Remove</button>
+        </div>
+
+        <div class="col-md-3 col-7">
             <div class="card mt-2">
                 <div class="card-body p-1">
                     <div class="row">
