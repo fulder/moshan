@@ -131,8 +131,10 @@ function createEpisodesList(episodes) {
         tableHTML += `
             <tr>
                 <td class="small">${episodeId}</td>
-                <td class="small"><button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button></td>
-                <td class="small"><button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper(${episodeId})"><i class="fa fa-minus"></i></button></td>
+                <td class="small">
+                    <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
+                    <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper(${episodeId})"><i class="fa fa-minus"></i></button>
+                </td>
                 <td class="text-truncate small">${episode['title']}</td>
                 <td class="small">${episode['air_date']}</td>
             </tr>
