@@ -23,3 +23,13 @@ def mocked_anime_api():
     anime_api.ANIME_API_URL = "https://mocked"
 
     return anime_api
+
+
+@pytest.fixture(scope='function')
+def mocked_episodes_db():
+    import episodes_db
+
+    episodes_db.table = MagicMock()
+    episodes_db.client = MagicMock()
+
+    return episodes_db
