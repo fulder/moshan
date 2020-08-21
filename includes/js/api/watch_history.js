@@ -106,16 +106,13 @@ function addEpisode(collectionName, itemId, episodeId, callback) {
 }
 
 function removeEpisode(collectionName, itemId, episodeId, callback) {
-    data = {
-        episode_id: episodeId
-    }
     options = {
         headers: {
             'Authorization': accessToken,
             'Content-Type': "application/json"
         }
     }
-    axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, data, options)
+    axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
       .then(function (response) {
         if (callback !== null) {
             callback(response.data)
