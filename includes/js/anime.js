@@ -136,7 +136,7 @@ function createEpisodesList(episodes) {
                 <tr class="bg-secondary">
                     <td class="small">${episodeNumber}</td>
                     <td class="small">
-                        <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm disabled" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
+                        <button type="button" class="btn btn-success btn-sm disabled"><i class="fa fa-plus"></i></button>
                     </td>
                     <td class="text-truncate small">${episode['title']}</td>
                     <td class="small">${episodeDate}</td>
@@ -147,8 +147,8 @@ function createEpisodesList(episodes) {
                 <tr>
                     <td class="small">${episodeNumber}</td>
                     <td class="small">
-                        <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
-                        <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper(${episodeId})"><i class="fa fa-minus"></i></button>
+                        <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper('${episodeId}')"><i class="fa fa-plus"></i></button>
+                        <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper('${episodeId}')"><i class="fa fa-minus"></i></button>
                     </td>
                     <td class="text-truncate small">${episode['title']}</td>
                     <td class="small">${episodeDate}</td>
