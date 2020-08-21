@@ -219,5 +219,9 @@ function removeEpisodeWrapper(episodeId) {
 }
 
 function markAddedEpisodes(userEpisodes) {
-    console.log(userEpisodes);
+    userEpisodes["episodes"].forEach(function(episode) {
+        episodeId = episode["id"]
+        document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
+        document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
+    });
 }
