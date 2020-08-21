@@ -62,7 +62,7 @@ class WatchHistory(core.Stack):
             self,
             "episodes",
             partition_key=Attribute(name="username", type=AttributeType.STRING),
-            sort_key=Attribute(name="item_id", type=AttributeType.STRING),
+            sort_key=Attribute(name="id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
         )
 
