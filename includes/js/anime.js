@@ -126,10 +126,11 @@ function createEpisodesList(episodes) {
     `
 
     episodes["items"].forEach(function(episode) {
-        episodeId = episode['episode_number'];
+        episodeId = episode['id'];
+        episodeNumber = episode['episode_number'];
         tableHTML += `
             <tr>
-                <td class="small">${episodeId}</td>
+                <td class="small">${episodeNumber}</td>
                 <td class="small">
                     <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
                     <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper(${episodeId})"><i class="fa fa-minus"></i></button>
@@ -192,3 +193,4 @@ function addEpisodeWrapper(episodeId) {
 
     addEpisode("anime", id, episodeId)
 }
+
