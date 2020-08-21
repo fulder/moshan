@@ -133,7 +133,7 @@ function createEpisodesList(episodes) {
 
         if (!episodeAired) {
             tableHTML += `
-                <tr class="warning">
+                <tr class="bg-secondary">
                     <td class="small">${episodeNumber}</td>
                     <td class="small">
                         <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm disabled" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
