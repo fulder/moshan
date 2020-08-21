@@ -90,7 +90,6 @@ function createAnime(anime) {
         getItem("anime", id, animeAdded);
 
         getAnimeEpisodes(id, createEpisodesList, episodePage);
-        getEpisodes("anime", id, markAddedEpisodes);
     }
 }
 
@@ -175,6 +174,8 @@ function createEpisodesList(episodes) {
 
         document.getElementById("episodesPages").innerHTML = paginationHTML;
     }
+
+    getEpisodes("anime", id, markAddedEpisodes, episodePage);
 }
 
 function loadPreviousEpisodes() {
