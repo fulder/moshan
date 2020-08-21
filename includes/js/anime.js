@@ -194,3 +194,9 @@ function addEpisodeWrapper(episodeId) {
     addEpisode("anime", id, episodeId)
 }
 
+function removeEpisodeWrapper(episodeId) {
+    document.getElementById(`addEpisode-${episodeId}`).classList.remove("d-none")
+    document.getElementById(`removeEpisode-${episodeId}`).classList.add("d-none")
+
+    removeEpisode("anime", id, episodeId)
+}
