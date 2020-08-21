@@ -131,17 +131,17 @@ function createEpisodesList(episodes) {
         episodeDate = episode['air_date'];
         episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
 
-        if (episodeAired) {
+        if (!episodeAired) {
             tableHTML += `
-            <tr class="warning">
-                <td class="small">${episodeNumber}</td>
-                <td class="small">
-                    <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm disabled" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
-                </td>
-                <td class="text-truncate small">${episode['title']}</td>
-                <td class="small">${episodeDate}</td>
-            </tr>
-        `
+                <tr class="warning">
+                    <td class="small">${episodeNumber}</td>
+                    <td class="small">
+                        <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm disabled" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
+                    </td>
+                    <td class="text-truncate small">${episode['title']}</td>
+                    <td class="small">${episodeDate}</td>
+                </tr>
+            `
         } else {
             tableHTML += `
                 <tr>
