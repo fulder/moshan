@@ -177,7 +177,7 @@ function createEpisodesList(episodes) {
         document.getElementById("episodesPages").innerHTML = paginationHTML;
     }
 
-    if (maxUserEpisodePages >= episodePage) {
+    if (maxUserEpisodePages == 0 || maxUserEpisodePages >= episodePage) {
         getEpisodes("anime", id, markAddedEpisodes, episodePage);
     }
 }
