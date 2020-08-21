@@ -105,7 +105,7 @@ function addEpisode(collectionName, itemId, episodeId, callback) {
       });
 }
 
-function removeEpisode(collectionName, episodeId, callback) {
+function removeEpisode(collectionName, itemId, episodeId, callback) {
     data = {
         episode_id: episodeId
     }
