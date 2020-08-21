@@ -11,6 +11,8 @@ if (episodePage === null) {
     episodePage = parseInt(episodePage);
 }
 
+maxUserEpisodePages = 0
+
 if (id !== null){
     getAnimeById(id, createAnime);
 }
@@ -175,7 +177,9 @@ function createEpisodesList(episodes) {
         document.getElementById("episodesPages").innerHTML = paginationHTML;
     }
 
-    getEpisodes("anime", id, markAddedEpisodes, episodePage);
+    if (maxUserEpisodePages >= episodePage) {
+        getEpisodes("anime", id, markAddedEpisodes, episodePage);
+    }
 }
 
 function loadPreviousEpisodes() {
@@ -220,6 +224,8 @@ function removeEpisodeWrapper(episodeId) {
 }
 
 function markAddedEpisodes(userEpisodes) {
+    maxUserEpisodePages = userEpisodes["total_pages"];
+
     for (const [episodeId, episodeInfo] of Object.entries(userEpisodes["episodes"])) {
         document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
         document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
