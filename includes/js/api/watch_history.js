@@ -123,3 +123,22 @@ function removeEpisode(collectionName, itemId, episodeId, callback) {
         console.log(error);
       });
 }
+
+function getEpisodes(collectionName, itemId, callback, start=1, limit=100) {
+    options = {
+        headers: {
+            'Authorization': accessToken,
+            'Content-Type': "application/json"
+        }
+    }
+    axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode?limit=${limit}&start=${start}`, options)
+      .then(function (response) {
+        if (callback !== null) {
+            callback(response.data)
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+}

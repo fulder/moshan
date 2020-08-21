@@ -89,6 +89,7 @@ function createAnime(anime) {
         // get item from watch history and toggle add/remove buttons
         getItem("anime", id, animeAdded);
 
+        getEpisodes("anime", id, markAddedEpisodes);
         getAnimeEpisodes(id, createEpisodesList, episodePage);
     }
 }
@@ -215,4 +216,8 @@ function removeEpisodeWrapper(episodeId) {
     document.getElementById(`removeEpisode-${episodeId}`).classList.add("d-none")
 
     removeEpisode("anime", id, episodeId)
+}
+
+function markAddedEpisodes(userEpisodes) {
+    console.log(userEpisodes);
 }
