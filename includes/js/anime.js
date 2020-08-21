@@ -128,17 +128,33 @@ function createEpisodesList(episodes) {
     episodes["items"].forEach(function(episode) {
         episodeId = episode['id'];
         episodeNumber = episode['episode_number'];
-        tableHTML += `
-            <tr>
+        episodeDate = episode['air_date'];
+        episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
+
+        if (episodeAired) {
+            tableHTML += `
+            <tr class="warning">
                 <td class="small">${episodeNumber}</td>
                 <td class="small">
-                    <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
-                    <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper(${episodeId})"><i class="fa fa-minus"></i></button>
+                    <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm disabled" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
                 </td>
                 <td class="text-truncate small">${episode['title']}</td>
-                <td class="small">${episode['air_date']}</td>
+                <td class="small">${episodeDate}</td>
             </tr>
         `
+        } else {
+            tableHTML += `
+                <tr>
+                    <td class="small">${episodeNumber}</td>
+                    <td class="small">
+                        <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper(${episodeId})"><i class="fa fa-plus"></i></button>
+                        <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper(${episodeId})"><i class="fa fa-minus"></i></button>
+                    </td>
+                    <td class="text-truncate small">${episode['title']}</td>
+                    <td class="small">${episodeDate}</td>
+                </tr>
+            `
+        }
     });
 
     document.getElementById("episodesTable").innerHTML = tableHTML
