@@ -219,9 +219,8 @@ function removeEpisodeWrapper(episodeId) {
 }
 
 function markAddedEpisodes(userEpisodes) {
-    userEpisodes["episodes"].forEach(function(episode) {
-        episodeId = episode["id"]
+    for (const [episodeId, episodeInfo] of Object.entries(userEpisodes["episodes"])) {
         document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
         document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
-    });
+    }
 }
