@@ -43,34 +43,35 @@ def _get_client():
 
 
 def add_episode(username, collection_name, item_id, episode_id):
-    data = {}
+    data = {
+        "item_id": item_id
+    }
     try:
-        get_episode(username, collection_name, item_id, episode_id)
+        get_episode(username, collection_name, episode_id)
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_episode(username, collection_name, item_id, episode_id, data)
+    update_episode(username, collection_name, episode_id, data)
 
 
-def delete_episode(username, collection_name, item_id, episode_id):
+def delete_episode(username, collection_name, episode_id):
     data = {"deleted_at": int(time.time())}
-    update_episode(username, collection_name, item_id, episode_id, data)
+    update_episode(username, collection_name, episode_id, data)
 
 
-def get_episode(username, collection_name, item_id, episode_id):
+def get_episode(username, collection_name, episode_id):
     res = _get_table().query(
-        KeyConditionExpression=Key("username").eq(username) & Key("item_id").eq(item_id),
-        FilterExpression=Attr("collection_name").eq(collection_name) & Attr("episode_id").eq(episode_id) & Attr("deleted_at").not_exists(),
+        KeyConditionExpression=Key("username").eq(username) & Key("id").eq(episode_id),
+        FilterExpression=Attr("collection_name").eq(collection_name) & Attr("deleted_at").not_exists(),
     )
 
     if not res["Items"]:
-        raise NotFoundError(f"Episode with id: {episode_id} not found. Collection name: {collection_name}, item id: {item_id}")
+        raise NotFoundError(f"Episode with id: {episode_id} not found. Collection name: {collection_name}")
 
     return res["Items"][0]
 
 
-def update_episode(username, collection_name, item_id, episode_id, data):
-    data["episode_id"] = episode_id
+def update_episode(username, collection_name, episode_id, data):
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -91,7 +92,7 @@ def update_episode(username, collection_name, item_id, episode_id, data):
     _get_table().update_item(
         Key={
             "username": username,
-            "item_id": item_id,
+            "id": episode_id,
         },
         UpdateExpression=update_expression,
         ExpressionAttributeNames=expression_attribute_names,
@@ -152,6 +153,6 @@ def _episodes_generator(username, collection_name, item_id, limit):
         items = {}
         for i in p["Items"]:
             item = json_util.loads(i)
-            episode_id = item.pop("episode_id")
+            episode_id = item.pop("id")
             items[episode_id] = item
         yield items
