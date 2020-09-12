@@ -225,8 +225,10 @@ function removeEpisodeWrapper(episodeId) {
 function markAddedEpisodes(userEpisodes) {
     console.log(userEpisodes);
 
-    for (const [episodeId, episodeInfo] of Object.entries(userEpisodes["episodes"])) {
+    userEpisodes["episodes"]).forEach(function (episodeInfo, index) {
+        episodeId = episodeInfo["id"]
         document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
         document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
-    }
+    });
+
 }
