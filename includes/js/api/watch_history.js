@@ -94,6 +94,7 @@ function addEpisode(collectionName, itemId, episodeId, episodeNumber, callback) 
             'Content-Type': "application/json"
         }
     }
+    console.log(callback);
     axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode`, data, options)
       .then(function (response) {
         if (callback !== null) {
