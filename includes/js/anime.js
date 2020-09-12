@@ -126,7 +126,6 @@ function createEpisodesList(episodes) {
             </tr>
         </thead>
     `
-
     episodes["items"].forEach(function(episode) {
         episodeId = episode['id'];
         episodeNumber = episode['episode_number'];
@@ -177,9 +176,9 @@ function createEpisodesList(episodes) {
         document.getElementById("episodesPages").innerHTML = paginationHTML;
     }
 
-    if (maxUserEpisodePages == 0 || maxUserEpisodePages >= episodePage) {
-        getEpisodes("anime", id, markAddedEpisodes, episodePage);
-    }
+    maxEpisodeNumber = episodes["items"][0]["episode_number"]
+    getEpisodes("anime", id, markAddedEpisodes, maxEpisodeNumber);
+
 }
 
 function loadPreviousEpisodes() {
@@ -209,11 +208,11 @@ function loadEpisodes(page) {
     history.pushState({}, null, `?${urlParams.toString()}`)
 }
 
-function addEpisodeWrapper(episodeId) {
+function addEpisodeWrapper(episodeId, episodeNumber) {
     document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
     document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
 
-    addEpisode("anime", id, episodeId)
+    addEpisode("anime", id, episodeId, episodeNumber)
 }
 
 function removeEpisodeWrapper(episodeId) {
@@ -224,10 +223,10 @@ function removeEpisodeWrapper(episodeId) {
 }
 
 function markAddedEpisodes(userEpisodes) {
-    maxUserEpisodePages = userEpisodes["total_pages"];
+    console.log(userEpisodes);
 
-    for (const [episodeId, episodeInfo] of Object.entries(userEpisodes["episodes"])) {
+    /*for (const [episodeId, episodeInfo] of Object.entries(userEpisodes["episodes"])) {
         document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
         document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
-    }
+    }*/
 }
