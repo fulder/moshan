@@ -152,6 +152,7 @@ function createEpisodesList(episodes) {
                         <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper('${episodeId}')"><i class="fa fa-minus"></i></button>
                     </td>
                     <td class="text-truncate small">${episode['title']}</td>
+                    <td class="small">flatpickr("#myID", {})</td>
                     <td class="small">${episodeDate}</td>
                 </tr>
             `
