@@ -160,13 +160,12 @@ function createEpisodesList(episodes) {
         }
     });
 
+    document.getElementById("episodesTable").innerHTML = tableHTML
+
     const fp = flatpickr(".flatpickr", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
     });
-
-
-    document.getElementById("episodesTable").innerHTML = tableHTML
 
     if (document.getElementById("episodesPages").innerHTML === "") {
         paginationHTML = `<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
