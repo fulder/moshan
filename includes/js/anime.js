@@ -122,7 +122,7 @@ function createEpisodesList(episodes) {
                 <th scope="col" class="episode-number-header small">#</th>
                 <th scope="col" class="episode-add-header small">+/-</th>
                 <th scope="col" class="small">Title</th>
-                <th scope="col" class="small">Last Watched</th>
+                <th scope="col" class="episode-watched-header small">Last Watched</th>
                 <th scope="col" class="episode-date-header small">Date</th>
             </tr>
         </thead>
