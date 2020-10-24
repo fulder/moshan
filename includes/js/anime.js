@@ -141,7 +141,7 @@ function createEpisodesList(episodes) {
                         <button type="button" class="btn btn-success btn-sm disabled"><i class="fa fa-plus"></i></button>
                     </td>
                     <td class="text-truncate small">${episode['title']}</td>
-                    <td class="small"><input id="date-${episodeId}" class="flatpickr flatpickr-input disabled" type="text" placeholder="Select Date.."></td>
+                    <td class="small"><input id="date-${episodeId}" class="disabled" type="text" placeholder="Select Date.."></td>
                     <td class="small">${episodeDate}</td>
                 </tr>
             `
