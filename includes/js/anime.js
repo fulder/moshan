@@ -153,16 +153,18 @@ function createEpisodesList(episodes) {
                         <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper('${episodeId}')"><i class="fa fa-minus"></i></button>
                     </td>
                     <td class="text-truncate small">${episode['title']}</td>
-                    <td class="small" id="date-${episodeId}"><input class="flatpickr flatpickr-input" type="text" placeholder="Select Date.."></td>
+                    <td class="small"><input id="date-${episodeId}" class="flatpickr flatpickr-input" type="text" placeholder="Select Date.."></td>
                     <td class="small">${episodeDate}</td>
                 </tr>
             `
-            picker = flatpickr(`#date-${episodeId}`, {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i",
-            });
         }
     });
+
+    const fp = flatpickr(".flatpickr", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+    });
+
 
     document.getElementById("episodesTable").innerHTML = tableHTML
 
