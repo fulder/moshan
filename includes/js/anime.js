@@ -157,7 +157,7 @@ function createEpisodesList(episodes) {
                     <td class="small">${episodeDate}</td>
                 </tr>
             `
-            flatpickr("#date-${episodeId}", {});
+            //flatpickr(`#date-${episodeId}`, {});
         }
     });
 
