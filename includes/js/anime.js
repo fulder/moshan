@@ -145,7 +145,6 @@ function createEpisodesList(episodes) {
                 </tr>
             `
         } else {
-            datePicker = flatpickr("#myID", {});
             tableHTML += `
                 <tr>
                     <td class="small">${episodeNumber}</td>
@@ -154,10 +153,11 @@ function createEpisodesList(episodes) {
                         <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper('${episodeId}')"><i class="fa fa-minus"></i></button>
                     </td>
                     <td class="text-truncate small">${episode['title']}</td>
-                    <td class="small">${datePicker}</td>
+                    <td id="date-${episodeId}" class="small"></td>
                     <td class="small">${episodeDate}</td>
                 </tr>
             `
+            flatpickr("#date-${episodeId}", {});
         }
     });
 
