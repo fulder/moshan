@@ -166,6 +166,7 @@ function createEpisodesList(episodes) {
     const fp = flatpickr(".flatpickr", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
+        time_24hr: true,
     });
 
     if (document.getElementById("episodesPages").innerHTML === "") {
