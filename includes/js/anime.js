@@ -169,7 +169,8 @@ function createEpisodesList(episodes) {
         time_24hr: true,
         locale: {
             firstDayOfWeek: 1 // start week on Monday
-        }
+        },
+        weekNumbers: true,
     });
 
     if (document.getElementById("episodesPages").innerHTML === "") {
