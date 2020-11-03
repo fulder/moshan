@@ -1,9 +1,12 @@
-function getWatchHistory() {
-    options = {
-        headers: {
-            'Authorization': accessToken
-        }
+options = {
+    headers: {
+        'Authorization': accessToken,
+        'Content-Type': "application/json"
     }
+}
+
+
+function getWatchHistory() {
     axios.get("https://api.watch-history.moshan.tv/v1/watch-history", options)
       .then(function (response) {
         watchHistory = response.data;
@@ -15,11 +18,6 @@ function getWatchHistory() {
 }
 
 function getWatchHistoryByCollection(collectionName, callback) {
-    options = {
-        headers: {
-            'Authorization': accessToken
-        }
-    }
     axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}`, options)
       .then(function (response) {
         callback(response.data)
@@ -31,11 +29,6 @@ function getWatchHistoryByCollection(collectionName, callback) {
 }
 
 function removeItem(collectionName, id, callback) {
-    options = {
-        headers: {
-            'Authorization': accessToken
-        }
-    }
     axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
       .then(function (response) {
         callback(response);
@@ -50,12 +43,6 @@ function addItem(collectionName, id, callback) {
     data = {
         item_add_id: id
     }
-    options = {
-        headers: {
-            'Authorization': accessToken,
-            'Content-Type': "application/json"
-        }
-    }
     axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}`, data, options)
       .then(function (response) {
         callback(response.data)
@@ -67,12 +54,6 @@ function addItem(collectionName, id, callback) {
 }
 
 function getItem(collectionName, id, callback) {
-    options = {
-        headers: {
-            'Authorization': accessToken,
-            'Content-Type': "application/json"
-        }
-    }
     axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
       .then(function (response) {
         callback(response.data)
@@ -88,12 +69,6 @@ function addEpisode(collectionName, itemId, episodeId, episodeNumber, callback) 
         episode_id: episodeId,
         episode_number: episodeNumber
     }
-    options = {
-        headers: {
-            'Authorization': accessToken,
-            'Content-Type': "application/json"
-        }
-    }
     axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode`, data, options)
       .then(function (response) {
         if (callback !== undefined) {
@@ -107,12 +82,6 @@ function addEpisode(collectionName, itemId, episodeId, episodeNumber, callback) 
 }
 
 function removeEpisode(collectionName, itemId, episodeId, callback) {
-    options = {
-        headers: {
-            'Authorization': accessToken,
-            'Content-Type': "application/json"
-        }
-    }
     axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
       .then(function (response) {
         if (callback !== undefined) {
@@ -126,12 +95,6 @@ function removeEpisode(collectionName, itemId, episodeId, callback) {
 }
 
 function getEpisodes(collectionName, itemId, callback, startEpisode=0, limit=100) {
-    options = {
-        headers: {
-            'Authorization': accessToken,
-            'Content-Type': "application/json"
-        }
-    }
     axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode?limit=${limit}&start_episode=${startEpisode}`, options)
       .then(function (response) {
         if (callback !== undefined) {
@@ -144,21 +107,6 @@ function getEpisodes(collectionName, itemId, callback, startEpisode=0, limit=100
       });
 }
 
-func getEpisode(collectionName, episodeId, callback) {
-    options = {
-        headers: {
-            'Authorization': accessToken,
-            'Content-Type': "application/json"
-        }
-    }
-    axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/{episodeId}`, options)
-      .then(function (response) {
-        if (callback !== undefined) {
-            callback(response.data)
-        }
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
+function getEpisode(collectionName, episodeId) {
+    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/{episodeId}`, options)
 }
