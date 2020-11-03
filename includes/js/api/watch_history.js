@@ -143,3 +143,22 @@ function getEpisodes(collectionName, itemId, callback, startEpisode=0, limit=100
         console.log(error);
       });
 }
+
+func getEpisode(collectionName, episodeId, callback) {
+    options = {
+        headers: {
+            'Authorization': accessToken,
+            'Content-Type': "application/json"
+        }
+    }
+    axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/{episodeId}`, options)
+      .then(function (response) {
+        if (callback !== undefined) {
+            callback(response.data)
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+}
