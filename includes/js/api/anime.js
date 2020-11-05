@@ -34,3 +34,7 @@ function getAnimeEpisodes(id, callback, start=1, limit=100) {
         console.log(error);
       });
 }
+
+function getAnimeEpisode(id, episodeId) {
+    return axios.get(`https://api.anime.moshan.tv/v1/anime/${id}/episode/{episodeId}`, options)
+}
