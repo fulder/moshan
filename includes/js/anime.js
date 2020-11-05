@@ -115,6 +115,7 @@ function animeAdded(anime) {
 }
 
 function createEpisodesList(episodes) {
+    tableHTML = ''
     episodes["items"].forEach(function(episode) {
         episodeId = episode['id'];
         episodeNumber = episode['episode_number'];
@@ -188,7 +189,6 @@ function loadEpisodes(page) {
     }).catch(function (error) {
         console.log(error);
     });
-
 
     document.getElementById("episodesPages").getElementsByTagName("LI")[episodePage].classList.add("active");
 
