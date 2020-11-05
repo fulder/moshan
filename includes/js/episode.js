@@ -4,25 +4,28 @@ collectionName = urlParams.get("collection_name")
 id = urlParams.get("id")
 episodeId = urlParams.get("episode_id")
 
-watchHistoryRequest = getWatchHistoryEpisode(collectionName, id, episodeId)
-
 if (collectionName == "anime") {
     animeRequest = getAnimeEpisode(id, episodeId)
 }
+watchHistoryRequest = getWatchHistoryEpisode(collectionName, id, episodeId)
 
-axios.all([watchHistoryRequest, animeRequest]).then(axios.spread((...responses) => {
-  watchHistoryItem = responses[0].data
-  animeItem = responses[1].data
+axios.all([animeRequest, watchHistoryRequest]).then(axios.spread((...responses) => {
+  animeItem = responses[0].data
+  watchHistoryItem = responses[1].data
 
-  createEpisodePage(watchHistoryItem, animeItem)
+  createEpisodePage(animeItem, watchHistoryItem)
 })).catch(error  => {
   if (error.response) {
-    console.log(error.response);
+    if (error.response.status === 404 && error.response.config.url.includes("watch-history")) {
+        createEpisodePage(animeItem)
+    }
+    console.log(error.response)
   }
+
   console.log(errors)
 })
 
-function createEpisodePage(watchHistoryItem, animeItem) {
-    console.log(watchHistoryItem)
+function createEpisodePage(animeItem, watchHistoryItem) {
     console.log(animeItem)
+    console.log(watchHistoryItem)
 }
