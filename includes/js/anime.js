@@ -11,8 +11,6 @@ if (episodePage === null) {
     episodePage = parseInt(episodePage);
 }
 
-maxUserEpisodePages = 0
-
 if (id !== null){
     animeRequest = getAnimeById(id);
 }
@@ -49,7 +47,7 @@ function createAnime(anime) {
             <p><b>Released</b>: ${anime['start_date']}</p>
             <p><b>Status</b>: ${status}</p>
             <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger d-none" onclick="removeItem('anime', '${anime['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
+            <button id="removeButton" class="btn btn-danger d-none" onclick="removeWatchHistoryItem('anime', '${anime['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div class="col-md-3 col-7">
@@ -196,7 +194,7 @@ function createEpisodesList(episodes) {
     }
 
     maxEpisodeNumber = episodes["items"][0]["episode_number"]
-    getEpisodes("anime", id, markAddedEpisodes, maxEpisodeNumber);
+    getWatchHistoryEpisodes("anime", id, markAddedEpisodes, maxEpisodeNumber);
 
 }
 
@@ -231,14 +229,14 @@ function addEpisodeWrapper(episodeId, episodeNumber) {
     document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
     document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
 
-    addEpisode("anime", id, episodeId, episodeNumber)
+    addWatchHistoryEpisode("anime", id, episodeId, episodeNumber)
 }
 
 function removeEpisodeWrapper(episodeId) {
     document.getElementById(`addEpisode-${episodeId}`).classList.remove("d-none")
     document.getElementById(`removeEpisode-${episodeId}`).classList.add("d-none")
 
-    removeEpisode("anime", id, episodeId)
+    removeWatchHistoryEpisode("anime", id, episodeId)
 }
 
 function markAddedEpisodes(userEpisodes) {
