@@ -15,7 +15,7 @@ axios.all([animeRequest, watchHistoryRequest]).then(axios.spread((...responses) 
 
   createEpisodePage(animeItem, watchHistoryItem)
 })).catch(error  => {
-  console.log(errors)
+  console.log(error)
 })
 
 function createEpisodePage(animeItem, watchHistoryItem) {
