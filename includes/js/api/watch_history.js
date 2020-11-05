@@ -28,7 +28,7 @@ function getWatchHistoryByCollection(collectionName, callback) {
       });
 }
 
-function removeItem(collectionName, id, callback) {
+function removeWatchHistoryItem(collectionName, id, callback) {
     axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
       .then(function (response) {
         callback(response);
@@ -39,7 +39,7 @@ function removeItem(collectionName, id, callback) {
       });
 }
 
-function addItem(collectionName, id, callback) {
+function addWatchHistoryItem(collectionName, id, callback) {
     data = {
         item_add_id: id
     }
@@ -53,18 +53,11 @@ function addItem(collectionName, id, callback) {
       });
 }
 
-function getItem(collectionName, id, callback) {
-    axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
-      .then(function (response) {
-        callback(response.data)
-      })
-      .catch(function (error) {
-        // handle error
-        callback(null)
-      });
+function getWatchHistoryItem(collectionName, id) {
+    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
 }
 
-function addEpisode(collectionName, itemId, episodeId, episodeNumber, callback) {
+function addWatchHistoryEpisode(collectionName, itemId, episodeId, episodeNumber, callback) {
     data = {
         episode_id: episodeId,
         episode_number: episodeNumber
@@ -81,7 +74,7 @@ function addEpisode(collectionName, itemId, episodeId, episodeNumber, callback) 
       });
 }
 
-function removeEpisode(collectionName, itemId, episodeId, callback) {
+function removeWatchHistoryEpisode(collectionName, itemId, episodeId, callback) {
     axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
       .then(function (response) {
         if (callback !== undefined) {
@@ -94,19 +87,10 @@ function removeEpisode(collectionName, itemId, episodeId, callback) {
       });
 }
 
-function getEpisodes(collectionName, itemId, callback, startEpisode=0, limit=100) {
-    axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode?limit=${limit}&start_episode=${startEpisode}`, options)
-      .then(function (response) {
-        if (callback !== undefined) {
-            callback(response.data)
-        }
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
+function getWatchHistoryEpisodes(collectionName, itemId, callback, startEpisode=0, limit=100) {
+    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode?limit=${limit}&start_episode=${startEpisode}`, options)
 }
 
-function getEpisode(collectionName, itemId, episodeId) {
+function getWatchHistoryEpisode(collectionName, itemId, episodeId) {
     return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
 }

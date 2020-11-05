@@ -4,7 +4,7 @@ collectionName = urlParams.get("collection_name")
 id = urlParams.get("id")
 episodeId = urlParams.get("episode_id")
 
-watchHistoryRequest = getEpisode(collectionName, id, episodeId)
+watchHistoryRequest = getWatchHistoryEpisode(collectionName, id, episodeId)
 
 if (collectionName == "anime") {
     collectionRequest = getAnimeEpisode(id, episodeId)

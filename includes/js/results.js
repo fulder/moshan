@@ -46,11 +46,11 @@ function animeWrapper(externalId, type) {
     if (type === "add") {
         addAnimeButton.className = "btn btn-sm btn-success d-none"
         removeAnimeButton.className = "btn btn-sm btn-danger d-inline"
-        addItem("anime", externalId);
+        addWatchHistoryItem("anime", externalId);
     }
     else if (type === "remove") {
         addAnimeButton.className = "btn btn-sm btn-success d-inline"
         removeAnimeButton.className = "btn btn-sm btn-danger d-none"
-        removeItem("anime", idMap[externalId]);
+        removeWatchHistoryItem("anime", idMap[externalId]);
     }
 }
