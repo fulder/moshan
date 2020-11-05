@@ -108,5 +108,5 @@ function getEpisodes(collectionName, itemId, callback, startEpisode=0, limit=100
 }
 
 function getEpisode(collectionName, itemId, episodeId) {
-    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/{episodeId}`, options)
+    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
 }
