@@ -42,17 +42,14 @@ axios.all(requests).then(axios.spread((...responses) => {
 function createAnime(animeItem, watchHistoryItem) {
     itemAdded = watchHistoryItem !== null
 
-    poster = animeItem["main_picture"]["large"]
-
     status = "Airing"
     if ("end_date" in anime && anime["end_date"] !== null) {
         status = "Finished"
     }
 
-
     resultHTML = `
         <div class="col-md-3 col-5 item">
-            <img class="img-fluid" src="${poster}" />
+            <img class="img-fluid" src="${animeItem['main_picture']['large']}" />
         </div>
 
         <div class="col-md-9 col-7">
