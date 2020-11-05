@@ -131,7 +131,7 @@ function createEpisodesList(episodes) {
         }
 
         tableHTML += `
-            <a href=`episode?collection_name="anime"&id=${anime_id}&episode_id=${episodeId}`>
+            <a href=episode?collection_name="anime"&id=${anime_id}&episode_id=${episodeId}>
                 <tr class=${rowClass}>
                     <td class="small">${episodeNumber}</td>
                     <td class="text-truncate small">${episode['title']}</td>
