@@ -15,14 +15,7 @@ axios.all([animeRequest, watchHistoryRequest]).then(axios.spread((...responses) 
 
   createEpisodePage(animeItem, watchHistoryItem)
 })).catch(error  => {
-  if (error.response) {
-    if (error.response.status === 404 && error.response.config.url.includes("watch-history")) {
-        createEpisodePage(animeItem)
-    }
-    console.log(error.response)
-  }
-
-  console.log(error)
+  console.log(errors)
 })
 
 function createEpisodePage(animeItem, watchHistoryItem) {
