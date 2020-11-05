@@ -14,11 +14,17 @@ if (episodePage === null) {
 maxUserEpisodePages = 0
 
 if (id !== null){
-    getAnimeById(id, createAnime);
+    animeRequest = getAnimeById(id);
 }
 else if (mal_id !== null) {
-    getAnimeByApiId("mal_id", mal_id, createAnime);
+    animeRequest = getAnimeByApiId("mal_id", mal_id);
 }
+
+animeRequest.then(function (response) {
+    createAnime(response.data);
+}).catch(function (error) {
+    console.log(error);
+});
 
 function createAnime(anime) {
     if ("id" in anime) {
