@@ -16,7 +16,7 @@ function searchAnime(searchString, callback) {
       });
 }
 
-function getAnimeByApiId(apiName, id, callback) {
+function getAnimeByApiId(apiName, id) {
     return axios.get(`https://api.anime.moshan.tv/v1/anime?${apiName}=${id}`, options)
 }
 
@@ -24,15 +24,8 @@ function getAnimeById(id) {
     return axios.get(`https://api.anime.moshan.tv/v1/anime/${id}`, options)
 }
 
-function getAnimeEpisodes(id, callback, start=1, limit=100) {
-    axios.get(`https://api.anime.moshan.tv/v1/anime/${id}/episodes?limit=${limit}&start=${start}`, options)
-      .then(function (response) {
-        callback(response.data);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
+function getAnimeEpisodes(id, start=1, limit=100) {
+    return axios.get(`https://api.anime.moshan.tv/v1/anime/${id}/episodes?limit=${limit}&start=${start}`, options)
 }
 
 function getAnimeEpisode(id, episodeId) {

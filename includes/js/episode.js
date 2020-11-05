@@ -11,10 +11,10 @@ if (collectionName == "anime") {
 }
 
 axios.all([watchHistoryRequest, collectionRequest]).then(axios.spread((...responses) => {
-  const watchHistoryRes = responses[0]
-  const collectionRes = responses[1]
+  watchHistoryItem = responses[0].data
+  collectionItem = responses[1].data
 
-  createEpisodePage(watchHistoryRes, collectionRes)
+  createEpisodePage(watchHistoryItem, collectionItem)
 })).catch(errors => {
   console.log(errors)
 })
