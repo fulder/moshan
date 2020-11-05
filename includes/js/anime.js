@@ -185,11 +185,10 @@ function loadEpisodes(page) {
     episodePage = page;
     getAnimeEpisodes(id, episodePage).then(function (response) {
         createEpisodesList(response.data);
-      })
-      .catch(function (error) {
+    }).catch(function (error) {
         console.log(error);
-      });
-    }
+    });
+
 
     document.getElementById("episodesPages").getElementsByTagName("LI")[episodePage].classList.add("active");
 
