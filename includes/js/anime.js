@@ -40,9 +40,7 @@ axios.all(requests).then(axios.spread((...responses) => {
 })
 
 function createAnime(animeItem, watchHistoryItem) {
-    if (watchHistoryItem !== null) {
-        console.log(watchHistoryItem);
-    }
+    itemAdded = watchHistoryItem !== null
 
     poster = animeItem["main_picture"]["large"]
 
@@ -50,6 +48,7 @@ function createAnime(animeItem, watchHistoryItem) {
     if ("end_date" in anime && anime["end_date"] !== null) {
         status = "Finished"
     }
+
 
     resultHTML = `
         <div class="col-md-3 col-5 item">
@@ -60,8 +59,8 @@ function createAnime(animeItem, watchHistoryItem) {
             <h5>${animeItem['title']}</h5>
             <p><b>Released</b>: ${animeItem['start_date']}</p>
             <p><b>Status</b>: ${status}</p>
-            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${animeItem['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger d-none" onclick="removeWatchHistoryItem('anime', '${animeItem['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
+            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItem('anime', ${animeItem['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeWatchHistoryItem('anime', '${animeItem['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div class="col-md-3 col-7">
