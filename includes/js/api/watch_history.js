@@ -97,7 +97,7 @@ function getWatchHistoryEpisode(collectionName, itemId, episodeId) {
             'Authorization': accessToken,
             'Content-Type': "application/json"
         },
-        validateStatus: (status) => status !== 404 && status !== 200
+        validateStatus: (status) => status >= 200 && status < 300 || status === 404
     }
     return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
 }
