@@ -89,7 +89,7 @@ function createAnime(animeItem, watchHistoryItem) {
 
     document.getElementById("anime").innerHTML = resultHTML
 
-    if ("anidb_id" in anime) {
+    if ("anidb_id" in animeItem) {
         document.getElementById("anidbLink").classList.remove("d-none")
     }
 }
