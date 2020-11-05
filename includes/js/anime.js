@@ -11,26 +11,36 @@ if (episodePage === null) {
     episodePage = parseInt(episodePage);
 }
 
-if (id !== null){
+if (id !== null) {
     animeRequest = getAnimeById(id);
+    animeEpisodesRequest = getAnimeEpisodes(id, episodePage);
+    watchHistoryRequest = getWatchHistoryItem("anime", id, animeAdded);
+    requests = [animeRequest, animeEpisodesRequest, watchHistoryRequest];
+} else if (mal_id !== null) {
+    animeRequest = getAnimeByApiId("mal", id);
+    requests = [animeRequest]
 }
-else if (mal_id !== null) {
-    animeRequest = getAnimeByApiId("mal_id", mal_id);
-}
 
-animeRequest.then(function (response) {
-    createAnime(response.data);
-}).catch(function (error) {
-    console.log(error);
-});
+axios.all(requests).then(axios.spread((...responses) => {
+  animeItem = responses[0].data
+  animeEpisodes = null;
+  watchHistoryItem = null;
+  if (responses.length > 1) {
+    animeEpisodes = responses[1].data
+    watchHistoryItem = responses[2].data
+  }
 
-function createAnime(anime) {
-    if ("id" in anime) {
-        id = anime["id"];
-    }
+  createAnime(animeItem, watchHistoryItem)
 
-    poster = anime["main_picture"]["large"]
-    console.log(anime);
+  if (animeEpisodes !== null) {
+    createEpisodesList(animeEpisodes)
+   }
+})).catch(errors => {
+  console.log(errors)
+})
+
+function createAnime(animeItem, watchHistoryItem) {
+    poster = animeItem["main_picture"]["large"]
 
     status = "Airing"
     if ("end_date" in anime && anime["end_date"] !== null) {
@@ -43,11 +53,11 @@ function createAnime(anime) {
         </div>
 
         <div class="col-md-9 col-7">
-            <h5>${anime['title']}</h5>
-            <p><b>Released</b>: ${anime['start_date']}</p>
+            <h5>${animeItem['title']}</h5>
+            <p><b>Released</b>: ${animeItem['start_date']}</p>
             <p><b>Status</b>: ${status}</p>
-            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${anime['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger d-none" onclick="removeWatchHistoryItem('anime', '${anime['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
+            <button id="addButton" class="btn btn-success" onclick="addItem('anime', ${animeItem['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger d-none" onclick="removeWatchHistoryItem('anime', '${animeItem['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div class="col-md-3 col-7">
@@ -55,10 +65,10 @@ function createAnime(anime) {
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="col-4">
-                            <a href="https://myanimelist.net/anime/${anime['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
+                            <a href="https://myanimelist.net/anime/${animeItem['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
                         </div>
                         <div id="anidbLink" class="col-4 d-none">
-                            <a href="https://anidb.net/anime/${anime['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
+                            <a href="https://anidb.net/anime/${animeItem['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
                         </div>
                     </div>
                 </div>
@@ -71,16 +81,9 @@ function createAnime(anime) {
                     <div id="synopsisCardHeader" class="card-header">Synopsis</div>
                 </a>
                 <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
-                    <div class="card-body">${anime['synopsis']}</div>
+                    <div class="card-body">${animeItem['synopsis']}</div>
                 </div>
             </div>
-       </div>
-
-       <div class="mt-2 col-12">
-           <nav aria-label="Episode navigation">
-               <ul id="episodesPages" class="pagination pagination-sm flex-wrap"></ul>
-           </nav>
-           <table id="episodesTable" class="table table-striped table-hover"></table>
        </div>
     `;
 
@@ -88,14 +91,6 @@ function createAnime(anime) {
 
     if ("anidb_id" in anime) {
         document.getElementById("anidbLink").classList.remove("d-none")
-    }
-
-    // if the anime item is cached
-    if (id !== null) {
-        // get item from watch history and toggle add/remove buttons
-        getItem("anime", id, animeAdded);
-
-        getAnimeEpisodes(id, createEpisodesList, episodePage);
     }
 }
 
@@ -120,62 +115,37 @@ function animeAdded(anime) {
 }
 
 function createEpisodesList(episodes) {
-    tableHTML = `
-        <thead>
-            <tr>
-                <th scope="col" class="episode-number-header small">#</th>
-                <th scope="col" class="episode-add-header small">+/-</th>
-                <th scope="col" class="small">Title</th>
-                <th scope="col" class="episode-watched-header small">Last Watched</th>
-                <th scope="col" class="episode-date-header small">Date</th>
-            </tr>
-        </thead>
-    `
     episodes["items"].forEach(function(episode) {
         episodeId = episode['id'];
         episodeNumber = episode['episode_number'];
         episodeDate = episode['air_date'];
         episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
 
+        rowClass = ""
         if (!episodeAired) {
-            tableHTML += `
-                <tr class="bg-secondary">
-                    <td class="small">${episodeNumber}</td>
-                    <td class="small">
-                        <button type="button" class="btn btn-success btn-sm disabled"><i class="fa fa-plus"></i></button>
-                    </td>
-                    <td class="text-truncate small">${episode['title']}</td>
-                    <td class="small"><input type="text" placeholder="Select Date.." size="8" disabled></td>
-                    <td class="small">${episodeDate}</td>
-                </tr>
-            `
-        } else {
-            tableHTML += `
-                <tr>
-                    <td class="small">${episodeNumber}</td>
-                    <td class="small">
-                        <button id="addEpisode-${episodeId}" type="button" class="btn btn-success btn-sm" onclick="addEpisodeWrapper('${episodeId}', ${episodeNumber})"><i class="fa fa-plus"></i></button>
-                        <button id="removeEpisode-${episodeId}" type="button" class="btn btn-danger btn-sm d-none" onclick="removeEpisodeWrapper('${episodeId}')"><i class="fa fa-minus"></i></button>
-                    </td>
-                    <td class="text-truncate small">${episode['title']}</td>
-                    <td class="small"><input id="date-${episodeId}" class="flatpickr flatpickr-input" type="text" placeholder="Select Date.." size="8"></td>
-                    <td class="small">${episodeDate}</td>
-                </tr>
-            `
+            rowClass = "bg-secondary"
         }
+
+        tableHTML += `
+            <tr class="bg-secondary">
+                <td class="small">${episodeNumber}</td>
+                <td class="text-truncate small">${episode['title']}</td>
+                <td class="small">${episodeDate}</td>
+            </tr>
+        `
     });
 
-    document.getElementById("episodesTable").innerHTML = tableHTML
+    document.getElementById("episodeTableBody").innerHTML = tableHTML
 
-    const fp = flatpickr(".flatpickr", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        time_24hr: true,
-        locale: {
-            firstDayOfWeek: 1 // start week on Monday
-        },
-        weekNumbers: true,
-    });
+//    const fp = flatpickr(".flatpickr", {
+//        enableTime: true,
+//        dateFormat: "Y-m-d H:i",
+//        time_24hr: true,
+//        locale: {
+//            firstDayOfWeek: 1 // start week on Monday
+//        },
+//        weekNumbers: true,
+//    });
 
     if (document.getElementById("episodesPages").innerHTML === "") {
         paginationHTML = `<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
@@ -192,10 +162,6 @@ function createEpisodesList(episodes) {
 
         document.getElementById("episodesPages").innerHTML = paginationHTML;
     }
-
-    maxEpisodeNumber = episodes["items"][0]["episode_number"]
-    getWatchHistoryEpisodes("anime", id, markAddedEpisodes, maxEpisodeNumber);
-
 }
 
 function loadPreviousEpisodes() {
@@ -217,33 +183,16 @@ function loadEpisodes(page) {
     document.getElementById("episodesPages").getElementsByTagName("LI")[episodePage].classList.remove("active");
 
     episodePage = page;
-    getAnimeEpisodes(id, createEpisodesList, episodePage);
+    getAnimeEpisodes(id, episodePage).then(function (response) {
+        createEpisodesList(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
 
     document.getElementById("episodesPages").getElementsByTagName("LI")[episodePage].classList.add("active");
 
     urlParams.set("episode_page", page)
     history.pushState({}, null, `?${urlParams.toString()}`)
-}
-
-function addEpisodeWrapper(episodeId, episodeNumber) {
-    document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
-    document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
-
-    addWatchHistoryEpisode("anime", id, episodeId, episodeNumber)
-}
-
-function removeEpisodeWrapper(episodeId) {
-    document.getElementById(`addEpisode-${episodeId}`).classList.remove("d-none")
-    document.getElementById(`removeEpisode-${episodeId}`).classList.add("d-none")
-
-    removeWatchHistoryEpisode("anime", id, episodeId)
-}
-
-function markAddedEpisodes(userEpisodes) {
-    userEpisodes["episodes"].forEach(function (episodeInfo, index) {
-        episodeId = episodeInfo["id"]
-        document.getElementById(`addEpisode-${episodeId}`).classList.add("d-none")
-        document.getElementById(`removeEpisode-${episodeId}`).classList.remove("d-none")
-    });
-
 }
