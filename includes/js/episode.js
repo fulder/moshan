@@ -22,7 +22,7 @@ axios.all([animeRequest, watchHistoryRequest]).then(axios.spread((...responses) 
     console.log(error.response)
   }
 
-  console.log(errors)
+  console.log(error)
 })
 
 function createEpisodePage(animeItem, watchHistoryItem) {
