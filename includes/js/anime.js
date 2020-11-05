@@ -25,9 +25,12 @@ axios.all(requests).then(axios.spread((...responses) => {
   animeItem = responses[0].data
   animeEpisodes = null;
   watchHistoryItem = null;
+
   if (responses.length > 1) {
     animeEpisodes = responses[1].data
     watchHistoryItem = responses[2].data
+
+    animeId = animeItem["id"]
   }
 
   createAnime(animeItem, watchHistoryItem)
@@ -128,11 +131,13 @@ function createEpisodesList(episodes) {
         }
 
         tableHTML += `
-            <tr class=${rowClass}>
-                <td class="small">${episodeNumber}</td>
-                <td class="text-truncate small">${episode['title']}</td>
-                <td class="small">${episodeDate}</td>
-            </tr>
+            <a href=`episode?collection_name="anime"&id=${anime_id}&episode_id=${episodeId}>`
+                <tr class=${rowClass}>
+                    <td class="small">${episodeNumber}</td>
+                    <td class="text-truncate small">${episode['title']}</td>
+                    <td class="small">${episodeDate}</td>
+                </tr>
+            </a>
         `
     });
 
