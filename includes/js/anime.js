@@ -14,7 +14,7 @@ if (episodePage === null) {
 if (id !== null) {
     animeRequest = getAnimeById(id);
     animeEpisodesRequest = getAnimeEpisodes(id, episodePage);
-    watchHistoryRequest = getWatchHistoryItem("anime", id, animeAdded);
+    watchHistoryRequest = getWatchHistoryItem("anime", id);
     requests = [animeRequest, animeEpisodesRequest, watchHistoryRequest];
 } else if (mal_id !== null) {
     animeRequest = getAnimeByApiId("mal", id);
@@ -40,6 +40,10 @@ axios.all(requests).then(axios.spread((...responses) => {
 })
 
 function createAnime(animeItem, watchHistoryItem) {
+    if (watchHistoryItem !== null) {
+        console.log(watchHistoryItem);
+    }
+
     poster = animeItem["main_picture"]["large"]
 
     status = "Airing"
