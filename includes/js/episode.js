@@ -10,15 +10,47 @@ if (collectionName == "anime") {
 watchHistoryRequest = getWatchHistoryEpisode(collectionName, id, episodeId)
 
 axios.all([animeRequest, watchHistoryRequest]).then(axios.spread((...responses) => {
-  animeItem = responses[0].data
-  watchHistoryItem = responses[1].data
+  animeEpisode = responses[0].data
+  watchHistoryEpisode = responses[1].data
 
-  createEpisodePage(animeItem, watchHistoryItem)
+  createEpisodePage(animeEpisode, watchHistoryEpisode)
 })).catch(error  => {
   console.log(error)
 })
 
-function createEpisodePage(animeItem, watchHistoryItem) {
-    console.log(animeItem)
-    console.log(watchHistoryItem)
+function createEpisodePage(animeEpisode, watchHistoryEpisode) {
+    console.log(animeEpisode)
+    console.log(watchHistoryEpisode)
+
+    itemAdded = watchHistoryEpisode !== null
+
+    episodeAired = Date.parse(animeEpisode['air_date']) <= (new Date()).getTime();
+    status = episodeAired ? "Aired" : "Not Aired"
+
+    resultHTML = `
+        <div class="col-md-3 col-5 item">
+            <img class="img-fluid" src="/includes/img/image_not_available.png" />
+        </div>
+
+        <div class="col-md-9 col-7">
+            <h5>${animeEpisode['title']}</h5>
+            <p><b>Aired</b>: ${animeEpisode['air_date']}</p>
+            <p><b>Status</b>: ${status}</p>
+            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addWatchHistoryEpisode('anime', ${animeEpisode['id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeWatchHistoryEpisode('anime', '${animeEpisode['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
+        </div>
+
+        <div id="synopsisCol" class="mt-2 col-12">
+            <div class="card">
+                <a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">
+                    <div id="synopsisCardHeader" class="card-header">Synopsis</div>
+                </a>
+                <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
+                    <div class="card-body">${animeEpisode['synopsis']}</div>
+                </div>
+            </div>
+       </div>
+    `;
+
+    document.getElementById("episode").innerHTML = resultHTML
 }
