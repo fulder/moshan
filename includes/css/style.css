@@ -39,4 +39,5 @@ body {
 
 .episodeRow {
     cursor: pointer;
+    user-select: none;
 }
