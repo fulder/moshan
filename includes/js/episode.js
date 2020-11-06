@@ -22,7 +22,7 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
     console.log(animeEpisode)
     console.log(watchHistoryEpisode)
 
-    itemAdded = watchHistoryEpisode !== ""
+    episodeAdded = watchHistoryEpisode !== ""
 
     episodeAired = Date.parse(animeEpisode['air_date']) <= (new Date()).getTime();
     status = episodeAired ? "Aired" : "Not Aired"
@@ -36,8 +36,8 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
             <h5>${animeEpisode['title']}</h5>
             <p><b>Aired</b>: ${animeEpisode['air_date']}</p>
             <p><b>Status</b>: ${status}</p>
-            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addWatchHistoryEpisode('anime', ${animeEpisode['id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeWatchHistoryEpisode('anime', '${animeEpisode['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
+            <button id="addButton" class="btn btn-success ${episodeAdded ? 'd-none' : ''}" onclick="addWatchHistoryEpisode('anime', ${animeEpisode['id']}, episodeAdded)"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!episodeAdded ? 'd-none' : ''}" onclick="removeWatchHistoryEpisode('anime', '${animeEpisode['id']}', episodeRemoved)"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div id="synopsisCol" class="mt-2 col-12">
