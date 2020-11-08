@@ -143,16 +143,6 @@ function createEpisodesList(episodes) {
 
     document.getElementById("episodeTableBody").innerHTML = tableHTML
 
-//    const fp = flatpickr(".flatpickr", {
-//        enableTime: true,
-//        dateFormat: "Y-m-d H:i",
-//        time_24hr: true,
-//        locale: {
-//            firstDayOfWeek: 1 // start week on Monday
-//        },
-//        weekNumbers: true,
-//    });
-
     if (document.getElementById("episodesPages").innerHTML === "") {
         paginationHTML = `<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>`
 

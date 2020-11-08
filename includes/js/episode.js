@@ -39,6 +39,7 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
             <button id="addButton" class="btn btn-success ${episodeAired && episodeAdded ? 'd-none' : ''}" onclick="addWatchHistoryEpisode('anime', ${animeEpisode['id']}, episodeAdded)"><i class="fa fa-plus"></i> Add</button>
             <button id="removeButton" class="btn btn-danger ${episodeAired && !episodeAdded ? 'd-none' : ''}" onclick="removeWatchHistoryEpisode('anime', '${animeEpisode['id']}', episodeRemoved)"><i class="fa fa-minus"></i> Remove</button>
             <button class="btn btn-secondary" ${!episodeAired ? 'disabled' : ''}><i class="fa fa-plus"></i> Add</button>
+            <input type="text" id="flatpickr">
         </div>
 
         <div id="synopsisCol" class="mt-2 col-12">
@@ -52,6 +53,16 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
             </div>
        </div>
     `;
+
+    const fp = flatpickr("#flatpickr", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+        locale: {
+            firstDayOfWeek: 1 // start week on Monday
+        },
+        weekNumbers: true,
+    });
 
     document.getElementById("episode").innerHTML = resultHTML
 }
