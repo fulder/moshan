@@ -133,7 +133,7 @@ function createEpisodesList(episodes) {
         }
 
         tableHTML += `
-            <tr onclick=${onClickAction} class=${rowClass}>
+            <tr onclick="${onClickAction}" class=${rowClass}>
                 <td class="small">${episodeNumber}</td>
                 <td class="text-truncate small">${episode['title']}</td>
                 <td class="small">${episodeDate}</td>
