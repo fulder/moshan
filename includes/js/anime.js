@@ -62,7 +62,7 @@ function createAnime(animeItem, watchHistoryItem) {
              <div class="card mt-2">
                 <div class="card-body p-1">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-4 col-md-1">
                             <a href="https://myanimelist.net/anime/${animeItem['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
                         </div>
                         <div id="anidbLink" class="col-4 d-none">
