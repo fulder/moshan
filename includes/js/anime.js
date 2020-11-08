@@ -126,12 +126,14 @@ function createEpisodesList(episodes) {
         episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
 
         rowClass = "episodeRow"
+        onClickAction = `window.location='/episode?collection_name=anime&id=${animeId}&episode_id=${episodeId}'`
         if (!episodeAired) {
             rowClass = "bg-secondary"
+            onClickAction = ""
         }
 
         tableHTML += `
-            <tr onclick="window.location='/episode?collection_name=anime&id=${animeId}&episode_id=${episodeId}'" class=${rowClass}>
+            <tr onclick=${onClickAction} class=${rowClass}>
                 <td class="small">${episodeNumber}</td>
                 <td class="text-truncate small">${episode['title']}</td>
                 <td class="small">${episodeDate}</td>
