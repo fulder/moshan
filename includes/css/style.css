@@ -42,7 +42,7 @@ body {
     user-select: none;
 }
 
-.flatpickr {
+#flatpickr {
     max-width: 130px;
 }
 
