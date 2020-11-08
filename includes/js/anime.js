@@ -59,13 +59,13 @@ function createAnime(animeItem, watchHistoryItem) {
             <h5>${animeItem['title']}</h5>
             <p><b>Released</b>: ${animeItem['start_date']}</p>
             <p><b>Status</b>: ${status}</p>
-             <div class="card mt-2">
+             <div class="card mt-2 col-7 col-md-3">
                 <div class="card-body p-1">
                     <div class="row">
-                        <div class="col-4 col-md-1">
+                        <div class="col-6 col-md-5">
                             <a href="https://myanimelist.net/anime/${animeItem['mal_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
                         </div>
-                        <div id="anidbLink" class="col-4 col-md-1 d-none">
+                        <div id="anidbLink" class="col-6 col-md-5 d-none">
                             <a href="https://anidb.net/anime/${animeItem['anidb_id']}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
                         </div>
                     </div>
