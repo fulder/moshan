@@ -59,6 +59,8 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
        </div>
     `;
 
+    document.getElementById("episode").innerHTML = resultHTML
+
     const fp = flatpickr("#flatpickr", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
@@ -68,6 +70,4 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
         },
         weekNumbers: true,
     });
-
-    document.getElementById("episode").innerHTML = resultHTML
 }
