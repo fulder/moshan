@@ -41,8 +41,3 @@ body {
     cursor: pointer;
     user-select: none;
 }
-
-#flatpickr {
-    max-width: 130px;
-}
-
