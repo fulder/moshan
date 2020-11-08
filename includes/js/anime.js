@@ -60,6 +60,7 @@ function createAnime(animeItem, watchHistoryItem) {
             <p><b>Released</b>: ${animeItem['start_date']}</p>
             <p><b>Status</b>: ${status}</p>
              <div class="card mt-2 col-7 col-md-3">
+                <dib class="card-header">Links</div>
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="col-6 col-md-5">
