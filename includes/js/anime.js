@@ -74,9 +74,9 @@ function createAnime(animeItem, watchHistoryItem) {
             </div>
         </div>
 
-        <div class="col-md-3 col-7">
-            <button id="addButton" class="btn btn-success mt-1 ${itemAdded ? 'd-none' : ''}" onclick="addItem('anime', ${animeItem['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger mt-1 ${!itemAdded ? 'd-none' : ''}" onclick="removeWatchHistoryItem('anime', '${animeItem['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
+        <div class="col-md-3 col-7 mt-1">
+            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItem('anime', ${animeItem['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeWatchHistoryItem('anime', '${animeItem['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div id="synopsisCol" class="mt-2 col-12">
