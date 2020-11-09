@@ -38,7 +38,7 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
             <p><b>Status</b>: ${status}</p>
         </div>
 
-        <div class="col-md-3 col-8 mt-1">
+        <div class="col-md-3 col-9 mt-1">
             <button id="addButton" class="btn btn-success ${!episodeAired || episodeAdded ? 'd-none' : ''}" onclick="addWatchHistoryEpisode('anime', ${animeEpisode['id']}, episodeAdded)"><i class="fa fa-plus"></i> Add</button>
             <button id="removeButton" class="btn btn-danger ${!episodeAired || !episodeAdded ? 'd-none' : ''}" onclick="removeWatchHistoryEpisode('anime', '${animeEpisode['id']}', episodeRemoved)"><i class="fa fa-minus"></i> Remove</button>
             <button class="btn btn-secondary ${!episodeAired ? '" disabled' : 'd-none"'}><i class="fa fa-plus"></i> Add</button>
