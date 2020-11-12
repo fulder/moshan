@@ -34,8 +34,8 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
 
         <div class="col-md-9 col-7">
             <h5>${animeEpisode['title']}</h5>
-            <p><b>Aired</b>: ${animeEpisode['air_date']}</p>
-            <p><b>Status</b>: ${status}</p>
+            <b>Aired</b>: ${animeEpisode['air_date']}<br>
+            <b>Status</b>: ${status}
         </div>
 
         <div class="col-md-3 col-9 mt-1">
