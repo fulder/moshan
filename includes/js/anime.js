@@ -17,7 +17,7 @@ if (id !== null) {
     watchHistoryRequest = getWatchHistoryItem("anime", id);
     requests = [animeRequest, animeEpisodesRequest, watchHistoryRequest];
 } else if (mal_id !== null) {
-    animeRequest = getAnimeByApiId("mal", id);
+    animeRequest = getAnimeByApiId("mal", mal_id);
     requests = [animeRequest]
 }
 
