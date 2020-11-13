@@ -17,7 +17,7 @@ function searchAnime(searchString, callback) {
 }
 
 function getAnimeByApiId(apiName, id) {
-    return axios.get(`https://api.anime.moshan.tv/v1/anime?${apiName}=${id}`, options)
+    return axios.get(`https://api.anime.moshan.tv/v1/anime?${apiName}_id=${id}`, options)
 }
 
 function getAnimeById(id) {
