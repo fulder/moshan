@@ -28,29 +28,15 @@ function getWatchHistoryByCollection(collectionName, callback) {
       });
 }
 
-function removeWatchHistoryItem(collectionName, id, callback) {
-    axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
-      .then(function (response) {
-        callback(response);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
+function removeWatchHistoryItem(collectionName, id) {
+    return axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
 }
 
-function addWatchHistoryItem(collectionName, id, callback) {
+function addWatchHistoryItem(collectionName, id) {
     data = {
         item_add_id: id
     }
-    axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}`, data, options)
-      .then(function (response) {
-        callback(response.data)
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
+    return axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}`, data, options)
 }
 
 function getWatchHistoryItem(collectionName, id) {

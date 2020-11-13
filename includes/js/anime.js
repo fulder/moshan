@@ -75,8 +75,8 @@ function createAnime(animeItem, watchHistoryItem) {
         </div>
 
         <div class="col-md-3 col-7 mt-1">
-            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItem('anime', ${animeItem['mal_id']}, itemAdded)"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeWatchHistoryItem('anime', '${animeItem['id']}', itemRemoved)"><i class="fa fa-minus"></i> Remove</button>
+            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('anime', ${animeItem['mal_id']})"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItemWrapper('anime', '${animeItem['id']}')"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div id="synopsisCol" class="mt-2 col-12">
@@ -98,24 +98,22 @@ function createAnime(animeItem, watchHistoryItem) {
     }
 }
 
-function itemAdded() {
-    document.getElementById("addButton").classList.add("d-none");
-    document.getElementById("removeButton").classList.remove("d-none");
+function addItemWrapper(type, id) {
+    req = addWatchHistoryItem(type, id).then(function (response) {
+        document.getElementById("addButton").classList.add("d-none");
+        document.getElementById("removeButton").classList.remove("d-none");
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
-function itemRemoved() {
-    document.getElementById("addButton").classList.remove("d-none");
-    document.getElementById("removeButton").classList.add("d-none");
-}
-
-function animeAdded(anime) {
-    console.log(anime);
-
-    if (anime === null) {
-        itemRemoved();
-    } else {
-        itemAdded();
-    }
+function removeItemWrapper(type, id) {
+    req = removeWatchHistoryItem(type, id).then(function (response) {
+        document.getElementById("addButton").classList.remove("d-none");
+        document.getElementById("removeButton").classList.add("d-none");
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 function createEpisodesList(episodes) {
