@@ -61,6 +61,9 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
             firstDayOfWeek: 1 // start week on Monday
         },
         weekNumbers: true,
+        onClose: function(selectedDates, dateStr, instance){
+            updateWatchHistoryEpisode(collectionName, id, episodeId, watchDate=dateStr)
+        }
     });
 }
 
