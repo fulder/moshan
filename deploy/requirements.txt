@@ -3,3 +3,5 @@ aws_cdk.aws_lambda==1.49.1
 aws_cdk.aws_dynamodb==1.49.1
 aws_cdk.aws_iam==1.49.1
 aws_cdk.aws_apigatewayv2==1.50.0
+
+wheel
