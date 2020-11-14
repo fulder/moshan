@@ -50,3 +50,11 @@ function getWatchHistoryEpisode(collectionName, itemId, episodeId) {
     }
     return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
 }
+
+function updateWatchHistoryEpisode(collectionName, itemId, episodeId, watchDate="") {
+    data = {}
+    if watchDate !== "" {
+        data["date_watched"] = watchDate;
+    }
+    return axios.patch(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, data, options)
+}
