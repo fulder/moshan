@@ -85,7 +85,7 @@ function addEpisodeWrapper(type, episodeId) {
 }
 
 function removeEpisodeWrapper(type, episodeId) {
-    req = removeWatchHistoryItem(type, id, episodeId).then(function (response) {
+    req = removeWatchHistoryEpisode(type, id, episodeId).then(function (response) {
         document.getElementById("addButton").classList.remove("d-none");
         document.getElementById("removeButton").classList.add("d-none");
     }).catch(function (error) {
