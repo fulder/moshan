@@ -49,17 +49,6 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
               <input id="flatpickr" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
             </div>
         </div>
-
-//        <div id="synopsisCol" class="mt-2 col-12">
-//            <div class="card">
-//                <a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">
-//                    <div id="synopsisCardHeader" class="card-header">Synopsis</div>
-//                </a>
-//                <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
-//                    <div class="card-body">${animeEpisode['synopsis']}</div>
-//                </div>
-//            </div>
-//       </div>
     `;
 
     document.getElementById("episode").innerHTML = resultHTML
