@@ -1,3 +1,5 @@
+await checkToken();
+
 const urlParams = new URLSearchParams(window.location.search);
 totalPages = 0;
 
