@@ -9,7 +9,11 @@ else {
     document.getElementById("animeResults").innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>'
 }
 
-searchAnime(searchString, callback);
+searchAnime(searchString).then(function (response) {
+    callback(response.data);
+}).catch(function (error) {
+    console.log(error);
+});
 
 function callback(animes) {
     resultHTML = ""
