@@ -39,8 +39,8 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
         </div>
 
         <div class="col-md-3 col-9 mt-1">
-            <button id="addButton" class="btn btn-success ${!episodeAired || episodeAdded ? 'd-none' : ''}" onclick="addWatchHistoryEpisode('anime', ${animeEpisode['id']}, episodeAdded)"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger ${!episodeAired || !episodeAdded ? 'd-none' : ''}" onclick="removeWatchHistoryEpisode('anime', '${animeEpisode['id']}', episodeRemoved)"><i class="fa fa-minus"></i> Remove</button>
+            <button id="addButton" class="btn btn-success ${!episodeAired || episodeAdded ? 'd-none' : ''}" onclick="addEpisodeWrapper('anime', ${animeEpisode['id']})"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!episodeAired || !episodeAdded ? 'd-none' : ''}" onclick="removeEpisodeWrapper('anime', '${animeEpisode['id']}')"><i class="fa fa-minus"></i> Remove</button>
             <button class="btn btn-secondary ${!episodeAired ? '" disabled' : 'd-none"'}><i class="fa fa-plus"></i> Add</button>
             <div class="input-group input-group-sm pt-1">
               <div class="input-group-prepend">
@@ -72,5 +72,23 @@ function createEpisodePage(animeEpisode, watchHistoryEpisode) {
             firstDayOfWeek: 1 // start week on Monday
         },
         weekNumbers: true,
+    });
+}
+
+function addEpisodeWrapper(type, episodeId) {
+    req = addWatchHistoryEpisode(type, id, episodeId).then(function (response) {
+        document.getElementById("addButton").classList.add("d-none");
+        document.getElementById("removeButton").classList.remove("d-none");
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
+function removeEpisodeWrapper(type, episodeId) {
+    req = removeWatchHistoryItem(type, id, episodeId).then(function (response) {
+        document.getElementById("addButton").classList.remove("d-none");
+        document.getElementById("removeButton").classList.add("d-none");
+    }).catch(function (error) {
+        console.log(error);
     });
 }
