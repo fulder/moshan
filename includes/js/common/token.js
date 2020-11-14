@@ -40,9 +40,7 @@ async function refreshToken(){
         if(data["refresh_token"] !== undefined) {
             localStorage.setItem("moshan_refresh_token", data["refresh_token"])
         }
-    catch(error) {
+    } catch(error) {
         console.log(error);
-    }
-
     }
 }
