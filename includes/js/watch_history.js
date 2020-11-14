@@ -1,5 +1,3 @@
-await checkToken();
-
 if (accessToken === null) {
     document.getElementById("logInAlert").className = "alert alert-danger";
 }
