@@ -1,3 +1,4 @@
 python-json-logger
 pyjwt
 jsonschema
+setuptools
