@@ -1,12 +1,12 @@
 from unittest.mock import patch
 
-from api.item_by_collection import handle
-from watch_history_db import NotFoundError
+from api.episode_by_id import handle
+from episodes_db import NotFoundError
 
 TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6IlRFU1RfQ0xJRU5UX0lEIn0.ud_dRdguJwmKv4XO-c4JD-dKGffSvXsxuAxZq9uWV-g"
 
 
-@patch("api.item_by_collection.watch_history_db.get_item")
+@patch("api.episode_by_id.episodes_db.get_episode")
 def test_handler_get(mocked_get):
     mocked_get.return_value = {"collection_name": "anime", "item_id": 123}
 
@@ -21,7 +21,8 @@ def test_handler_get(mocked_get):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
+            "item_id": "123",
+            "episode_id": "345"
         }
     }
 
@@ -29,7 +30,7 @@ def test_handler_get(mocked_get):
     assert ret == {'body': '{"collection_name": "anime", "item_id": 123}', 'statusCode': 200}
 
 
-@patch("api.item_by_collection.watch_history_db.get_item")
+@patch("api.episode_by_id.episodes_db.get_episode")
 def test_handler_get_not_found(mocked_get):
     mocked_get.side_effect = NotFoundError
 
@@ -44,7 +45,8 @@ def test_handler_get_not_found(mocked_get):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
+            "item_id": "123",
+            "episode_id": "345"
         }
     }
 
@@ -52,7 +54,7 @@ def test_handler_get_not_found(mocked_get):
     assert ret == {'statusCode': 404}
 
 
-@patch("api.item_by_collection.watch_history_db.delete_item")
+@patch("api.episode_by_id.episodes_db.delete_episode")
 def test_handler_delete(mocked_delete):
     mocked_delete.return_value = True
 
@@ -67,7 +69,8 @@ def test_handler_delete(mocked_delete):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
+            "item_id": "123",
+            "episode_id": "345"
         }
     }
 
@@ -75,7 +78,7 @@ def test_handler_delete(mocked_delete):
     assert ret == {'statusCode': 204}
 
 
-@patch("api.item_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_id.episodes_db.update_episode")
 def test_handler_patch(mocked_post):
     mocked_post.return_value = True
 
@@ -90,7 +93,8 @@ def test_handler_patch(mocked_post):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
+            "item_id": "123",
+            "episode_id": "345"
         },
         "body": '{"rating": 3, "overview": "My overview", "review": "My review"}'
     }
@@ -99,7 +103,7 @@ def test_handler_patch(mocked_post):
     assert ret == {'statusCode': 204}
 
 
-@patch("api.item_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_id.episodes_db.update_episode")
 def test_handler_patch_validation_failure(mocked_post):
     mocked_post.return_value = True
 
@@ -114,7 +118,8 @@ def test_handler_patch_validation_failure(mocked_post):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
+            "item_id": "123",
+            "episode_id": "345"
         },
         "body": '{"rating": "ABC"}'
     }
@@ -123,7 +128,7 @@ def test_handler_patch_validation_failure(mocked_post):
     assert ret == {'statusCode': 400, 'body': '{"message": "Invalid post schema", "error": "\'ABC\' is not of type \'integer\'"}'}
 
 
-@patch("api.item_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_id.episodes_db.update_episode")
 def test_handler_patch_block_additional_properties(mocked_post):
     mocked_post.return_value = True
 
@@ -138,7 +143,8 @@ def test_handler_patch_block_additional_properties(mocked_post):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
+            "item_id": "123",
+            "episode_id": "345"
         },
         "body": '{"rating": 1, "werid_property": "123"}'
     }
@@ -147,7 +153,7 @@ def test_handler_patch_block_additional_properties(mocked_post):
     assert ret == {'statusCode': 400, 'body': '{"message": "Invalid post schema", "error": "Additional properties are not allowed (\'werid_property\' was unexpected)"}'}
 
 
-@patch("api.item_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_id.episodes_db.update_episode")
 def test_handler_patch_invalid_body_format(mocked_post):
     mocked_post.return_value = True
 
@@ -162,7 +168,8 @@ def test_handler_patch_invalid_body_format(mocked_post):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
+            "item_id": "123",
+            "episode_id": "345"
         },
         "body": 'INVALID'
     }
@@ -183,7 +190,8 @@ def test_handler_invalid_collection_name():
         },
         "pathParameters": {
             "collection_name": "INVALID",
-            "item_id": "123"
+            "item_id": "123",
+            "episode_id": "345"
         }
     }
 

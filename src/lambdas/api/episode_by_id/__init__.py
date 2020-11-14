@@ -6,9 +6,9 @@ import decimal_encoder
 import logger
 import jwt_utils
 import schema
-import watch_history_db
+import episodes_db
 
-log = logger.get_logger("watch_history")
+log = logger.get_logger("episodes_by_id")
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 PATCH_SCHEMA_PATH = os.path.join(CURRENT_DIR, "patch.json")
@@ -22,29 +22,30 @@ def handle(event, context):
 
     method = event["requestContext"]["http"]["method"]
     collection_name = event["pathParameters"].get("collection_name")
-    item_id = event["pathParameters"].get("item_id")
+    episode_id = event["pathParameters"].get("episode_id")
 
     if collection_name not in schema.COLLECTION_NAMES:
         return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
 
     if method == "GET":
-        return _get_item(username, collection_name, item_id)
+        return _get_episode(username, collection_name, episode_id)
     elif method == "PATCH":
         body = event.get("body")
-        return _patch_item(username, collection_name, item_id, body)
+        return _patch_episode(username, collection_name, episode_id, body)
     elif method == "DELETE":
-        return _delete_item(username, collection_name, item_id)
+        return _delete_episode(username, collection_name, episode_id)
 
 
-def _get_item(username, collection_name, item_id):
+def _get_episode(username, collection_name, episode_id):
     try:
-        ret = watch_history_db.get_item(username, collection_name, item_id)
+        ret = episodes_db.get_episode(username, collection_name, episode_id)
         return {"statusCode": 200, "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
-    except watch_history_db.NotFoundError:
+    except episodes_db.NotFoundError as e:
+        log.debug(f"Not found episode. Error: {e}")
         return {"statusCode": 404}
 
 
-def _patch_item(username, collection_name, item_id, body):
+def _patch_episode(username, collection_name, episode_id, body):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -57,10 +58,10 @@ def _patch_item(username, collection_name, item_id, body):
         schema.validate_schema(PATCH_SCHEMA_PATH, body)
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
-    watch_history_db.update_item(username, collection_name, item_id, body)
+    episodes_db.update_episode(username, collection_name, episode_id, body)
     return {"statusCode": 204}
 
 
-def _delete_item(username, collection_name, item_id):
-    watch_history_db.delete_item(username, collection_name, item_id)
+def _delete_episode(username, collection_name, episode_id):
+    episodes_db.delete_episode(username, collection_name, episode_id)
     return {"statusCode": 204}

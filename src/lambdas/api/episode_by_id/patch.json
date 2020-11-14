@@ -1,19 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
-  "title": "Update collection item",
-  "description": "Update a collection item information",
+  "title": "Update collection episode",
+  "description": "Update episode information",
   "default": {},
   "examples": [
     {
       "rating": 3,
       "overview": "My ovweview text",
-      "review": "Very long review about the item",
+      "review": "Very long review about the episode",
       "date_watched": [
         "2020-01-01 10:00:00",
         "2020-01-02 11:00:00"
-      ],
-      "status": "following"
+      ]
     }
   ],
   "additionalProperties": false,
@@ -22,7 +21,7 @@
       "$id": "#/properties/rating",
       "type": "integer",
       "title": "Rating",
-      "description": "Rate the collection item 1-6",
+      "description": "Rate the episode 1-6",
       "minimum": 1,
       "maximum": 10
     },
@@ -30,37 +29,25 @@
       "$id": "#/properties/overview",
       "type": "string",
       "title": "Overview",
-      "description": "Own overview for the item",
+      "description": "Own overview for the episode",
       "maxLength": 5000
     },
     "review": {
       "$id": "#/properties/review",
       "type": "string",
       "title": "Review",
-      "description": "Review for the item",
+      "description": "Review for the episode",
       "maxLength": 80000
     },
     "date_watched": {
       "$id": "#/properties/name",
       "type": "array",
       "title": "Watch date(s)",
-      "description": "One or more dates this item was watched",
+      "description": "One or more dates this episode was watched",
       "items": {
         "type": "string",
         "format": "date-time"
       }
-    },
-    "status": {
-      "$id": "#/properties/status",
-      "type": "string",
-      "title": "Watch status",
-      "description": "Watch status of the item",
-      "enum": [
-        "finished",
-        "following",
-        "watching",
-        "dropped"
-      ]
     }
   }
 }

@@ -3,23 +3,17 @@ from decimal import Decimal
 from unittest.mock import patch
 
 from anime_api import HttpError
-from api.watch_history_by_collection import handle
+from api.episode_by_collection_item import handle
 from schema import ALLOWED_SORT
-from watch_history_db import NotFoundError
+from episodes_db import NotFoundError
 
 TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6IlRFU1RfQ0xJRU5UX0lEIn0.ud_dRdguJwmKv4XO-c4JD-dKGffSvXsxuAxZq9uWV-g"
 
 
-@patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-@patch("api.watch_history_by_collection.anime_api.get_animes")
-def test_handler(mocked_get_animes, mocked_get_watch_history):
-    mocked_get_watch_history.return_value = {
-        "items": {"123": {"collection_name": "anime", "item_id": Decimal(123)}}
-    }
-    mocked_get_animes.return_value = {
-        "123": {
-            "title": "anime_title"
-        }
+@patch("api.episode_by_collection_item.episodes_db.get_episodes")
+def test_handler(mocked_get_episodes):
+    mocked_get_episodes.return_value = {
+        "items": {"123": {"collection_name": "anime", "item_id": Decimal(123), "episode_id": Decimal(345)}}
     }
 
     event = {
@@ -27,7 +21,8 @@ def test_handler(mocked_get_animes, mocked_get_watch_history):
             "authorization": TEST_JWT
         },
         "pathParameters": {
-            "collection_name": "anime"
+            "collection_name": "anime",
+            "item_id": 123
         },
         "requestContext": {
             "http": {
@@ -38,66 +33,14 @@ def test_handler(mocked_get_animes, mocked_get_watch_history):
 
     ret = handle(event, None)
     assert ret == {
-        'body': '{"items": {"123": {"collection_name": "anime", "item_id": 123, "title": "anime_title"}}}',
+        'body': '{"items": {"123": {"collection_name": "anime", "item_id": 123, "episode_id": 345}}}',
         "statusCode": 200
     }
 
 
-def test_handler_invalid_sort():
-    event = {
-        "headers": {
-            "authorization": TEST_JWT
-        },
-        "queryStringParameters": {
-            "sort": "INVALID"
-        },
-        "pathParameters": {
-            "collection_name": "anime"
-        },
-        "requestContext": {
-            "http": {
-                "method": "GET"
-            }
-        }
-    }
-
-    ret = handle(event, None)
-
-    assert ret == {
-        "statusCode": 400,
-        "body": json.dumps({"error": f"Invalid sort specified. Allowed values: {ALLOWED_SORT}"})
-    }
-
-
-@patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-def test_handler_sort(mocked_get_watch_history):
-    mocked_get_watch_history.return_value = [{"collection_name": "test_collection", "item_id": Decimal(123)}]
-
-    event = {
-        "headers": {
-            "authorization": TEST_JWT
-        },
-        "queryStringParameters": {
-            "sort": "date_watched"
-        },
-        "pathParameters": {
-            "collection_name": "test_collection"
-        },
-        "requestContext": {
-            "http": {
-                "method": "GET"
-            }
-        }
-    }
-
-    ret = handle(event, None)
-
-    assert ret == {'body': '[{"collection_name": "test_collection", "item_id": 123}]', 'statusCode': 200}
-
-
-@patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-def test_handler_limit_and_start(mocked_get_watch_history):
-    mocked_get_watch_history.return_value = [{"collection_name": "test_collection", "item_id": Decimal(123)}]
+@patch("api.episode_by_collection_item.episodes_db.get_episodes")
+def test_handler_limit_and_start(mocked_get_episodes):
+    mocked_get_episodes.return_value = [{"collection_name": "test_collection", "item_id": Decimal(123), "episode_id": Decimal(345)}]
 
     event = {
         "headers": {
@@ -108,7 +51,8 @@ def test_handler_limit_and_start(mocked_get_watch_history):
             "start": "23"
         },
         "pathParameters": {
-            "collection_name": "test_collection"
+            "collection_name": "anime",
+            "item_id": 123
         },
         "requestContext": {
             "http": {
@@ -119,7 +63,7 @@ def test_handler_limit_and_start(mocked_get_watch_history):
 
     ret = handle(event, None)
 
-    assert ret == {'body': '[{"collection_name": "test_collection", "item_id": 123}]', 'statusCode': 200}
+    assert ret == {'body': '[{"collection_name": "test_collection", "item_id": 123, "episode_id": 345}]', 'statusCode': 200}
 
 
 def test_handler_invalid_limit_type():
@@ -168,9 +112,9 @@ def test_handler_invalid_start_type():
     assert ret == {'body': '{"message": "Invalid start type"}', 'statusCode': 400}
 
 
-@patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-def test_handler_not_found(mocked_get_watch_history):
-    mocked_get_watch_history.side_effect = NotFoundError
+@patch("api.episode_by_collection_item.episodes_db.get_episodes")
+def test_handler_not_found(mocked_get_episodes):
+    mocked_get_episodes.side_effect = NotFoundError
 
     event = {
         "headers": {
@@ -188,10 +132,10 @@ def test_handler_not_found(mocked_get_watch_history):
 
     ret = handle(event, None)
 
-    assert ret == {"statusCode": 200, "body": json.dumps({"items": []})}
+    assert ret == {"statusCode": 200, "body": json.dumps({"episodes": []})}
 
 
-@patch("api.watch_history_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_collection_item.episodes_db.update_episode")
 def test_handler_post_without_body(mocked_post):
     mocked_post.return_value = True
 
@@ -214,7 +158,7 @@ def test_handler_post_without_body(mocked_post):
     assert ret == {'body': 'Invalid post body', 'statusCode': 400}
 
 
-@patch("api.watch_history_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_collection_item.episodes_db.update_episode")
 def test_handler_post_with_empty_body(mocked_post):
     mocked_post.return_value = True
 
@@ -238,10 +182,8 @@ def test_handler_post_with_empty_body(mocked_post):
     assert ret == {'body': 'Invalid post body', 'statusCode': 400}
 
 
-@patch("api.watch_history_by_collection.watch_history_db.add_item")
-@patch("api.watch_history_by_collection.anime_api.post_anime")
-def test_handler_post(mocked_post_anime, mocked_post):
-    mocked_post_anime.return_value = True
+@patch("api.episode_by_collection_item.episodes_db.add_episode")
+def test_handler_post(mocked_post):
     mocked_post.return_value = True
 
     event = {
@@ -257,43 +199,14 @@ def test_handler_post(mocked_post_anime, mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": '{ "item_add_id": 123 }'
+        "body": '{ "episode_id": "123" }'
     }
 
     ret = handle(event, None)
     assert ret == {'statusCode': 204}
 
 
-@patch("api.watch_history_by_collection.watch_history_db.update_item")
-@patch("api.watch_history_by_collection.anime_api.post_anime")
-def test_handler_post_anime_api_error(mocked_post_anime, mocked_post):
-    mocked_post_anime.side_effect = HttpError
-    mocked_post.return_value = True
-
-    event = {
-        "headers": {
-            "authorization": TEST_JWT
-        },
-        "requestContext": {
-            "http": {
-                "method": "POST"
-            }
-        },
-        "pathParameters": {
-            "collection_name": "anime",
-            "item_id": "123"
-        },
-        "body": '{ "item_add_id": 123 }'
-    }
-
-    ret = handle(event, None)
-    assert ret == {
-        'body': '{"message": "Error during anime post", "error": ""}',
-        'statusCode': 503
-    }
-
-
-@patch("api.watch_history_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_collection_item.episodes_db.update_episode")
 def test_handler_post_invalid_collection(mocked_post):
     mocked_post.return_value = True
 
@@ -310,7 +223,7 @@ def test_handler_post_invalid_collection(mocked_post):
             "collection_name": "INVALID",
             "item_id": "123"
         },
-        "body": '{ "item_add_id": 123 }'
+        "body": '{ "episode_id": 123 }'
     }
 
     ret = handle(event, None)
@@ -320,7 +233,7 @@ def test_handler_post_invalid_collection(mocked_post):
     }
 
 
-@patch("api.watch_history_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_collection_item.episodes_db.update_episode")
 def test_handler_post_invalid_body(mocked_post):
     mocked_post.return_value = True
 
@@ -334,7 +247,7 @@ def test_handler_post_invalid_body(mocked_post):
             }
         },
         "pathParameters": {
-            "collection_name": "INVALID",
+            "collection_name": "anime",
             "item_id": "123"
         },
         "body": "INVALID"
@@ -344,7 +257,7 @@ def test_handler_post_invalid_body(mocked_post):
     assert ret == {'body': 'Invalid post body', 'statusCode': 400}
 
 
-@patch("api.watch_history_by_collection.watch_history_db.update_item")
+@patch("api.episode_by_collection_item.episodes_db.update_episode")
 def test_handler_post_invalid_body_schema(mocked_post):
     mocked_post.return_value = True
 

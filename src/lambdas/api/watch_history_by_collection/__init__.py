@@ -18,7 +18,7 @@ POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
 def handle(event, context):
     log.debug(f"Received event: {event}")
     auth_header = event["headers"]["authorization"]
-    client_id = jwt_utils.get_username(auth_header)
+    username = jwt_utils.get_username(auth_header)
 
     collection_name = event["pathParameters"].get("collection_name")
 
@@ -26,13 +26,13 @@ def handle(event, context):
 
     if method == "GET":
         query_params = event.get("queryStringParameters")
-        return _get_watch_history(client_id, collection_name, query_params, auth_header)
+        return _get_watch_history(username, collection_name, query_params, auth_header)
     elif method == "POST":
         body = event.get("body")
-        return _post_collection_item(client_id, collection_name, body, auth_header)
+        return _post_collection_item(username, collection_name, body, auth_header)
 
 
-def _get_watch_history(client_id, collection_name, query_params, token):
+def _get_watch_history(username, collection_name, query_params, token):
     sort = None
     if query_params:
         sort = query_params.get("sort")
@@ -63,7 +63,7 @@ def _get_watch_history(client_id, collection_name, query_params, token):
         limit = 20
 
     try:
-        watch_history = watch_history_db.get_watch_history(client_id, collection_name=collection_name, index_name=sort,
+        watch_history = watch_history_db.get_watch_history(username, collection_name=collection_name, index_name=sort,
                                                            limit=limit, start=start)
 
         # Fetch anime posters for all items in returned watch_history items
@@ -78,7 +78,7 @@ def _get_watch_history(client_id, collection_name, query_params, token):
         return {"statusCode": 200, "body": json.dumps({"items": []})}
 
 
-def _post_collection_item(client_id, collection_name, body, token):
+def _post_collection_item(username, collection_name, body, token):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -110,5 +110,5 @@ def _post_collection_item(client_id, collection_name, body, token):
     elif collection_name == "movie":
         return {"statusCode": 501}  # TODO: Implement
 
-    watch_history_db.add_item(client_id, collection_name, item_id)
+    watch_history_db.add_item(username, collection_name, item_id)
     return {"statusCode": 204}

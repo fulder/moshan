@@ -58,6 +58,14 @@ class WatchHistory(core.Stack):
             index_name="state"
         )
 
+        self.episodes_table = Table(
+            self,
+            "episodes",
+            partition_key=Attribute(name="username", type=AttributeType.STRING),
+            sort_key=Attribute(name="id", type=AttributeType.STRING),
+            billing_mode=BillingMode.PAY_PER_REQUEST,
+        )
+
     def _create_lambdas_config(self):
         self.lambdas_config = {
             "api-watch_history": {
@@ -105,6 +113,36 @@ class WatchHistory(core.Stack):
                     )
                 ],
                 "timeout": 5
+            },
+            "api-episode_by_collection_item": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "DEBUG"
+                },
+                "concurrent_executions": 10,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
+                        resources=[self.episodes_table.table_arn]
+                    )
+                ],
+                "timeout": 10
+            },
+            "api-episode_by_id": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "INFO"
+                },
+                "concurrent_executions": 10,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
+                        resources=[self.episodes_table.table_arn]
+                    )
+                ],
+                "timeout": 10
             },
         }
 
@@ -226,8 +264,17 @@ class WatchHistory(core.Stack):
                 "method": ["GET", "PATCH", "DELETE"],
                 "route": "/v1/watch-history/collection/{collection_name}/{item_id}",
                 "target_lambda": self.lambdas["api-item_by_collection"]
+            },
+            "episode_by_id": {
+                "method": ["GET", "PATCH", "DELETE"],
+                "route": "/v1/watch-history/collection/{collection_name}/{item_id}/episode/{episode_id}",
+                "target_lambda": self.lambdas["api-episode_by_id"]
+            },
+            "episode_by_collection_item": {
+                "method": ["GET", "POST"],
+                "route": "/v1/watch-history/collection/{collection_name}/{item_id}/episode",
+                "target_lambda": self.lambdas["api-episode_by_collection_item"]
             }
-
         }
 
         for r in routes:

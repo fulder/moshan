@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Add new episode to collection",
+  "description": "Add a collection episode to watch history",
+  "default": {},
+  "examples": [
+    {
+      "episode_id": "48c7a898-b969-4301-bf56-0ea191bf0d5c"
+    }
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "episode_id": {
+      "$id": "#/properties/episode_id",
+      "type": "string",
+      "title": "Episode ID",
+      "description": "ID of the item episode to add"
+    }
+  }
+}

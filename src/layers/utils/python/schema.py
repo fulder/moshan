@@ -20,5 +20,5 @@ def validate_schema(path, input_dict):
     try:
         jsonschema.validate(instance=input_dict, schema=schema)
     except jsonschema.ValidationError as e:
-        log.warning(f"Validation errror: {e}")
+        log.warning(f"Validation error: {e}")
         raise ValidationException(e.message)
