@@ -1,5 +1,6 @@
+/* global AnimeApi, accessToken */
+
 const animeApi = new AnimeApi();
-const watchHistoryApi = new WatchHistoryApi();
 
 const urlParams = new URLSearchParams(window.location.search);
 const searchString = urlParams.get('search');
@@ -18,44 +19,25 @@ animeApi.search(searchString).then(function (response) {
 });
 
 function callback (animes) {
-  resultHTML = '';
-  idMap = animes.id_map;
-  animes.items.forEach(createResultAnimeItem);
+  let resultHTML = '';
+  for (const anime in animes) {
+    resultHTML += createResultAnimeItem(anime);
+  }
 
   document.getElementById('animeResults').innerHTML = resultHTML;
 }
 
 function createResultAnimeItem (anime) {
-  title = anime.title;
-  poster = anime.main_picture.medium;
-  externalId = anime.id;
+  const title = anime.title;
+  const poster = anime.main_picture.medium;
+  const externalId = anime.id;
 
-  resultHTML += '<div class="col-4 col-md-2 poster">';
-  resultHTML += `<a href="/anime/index.html?mal_id=${externalId}">`;
-  resultHTML += '<img class="img-fluid" src=' + poster + '>';
-  resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>';
-  resultHTML += '</a>';
-}
-
-function addAnimeWrapper (externalId) {
-  animeWrapper(externalId, 'add');
-}
-
-function removeAnimeWrapper (externalId) {
-  animeWrapper(externalId, 'remove');
-}
-
-function animeWrapper (externalId, type) {
-  addAnimeButton = document.getElementById('addAnimeButton-' + externalId);
-  removeAnimeButton = document.getElementById('removeAnimeButton-' + externalId);
-
-  if (type === 'add') {
-    addAnimeButton.className = 'btn btn-sm btn-success d-none';
-    removeAnimeButton.className = 'btn btn-sm btn-danger d-inline';
-    watchHistoryApi.addWatchHistoryItem('anime', externalId);
-  } else if (type === 'remove') {
-    addAnimeButton.className = 'btn btn-sm btn-success d-inline';
-    removeAnimeButton.className = 'btn btn-sm btn-danger d-none';
-    watchHistoryApi.removeWatchHistoryItem('anime', idMap[externalId]);
-  }
+  return `
+    <div class="col-4 col-md-2 poster">
+      <a href="/anime/index.html?mal_id=${externalId}">
+        <img class="img-fluid" src=${poster} />
+        <p class="text-truncate small">${title}</p
+      </a>
+    </div>
+  `;
 }
