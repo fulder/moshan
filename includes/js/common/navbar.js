@@ -1,5 +1,3 @@
-accessToken = localStorage.getItem("moshan_access_token")
-
 if (accessToken === null) {
     document.getElementById("loginButton").classList.remove("d-none");
     document.getElementById("profileDropdown").classList.add("d-none");
