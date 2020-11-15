@@ -1,20 +1,26 @@
+/* global axios, flatpickr */
+/* global AnimeApi, WatchHistoryApi */
+
 const animeApi = new AnimeApi();
 const watchHistoryApi = new WatchHistoryApi();
 
 const urlParams = new URLSearchParams(window.location.search);
 
-collectionName = urlParams.get('collection_name');
-id = urlParams.get('id');
-episodeId = urlParams.get('episode_id');
+const collectionName = urlParams.get('collection_name');
+const id = urlParams.get('id');
+const episodeId = urlParams.get('episode_id');
 
-if (collectionName == 'anime') {
-  animeRequest = animeApi.getAnimeEpisode(id, episodeId);
+const watchHistoryRequest = watchHistoryApi.getWatchHistoryEpisode(collectionName, id, episodeId);
+const requests = [watchHistoryRequest];
+
+if (collectionName === 'anime') {
+  const animeRequest = animeApi.getAnimeEpisode(id, episodeId);
+  requests.push(animeRequest);
 }
-watchHistoryRequest = watchHistoryApi.getWatchHistoryEpisode(collectionName, id, episodeId);
 
-axios.all([animeRequest, watchHistoryRequest]).then(axios.spread((...responses) => {
-  animeEpisode = responses[0].data;
-  watchHistoryEpisode = responses[1].data;
+axios.all(requests).then(axios.spread((...responses) => {
+  const animeEpisode = responses[0].data;
+  const watchHistoryEpisode = responses[1].data;
 
   createEpisodePage(animeEpisode, watchHistoryEpisode);
 })).catch(error => {
@@ -25,12 +31,11 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   console.log(animeEpisode);
   console.log(watchHistoryEpisode);
 
-  episodeAdded = watchHistoryEpisode !== '';
+  const episodeAdded = watchHistoryEpisode !== '';
+  const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime;
+  const status = episodeAired ? 'Aired' : 'Not Aired';
 
-  episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime();
-  status = episodeAired ? 'Aired' : 'Not Aired';
-
-  resultHTML = `
+  const resultHTML = `
         <div class="col-md-3 col-5 item">
             <img class="img-fluid" src="/includes/img/image_not_available.png" />
         </div>
@@ -56,7 +61,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
 
   document.getElementById('episode').innerHTML = resultHTML;
 
-  const fp = flatpickr('#flatpickr', {
+  flatpickr('#flatpickr', {
     enableTime: true,
     dateFormat: 'Y-m-d H:i',
     time_24hr: true,
@@ -65,7 +70,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
     },
     weekNumbers: true,
     onClose: function (selectedDates, dateStr, instance) {
-      watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, watchDate = dateStr).then(function (response) {
+      watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, dateStr).then(function (response) {
         console.log(response);
       }).catch(function (error) {
         console.log(error);
@@ -75,7 +80,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
 }
 
 function addEpisodeWrapper (type, episodeId) {
-  req = watchHistoryApi.addWatchHistoryEpisode(type, id, episodeId).then(function (response) {
+  watchHistoryApi.addWatchHistoryEpisode(type, id, episodeId).then(function (response) {
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
   }).catch(function (error) {
@@ -84,7 +89,7 @@ function addEpisodeWrapper (type, episodeId) {
 }
 
 function removeEpisodeWrapper (type, episodeId) {
-  req = watchHistoryApi.removeWatchHistoryEpisode(type, id, episodeId).then(function (response) {
+  watchHistoryApi.removeWatchHistoryEpisode(type, id, episodeId).then(function (response) {
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
   }).catch(function (error) {
