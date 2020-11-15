@@ -106,8 +106,9 @@ function createAnime (animeItem, watchHistoryItem) {
   }
 }
 
+/* exported addItemWrapper */
 function addItemWrapper (type, id) {
-  watchHistoryApi.addWatchHistoryItem(type, id).then(function (response) {
+  watchHistoryApi.addWatchHistoryItem(type, id).then(function () {
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
   }).catch(function (error) {
@@ -115,8 +116,9 @@ function addItemWrapper (type, id) {
   });
 }
 
+/* exported removeItemWrapper */
 function removeItemWrapper (type, id) {
-  watchHistoryApi.removeWatchHistoryItem(type, id).then(function (response) {
+  watchHistoryApi.removeWatchHistoryItem(type, id).then(function () {
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
   }).catch(function (error) {
@@ -167,12 +169,14 @@ function createEpisodesList (animeId, episodes) {
   }
 }
 
+/* exported loadPreviousEpisodes */
 function loadPreviousEpisodes () {
   if (episodePage > 1) {
     loadEpisodes(episodePage - 1);
   }
 }
 
+/* exported loadNextEpisodes */
 function loadNextEpisodes () {
   if (episodePage < totalPages) {
     loadEpisodes(episodePage + 1);

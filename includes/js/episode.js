@@ -69,7 +69,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
       firstDayOfWeek: 1 // start week on Monday
     },
     weekNumbers: true,
-    onClose: function (selectedDates, dateStr, instance) {
+    onClose: function (selectedDates, dateStr) {
       watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, dateStr).then(function (response) {
         console.log(response);
       }).catch(function (error) {
@@ -79,8 +79,9 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   });
 }
 
+/* exported addEpisodeWrapper */
 function addEpisodeWrapper (type, episodeId) {
-  watchHistoryApi.addWatchHistoryEpisode(type, id, episodeId).then(function (response) {
+  watchHistoryApi.addWatchHistoryEpisode(type, id, episodeId).then(function () {
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
   }).catch(function (error) {
@@ -88,8 +89,9 @@ function addEpisodeWrapper (type, episodeId) {
   });
 }
 
+/* exported removeEpisodeWrapper */
 function removeEpisodeWrapper (type, episodeId) {
-  watchHistoryApi.removeWatchHistoryEpisode(type, id, episodeId).then(function (response) {
+  watchHistoryApi.removeWatchHistoryEpisode(type, id, episodeId).then(function () {
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
   }).catch(function (error) {

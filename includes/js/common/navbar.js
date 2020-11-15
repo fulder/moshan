@@ -1,3 +1,5 @@
+/* global accessToken, parsedToken */
+
 if (accessToken === null) {
   document.getElementById('loginButton').classList.remove('d-none');
   document.getElementById('profileDropdown').classList.add('d-none');
@@ -5,21 +7,23 @@ if (accessToken === null) {
   document.getElementById('loginButton').classList.add('d-none');
   document.getElementById('profileDropdown').classList.remove('d-none');
 
-  profileDropDown = document.getElementById('profileDropdown');
+  const profileDropDown = document.getElementById('profileDropdown');
   profileDropDown.innerHTML = parsedToken.username;
 }
 
+/* exported logout */
 function logout () {
   localStorage.removeItem('moshan_access_token');
   localStorage.removeItem('moshan_refresh_token');
   window.location.href = 'https://auth.moshan.tv/logout?logout_uri=https://' + window.location.hostname + '/index.html&client_id=68v5rahd0sdvrmf7fgbq2o1a9u';
 }
 
+/* exported authorize */
 async function authorize () {
-  codeVerifier = generateRandomString();
+  const codeVerifier = generateRandomString();
 
-  codeChallenge = await codeChallengeFromVerifier(codeVerifier);
-  state = generateRandomString();
+  const codeChallenge = await codeChallengeFromVerifier(codeVerifier);
+  const state = generateRandomString();
 
   localStorage.setItem('pkce_code_verifier', codeVerifier);
   localStorage.setItem('pkce_state', state);
@@ -61,7 +65,7 @@ function sha256 (verifier) {
   return window.crypto.subtle.digest('SHA-256', data);
 }
 async function codeChallengeFromVerifier (verifier) {
-  hashed = await sha256(verifier);
+  const hashed = await sha256(verifier);
   return base64URLEncode(hashed);
 }
 function base64URLEncode (str) {
