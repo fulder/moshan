@@ -1,3 +1,6 @@
+const animeApi = new AnimeApi();
+const watchHistoryApi = new WatchHistoryApi();
+
 const urlParams = new URLSearchParams(window.location.search);
 const searchString = urlParams.get('search');
 
@@ -49,10 +52,10 @@ function animeWrapper (externalId, type) {
   if (type === 'add') {
     addAnimeButton.className = 'btn btn-sm btn-success d-none';
     removeAnimeButton.className = 'btn btn-sm btn-danger d-inline';
-    addWatchHistoryItem('anime', externalId);
+    watchHistoryApi.addWatchHistoryItem('anime', externalId);
   } else if (type === 'remove') {
     addAnimeButton.className = 'btn btn-sm btn-success d-inline';
     removeAnimeButton.className = 'btn btn-sm btn-danger d-none';
-    removeWatchHistoryItem('anime', idMap[externalId]);
+    watchHistoryApi.removeWatchHistoryItem('anime', idMap[externalId]);
   }
 }

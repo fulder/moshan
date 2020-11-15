@@ -1,5 +1,3 @@
-animeApi = new AnimeApi();
-
 class AnimeApi {
   constructor () {
     this.apiAxios = axios.create({

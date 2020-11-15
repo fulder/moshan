@@ -1,5 +1,3 @@
-watchHistoryApi = new WatchHistoryApi();
-
 class WatchHistoryApi {
   constructor () {
     this.apiAxios = axios.create({
@@ -45,10 +43,6 @@ class WatchHistoryApi {
 
   removeWatchHistoryEpisode (collectionName, itemId, episodeId) {
     return this.apiAxios.delete(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`);
-  }
-
-  getWatchHistoryEpisodes (collectionName, itemId, startEpisode = 0, limit = 100) {
-    return this.apiAxios.get(`/watch-history/collection/${collectionName}/${itemId}/episode?limit=${limit}&start_episode=${startEpisode}`);
   }
 
   getWatchHistoryEpisode (collectionName, itemId, episodeId) {

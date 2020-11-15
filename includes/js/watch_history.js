@@ -1,3 +1,5 @@
+const watchHistoryApi = new WatchHistoryApi();
+
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
 } else {
