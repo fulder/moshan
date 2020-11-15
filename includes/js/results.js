@@ -35,11 +35,8 @@ function createResultAnimeItem (anime) {
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/anime/index.html?mal_id=${externalId}">
-        <img class="img-fluid" src=${poster} >
-        <p class="text-truncate small">${title}</p>
-        </img>
+        <img class="img-fluid" src=${poster} />
+        <p class="text-truncate small">${title}</p
     </div>
-    </a>
   `;
 }
