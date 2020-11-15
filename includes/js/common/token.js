@@ -6,7 +6,7 @@ async function checkToken() {
         currentTimeStamp = Math.floor(Date.now() / 1000)
 
         if (parsedToken["exp"] < currentTimeStamp) {
-            await refreshToken()
+            accessToken = await refreshToken()
         }
     }
 }
@@ -40,6 +40,8 @@ async function refreshToken(){
         if(data["refresh_token"] !== undefined) {
             localStorage.setItem("moshan_refresh_token", data["refresh_token"])
         }
+
+        return data["access_token"];
     } catch(error) {
         console.log(error);
     }
