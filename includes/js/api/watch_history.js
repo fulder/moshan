@@ -6,7 +6,6 @@ const watchHistoryAxios = axios.create({
 })
 
 watchHistoryAxios.interceptors.request.use(async function (config) {
-    console.log("AXIOS INTERCEPTOR CALLED")
     await checkToken();
     config.headers["Authorization"] = accessToken;
     return config;
