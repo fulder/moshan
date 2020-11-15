@@ -16,7 +16,7 @@ class AnimeApi {
   }
 
   search (searchString) {
-    return this.apiAxios..get(`/anime?search=${searchString}`);
+    return this.apiAxios.get(`/anime?search=${searchString}`);
   }
 
   getAnimeByApiId (apiName, id) {
