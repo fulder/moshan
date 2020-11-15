@@ -16,12 +16,16 @@ watchHistoryApi.getWatchHistoryByCollection('anime').then(function (response) {
 });
 
 function createAnimeItems (response) {
-  const resultHTML = '';
+  let resultHTML = '';
 
   let res = true;
   let itemCreated = false;
   for (const [animeId, anime] of Object.entries(response.items)) {
-    itemCreated = createHistoryAnimeItem(animeId, anime);
+    const itemHTML = createHistoryAnimeItem(animeId, anime);
+    resultHTML += itemHTML;
+
+    itemCreated = itemHTML !== '';
+
     res = res && itemCreated;
   }
 
@@ -36,17 +40,19 @@ function createAnimeItems (response) {
 
 function createHistoryAnimeItem (animeId, anime) {
   if (!('title' in anime) || !('main_picture' in anime)) {
-    return false;
+    return '';
   }
 
-  title = anime.title;
-  poster = anime.main_picture.medium;
+  const title = anime.title;
+  const poster = anime.main_picture.medium;
 
-  resultHTML += `<div id="poster-anime-${animeId}" class="col-4 col-md-2 poster">`;
-  resultHTML += `<a href="/anime?id=${animeId}">`;
-  resultHTML += `<img class="img-fluid" src="${poster}">`;
-  resultHTML += '<p class="text-truncate small">' + title + '</p></img></div>';
-  resultHTML += '</a>';
+  const resultHTML = `
+    <div id="poster-anime-${animeId}" class="col-4 col-md-2 poster">
+    <a href="/anime?id=${animeId}">
+    <img class="img-fluid" src="${poster}">
+    <p class="text-truncate small">${title}</p></img></div>
+    </a>
+  `;
 
-  return true;
+  return resultHTML;
 }
