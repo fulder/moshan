@@ -1,5 +1,5 @@
 const watchHistoryAxios = axios.create({
-    baseURL: 'ttps://api.watch-history.moshan.tv/v1',
+    baseURL: 'https://api.watch-history.moshan.tv/v1',
     headers: {
       'Content-Type': "application/json"
     }
