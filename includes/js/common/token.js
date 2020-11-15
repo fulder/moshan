@@ -6,7 +6,7 @@ if (accessToken !== null) {
 async function checkToken() {
     currentTimeStamp = Math.floor(Date.now() / 1000)
 
-    if (parsedToken["exp"] < currentTimeStamp) {
+    if (parsedToken["exp"] < currentTimeStamp || true) {
         accessToken = await refreshToken()
         parsedToken = parseJwt(accessToken);
     }
