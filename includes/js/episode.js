@@ -19,8 +19,8 @@ if (collectionName === 'anime') {
 }
 
 axios.all(requests).then(axios.spread((...responses) => {
-  const animeEpisode = responses[0].data;
-  const watchHistoryEpisode = responses[1].data;
+  const watchHistoryEpisode = responses[0].data;
+  const animeEpisode = responses[1].data;
 
   createEpisodePage(animeEpisode, watchHistoryEpisode);
 })).catch(error => {
