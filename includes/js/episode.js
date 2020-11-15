@@ -1,3 +1,6 @@
+const animeApi = new AnimeApi();
+const watchHistoryApi = new WatchHistoryApi();
+
 const urlParams = new URLSearchParams(window.location.search);
 
 collectionName = urlParams.get('collection_name');
@@ -7,7 +10,7 @@ episodeId = urlParams.get('episode_id');
 if (collectionName == 'anime') {
   animeRequest = animeApi.getAnimeEpisode(id, episodeId);
 }
-watchHistoryRequest = getWatchHistoryEpisode(collectionName, id, episodeId);
+watchHistoryRequest = watchHistoryApi.getWatchHistoryEpisode(collectionName, id, episodeId);
 
 axios.all([animeRequest, watchHistoryRequest]).then(axios.spread((...responses) => {
   animeEpisode = responses[0].data;
@@ -62,7 +65,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
     },
     weekNumbers: true,
     onClose: function (selectedDates, dateStr, instance) {
-      updateWatchHistoryEpisode(collectionName, id, episodeId, watchDate = dateStr).then(function (response) {
+      watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, watchDate = dateStr).then(function (response) {
         console.log(response);
       }).catch(function (error) {
         console.log(error);
@@ -72,7 +75,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
 }
 
 function addEpisodeWrapper (type, episodeId) {
-  req = addWatchHistoryEpisode(type, id, episodeId).then(function (response) {
+  req = watchHistoryApi.addWatchHistoryEpisode(type, id, episodeId).then(function (response) {
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
   }).catch(function (error) {
@@ -81,7 +84,7 @@ function addEpisodeWrapper (type, episodeId) {
 }
 
 function removeEpisodeWrapper (type, episodeId) {
-  req = removeWatchHistoryEpisode(type, id, episodeId).then(function (response) {
+  req = watchHistoryApi.removeWatchHistoryEpisode(type, id, episodeId).then(function (response) {
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
   }).catch(function (error) {

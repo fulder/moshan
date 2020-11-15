@@ -1,3 +1,6 @@
+const animeApi = new AnimeApi();
+const watchHistoryApi = new WatchHistoryApi();
+
 const urlParams = new URLSearchParams(window.location.search);
 totalPages = 0;
 
@@ -13,8 +16,8 @@ if (episodePage === null) {
 
 if (id !== null) {
   animeRequest = animeApi.getAnimeById(id);
-  animeEpisodesRequest = anime.getAnimeEpisodes(id, episodePage);
-  watchHistoryRequest = getWatchHistoryItem('anime', id);
+  animeEpisodesRequest = animeApi.getAnimeEpisodes(id, episodePage);
+  watchHistoryRequest = watchHistoryApi.getWatchHistoryItem('anime', id);
   requests = [animeRequest, animeEpisodesRequest, watchHistoryRequest];
 } else if (mal_id !== null) {
   animeRequest = animeApi.getAnimeByApiId('mal', mal_id);
@@ -99,7 +102,7 @@ function createAnime (animeItem, watchHistoryItem) {
 }
 
 function addItemWrapper (type, id) {
-  req = addWatchHistoryItem(type, id).then(function (response) {
+  req = watchHistoryApi.addWatchHistoryItem(type, id).then(function (response) {
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
   }).catch(function (error) {
