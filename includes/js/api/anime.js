@@ -19,17 +19,17 @@ function searchAnime(searchString) {
 }
 
 function getAnimeByApiId(apiName, id) {
-    return axios.get(`/anime?${apiName}_id=${id}`)
+    return animeAxios.get(`/anime?${apiName}_id=${id}`)
 }
 
 function getAnimeById(id) {
-    return axios.get(`/anime/${id}`)
+    return animeAxios.get(`/anime/${id}`)
 }
 
 function getAnimeEpisodes(id, start=1, limit=100) {
-    return axios.get(`/anime/${id}/episodes?limit=${limit}&start=${start}`)
+    return animeAxios.get(`/anime/${id}/episodes?limit=${limit}&start=${start}`)
 }
 
 function getAnimeEpisode(id, episodeId) {
-    return axios.get(`/anime/${id}/episode/${episodeId}`)
+    return animeAxios.get(`/anime/${id}/episode/${episodeId}`)
 }
