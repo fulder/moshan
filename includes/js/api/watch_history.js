@@ -1,27 +1,27 @@
-options = {
+const watchHistoryAxios = axios.create({
+    baseURL: 'ttps://api.watch-history.moshan.tv/v1',
     headers: {
-        'Authorization': accessToken,
-        'Content-Type': "application/json"
+      'Content-Type': "application/json"
     }
-}
+})
 
 function getWatchHistoryByCollection(collectionName) {
-    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}`, options)
+    return watchHistoryAxios.get(`/watch-history/collection/${collectionName}`)
 }
 
 function removeWatchHistoryItem(collectionName, id) {
-    return axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
+    return watchHistoryAxios.delete(`/watch-history/collection/${collectionName}/${id}`)
 }
 
 function addWatchHistoryItem(collectionName, id) {
     data = {
         item_add_id: id
     }
-    return axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}`, data, options)
+    return watchHistoryAxios.post(`/watch-history/collection/${collectionName}`, data)
 }
 
 function getWatchHistoryItem(collectionName, id) {
-    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${id}`, options)
+    return watchHistoryAxios.get(`/watch-history/collection/${collectionName}/${id}`)
 }
 
 function addWatchHistoryEpisode(collectionName, itemId, episodeId, episodeNumber) {
@@ -29,26 +29,23 @@ function addWatchHistoryEpisode(collectionName, itemId, episodeId, episodeNumber
         episode_id: episodeId,
         episode_number: episodeNumber
     }
-    return axios.post(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode`, data, options)
+    return watchHistoryAxios.post(`/watch-history/collection/${collectionName}/${itemId}/episode`, data)
 }
 
 function removeWatchHistoryEpisode(collectionName, itemId, episodeId) {
-    return axios.delete(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
+    return watchHistoryAxios.delete(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`)
 }
 
 function getWatchHistoryEpisodes(collectionName, itemId, startEpisode=0, limit=100) {
-    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode?limit=${limit}&start_episode=${startEpisode}`, options)
+    return watchHistoryAxios.get(`/watch-history/collection/${collectionName}/${itemId}/episode?limit=${limit}&start_episode=${startEpisode}`)
 }
 
 function getWatchHistoryEpisode(collectionName, itemId, episodeId) {
     options = {
-        headers: {
-            'Authorization': accessToken,
-            'Content-Type': "application/json"
-        },
         validateStatus: (status) => status >= 200 && status < 300 || status === 404
     }
-    return axios.get(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
+
+    return watchHistoryAxios.get(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options)
 }
 
 function updateWatchHistoryEpisode(collectionName, itemId, episodeId, watchDate="") {
@@ -56,5 +53,5 @@ function updateWatchHistoryEpisode(collectionName, itemId, episodeId, watchDate=
     if (watchDate !== ""){
         data["date_watched"] = watchDate;
     }
-    return axios.patch(`https://api.watch-history.moshan.tv/v1/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, data, options)
+    return watchHistoryAxios.patch(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, data)
 }
