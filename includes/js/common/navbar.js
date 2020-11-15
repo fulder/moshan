@@ -1,5 +1,3 @@
-await checkToken();
-
 if (accessToken === null) {
     document.getElementById("loginButton").classList.remove("d-none");
     document.getElementById("profileDropdown").classList.add("d-none");

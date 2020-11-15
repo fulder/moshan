@@ -1,26 +1,35 @@
-options = {
+const animeAxios = axios.create({
+    baseURL: 'https://api.anime.moshan.tv/v1',
     headers: {
-        'Authorization': accessToken,
-        'Content-Type': "application/json"
+      'Content-Type': "application/json"
     }
-}
+})
+
+animeAxios.interceptors.request.use(async function (config) {
+    await checkToken();
+    config.headers["Authorization"] = accessToken;
+    return config;
+}, function (error) {
+    console.log(error);
+    return Promise.reject(error);
+});
 
 function searchAnime(searchString) {
-    return axios.get(`https://api.anime.moshan.tv/v1/anime?search=${searchString}`, options)
+    return animeAxios.get(`/anime?search=${searchString}`)
 }
 
 function getAnimeByApiId(apiName, id) {
-    return axios.get(`https://api.anime.moshan.tv/v1/anime?${apiName}_id=${id}`, options)
+    return axios.get(`/anime?${apiName}_id=${id}`)
 }
 
 function getAnimeById(id) {
-    return axios.get(`https://api.anime.moshan.tv/v1/anime/${id}`, options)
+    return axios.get(`/anime/${id}`, options)
 }
 
 function getAnimeEpisodes(id, start=1, limit=100) {
-    return axios.get(`https://api.anime.moshan.tv/v1/anime/${id}/episodes?limit=${limit}&start=${start}`, options)
+    return axios.get(`/anime/${id}/episodes?limit=${limit}&start=${start}`)
 }
 
 function getAnimeEpisode(id, episodeId) {
-    return axios.get(`https://api.anime.moshan.tv/v1/anime/${id}/episode/${episodeId}`, options)
+    return axios.get(`/anime/${id}/episode/${episodeId}`)
 }
