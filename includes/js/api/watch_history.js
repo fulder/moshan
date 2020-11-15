@@ -1,9 +1,19 @@
 const watchHistoryAxios = axios.create({
-    baseURL: 'https://api.watch-history.moshan.tv/v1',
+    baseURL: 'ttps://api.watch-history.moshan.tv/v1',
     headers: {
       'Content-Type': "application/json"
     }
 })
+
+watchHistoryAxios.interceptors.request.use(async function (config) {
+    console.log("AXIOS INTERCEPTOR CALLED")
+    await checkToken();
+    config.headers["Authorization"] = accessToken;
+    return config;
+}, function (error) {
+    console.log(error);
+    return Promise.reject(error);
+});
 
 function getWatchHistoryByCollection(collectionName) {
     return watchHistoryAxios.get(`/watch-history/collection/${collectionName}`)
