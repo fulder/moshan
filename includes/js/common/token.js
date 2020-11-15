@@ -1,18 +1,9 @@
-accessToken = localStorage.getItem("moshan_access_token")
+accessToken = localStorage.getItem('moshan_access_token');
 if (accessToken !== null) {
-    parsedToken = parseJwt(accessToken);
+  parsedToken = parseJwt(accessToken);
 }
 
-async function checkToken() {
-    currentTimeStamp = Math.floor(Date.now() / 1000)
-
-    if (parsedToken["exp"] < currentTimeStamp) {
-        accessToken = await refreshToken()
-        parsedToken = parseJwt(accessToken);
-    }
-}
-
-function parseJwt(token){
+function parseJwt (token) {
   try {
     return JSON.parse(atob(token.split('.')[1]));
   } catch (e) {
@@ -20,30 +11,45 @@ function parseJwt(token){
   }
 }
 
-async function refreshToken(){
-    data = new URLSearchParams({
-        grant_type: "refresh_token",
-        client_id: "68v5rahd0sdvrmf7fgbq2o1a9u",
-        refresh_token: localStorage.getItem("moshan_refresh_token")
-    }).toString();
-    options = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+async function axiosTokenInterceptor (config) {
+  await checkToken();
+  config.headers.Authorization = accessToken;
+  return config;
+}
+
+async function checkToken () {
+  currentTimeStamp = Math.floor(Date.now() / 1000);
+
+  if (parsedToken.exp < currentTimeStamp) {
+    accessToken = await refreshToken();
+    parsedToken = parseJwt(accessToken);
+  }
+}
+
+async function refreshToken () {
+  data = new URLSearchParams({
+    grant_type: 'refresh_token',
+    client_id: '68v5rahd0sdvrmf7fgbq2o1a9u',
+    refresh_token: localStorage.getItem('moshan_refresh_token')
+  }).toString();
+  options = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+
+  try {
+    response = await axios.post('https://auth.moshan.tv/oauth2/token', data, options);
+
+    data = response.data;
+    localStorage.setItem('moshan_access_token', data.access_token);
+
+    if (data.refresh_token !== undefined) {
+      localStorage.setItem('moshan_refresh_token', data.refresh_token);
     }
 
-    try {
-        response = await axios.post("https://auth.moshan.tv/oauth2/token", data, options)
-
-        data = response.data;
-        localStorage.setItem("moshan_access_token", data["access_token"])
-
-        if(data["refresh_token"] !== undefined) {
-            localStorage.setItem("moshan_refresh_token", data["refresh_token"])
-        }
-
-        return data["access_token"];
-    } catch(error) {
-        console.log(error);
-    }
+    return data.access_token;
+  } catch (error) {
+    console.log(error);
+  }
 }
