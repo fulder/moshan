@@ -1,3 +1,5 @@
+animeApi = new AnimeApi();
+
 const urlParams = new URLSearchParams(window.location.search);
 const searchString = urlParams.get('search');
 
@@ -8,7 +10,7 @@ if (accessToken === null) {
   document.getElementById('animeResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
-searchAnime(searchString).then(function (response) {
+animeApi.search(searchString).then(function (response) {
   callback(response.data);
 }).catch(function (error) {
   console.log(error);

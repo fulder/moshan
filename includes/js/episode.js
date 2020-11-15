@@ -1,3 +1,5 @@
+animeApi = new AnimeApi();
+
 const urlParams = new URLSearchParams(window.location.search);
 
 collectionName = urlParams.get('collection_name');
@@ -5,7 +7,7 @@ id = urlParams.get('id');
 episodeId = urlParams.get('episode_id');
 
 if (collectionName == 'anime') {
-  animeRequest = getAnimeEpisode(id, episodeId);
+  animeRequest = animeApi.getAnimeEpisode(id, episodeId);
 }
 watchHistoryRequest = getWatchHistoryEpisode(collectionName, id, episodeId);
 

@@ -13,8 +13,8 @@ class AnimeApi {
     });
   }
 
-  searchAnime (searchString) {
-    return .get(`/anime?search=${searchString}`);
+  search (searchString) {
+    return this.apiAxios..get(`/anime?search=${searchString}`);
   }
 
   getAnimeByApiId (apiName, id) {

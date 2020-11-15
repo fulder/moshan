@@ -1,3 +1,5 @@
+animeApi = new AnimeApi();
+
 const urlParams = new URLSearchParams(window.location.search);
 totalPages = 0;
 
@@ -12,12 +14,12 @@ if (episodePage === null) {
 }
 
 if (id !== null) {
-  animeRequest = getAnimeById(id);
-  animeEpisodesRequest = getAnimeEpisodes(id, episodePage);
+  animeRequest = animeApi.getAnimeById(id);
+  animeEpisodesRequest = anime.getAnimeEpisodes(id, episodePage);
   watchHistoryRequest = getWatchHistoryItem('anime', id);
   requests = [animeRequest, animeEpisodesRequest, watchHistoryRequest];
 } else if (mal_id !== null) {
-  animeRequest = getAnimeByApiId('mal', mal_id);
+  animeRequest = animeApi.getAnimeByApiId('mal', mal_id);
   requests = [animeRequest];
 }
 
@@ -178,7 +180,7 @@ function loadEpisodes (page) {
   document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.remove('active');
 
   episodePage = page;
-  getAnimeEpisodes(id, episodePage).then(function (response) {
+  animeApi.getAnimeEpisodes(id, episodePage).then(function (response) {
     createEpisodesList(response.data);
   }).catch(function (error) {
     console.log(error);
