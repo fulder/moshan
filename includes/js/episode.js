@@ -32,7 +32,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   console.log(watchHistoryEpisode);
 
   const episodeAdded = watchHistoryEpisode !== '';
-  const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime;
+  const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime();
   const status = episodeAired ? 'Aired' : 'Not Aired';
 
   const resultHTML = `
