@@ -1,3 +1,5 @@
+/* global WatchHistoryApi, accessToken */
+
 const watchHistoryApi = new WatchHistoryApi();
 
 if (accessToken === null) {
@@ -14,9 +16,10 @@ watchHistoryApi.getWatchHistoryByCollection('anime').then(function (response) {
 });
 
 function createAnimeItems (response) {
-  resultHTML = '';
+  const resultHTML = '';
 
-  res = true;
+  let res = true;
+  let itemCreated = false;
   for (const [animeId, anime] of Object.entries(response.items)) {
     itemCreated = createHistoryAnimeItem(animeId, anime);
     res = res && itemCreated;
