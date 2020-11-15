@@ -32,11 +32,12 @@ function createResultAnimeItem (anime) {
   const poster = anime.main_picture.medium;
   const externalId = anime.id;
 
-
   return `
     <div class="col-4 col-md-2 poster">
+      <a href="/anime/index.html?mal_id=${externalId}">
         <img class="img-fluid" src=${poster} />
         <p class="text-truncate small">${title}</p
+      </a>
     </div>
   `;
 }
