@@ -1,13 +1,14 @@
+accessToken = localStorage.getItem("moshan_access_token")
+if (accessToken !== null) {
+    parsedToken = parseJwt(accessToken);
+}
+
 async function checkToken() {
-    accessToken = localStorage.getItem("moshan_access_token")
+    currentTimeStamp = Math.floor(Date.now() / 1000)
 
-    if (accessToken !== null) {
+    if (parsedToken["exp"] < currentTimeStamp) {
+        accessToken = await refreshToken()
         parsedToken = parseJwt(accessToken);
-        currentTimeStamp = Math.floor(Date.now() / 1000)
-
-        if (parsedToken["exp"] < currentTimeStamp) {
-            accessToken = await refreshToken()
-        }
     }
 }
 
