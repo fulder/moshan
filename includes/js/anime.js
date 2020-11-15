@@ -1,5 +1,3 @@
-animeApi = new AnimeApi();
-
 const urlParams = new URLSearchParams(window.location.search);
 totalPages = 0;
 
@@ -110,7 +108,7 @@ function addItemWrapper (type, id) {
 }
 
 function removeItemWrapper (type, id) {
-  req = removeWatchHistoryItem(type, id).then(function (response) {
+  req = watchHistoryApi.removeWatchHistoryItem(type, id).then(function (response) {
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
   }).catch(function (error) {

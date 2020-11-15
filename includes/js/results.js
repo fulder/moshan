@@ -1,5 +1,3 @@
-animeApi = new AnimeApi();
-
 const urlParams = new URLSearchParams(window.location.search);
 const searchString = urlParams.get('search');
 
