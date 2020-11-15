@@ -23,7 +23,7 @@ function getAnimeByApiId(apiName, id) {
 }
 
 function getAnimeById(id) {
-    return axios.get(`/anime/${id}`, options)
+    return axios.get(`/anime/${id}`)
 }
 
 function getAnimeEpisodes(id, start=1, limit=100) {
