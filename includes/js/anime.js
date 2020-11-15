@@ -1,33 +1,38 @@
+/* global axios */
+/* global AnimeApi, WatchHistoryApi */
+
 const animeApi = new AnimeApi();
 const watchHistoryApi = new WatchHistoryApi();
 
 const urlParams = new URLSearchParams(window.location.search);
-totalPages = 0;
+const id = urlParams.get('id');
+const malId = urlParams.get('mal_id');
+let episodePage = urlParams.get('episode_page');
 
-id = urlParams.get('id');
-mal_id = urlParams.get('mal_id');
-
-episodePage = urlParams.get('episode_page');
 if (episodePage === null) {
   episodePage = 1;
 } else {
   episodePage = parseInt(episodePage);
 }
 
+let totalPages = 0;
+
+let requests = [];
 if (id !== null) {
-  animeRequest = animeApi.getAnimeById(id);
-  animeEpisodesRequest = animeApi.getAnimeEpisodes(id, episodePage);
-  watchHistoryRequest = watchHistoryApi.getWatchHistoryItem('anime', id);
+  const animeRequest = animeApi.getAnimeById(id);
+  const animeEpisodesRequest = animeApi.getAnimeEpisodes(id, episodePage);
+  const watchHistoryRequest = watchHistoryApi.getWatchHistoryItem('anime', id);
   requests = [animeRequest, animeEpisodesRequest, watchHistoryRequest];
-} else if (mal_id !== null) {
-  animeRequest = animeApi.getAnimeByApiId('mal', mal_id);
+} else if (malId !== null) {
+  const animeRequest = animeApi.getAnimeByApiId('mal', malId);
   requests = [animeRequest];
 }
 
 axios.all(requests).then(axios.spread((...responses) => {
-  animeItem = responses[0].data;
-  animeEpisodes = null;
-  watchHistoryItem = null;
+  const animeItem = responses[0].data;
+  let animeEpisodes = null;
+  let watchHistoryItem = null;
+  let animeId = null;
 
   if (responses.length > 1) {
     animeEpisodes = responses[1].data;
@@ -39,21 +44,21 @@ axios.all(requests).then(axios.spread((...responses) => {
   createAnime(animeItem, watchHistoryItem);
 
   if (animeEpisodes !== null) {
-    createEpisodesList(animeEpisodes);
+    createEpisodesList(animeId, animeEpisodes);
   }
 })).catch(errors => {
   console.log(errors);
 });
 
 function createAnime (animeItem, watchHistoryItem) {
-  itemAdded = watchHistoryItem !== null;
+  const itemAdded = watchHistoryItem !== null;
 
-  status = 'Airing';
-  if ('end_date' in anime && anime.end_date !== null) {
+  let status = 'Airing';
+  if ('end_date' in animeItem && animeItem.end_date !== null) {
     status = 'Finished';
   }
 
-  resultHTML = `
+  const resultHTML = `
         <div class="col-md-3 col-5 item">
             <img class="img-fluid" src="${animeItem.main_picture.large}" />
         </div>
@@ -102,7 +107,7 @@ function createAnime (animeItem, watchHistoryItem) {
 }
 
 function addItemWrapper (type, id) {
-  req = watchHistoryApi.addWatchHistoryItem(type, id).then(function (response) {
+  watchHistoryApi.addWatchHistoryItem(type, id).then(function (response) {
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
   }).catch(function (error) {
@@ -111,7 +116,7 @@ function addItemWrapper (type, id) {
 }
 
 function removeItemWrapper (type, id) {
-  req = watchHistoryApi.removeWatchHistoryItem(type, id).then(function (response) {
+  watchHistoryApi.removeWatchHistoryItem(type, id).then(function (response) {
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
   }).catch(function (error) {
@@ -119,16 +124,16 @@ function removeItemWrapper (type, id) {
   });
 }
 
-function createEpisodesList (episodes) {
-  tableHTML = '';
+function createEpisodesList (animeId, episodes) {
+  let tableHTML = '';
   episodes.items.forEach(function (episode) {
-    episodeId = episode.id;
-    episodeNumber = episode.episode_number;
-    episodeDate = episode.air_date;
-    episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
+    const episodeId = episode.id;
+    const episodeNumber = episode.episode_number;
+    const episodeDate = episode.air_date;
+    const episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
 
-    rowClass = 'episodeRow';
-    onClickAction = `window.location='/episode?collection_name=anime&id=${animeId}&episode_id=${episodeId}'`;
+    let rowClass = 'episodeRow';
+    let onClickAction = `window.location='/episode?collection_name=anime&id=${animeId}&episode_id=${episodeId}'`;
     if (!episodeAired) {
       rowClass = 'bg-secondary';
       onClickAction = '';
@@ -146,12 +151,12 @@ function createEpisodesList (episodes) {
   document.getElementById('episodeTableBody').innerHTML = tableHTML;
 
   if (document.getElementById('episodesPages').innerHTML === '') {
-    paginationHTML = '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>';
+    let paginationHTML = '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>';
 
     totalPages = episodes.total_pages;
-    for (i = 1; i <= totalPages; i++) {
-      className = 'page-item';
-      if (i == episodePage) {
+    for (let i = 1; i <= totalPages; i++) {
+      let className = 'page-item';
+      if (i === episodePage) {
         className = 'page-item active';
       }
       paginationHTML += `<li id="episodePage${i}" class="${className}"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`;
@@ -175,7 +180,7 @@ function loadNextEpisodes () {
 }
 
 function loadEpisodes (page) {
-  if (episodePage == page) {
+  if (episodePage === page) {
     return;
   }
   document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.remove('active');
