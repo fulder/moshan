@@ -1,4 +1,9 @@
-accessToken = localStorage.getItem('moshan_access_token');
+/* global axios */
+/* exported parseJwt */
+
+let accessToken = localStorage.getItem('moshan_access_token');
+let parsedToken = null;
+
 if (accessToken !== null) {
   parsedToken = parseJwt(accessToken);
 }
@@ -11,6 +16,7 @@ function parseJwt (token) {
   }
 }
 
+/* exported axiosTokenInterceptor */
 async function axiosTokenInterceptor (config) {
   await checkToken();
   config.headers.Authorization = accessToken;
@@ -18,7 +24,7 @@ async function axiosTokenInterceptor (config) {
 }
 
 async function checkToken () {
-  currentTimeStamp = Math.floor(Date.now() / 1000);
+  const currentTimeStamp = Math.floor(Date.now() / 1000);
 
   if (parsedToken.exp < currentTimeStamp) {
     accessToken = await refreshToken();
@@ -27,21 +33,21 @@ async function checkToken () {
 }
 
 async function refreshToken () {
-  data = new URLSearchParams({
+  const requestData = new URLSearchParams({
     grant_type: 'refresh_token',
     client_id: '68v5rahd0sdvrmf7fgbq2o1a9u',
     refresh_token: localStorage.getItem('moshan_refresh_token')
   }).toString();
-  options = {
+  const options = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
 
   try {
-    response = await axios.post('https://auth.moshan.tv/oauth2/token', data, options);
+    const response = await axios.post('https://auth.moshan.tv/oauth2/token', requestData, options);
 
-    data = response.data;
+    const data = response.data;
     localStorage.setItem('moshan_access_token', data.access_token);
 
     if (data.refresh_token !== undefined) {

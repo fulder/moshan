@@ -1,3 +1,5 @@
+/* global axios, axiosTokenInterceptor */
+/* exported AnimeApi */
 class AnimeApi {
   constructor () {
     this.apiAxios = axios.create({
