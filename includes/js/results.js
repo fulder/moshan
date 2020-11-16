@@ -22,7 +22,7 @@ function createAnimeResults (animes) {
   let resultHTML = '';
   console.debug(animes);
   for (const i=0; i<animes.items.length; i++) {
-    resultHTML += createResultAnimeItem(animes[i]);
+    resultHTML += createResultAnimeItem(animes.items[i]);
   }
 
   document.getElementById('animeResults').innerHTML = resultHTML;
