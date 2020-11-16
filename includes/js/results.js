@@ -21,8 +21,9 @@ animeApi.search(searchString).then(function (response) {
 function createAnimeResults (animes) {
   let resultHTML = '';
   console.debug(animes);
-  for (const animeKey in animes.items) {
-    resultHTML += createResultAnimeItem(animes[animeKey]);
+  for (const anime in animes.items) {
+    console.debug(anime);
+    resultHTML += createResultAnimeItem(anime);
   }
 
   document.getElementById('animeResults').innerHTML = resultHTML;
