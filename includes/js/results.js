@@ -13,14 +13,14 @@ if (accessToken === null) {
 }
 
 animeApi.search(searchString).then(function (response) {
-  callback(response.data);
+  createAnimeResults(response.data);
 }).catch(function (error) {
   console.log(error);
 });
 
-function callback (animes) {
+function createAnimeResults (animes) {
   let resultHTML = '';
-  for (const anime in animes) {
+  for (const anime in animes.items) {
     resultHTML += createResultAnimeItem(anime);
   }
 
