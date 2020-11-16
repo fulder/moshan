@@ -47,11 +47,12 @@ function createHistoryAnimeItem (animeId, anime) {
   const poster = anime.main_picture.medium;
 
   const resultHTML = `
-    <div id="poster-anime-${animeId}" class="col-4 col-md-2 poster">
-    <a href="/anime?id=${animeId}">
-    <img class="img-fluid" src="${poster}">
-    <p class="text-truncate small">${title}</p></img></div>
-    </a>
+      <div id="poster-anime-${animeId}" class="col-4 col-md-2 poster">
+        <a href="/anime?id=${animeId}">
+          <img class="img-fluid" src="${poster}" />
+          <p class="text-truncate small">${title}</p>
+        </a>
+    </div>
   `;
 
   return resultHTML;
