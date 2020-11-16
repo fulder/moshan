@@ -29,6 +29,7 @@ function createAnimeResults (animes) {
 }
 
 function createResultAnimeItem (anime) {
+  console.debug(anime);
   const title = anime.title;
   const poster = anime.main_picture.medium;
   const externalId = anime.id;
