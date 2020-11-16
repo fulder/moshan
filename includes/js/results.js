@@ -20,6 +20,7 @@ animeApi.search(searchString).then(function (response) {
 
 function createAnimeResults (animes) {
   let resultHTML = '';
+  console.log(animes);
   for (const anime in animes.items) {
     resultHTML += createResultAnimeItem(anime);
   }
