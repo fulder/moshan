@@ -28,8 +28,8 @@ axios.all(requests).then(axios.spread((...responses) => {
 });
 
 function createEpisodePage (animeEpisode, watchHistoryEpisode) {
-  console.log(animeEpisode);
-  console.log(watchHistoryEpisode);
+  console.debug(animeEpisode);
+  console.debug(watchHistoryEpisode);
 
   const episodeAdded = watchHistoryEpisode !== '';
   const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime();
@@ -71,7 +71,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
     weekNumbers: true,
     onClose: function (selectedDates, dateStr) {
       watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, dateStr).then(function (response) {
-        console.log(response);
+        console.debug(response);
       }).catch(function (error) {
         console.log(error);
       });
