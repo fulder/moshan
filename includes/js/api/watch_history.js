@@ -62,10 +62,10 @@ class WatchHistoryApi {
     return this.apiAxios.get(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options);
   }
 
-  updateWatchHistoryEpisode (collectionName, itemId, episodeId, watchDate = '') {
+  updateWatchHistoryEpisode (collectionName, itemId, episodeId, watchDates = []) {
     const data = {};
-    if (watchDate !== '') {
-      data.date_watched = watchDate;
+    if (watchDates.length > 0) {
+      data.date_watched = watchDates;
     }
     return this.apiAxios.patch(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, data);
   }
