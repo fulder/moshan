@@ -35,7 +35,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime();
   const status = episodeAired ? 'Aired' : 'Not Aired';
 
-  const dateWatched = watchHistoryEpisde['date_watched'];
+  const dateWatched = watchHistoryEpisode['date_watched'];
   const latestWatchDate = dateWatched !== undefined && dateWatched.length > 0 ? dateWatched[dateWatched.length-1] : '';
 
   const resultHTML = `
