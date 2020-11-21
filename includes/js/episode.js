@@ -35,6 +35,9 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime();
   const status = episodeAired ? 'Aired' : 'Not Aired';
 
+  const dateWatched = watchHistoryEpisde['date_watched'];
+  const latestWatchDate = dateWatched !== undefined && dateWatched.length > 0 ? dateWatched[dateWatched.length-1] : '';
+
   const resultHTML = `
         <div class="col-md-3 col-5 item">
             <img class="img-fluid" src="/includes/img/image_not_available.png" />
@@ -52,7 +55,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <button class="btn btn-secondary ${!episodeAired ? '" disabled' : 'd-none"'}><i class="fa fa-plus"></i> Add</button>
             <div class="input-group input-group-sm pt-1">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm">Watched</span>
+                <span class="input-group-text" id="inputGroup-sizing-sm" value="${latestWatchDate}">Watched</span>
               </div>
               <input id="flatpickr" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
             </div>
