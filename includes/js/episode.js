@@ -74,6 +74,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
     onClose: function (selectedDates, dateStr) {
       const updateDates = dateWatched !== undefined ? dateWatched : [];
       updateDates[updateDates.length-1] = dateStr;
+      console.debug(updateDates);
 
       watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, updateDates).then(function (response) {
         console.debug(response);
