@@ -22,7 +22,7 @@
       "$id": "#/properties/rating",
       "type": "integer",
       "title": "Rating",
-      "description": "Rate the collection item 1-6",
+      "description": "Rate the collection item 1-10",
       "minimum": 1,
       "maximum": 10
     },
