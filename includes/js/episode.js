@@ -80,10 +80,11 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
 }
 
 function saveLatestDate (selectedDates, dateStr) {
+  const date = new Date(dateStr).toISOString();
   if (datesWatched === undefined || datesWatched.length == 0) {
-    datesWatched = [dateStr];
+    datesWatched = [date];
   } else {
-    datesWatched[datesWatched.length - 1] = dateStr;
+    datesWatched[datesWatched.length - 1] = date;
   }
 
   console.debug(datesWatched);
