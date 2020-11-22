@@ -38,6 +38,8 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   let datesWatched = watchHistoryEpisode['dates_watched'];
   const latestWatchDate = datesWatched !== undefined && datesWatched.length > 0 ? datesWatched[datesWatched.length-1] : '';
 
+  console.debug(`Latest watch date: ${latestWatchDate}`);
+
   const resultHTML = `
         <div class="col-md-3 col-5 item">
             <img class="img-fluid" src="/includes/img/image_not_available.png" />
