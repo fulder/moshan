@@ -75,21 +75,23 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
       firstDayOfWeek: 1 // start week on Monday
     },
     weekNumbers: true,
-    onClose: function (selectedDates, dateStr) {
-      if (datesWatched === undefined || datesWatched.length == 0) {
-        datesWatched = [dateStr];
-      } else {
-        datesWatched[datesWatched.length - 1] = dateStr;
-      }
+    onClose: saveLatestDate,
+  });
+}
 
-      console.debug(datesWatched);
+function saveLatestDate (selectedDates, dateStr) {
+  if (datesWatched === undefined || datesWatched.length == 0) {
+    datesWatched = [dateStr];
+  } else {
+    datesWatched[datesWatched.length - 1] = dateStr;
+  }
 
-      watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
-        console.debug(response);
-      }).catch(function (error) {
-        console.log(error);
-      });
-    }
+  console.debug(datesWatched);
+
+  watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
+    console.debug(response);
+  }).catch(function (error) {
+    console.log(error);
   });
 }
 
