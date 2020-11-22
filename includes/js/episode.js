@@ -34,8 +34,9 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   const episodeAdded = watchHistoryEpisode !== '';
   const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime();
   const status = episodeAired ? 'Aired' : 'Not Aired';
-  const dateWatched = watchHistoryEpisode['date_watched'];
-  const latestWatchDate = dateWatched !== undefined && dateWatched.length > 0 ? dateWatched[dateWatched.length-1] : '';
+
+  let datesWatched = watchHistoryEpisode['date_watched'];
+  const latestWatchDate = datesWatched !== undefined && datesWatched.length > 0 ? datesWatched[datesWatched.length-1] : '';
 
   const resultHTML = `
         <div class="col-md-3 col-5 item">
@@ -72,11 +73,15 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
     },
     weekNumbers: true,
     onClose: function (selectedDates, dateStr) {
-      const updateDates = dateWatched !== undefined ? dateWatched : [];
-      updateDates[updateDates.length-1] = dateStr;
-      console.debug(updateDates);
+      if (datesWatched === undefined || datesWatched.length == 0) {
+        datesWatched = [dateStr];
+      } else {
+        datesWatched[datesWatched.length - 1] = dateStr;
+      }
 
-      watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, updateDates).then(function (response) {
+      console.debug(currentDates);
+
+      watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, currentDates).then(function (response) {
         console.debug(response);
       }).catch(function (error) {
         console.log(error);
