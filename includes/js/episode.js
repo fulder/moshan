@@ -79,7 +79,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
         datesWatched[datesWatched.length - 1] = dateStr;
       }
 
-      console.debug(currentDates);
+      console.debug(datesWatched);
 
       watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, currentDates).then(function (response) {
         console.debug(response);
