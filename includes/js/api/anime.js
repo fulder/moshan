@@ -5,8 +5,8 @@ class AnimeApi {
     this.apiAxios = axios.create({
       baseURL: 'https://api.anime.moshan.tv/v1',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     this.apiAxios.interceptors.request.use(axiosTokenInterceptor, function (error) {

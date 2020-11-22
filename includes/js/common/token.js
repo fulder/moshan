@@ -36,12 +36,12 @@ async function refreshToken () {
   const requestData = new URLSearchParams({
     grant_type: 'refresh_token',
     client_id: '68v5rahd0sdvrmf7fgbq2o1a9u',
-    refresh_token: localStorage.getItem('moshan_refresh_token')
+    refresh_token: localStorage.getItem('moshan_refresh_token'),
   }).toString();
   const options = {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   };
 
   try {

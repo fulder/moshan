@@ -17,12 +17,12 @@ if (code === null) {
     redirect_uri: 'https://' + window.location.hostname + '/callback.html',
     code: code,
     client_id: '68v5rahd0sdvrmf7fgbq2o1a9u',
-    code_verifier: codeVerifier
+    code_verifier: codeVerifier,
   }).toString();
   const options = {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   };
   axios.post('https://auth.moshan.tv/oauth2/token', postData, options)
     .then(function (response) {

@@ -5,8 +5,8 @@ class WatchHistoryApi {
     this.apiAxios = axios.create({
       baseURL: 'https://api.watch-history.moshan.tv/v1',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     this.apiAxios.interceptors.request.use(axiosTokenInterceptor,
@@ -26,7 +26,7 @@ class WatchHistoryApi {
 
   addWatchHistoryItem (collectionName, id) {
     const data = {
-      item_add_id: id
+      item_add_id: id,
     };
     return this.apiAxios.post(`/watch-history/collection/${collectionName}`, data);
   }
@@ -38,7 +38,7 @@ class WatchHistoryApi {
   addWatchHistoryEpisode (collectionName, itemId, episodeId, episodeNumber) {
     const data = {
       episode_id: episodeId,
-      episode_number: episodeNumber
+      episode_number: episodeNumber,
     };
     return this.apiAxios.post(`/watch-history/collection/${collectionName}/${itemId}/episode`, data);
   }
@@ -56,7 +56,7 @@ class WatchHistoryApi {
           return true;
         }
         return false;
-      }
+      },
     };
 
     return this.apiAxios.get(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options);
