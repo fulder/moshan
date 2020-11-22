@@ -72,7 +72,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
     time_24hr: true,
     defaultDate: latestWatchDate,
     locale: {
-      firstDayOfWeek: 1 // start week on Monday
+      firstDayOfWeek: 1, // start week on Monday
     },
     weekNumbers: true,
     onClose: saveLatestDate,
