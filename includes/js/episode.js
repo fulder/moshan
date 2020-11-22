@@ -13,6 +13,8 @@ const episodeId = urlParams.get('episode_id');
 const watchHistoryRequest = watchHistoryApi.getWatchHistoryEpisode(collectionName, id, episodeId);
 const requests = [watchHistoryRequest];
 
+let datesWatched;
+
 if (collectionName === 'anime') {
   const animeRequest = animeApi.getAnimeEpisode(id, episodeId);
   requests.push(animeRequest);
@@ -35,7 +37,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime();
   const status = episodeAired ? 'Aired' : 'Not Aired';
 
-  let datesWatched = watchHistoryEpisode['dates_watched'];
+  datesWatched = watchHistoryEpisode['dates_watched'];
   const latestWatchDate = datesWatched !== undefined && datesWatched.length > 0 ? datesWatched[datesWatched.length-1] : '';
 
   console.debug(`Latest watch date: ${latestWatchDate}`);
