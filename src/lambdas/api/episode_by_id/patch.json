@@ -39,7 +39,7 @@
       "description": "Review for the episode",
       "maxLength": 80000
     },
-    "date_watched": {
+    "dates_watched": {
       "$id": "#/properties/name",
       "type": "array",
       "title": "Watch date(s)",
