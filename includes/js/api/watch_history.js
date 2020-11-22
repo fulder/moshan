@@ -65,7 +65,7 @@ class WatchHistoryApi {
   updateWatchHistoryEpisode (collectionName, itemId, episodeId, watchDates = []) {
     const data = {};
     if (watchDates.length > 0) {
-      data.date_watched = watchDates;
+      data.dates_watched = watchDates;
     }
     return this.apiAxios.patch(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, data);
   }
