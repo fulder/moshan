@@ -53,8 +53,10 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <h5>${animeEpisode.title}</h5>
             <b>Aired</b>: ${animeEpisode.air_date}<br>
             <b>Status</b>: ${status}
-            <div class="card-body p-1">
-                <div class="row">
+            <div class="card mt-2 col-7 col-md-3">
+               <div class="card-header">Links</div>
+               <div class="card-body p-1">
+                 <div class="row">
                     <div class="col-6 col-md-5" ${previousEpisode === '' ? d-none : ''}>
                         <a href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}"><i class="fas fa-arrow-alt-circle-left"></i></a>
                     </div>
@@ -62,6 +64,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
                         <a href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}"><i class="fas fa-arrow-alt-circle-right"></i></a>
                     </div>
                 </div>
+              </div>
             </div>
         </div>
 
