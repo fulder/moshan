@@ -39,8 +39,10 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
 
   datesWatched = watchHistoryEpisode['dates_watched'];
   const latestWatchDate = datesWatched !== undefined && datesWatched.length > 0 ? datesWatched[datesWatched.length-1] : '';
-
   console.debug(`Latest watch date: ${latestWatchDate}`);
+
+  const nextEpisode = 'id_links' in animeEpisode && 'next' in animeEpisode['id_links'] ? animeEpisode['id_links']['next'] : '';
+  const previousEpisode = 'id_links' in animeEpisode && 'previous' in animeEpisode['id_links'] ? animeEpisode['id_links']['previous'] : '';
 
   const resultHTML = `
         <div class="col-md-3 col-5 item">
@@ -51,6 +53,16 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <h5>${animeEpisode.title}</h5>
             <b>Aired</b>: ${animeEpisode.air_date}<br>
             <b>Status</b>: ${status}
+            <div class="card-body p-1">
+                <div class="row">
+                    <div class="col-6 col-md-5" ${previousEpisode === '' ? d-none : ''}>
+                        <a href="episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}" target="_blank"><i class="fas fa-arrow-alt-circle-left"></i></a>
+                    </div>
+                    <div class="col-6 col-md-5" ${nextEpisode === '' ? d-none : ''}>
+                        <a href="episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-3 col-9 mt-1">
