@@ -56,8 +56,8 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <div class="card mt-2 col-7 col-md-3">
                <div class="card-header">Links</div>
                <div class="card-body p-1">
-                  <a class="${previousEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}"><i class="fas fa-3x fa-arrow-alt-circle-left"></i></a>
-                  <a class="${nextEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}"><i class="fas fa-3x fa-arrow-alt-circle-right"></i></a>
+                  <a class="${previousEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-left"></i></a>
+                  <a class="${nextEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-right"></i></a>
                 </div>
               </div>
             </div>
