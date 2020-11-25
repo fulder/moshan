@@ -53,14 +53,9 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <h5>${animeEpisode.title}</h5>
             <b>Aired</b>: ${animeEpisode.air_date}<br>
             <b>Status</b>: ${status}
-            <div class="card mt-2 col-7 col-md-3">
-               <div class="card-header">Links</div>
-               <div class="card-body p-1">
-                  <a class="${previousEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-left"></i></a>
-                  <a class="${nextEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-right"></i></a>
-                </div>
-              </div>
-            </div>
+            <b>Prev/Next</b>:
+            <a class="${previousEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-left"></i></a>
+            <a class="${nextEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-right"></i></a
         </div>
 
         <div class="col-md-3 col-9 mt-1">
