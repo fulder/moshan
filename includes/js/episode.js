@@ -56,10 +56,10 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <div class="card-body p-1">
                 <div class="row">
                     <div class="col-6 col-md-5" ${previousEpisode === '' ? d-none : ''}>
-                        <a href="episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}" target="_blank"><i class="fas fa-arrow-alt-circle-left"></i></a>
+                        <a href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}"><i class="fas fa-arrow-alt-circle-left"></i></a>
                     </div>
                     <div class="col-6 col-md-5" ${nextEpisode === '' ? d-none : ''}>
-                        <a href="episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}" target="_blank"><i class="fas fa-arrow-alt-circle-right"></i></a>
+                        <a href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}"><i class="fas fa-arrow-alt-circle-right"></i></a>
                     </div>
                 </div>
             </div>
