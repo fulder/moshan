@@ -123,12 +123,12 @@ function patchWatchDate(date) {
 
 /* exported removeWatchDate */
 function removeWatchDate() {
-  if (dateWatched === undefined || dateWatched.length == 0) {
+  if (datesWatched === undefined || datesWatched.length == 0) {
     return;
   }
 
   datesWatched.pop();
-  document.getElementById('watchedAmount').innerHTML = dateWatched.length;
+  document.getElementById('watchedAmount').innerHTML = datesWatched.length;
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
     console.debug(`Response from removeWatchDate: ${response}`);
