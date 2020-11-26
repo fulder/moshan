@@ -113,6 +113,7 @@ function patchWatchDate(date) {
     datesWatched[datesWatched.length - 1] = date;
   }
 
+  document.getElementById('watchedAmount').innerHTML = datesWatched.length;
   console.debug(datesWatched);
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
