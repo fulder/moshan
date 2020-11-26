@@ -131,7 +131,12 @@ function removeWatchDate() {
 
   datesWatched.pop();
   document.getElementById('watchedAmount').innerHTML = datesWatched.length;
-  calendarInstance.clear();
+
+  if (datesWatched.length == 0) {
+      calendarInstance.clear();
+  } else {
+      calendarInstance.setDate(datesWatched[datesWatched.length - 1]);
+  }
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
     console.debug('Response from removeWatchDate');
