@@ -14,6 +14,7 @@ const watchHistoryRequest = watchHistoryApi.getWatchHistoryEpisode(collectionNam
 const requests = [watchHistoryRequest];
 
 let datesWatched;
+let calendarInstance;
 
 if (collectionName === 'anime') {
   const animeRequest = animeApi.getAnimeEpisode(id, episodeId);
@@ -78,7 +79,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
 
   document.getElementById('episode').innerHTML = resultHTML;
 
-  flatpickr('#flatpickr', {
+  calendarInstance = flatpickr('#flatpickr', {
     enableTime: true,
     dateFormat: 'Y-m-d H:i',
     time_24hr: true,
@@ -99,9 +100,10 @@ function onCalendarClose (selectedDates, dateStr) {
 
 /* exported setCurrentWatchDate */
 function setCurrentWatchDate() {
-  const dateNow = (new Date()).toISOString();
+  const dateNow = new Date();
 
-  patchWatchDate(dateNow);
+  patchWatchDate(dateNow.toISOString());
+  calendarIntance.setDate(dateNow);
 }
 
 function patchWatchDate(date) {
@@ -129,7 +131,7 @@ function removeWatchDate() {
 
   datesWatched.pop();
   document.getElementById('watchedAmount').innerHTML = datesWatched.length;
-  document.getElementById('flatpickr').value = '';
+  calendarIntance.clear();
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
     console.debug('Response from removeWatchDate');
