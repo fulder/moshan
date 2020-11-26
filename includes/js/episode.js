@@ -70,8 +70,6 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
 
               <input id="flatpickr" type="text" class="form-control" ${!episodeAired ? 'disabled' : ''}>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button">Button</button>
-                <button class="btn btn-outline-secondary" type="button">Button</button>
                 <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate()"><i class="fas fa-calendar-day"></i></button>
                 <button class="btn btn-danger" type="button" onclick="removeWatchDate()"><i class="far fa-calendar-times"></i></button>
               </div>
@@ -132,7 +130,7 @@ function removeWatchDate() {
 
   datesWatched.pop();
   document.getElementById('watchedAmount').innerHTML = datesWatched.length;
-  document.getElementById('flatpickr').value = ''; 
+  document.getElementById('flatpickr').value = '';
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
     console.debug('Response from removeWatchDate');
