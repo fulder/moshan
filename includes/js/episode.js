@@ -40,7 +40,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   datesWatched = watchHistoryEpisode['dates_watched'];
   const latestWatchDate = datesWatched !== undefined && datesWatched.length > 0 ? datesWatched[datesWatched.length-1] : '';
   console.debug(`Latest watch date: ${latestWatchDate}`);
-  const watchDateLength = datesWatched === undeinfed ? 0 : datesWatched.length;
+  const watchDateLength = datesWatched === undefined ? 0 : datesWatched.length;
 
   const nextEpisode = 'id_links' in animeEpisode && 'next' in animeEpisode['id_links'] ? animeEpisode['id_links']['next'] : '';
   const previousEpisode = 'id_links' in animeEpisode && 'previous' in animeEpisode['id_links'] ? animeEpisode['id_links']['previous'] : '';
