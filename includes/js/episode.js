@@ -40,6 +40,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
   datesWatched = watchHistoryEpisode['dates_watched'];
   const latestWatchDate = datesWatched !== undefined && datesWatched.length > 0 ? datesWatched[datesWatched.length-1] : '';
   console.debug(`Latest watch date: ${latestWatchDate}`);
+  const watchDateLength = datesWatched === undeinfed ? 0 : datesWatched.length;
 
   const nextEpisode = 'id_links' in animeEpisode && 'next' in animeEpisode['id_links'] ? animeEpisode['id_links']['next'] : '';
   const previousEpisode = 'id_links' in animeEpisode && 'previous' in animeEpisode['id_links'] ? animeEpisode['id_links']['previous'] : '';
@@ -61,7 +62,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <button id="addButton" class="btn btn-success ${!episodeAired || episodeAdded ? 'd-none' : ''}" onclick="addEpisodeWrapper('anime', '${animeEpisode.id}')"><i class="fa fa-plus"></i> Add</button>
             <button id="removeButton" class="btn btn-danger ${!episodeAired || !episodeAdded ? 'd-none' : ''}" onclick="removeEpisodeWrapper('anime', '${animeEpisode.id}')"><i class="fa fa-minus"></i> Remove</button>
             <button class="btn btn-secondary ${!episodeAired ? '" disabled' : 'd-none"'}><i class="fa fa-plus"></i> Add</button>
-            <b>Watched</b>:<span id="watchedAmount">${datesWatched.length}</span>
+            <b>Watched</b>:<span id="watchedAmount">${watchDateLength}</span>
             <div class="input-group input-group-sm pt-1">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm" value="${latestWatchDate}">Watched</span>
