@@ -103,7 +103,7 @@ function setCurrentWatchDate() {
   const dateNow = new Date();
 
   patchWatchDate(dateNow.toISOString());
-  calendarIntance.setDate(dateNow);
+  calendarInstance.setDate(dateNow);
 }
 
 function patchWatchDate(date) {
@@ -131,7 +131,7 @@ function removeWatchDate() {
 
   datesWatched.pop();
   document.getElementById('watchedAmount').innerHTML = datesWatched.length;
-  calendarIntance.clear();
+  calendarInstance.clear();
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
     console.debug('Response from removeWatchDate');
