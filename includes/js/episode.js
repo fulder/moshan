@@ -61,10 +61,21 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <button id="addButton" class="btn btn-success ${!episodeAired || episodeAdded ? 'd-none' : ''}" onclick="addEpisodeWrapper('anime', '${animeEpisode.id}')"><i class="fa fa-plus"></i> Add</button>
             <button id="removeButton" class="btn btn-danger ${!episodeAired || !episodeAdded ? 'd-none' : ''}" onclick="removeEpisodeWrapper('anime', '${animeEpisode.id}')"><i class="fa fa-minus"></i> Remove</button>
             <button class="btn btn-secondary ${!episodeAired ? '" disabled' : 'd-none"'}><i class="fa fa-plus"></i> Add</button>
+            <b>Watched</b>:<span id="watchedAmount">${datesWatched.length}</span>
             <div class="input-group input-group-sm pt-1">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm" value="${latestWatchDate}">Watched</span>
               </div>
+
+              <div class="flatpickr">
+                <input id="latestWatchDate" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Select Date.." value="${latestWatchDate} data-input>
+
+                <i class="fas fa-calendar-day" onclick="setCurrentWatchDate()"></i>
+
+                <a class="input-button" title="clear" onclick="removeWatchDate()" data-clear>
+                    <i class="far fa-calendar-times"></i>
+                </a>
+            </div>
               <input id="flatpickr" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" ${!episodeAired ? 'disabled' : ''}>
             </div>
         </div>
@@ -81,12 +92,24 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
       firstDayOfWeek: 1, // start week on Monday
     },
     weekNumbers: true,
-    onClose: saveLatestDate,
+    onClose: onCalendarClose,
   });
 }
 
-function saveLatestDate (selectedDates, dateStr) {
+function onCalendarClose (selectedDates, dateStr) {
   const date = new Date(dateStr).toISOString();
+
+  patchWatchDate(date);
+}
+
+/* exported setCurrentWatchDate */
+function setCurrentWatchDate() {
+  const dateNow = (new Date()).toISOString();
+
+  saveLatestDate(dateNow);
+}
+
+function patchWatchDate(date) {
   if (datesWatched === undefined || datesWatched.length == 0) {
     datesWatched = [date];
   } else {
@@ -96,7 +119,23 @@ function saveLatestDate (selectedDates, dateStr) {
   console.debug(datesWatched);
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
-    console.debug(response);
+    console.debug(`Response from patchWatchDate: ${response}`);
+  }).catch(function (error) {
+    console.log(error);
+  });
+}
+
+/* exported removeWatchDate */
+function removeWatchDate() {
+  if (dateWatched.length == 0) {
+    return;
+  }
+
+  datesWatched.pop();
+  document.getElementById('watchedAmount').innerHTML = dateWatched.length;
+
+  watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
+    console.debug(`Response from removeWatchDate: ${response}`);
   }).catch(function (error) {
     console.log(error);
   });
