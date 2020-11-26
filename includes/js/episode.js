@@ -69,10 +69,10 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
                 <span class="input-group-text" id="inputGroup-sizing-sm">Watched</span>
               </div>
 
-              <input id="latestWatchDate" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Select Date.." value="${latestWatchDate} ${!episodeAired ? 'disabled' : ''} data-input>
+              <input id="latestWatchDate" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Select Date.." value="${latestWatchDate}" ${!episodeAired ? 'disabled' : ''} data-input>
 
               <div class="input-group-append">
-                <i class="fas fa-calendar-day" onclick="setCurrentWatchDate()"></i>
+                <button class="btn btn-outline-secondary" type="button" onclick="setCurrentWatchDate()">Today</button>
 
                 <a class="input-button" title="clear" onclick="removeWatchDate()" data-clear>
                     <i class="far fa-calendar-times"></i>
