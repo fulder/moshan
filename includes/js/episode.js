@@ -64,20 +64,21 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <button class="btn btn-secondary ${!episodeAired ? '" disabled' : 'd-none"'}><i class="fa fa-plus"></i> Add</button>
             <b>Watched</b>:<span id="watchedAmount">${watchDateLength}</span>
             <div class="input-group input-group-sm pt-1">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm" value="${latestWatchDate}">Watched</span>
+
+              <div class="input-group-prepend flatpickr">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Watched</span>
               </div>
 
-              <div class="flatpickr">
-                <input id="latestWatchDate" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Select Date.." value="${latestWatchDate} data-input>
+              <input id="latestWatchDate" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Select Date.." value="${latestWatchDate} ${!episodeAired ? 'disabled' : ''} data-input>
 
+              <div class="input-group-append">
                 <i class="fas fa-calendar-day" onclick="setCurrentWatchDate()"></i>
 
                 <a class="input-button" title="clear" onclick="removeWatchDate()" data-clear>
                     <i class="far fa-calendar-times"></i>
                 </a>
-            </div>
-              <input id="flatpickr" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" ${!episodeAired ? 'disabled' : ''}>
+              </div>
+
             </div>
         </div>
     `;
