@@ -128,7 +128,7 @@ function patchWatchDate(date) {
 
 /* exported removeWatchDate */
 function removeWatchDate() {
-  if (dateWatched.length == 0) {
+  if (dateWatched === undefined || dateWatched.length == 0) {
     return;
   }
 
