@@ -102,7 +102,7 @@ function onCalendarClose (selectedDates, dateStr) {
 function setCurrentWatchDate() {
   const dateNow = (new Date()).toISOString();
 
-  saveLatestDate(dateNow);
+  patchWatchDate(dateNow);
 }
 
 function patchWatchDate(date) {
