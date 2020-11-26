@@ -59,7 +59,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
             <a class="${nextEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-right"></i></a>
         </div>
 
-        <div class="col-md-3 col-9 mt-1">
+        <div class="col-md-4 col-10 mt-1">
             <button id="addButton" class="btn btn-success ${!episodeAired || episodeAdded ? 'd-none' : ''}" onclick="addEpisodeWrapper('anime', '${animeEpisode.id}')"><i class="fa fa-plus"></i> Add</button>
             <button id="removeButton" class="btn btn-danger ${!episodeAired || !episodeAdded ? 'd-none' : ''}" onclick="removeEpisodeWrapper('anime', '${animeEpisode.id}')"><i class="fa fa-minus"></i> Remove</button>
             <button class="btn btn-secondary ${!episodeAired ? '" disabled' : 'd-none"'}><i class="fa fa-plus"></i> Add</button>
@@ -69,7 +69,7 @@ function createEpisodePage (animeEpisode, watchHistoryEpisode) {
                 <span class="input-group-text">Date</span>
               </div>
 
-              <input id="flatpickr" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" ${!episodeAired ? 'disabled' : ''}>
+              <input id="flatpickr" type="text" class="form-control" ${!episodeAired ? 'disabled' : ''}>
               <div class="input-group-append">
                 <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate()"><i class="fas fa-calendar-day"></i></button><button class="btn btn-danger" type="button" onclick="removeWatchDate()"><i class="far fa-calendar-times"></i></button>
               </div>
