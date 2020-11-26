@@ -117,7 +117,8 @@ function patchWatchDate(date) {
   console.debug(datesWatched);
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
-    console.debug(`Response from patchWatchDate: ${response}`);
+    console.debug('Response from patchWatchDate');
+    console.debug(response);
   }).catch(function (error) {
     console.log(error);
   });
@@ -131,9 +132,11 @@ function removeWatchDate() {
 
   datesWatched.pop();
   document.getElementById('watchedAmount').innerHTML = datesWatched.length;
+  document.getElementById('flatpickr').value = ''; 
 
   watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
-    console.debug(`Response from removeWatchDate: ${response}`);
+    console.debug('Response from removeWatchDate');
+    console.debug(response);
   }).catch(function (error) {
     console.log(error);
   });
