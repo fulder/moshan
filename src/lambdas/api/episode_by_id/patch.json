@@ -46,7 +46,8 @@
       "description": "One or more dates this episode was watched",
       "items": {
         "type": "string",
-        "format": "date-time"
+        "format": "date-time",
+        "minLength": 5
       }
     }
   }
