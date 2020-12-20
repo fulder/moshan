@@ -3,7 +3,7 @@
 
 let accessToken = localStorage.getItem('moshan_access_token');
 let parsedToken = null;
-const interceptorMutex = new Mutex();
+let checkTokenPromise = null;
 
 if (accessToken !== null) {
   parsedToken = parseJwt(accessToken);
@@ -19,13 +19,14 @@ function parseJwt (token) {
 
 /* exported axiosTokenInterceptor */
 async function axiosTokenInterceptor (config) {
-  const release = await interceptorMutex.acquire();
+  if (checkTokenInProgress === null) {
+    checkTokenPromise = checkToken();
+  }
 
-  await checkToken();
+  await checkTokenPromise;
+  checkTokenPromise = null;
   config.headers.Authorization = accessToken;
   return config;
-
-  release();
 }
 
 async function checkToken () {
