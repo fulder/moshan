@@ -36,9 +36,6 @@ async function checkToken () {
     accessToken = await refreshToken();
     parsedToken = parseJwt(accessToken);
   }
-
-  accessToken = await refreshToken();
-  parsedToken = parseJwt(accessToken);
 }
 
 async function refreshToken () {
