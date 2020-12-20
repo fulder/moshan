@@ -19,7 +19,7 @@ function parseJwt (token) {
 
 /* exported axiosTokenInterceptor */
 async function axiosTokenInterceptor (config) {
-  if (checkTokenInProgress === null) {
+  if (checkTokenPromise === null) {
     checkTokenPromise = checkToken();
   }
 
