@@ -67,7 +67,12 @@ function createShowResults (shows) {
 function createResultShowItem (show) {
   console.debug(show);
   const title = show.name;
-  const poster = show.image.medium;
+
+  let poster = '/includes/img/image_not_available.png';
+  if (show.image !== null) {
+    poster = show.image.medium;
+  }
+
   const externalId = show.id;
 
   return `
