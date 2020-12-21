@@ -57,7 +57,7 @@ function createResultAnimeItem (anime) {
 function createShowResults (shows) {
   let resultHTML = '';
   console.debug(shows);
-  for (let i=0; i<shows.items.length; i++) {
+  for (let i=0; i<shows.length; i++) {
     resultHTML += createResultShowItem(shows.items[i].show);
   }
 
