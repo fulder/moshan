@@ -3,7 +3,7 @@
 class TvMazeApi {
   constructor () {
     this.apiAxios = axios.create({
-      baseURL: 'http://api.tvmaze.com',
+      baseURL: 'https://api.tvmaze.com',
       headers: {
         'Content-Type': 'application/json',
       },
