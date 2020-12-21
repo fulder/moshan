@@ -58,7 +58,7 @@ function createShowResults (shows) {
   let resultHTML = '';
   console.debug(shows);
   for (let i=0; i<shows.length; i++) {
-    resultHTML += createResultShowItem(shows.items[i].show);
+    resultHTML += createResultShowItem(shows[i].show);
   }
 
   document.getElementById('showResults').innerHTML = resultHTML;
