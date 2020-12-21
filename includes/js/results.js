@@ -11,6 +11,7 @@ if (accessToken === null) {
 } else {
   document.getElementById('logInAlert').className = 'd-none';
   document.getElementById('animeResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+  document.getElementById('showResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
 animeRequest = animeApi.search(searchString);
@@ -54,7 +55,27 @@ function createResultAnimeItem (anime) {
 }
 
 function createShowResults (shows) {
-  console.log(shows);
+  let resultHTML = '';
+  console.debug(shows);
+  for (let i=0; i<shows.items.length; i++) {
+    resultHTML += createResultShowItem(shows.items[i].show);
+  }
 
-  
+  document.getElementById('showResults').innerHTML = resultHTML;
+}
+
+function createResultShowItem (show) {
+  console.debug(show);
+  const title = show.name;
+  const poster = show.image.medium;
+  const externalId = show.id;
+
+  return `
+    <div class="col-4 col-md-2 poster">
+      <a href="/show/index.html?tvmaze_id=${externalId}">
+        <img class="img-fluid" src=${poster} />
+        <p class="text-truncate small">${title}</p>
+      </a>
+    </div>
+  `;
 }
