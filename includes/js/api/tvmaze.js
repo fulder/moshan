@@ -4,9 +4,6 @@ class TvMazeApi {
   constructor () {
     this.apiAxios = axios.create({
       baseURL: 'https://api.tvmaze.com',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
     });
 
     this.apiAxios.interceptors.request.use(axiosTokenInterceptor, function (error) {
