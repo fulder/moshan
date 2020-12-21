@@ -5,7 +5,7 @@ class TvMazeApi {
     this.apiAxios = axios.create({
       baseURL: 'https://api.tvmaze.com',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
 
