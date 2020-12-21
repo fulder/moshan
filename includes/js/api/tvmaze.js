@@ -1,14 +1,12 @@
-/* global axios, axiosTokenInterceptor */
+/* global axios */
 /* exported TvMazeApi */
 class TvMazeApi {
   constructor () {
     this.apiAxios = axios.create({
-      baseURL: 'https://api.tvmaze.com',
-    });
-
-    this.apiAxios.interceptors.request.use(axiosTokenInterceptor, function (error) {
-      console.log(error);
-      return Promise.reject(error);
+      baseURL: 'http://api.tvmaze.com',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
   }
 
