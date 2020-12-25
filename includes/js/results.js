@@ -41,8 +41,12 @@ function createAnimeResults (animes) {
 function createResultAnimeItem (anime) {
   console.debug(anime);
   const title = anime.title;
-  const poster = anime.main_picture.medium;
   const externalId = anime.id;
+
+  let poster = '/includes/img/image_not_available.png';
+  if (show.main_picture !== null) {
+    poster = show.main_picture.medium;
+  }
 
   return `
     <div class="col-4 col-md-2 poster">
