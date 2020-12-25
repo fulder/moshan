@@ -44,8 +44,8 @@ function createResultAnimeItem (anime) {
   const externalId = anime.id;
 
   let poster = '/includes/img/image_not_available.png';
-  if (show.main_picture !== null) {
-    poster = show.main_picture.medium;
+  if (anime.main_picture !== null) {
+    poster = anime.main_picture.medium;
   }
 
   return `
