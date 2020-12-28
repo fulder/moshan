@@ -6,23 +6,16 @@
   "default": {},
   "examples": [
     {
-      "api_name": "mal",
-      "api_id": 123
+      "id": "b24ed2d5-8e77-4fe0-b5a1-d0e68cf4d9c5"
     }
   ],
   "additionalProperties": false,
   "properties": {
-    "api_name": {
-      "$id": "#/properties/api_name",
+    "id": {
+      "$id": "#/properties/id",
       "type": "string",
-      "title": "API name",
-      "description": "One of the predefined enum string values defining third party API"
-    },
-    "api_id": {
-      "$id": "#/properties/api_id",
-      "type": "integer",
-      "title": "API Item ID",
-      "description": "The external ID of the item inside the third party API"
+      "title": "Item UUID",
+      "description": "The UUID for the collection item"
     }
   }
 }

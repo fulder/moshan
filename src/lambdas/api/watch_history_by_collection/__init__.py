@@ -101,19 +101,16 @@ def _post_collection_item(username, collection_name, body, token):
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
-    api_name = body["api_name"]
-    api_id = body["api_id"]
-    item_id = None
-
+    item_id = body["id"]
     try:
         if collection_name == "anime":
-            item_id = anime_api.post_anime(api_name, api_id, token)
+            anime_api.get_anime(item_id, token)
         elif collection_name == "show":
-            item_id = shows_api.post_show(api_name, api_id, token)
+            shows_api.get_show(item_id, token)
         elif collection_name == "movie":
             return {"statusCode": 501}  # TODO: Implement
     except api_errors.HttpError as e:
-        err_msg = f"Could not post {collection_name}"
+        err_msg = f"Could not get {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code, "body": json.dumps({"message": err_msg}), "error": str(e)}
 

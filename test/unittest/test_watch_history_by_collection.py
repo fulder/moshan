@@ -239,9 +239,9 @@ def test_handler_post_with_empty_body(mocked_post):
 
 
 @patch("api.watch_history_by_collection.watch_history_db.add_item")
-@patch("api.watch_history_by_collection.anime_api.post_anime")
-def test_handler_post(mocked_post_anime, mocked_post):
-    mocked_post_anime.return_value = True
+@patch("api.watch_history_by_collection.anime_api.get_anime")
+def test_handler_post(mocked_get_anime, mocked_post):
+    mocked_get_anime.return_value = True
     mocked_post.return_value = True
 
     event = {
@@ -257,7 +257,7 @@ def test_handler_post(mocked_post_anime, mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": '{ "api_name": "mal", "api_id": 123 }'
+        "body": '{ "id": "123" }'
     }
 
     ret = handle(event, None)
@@ -265,9 +265,9 @@ def test_handler_post(mocked_post_anime, mocked_post):
 
 
 @patch("api.watch_history_by_collection.watch_history_db.update_item")
-@patch("api.watch_history_by_collection.anime_api.post_anime")
-def test_handler_post_anime_api_error(mocked_post_anime, mocked_post):
-    mocked_post_anime.side_effect = HttpError("test_error", 403)
+@patch("api.watch_history_by_collection.anime_api.get_anime")
+def test_handler_get_anime_api_error(mocked_get_anime, mocked_post):
+    mocked_get_anime.side_effect = HttpError("test_error", 403)
     mocked_post.return_value = True
 
     event = {
@@ -283,12 +283,12 @@ def test_handler_post_anime_api_error(mocked_post_anime, mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": '{ "api_name": "mal", "api_id": 123 }'
+        "body": '{ "id": "123" }'
     }
 
     ret = handle(event, None)
     assert ret == {
-        'body': '{"message": "Could not post anime"}',
+        'body': '{"message": "Could not get anime"}',
         'error': 'test_error',
         'statusCode': 403
     }
