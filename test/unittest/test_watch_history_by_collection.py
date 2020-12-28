@@ -2,7 +2,7 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
-from anime_api import HttpError
+from api_errors import HttpError
 from api.watch_history_by_collection import handle
 from schema import ALLOWED_SORT
 from watch_history_db import NotFoundError
@@ -257,7 +257,7 @@ def test_handler_post(mocked_post_anime, mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": '{ "item_add_id": 123 }'
+        "body": '{ "api_name": "mal", "api_id": 123 }'
     }
 
     ret = handle(event, None)
@@ -283,7 +283,7 @@ def test_handler_post_anime_api_error(mocked_post_anime, mocked_post):
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": '{ "item_add_id": 123 }'
+        "body": '{ "api_name": "mal", "api_id": 123 }'
     }
 
     ret = handle(event, None)
@@ -310,7 +310,7 @@ def test_handler_post_invalid_collection(mocked_post):
             "collection_name": "INVALID",
             "item_id": "123"
         },
-        "body": '{ "item_add_id": 123 }'
+        "body": '{ "api_id": 123 }'
     }
 
     ret = handle(event, None)

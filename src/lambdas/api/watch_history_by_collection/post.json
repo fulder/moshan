@@ -6,16 +6,23 @@
   "default": {},
   "examples": [
     {
-      "item_add_id": 123
+      "api_name": "mal",
+      "api_id": 123
     }
   ],
   "additionalProperties": false,
   "properties": {
-    "item_add_id": {
-      "$id": "#/properties/item_add_id",
+    "api_name": {
+      "$id": "#/properties/api_name",
+      "type": "string",
+      "title": "API name",
+      "description": "One of the predefined enum string values defining third party API"
+    },
+    "api_id": {
+      "$id": "#/properties/api_id",
       "type": "integer",
-      "title": "Item add ID",
-      "description": "Item ID to use for the add operation"
+      "title": "API Item ID",
+      "description": "The external ID of the item inside the third party API"
     }
   }
 }

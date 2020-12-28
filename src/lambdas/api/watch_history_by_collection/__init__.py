@@ -3,9 +3,11 @@ import os
 from json import JSONDecodeError
 
 import decimal_encoder
+import api_errors
 import logger
 import jwt_utils
 import schema
+import shows_api
 import watch_history_db
 import anime_api
 
@@ -99,16 +101,19 @@ def _post_collection_item(username, collection_name, body, token):
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
+    api_name = body["api_name"]
+    api_id = body["api_id"]
     item_id = None
-    if collection_name == "anime":
-        try:
-            item_id = anime_api.post_anime(body["item_add_id"], token)
-        except anime_api.HttpError as e:
-            return {"statusCode": 503, "body": json.dumps({"message": "Error during anime post", "error": str(e)})}
-    elif collection_name == "show":
-        return {"statusCode": 501}  # TODO: Implement
-    elif collection_name == "movie":
-        return {"statusCode": 501}  # TODO: Implement
+
+    try:
+        if collection_name == "anime":
+            item_id = anime_api.post_anime(api_name, api_id, token)
+        elif collection_name == "show":
+            item_id = shows_api.post_show(api_name, api_id, token)
+        elif collection_name == "movie":
+            return {"statusCode": 501}  # TODO: Implement
+    except api_errors.HttpError as e:
+        return {"statusCode": 503, "body": json.dumps({"message": "Error during anime post", "error": str(e)})}
 
     watch_history_db.add_item(username, collection_name, item_id)
     return {"statusCode": 204}

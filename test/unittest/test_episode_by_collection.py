@@ -2,9 +2,7 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
-from anime_api import HttpError
 from api.episode_by_collection_item import handle
-from schema import ALLOWED_SORT
 from episodes_db import NotFoundError
 
 TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6IlRFU1RfQ0xJRU5UX0lEIn0.ud_dRdguJwmKv4XO-c4JD-dKGffSvXsxuAxZq9uWV-g"

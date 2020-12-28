@@ -22,10 +22,10 @@ def test_get_watch_history_invalid_collection_item():
 
 def test_get_watch_history():
     # Setup
-    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"item_add_id": 20}, headers=BASE_HEADERS)
+    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"api_id": 20}, headers=BASE_HEADERS)
     assert res.status_code == 204
     time.sleep(1)
-    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"item_add_id": 21}, headers=BASE_HEADERS)
+    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"api_id": 21}, headers=BASE_HEADERS)
     assert res.status_code == 204
     time.sleep(1)
 
@@ -56,14 +56,14 @@ def test_get_watch_history():
 
 
 def test_post_anime_item():
-    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"item_add_id": 20}, headers=BASE_HEADERS)
+    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"api_id": 20}, headers=BASE_HEADERS)
 
     assert res.status_code == 204
     time.sleep(1)
 
 
 def test_delete_anime_item():
-    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"item_add_id": 20}, headers=BASE_HEADERS)
+    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"api_id": 20}, headers=BASE_HEADERS)
     assert res.status_code == 204
     time.sleep(1)
 
@@ -79,7 +79,7 @@ def test_delete_anime_item():
 
 
 def test_get_anime_item():
-    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"item_add_id": 20}, headers=BASE_HEADERS)
+    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"api_id": 20}, headers=BASE_HEADERS)
     assert res.status_code == 204
     time.sleep(1)
 
@@ -96,7 +96,7 @@ def test_get_anime_item():
 
 
 def test_patch_anime_item():
-    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"item_add_id": 20}, headers=BASE_HEADERS)
+    res = requests.post(f"{API_URL}/watch-history/collection/anime", json={"api_id": 20}, headers=BASE_HEADERS)
     assert res.status_code == 204
     time.sleep(1)
 
