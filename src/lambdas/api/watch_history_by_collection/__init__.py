@@ -113,7 +113,9 @@ def _post_collection_item(username, collection_name, body, token):
         elif collection_name == "movie":
             return {"statusCode": 501}  # TODO: Implement
     except api_errors.HttpError as e:
-        return {"statusCode": 503, "body": json.dumps({"message": "Error during anime post", "error": str(e)})}
+        err_msg = f"Could not post {collection_name}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code, "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     watch_history_db.add_item(username, collection_name, item_id)
     return {"statusCode": 204}

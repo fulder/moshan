@@ -267,7 +267,7 @@ def test_handler_post(mocked_post_anime, mocked_post):
 @patch("api.watch_history_by_collection.watch_history_db.update_item")
 @patch("api.watch_history_by_collection.anime_api.post_anime")
 def test_handler_post_anime_api_error(mocked_post_anime, mocked_post):
-    mocked_post_anime.side_effect = HttpError
+    mocked_post_anime.side_effect = HttpError("test_error", 403)
     mocked_post.return_value = True
 
     event = {
@@ -288,8 +288,9 @@ def test_handler_post_anime_api_error(mocked_post_anime, mocked_post):
 
     ret = handle(event, None)
     assert ret == {
-        'body': '{"message": "Error during anime post", "error": ""}',
-        'statusCode': 503
+        'body': '{"message": "Could not post anime"}',
+        'error': 'test_error',
+        'statusCode': 403
     }
 
 
