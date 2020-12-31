@@ -13,8 +13,9 @@ app = core.App()
 env = {"region": "eu-west-1"}
 
 anime_api_url = "https://api.anime.moshan.tv/v1"
+show_api_url = "https://api.show.moshan.tv/v1"
 domain_name = "api.watch-history.moshan.tv"
 
-WatchHistory(app, "watch-history", anime_api_url, domain_name, env=env)
+WatchHistory(app, "watch-history", anime_api_url, show_api_url, domain_name, env=env)
 
 app.synth()

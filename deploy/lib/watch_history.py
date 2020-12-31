@@ -21,9 +21,10 @@ BUILD_FOLDER = os.path.join(CURRENT_DIR, "..", "..", "build")
 
 
 class WatchHistory(core.Stack):
-    def __init__(self, app: core.App, id: str, anime_api_url: str, domain_name: str, **kwargs) -> None:
+    def __init__(self, app: core.App, id: str, anime_api_url: str, show_api_url: str, domain_name: str, **kwargs) -> None:
         super().__init__(app, id, **kwargs)
         self.anime_api_url = anime_api_url
+        self.show_api_url = show_api_url
         self.domain_name = domain_name
         self.layers = {}
         self.lambdas = {}
@@ -88,7 +89,8 @@ class WatchHistory(core.Stack):
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
-                    "ANIME_API_URL": self.anime_api_url
+                    "ANIME_API_URL": self.anime_api_url,
+                    "SHOWS_API_URL": self.show_api_url
                 },
                 "concurrent_executions": 10,
                 "policies": [
