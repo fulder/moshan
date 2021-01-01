@@ -11,17 +11,10 @@ TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6IlRFU
 
 
 @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-@patch("api.watch_history_by_collection.anime_api.get_animes")
-def test_handler_anime(mocked_get_animes, mocked_get_watch_history):
+def test_handler(mocked_get_watch_history):
     mocked_get_watch_history.return_value = {
         "items": {"123": {"collection_name": "anime", "item_id": Decimal(123)}}
     }
-    mocked_get_animes.return_value = {
-        "123": {
-            "title": "anime_title"
-        }
-    }
-
     event = {
         "headers": {
             "authorization": TEST_JWT
@@ -38,43 +31,9 @@ def test_handler_anime(mocked_get_animes, mocked_get_watch_history):
 
     ret = handle(event, None)
     assert ret == {
-        'body': '{"items": {"123": {"collection_name": "anime", "item_id": 123, "title": "anime_title"}}}',
+        'body': '{"items": {"123": {"collection_name": "anime", "item_id": 123}}}',
         "statusCode": 200
     }
-
-
-@patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-@patch("api.watch_history_by_collection.show_api.get_show")
-def test_handler_show(mocked_get_show, mocked_get_watch_history):
-    mocked_get_watch_history.return_value = {
-        "items": {"123": {"collection_name": "anime", "item_id": Decimal(123)}}
-    }
-    mocked_get_show.return_value = {
-        "123": {
-            "title": "show_title"
-        }
-    }
-
-    event = {
-        "headers": {
-            "authorization": TEST_JWT
-        },
-        "pathParameters": {
-            "collection_name": "show"
-        },
-        "requestContext": {
-            "http": {
-                "method": "GET"
-            }
-        }
-    }
-
-    ret = handle(event, None)
-    assert ret == {
-        'body': '{"items": {"123": {"collection_name": "show", "item_id": 123, "title": "show_title"}}}',
-        "statusCode": 200
-    }
-
 
 def test_handler_invalid_sort():
     event = {
