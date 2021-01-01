@@ -232,7 +232,7 @@ def test_handler_post_with_empty_body(mocked_post):
 
 @patch("api.watch_history_by_collection.watch_history_db.add_item")
 @patch("api.watch_history_by_collection.anime_api.get_anime")
-def test_handler_post(mocked_get_anime, mocked_post):
+def test_handler_post_anime(mocked_get_anime, mocked_post):
     mocked_get_anime.return_value = True
     mocked_post.return_value = True
 
@@ -254,6 +254,56 @@ def test_handler_post(mocked_get_anime, mocked_post):
 
     ret = handle(event, None)
     assert ret == {'statusCode': 204}
+
+@patch("api.watch_history_by_collection.watch_history_db.add_item")
+@patch("api.watch_history_by_collection.shows_api.get_show")
+def test_handler_post_show(mocked_get_show, mocked_post):
+    mocked_get_show.return_value = True
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "show",
+            "item_id": "123"
+        },
+        "body": '{ "id": "123" }'
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 204}
+
+@patch("api.watch_history_by_collection.watch_history_db.add_item")
+@patch("api.watch_history_by_collection.shows_api.get_show")
+def test_handler_post_movie(mocked_get_show, mocked_post):
+    mocked_get_show.return_value = True
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "movie",
+            "item_id": "123"
+        },
+        "body": '{ "id": "123" }'
+    }
+
+    ret = handle(event, None)
+    assert ret == {'statusCode': 501}
 
 
 @patch("api.watch_history_by_collection.watch_history_db.update_item")
