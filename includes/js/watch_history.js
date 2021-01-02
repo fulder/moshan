@@ -31,8 +31,8 @@ function getAnimeItems (response) {
   let res = true;
   let itemCreated = false;
 
-  axios.all(requests).then(axios.spread((...responses) => {
-    for (const anime of responses) {
+  axios.all(animeRequest).then(axios.spread((...animeResponses) => {
+    for (const anime of animeResponses) {
       createHistoryAnimeItem(anime);
     }
     resultHTML += itemHTML;
