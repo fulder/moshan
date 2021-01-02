@@ -37,12 +37,13 @@ function getAnimeItems (response) {
     console.debug(animeResponses);
 
     for (let i = 0; i < animeResponses.length; i++) {
-      createHistoryAnimeItem(animeResponses[i]);
-    }
-    resultHTML += itemHTML;
+      const itemHTML = createHistoryAnimeItem(animeResponses[i]);
 
-    itemCreated = itemHTML !== '';
-    res = res && itemCreated;
+      resultHTML += itemHTML;
+
+      itemCreated = itemHTML !== '';
+      res = res && itemCreated;
+    }
   })).catch(errors => {
     console.log(errors);
   });
