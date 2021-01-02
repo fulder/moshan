@@ -23,7 +23,7 @@ function getAnimeItems (response) {
 
   let animeApiRequests = [];
   for (const watchHistoryAnime of response.items) {
-    animeRequest = animeApi.getAnimeById(watchHistoryAnime);
+    animeRequest = animeApi.getAnimeById(watchHistoryAnime.item_id);
     animeApiRequests.push(animeRequest);
   }
 
