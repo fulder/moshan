@@ -9,25 +9,39 @@ if (accessToken === null) {
   document.getElementById('animeWatchHistory').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
+
 watchHistoryApi.getWatchHistoryByCollection('anime').then(function (response) {
-  createAnimeItems(response.data);
+  getAnimeItems(response.data);
 }).catch(function (error) {
   console.log(error);
 });
 
-function createAnimeItems (response) {
-  let resultHTML = '';
+function getAnimeItems (response) {
+  console.debug('WatchHistory anime response:');
+  console.debug(response);
 
+  let animeApiRequests = [];
+  for (watchHistoryAnime in response.items) {
+    animeRequest = animeApi.getAnimeById(watchHistoryAnime);
+    animeApiRequests.push(animeRequest);
+  }
+
+  let resultHTML = '';
   let res = true;
   let itemCreated = false;
-  for (const [animeId, anime] of Object.entries(response.items)) {
-    const itemHTML = createHistoryAnimeItem(animeId, anime);
+
+  axios.all(requests).then(axios.spread((...responses) => {
+    for (anime in responses) {
+      createHistoryAnimeItem(anime);
+    }
     resultHTML += itemHTML;
 
     itemCreated = itemHTML !== '';
-
     res = res && itemCreated;
-  }
+  })).catch(errors => {
+    console.log(errors);
+  });
+
 
   if (res) {
     document.getElementById('itemsLoadingAlert').className = 'd-none';
@@ -38,11 +52,12 @@ function createAnimeItems (response) {
   document.getElementById('animeWatchHistory').innerHTML = resultHTML;
 }
 
-function createHistoryAnimeItem (animeId, anime) {
+function createHistoryAnimeItem (anime) {
   if (!('title' in anime) || !('main_picture' in anime)) {
     return '';
   }
 
+  const animeId = anime.id;
   const title = anime.title;
   const poster = anime.main_picture.medium;
 
