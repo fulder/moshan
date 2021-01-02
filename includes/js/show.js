@@ -23,7 +23,7 @@ let requests = [];
 if (id !== null) {
   apiId = getShowApiId(apiName, id);
 
-  const watchHistoryRequest = watchHistoryApi.getWatchHistoryItem('anime', id);
+  const watchHistoryRequest = watchHistoryApi.getWatchHistoryItem('show', id);
   requests.push(watchHistoryRequest);
 }
 
@@ -37,6 +37,8 @@ if (apiName === 'tvmaze') {
 requests.push(showRequest, showEpisodesRequest);
 
 axios.all(requests).then(axios.spread((...responses) => {
+  console.debug(responses);
+
   const watchHistoryItem = responses[0].data;
   const showItem = responses[1].data;
   const showEpisodes = responses[2].data;
