@@ -39,9 +39,13 @@ requests.push(showRequest, showEpisodesRequest);
 axios.all(requests).then(axios.spread((...responses) => {
   console.debug(responses);
 
-  const watchHistoryItem = responses[0].data;
-  const showItem = responses[1].data;
-  const showEpisodes = responses[2].data;
+  let watchHistoryItem = null;
+  if (responses.length === 3) {
+    watchHistoryItem = responses.shift().data;
+  }
+
+  const showItem = responses.shift().data;
+  const showEpisodes = responses.shift().data;
 
   createShow(watchHistoryItem, showItem, showEpisodes);
 })).catch(errors => {
