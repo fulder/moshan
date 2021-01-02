@@ -22,7 +22,8 @@ function getAnimeItems (response) {
   console.debug(response);
 
   let animeApiRequests = [];
-  for (const watchHistoryAnime of response.items) {
+  for (let i = 0; i < response.items.length; i++) {
+    const watchHistoryAnime = response.items[i];
     animeRequest = animeApi.getAnimeById(watchHistoryAnime.item_id);
     animeApiRequests.push(animeRequest);
   }
@@ -32,8 +33,8 @@ function getAnimeItems (response) {
   let itemCreated = false;
 
   axios.all(animeRequest).then(axios.spread((...animeResponses) => {
-    for (const anime of animeResponses) {
-      createHistoryAnimeItem(anime);
+    for (let i = 0; i < animeResponses.length; i++) {
+      createHistoryAnimeItem(animeResponses[i]);
     }
     resultHTML += itemHTML;
 
