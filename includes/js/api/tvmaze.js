@@ -13,4 +13,12 @@ class TvMazeApi {
   search (searchString) {
     return this.apiAxios.get(`/search/shows?q=${searchString}`);
   }
+
+  getShowById(id) {
+    return this.apiAxios.get(`/shows/${id}`);
+  }
+
+  getShowEpisodes(id) {
+    return this.apiAxios.get(`/shows/${id}/episodes`);
+  }
 }
