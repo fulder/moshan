@@ -37,7 +37,7 @@ function getAnimeItems (response) {
     console.debug(animeResponses);
 
     for (let i = 0; i < animeResponses.length; i++) {
-      const itemHTML = createHistoryAnimeItem(animeResponses[i]);
+      const itemHTML = createHistoryAnimeItem(animeResponses[i].data);
 
       resultHTML += itemHTML;
 
