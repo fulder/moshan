@@ -152,9 +152,8 @@ def _watch_history_generator(username, limit, collection_name=None, index_name=N
     page_iterator = paginator.paginate(**query_kwargs)
 
     for p in page_iterator:
-        items = {}
+        items = []
         for i in p["Items"]:
             item = json_util.loads(i)
-            item_id = item.pop("item_id")
-            items[item_id] = item
+            items.append(item)
         yield items

@@ -33,3 +33,12 @@ def mocked_episodes_db():
     episodes_db.client = MagicMock()
 
     return episodes_db
+
+
+@pytest.fixture(scope='function')
+def mocked_show_api():
+    import shows_api
+
+    shows_api.SHOW_API_URL = "https://mocked"
+
+    return shows_api

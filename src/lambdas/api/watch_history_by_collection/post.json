@@ -6,16 +6,16 @@
   "default": {},
   "examples": [
     {
-      "item_add_id": 123
+      "id": "b24ed2d5-8e77-4fe0-b5a1-d0e68cf4d9c5"
     }
   ],
   "additionalProperties": false,
   "properties": {
-    "item_add_id": {
-      "$id": "#/properties/item_add_id",
-      "type": "integer",
-      "title": "Item add ID",
-      "description": "Item ID to use for the add operation"
+    "id": {
+      "$id": "#/properties/id",
+      "type": "string",
+      "title": "Item UUID",
+      "description": "The UUID for the collection item"
     }
   }
 }

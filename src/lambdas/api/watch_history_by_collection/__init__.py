@@ -3,9 +3,11 @@ import os
 from json import JSONDecodeError
 
 import decimal_encoder
+import api_errors
 import logger
 import jwt_utils
 import schema
+import shows_api
 import watch_history_db
 import anime_api
 
@@ -65,14 +67,6 @@ def _get_watch_history(username, collection_name, query_params, token):
     try:
         watch_history = watch_history_db.get_watch_history(username, collection_name=collection_name, index_name=sort,
                                                            limit=limit, start=start)
-
-        # Fetch anime posters for all items in returned watch_history items
-        if collection_name == "anime":
-            anime = anime_api.get_animes(watch_history["items"].keys(), token)
-
-            for anime_id in anime:
-                watch_history["items"][anime_id].update(anime[anime_id])
-
         return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
         return {"statusCode": 200, "body": json.dumps({"items": []})}
@@ -99,16 +93,18 @@ def _post_collection_item(username, collection_name, body, token):
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
-    item_id = None
-    if collection_name == "anime":
-        try:
-            item_id = anime_api.post_anime(body["item_add_id"], token)
-        except anime_api.HttpError as e:
-            return {"statusCode": 503, "body": json.dumps({"message": "Error during anime post", "error": str(e)})}
-    elif collection_name == "show":
-        return {"statusCode": 501}  # TODO: Implement
-    elif collection_name == "movie":
-        return {"statusCode": 501}  # TODO: Implement
+    item_id = body["id"]
+    try:
+        if collection_name == "anime":
+            anime_api.get_anime(item_id, token)
+        elif collection_name == "show":
+            shows_api.get_show(item_id, token)
+        elif collection_name == "movie":
+            return {"statusCode": 501}  # TODO: Implement
+    except api_errors.HttpError as e:
+        err_msg = f"Could not get {collection_name}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code, "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     watch_history_db.add_item(username, collection_name, item_id)
     return {"statusCode": 204}
