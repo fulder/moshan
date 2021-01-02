@@ -32,10 +32,10 @@ function getAnimeItems (response) {
   let res = true;
   let itemCreated = false;
 
-  axios.all(animeRequest).then(axios.spread((...animeResponses) => {
+  axios.all(animeRequests).then(axios.spread((...animeResponses) => {
     console.debug('Anime responses:');
     console.debug(animeResponses);
-    
+
     for (let i = 0; i < animeResponses.length; i++) {
       createHistoryAnimeItem(animeResponses[i]);
     }
