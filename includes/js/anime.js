@@ -6,7 +6,8 @@ const watchHistoryApi = new WatchHistoryApi();
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
-const malId = urlParams.get('mal_id');
+const apiName = urlParams.get('api_name');
+const apiId = urlParams.get('api_id');
 let episodePage = urlParams.get('episode_page');
 
 if (episodePage === null) {
@@ -23,8 +24,8 @@ if (id !== null) {
   const animeEpisodesRequest = animeApi.getAnimeEpisodes(id, episodePage);
   const watchHistoryRequest = watchHistoryApi.getWatchHistoryItem('anime', id);
   requests = [animeRequest, animeEpisodesRequest, watchHistoryRequest];
-} else if (malId !== null) {
-  const animeRequest = animeApi.getAnimeByApiId('mal', malId);
+} else if (apiId !== null) {
+  const animeRequest = animeApi.getAnimeByApiId(apiName, apiId);
   requests = [animeRequest];
 }
 
@@ -83,7 +84,7 @@ function createAnime (animeItem, watchHistoryItem) {
         </div>
 
         <div class="col-md-3 col-7 mt-1">
-            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('anime', ${animeItem.mal_id})"><i class="fa fa-plus"></i> Add</button>
+            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('anime', '${apiName}', ${animeItem.mal_id})"><i class="fa fa-plus"></i> Add</button>
             <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItemWrapper('anime', '${animeItem.id}')"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
@@ -107,8 +108,8 @@ function createAnime (animeItem, watchHistoryItem) {
 }
 
 /* exported addItemWrapper */
-function addItemWrapper (type, id) {
-  watchHistoryApi.addWatchHistoryItem(type, id).then(function () {
+function addItemWrapper (type, apiName, id) {
+  watchHistoryApi.addWatchHistoryItem(type, apiName, id).then(function () {
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
   }).catch(function (error) {
