@@ -44,18 +44,17 @@ function getAnimeItems (response) {
       itemCreated = itemHTML !== '';
       res = res && itemCreated;
     }
+
+    if (res) {
+      document.getElementById('itemsLoadingAlert').className = 'd-none';
+    } else {
+      document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
+    }
+
+    document.getElementById('animeWatchHistory').innerHTML = resultHTML;
   })).catch(errors => {
     console.log(errors);
   });
-
-
-  if (res) {
-    document.getElementById('itemsLoadingAlert').className = 'd-none';
-  } else {
-    document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
-  }
-
-  document.getElementById('animeWatchHistory').innerHTML = resultHTML;
 }
 
 function createHistoryAnimeItem (anime) {
