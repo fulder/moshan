@@ -1,6 +1,7 @@
 /* global WatchHistoryApi, accessToken */
 
 const watchHistoryApi = new WatchHistoryApi();
+const animeApi = new AnimeApi();
 
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
