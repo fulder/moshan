@@ -1,4 +1,4 @@
-/* global WatchHistoryApi, accessToken */
+/* global WatchHistoryApi, AnimeApi, accessToken */
 
 const watchHistoryApi = new WatchHistoryApi();
 const animeApi = new AnimeApi();
