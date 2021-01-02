@@ -32,7 +32,7 @@ function getAnimeItems (response) {
   let res = true;
   let itemCreated = false;
 
-  axios.all(animeRequests).then(axios.spread((...animeResponses) => {
+  axios.all(animeApiRequests).then(axios.spread((...animeResponses) => {
     console.debug('Anime responses:');
     console.debug(animeResponses);
 
