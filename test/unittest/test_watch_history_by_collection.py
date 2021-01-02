@@ -35,6 +35,7 @@ def test_handler(mocked_get_watch_history):
         "statusCode": 200
     }
 
+
 def test_handler_invalid_sort():
     event = {
         "headers": {
@@ -255,6 +256,7 @@ def test_handler_post_anime(mocked_get_anime, mocked_post):
     ret = handle(event, None)
     assert ret == {'statusCode': 204}
 
+
 @patch("api.watch_history_by_collection.watch_history_db.add_item")
 @patch("api.watch_history_by_collection.shows_api.get_show")
 def test_handler_post_show(mocked_get_show, mocked_post):
@@ -279,6 +281,7 @@ def test_handler_post_show(mocked_get_show, mocked_post):
 
     ret = handle(event, None)
     assert ret == {'statusCode': 204}
+
 
 @patch("api.watch_history_by_collection.watch_history_db.add_item")
 @patch("api.watch_history_by_collection.shows_api.get_show")
