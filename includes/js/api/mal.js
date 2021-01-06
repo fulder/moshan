@@ -9,6 +9,11 @@ class MalApi {
         'X-Mal-Client-Id': '6f7663be0ec1555fe4dcb612763954c2',
       },
     });
+
+    this.apiAxios.interceptors.request.use(axiosTokenInterceptor, function (error) {
+      console.log(error);
+      return Promise.reject(error);
+    });
   }
 
   search(searchString) {
