@@ -1,13 +1,14 @@
 /* global axios */
-/* global AnimeApi, WatchHistoryApi */
+/* global AnimeApi, MalApi, WatchHistoryApi */
 
 const animeApi = new AnimeApi();
+const malApi = new MalApi();
 const watchHistoryApi = new WatchHistoryApi();
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
 const apiName = urlParams.get('api_name');
-const apiId = urlParams.get('api_id');
+let apiId = urlParams.get('api_id');
 let episodePage = urlParams.get('episode_page');
 
 if (episodePage === null) {
@@ -20,29 +21,36 @@ let totalPages = 0;
 
 let requests = [];
 if (id !== null) {
-  const animeRequest = animeApi.getAnimeById(id);
-  const animeEpisodesRequest = animeApi.getAnimeEpisodes(id, episodePage);
+  apiId = getAnimeApiId(apiName, id);
+
+  const moshanAnimeRequest = animeApi.getAnimeById(id);
   const watchHistoryRequest = watchHistoryApi.getWatchHistoryItem('anime', id);
-  requests = [animeRequest, animeEpisodesRequest, watchHistoryRequest];
-} else if (apiId !== null) {
-  const animeRequest = animeApi.getAnimeByApiId(apiName, apiId);
-  requests = [animeRequest];
+  const animeEpisodesRequest = animeApi.getAnimeEpisodes(id, episodePage);
+
+  requests.push(moshanAnimeRequest, watchHistoryRequest, animeEpisodesRequest);
 }
 
+let apiAnimeItem;
+if (apiName === 'mal') {
+  apiAnimeItem = malApi.getAnimeById(apiId);
+}
+requests.push(apiAnimeItem);
+
 axios.all(requests).then(axios.spread((...responses) => {
-  const animeItem = responses[0].data;
+  const apiAnimeItem = responses.shift().data;
+  const animeId = apiAnimeItem.id;
+
+  let animeItem = null;
   let animeEpisodes = null;
   let watchHistoryItem = null;
-  let animeId = null;
 
   if (responses.length > 1) {
-    animeEpisodes = responses[1].data;
-    watchHistoryItem = responses[2].data;
-
-    animeId = animeItem.id;
+    animeItem = responses[0].data;
+    watchHistoryItem = responses[1].data;
+    animeEpisodes = responses[2].data;
   }
 
-  createAnime(animeItem, watchHistoryItem);
+  createAnime(apiAnimeItem, watchHistoryItem, animeItem);
 
   if (animeEpisodes !== null) {
     createEpisodesList(animeId, animeEpisodes);
@@ -51,29 +59,37 @@ axios.all(requests).then(axios.spread((...responses) => {
   console.log(errors);
 });
 
-function createAnime (animeItem, watchHistoryItem) {
+function getAnimeApiId(apiName, animeId) {
+  animeApi.getAnimeById(animeId).then(response => {
+    return response[`${apiName}_id`];
+  }).catch(error => {
+      console.log(error);
+  });
+}
+
+function createAnime (apiAnimeItem, watchHistoryItem, animeItem) {
   const itemAdded = watchHistoryItem !== null;
 
   let status = 'Airing';
-  if ('end_date' in animeItem && animeItem.end_date !== null) {
+  if ('end_date' in apiAnimeItem && apiAnimeItem.end_date !== null) {
     status = 'Finished';
   }
 
   const resultHTML = `
         <div class="col-md-3 col-5 item">
-            <img class="img-fluid" src="${animeItem.main_picture.large}" />
+            <img class="img-fluid" src="${apiAnimeItem.main_picture.large}" />
         </div>
 
         <div class="col-md-9 col-7">
-            <h5>${animeItem.title}</h5>
-            <b>Released</b>: ${animeItem.start_date}<br>
+            <h5>${apiAnimeItem.title}</h5>
+            <b>Released</b>: ${apiAnimeItem.start_date}<br>
             <b>Status</b>: ${status}
              <div class="card mt-2 col-7 col-md-3">
                 <div class="card-header">Links</div>
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="col-6 col-md-5">
-                            <a href="https://myanimelist.net/anime/${animeItem.mal_id}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
+                            <a href="https://myanimelist.net/anime/${apiAnimeItem.id}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
                         </div>
                         <div id="anidbLink" class="col-6 col-md-5 d-none">
                             <a href="https://anidb.net/anime/${animeItem.anidb_id}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
@@ -108,23 +124,28 @@ function createAnime (animeItem, watchHistoryItem) {
 }
 
 /* exported addItemWrapper */
-function addItemWrapper (type, apiName, id) {
-  watchHistoryApi.addWatchHistoryItem(type, apiName, id).then(function () {
+async function addItemWrapper (type, apiName, id) {
+  try {
+    const animeApiResponse = await animeApi.addAnime(apiName, id);
+    const animeId = animeApiResponse.data.id;
+
+    await watchHistoryApi.addWatchHistoryItem(type, apiName, animeId);
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
-  }).catch(function (error) {
+  } catch (error) {
     console.log(error);
-  });
+  }
 }
 
 /* exported removeItemWrapper */
-function removeItemWrapper (type, id) {
-  watchHistoryApi.removeWatchHistoryItem(type, id).then(function () {
+async function removeItemWrapper (type, id) {
+  try {
+    await watchHistoryApi.removeWatchHistoryItem(type, id);
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
-  }).catch(function (error) {
+  } catch (error) {
     console.log(error);
-  });
+  }
 }
 
 function createEpisodesList (animeId, episodes) {

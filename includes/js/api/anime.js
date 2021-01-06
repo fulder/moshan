@@ -15,10 +15,6 @@ class AnimeApi {
     });
   }
 
-  search (searchString) {
-    return this.apiAxios.get(`/anime?search=${searchString}`);
-  }
-
   getAnimeByApiId (apiName, id) {
     return this.apiAxios.get(`/anime?${apiName}_id=${id}`);
   }
@@ -33,5 +29,13 @@ class AnimeApi {
 
   getAnimeEpisode (id, episodeId) {
     return this.apiAxios.get(`/anime/${id}/episode/${episodeId}`);
+  }
+
+  addAnime(apiName, apiId) {
+    const data = {
+      api_name: apiName,
+      api_id: apiId,
+    };
+    return this.apiAxios.post('/anime', data);
   }
 }
