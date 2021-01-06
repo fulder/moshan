@@ -31,8 +31,7 @@ let showRequest;
 let showEpisodesRequest;
 if (apiName === 'tvmaze') {
   showRequest = tvMazeApi.getShowById(apiId);
-  showEpisodesRequest = tvMazeApi.getShowEpisodes(apiId, episodePage);
-
+  showEpisodesRequest = tvMazeApi.getShowEpisodes(apiId);
 }
 requests.push(showRequest, showEpisodesRequest);
 
@@ -47,7 +46,8 @@ axios.all(requests).then(axios.spread((...responses) => {
   const showItem = responses.shift().data;
   const showEpisodes = responses.shift().data;
 
-  createShow(watchHistoryItem, showItem, showEpisodes);
+  createShow(watchHistoryItem, showItem);
+  createEpisodesList(showItem.id, showEpisodes);
 })).catch(errors => {
   console.log(errors);
 });
@@ -60,36 +60,24 @@ function getShowApiId(apiName, showId) {
   });
 }
 
-function createShow (watchHistoryItem, showItem, showEpisodes) {
-  console.debug(`WatchHistory item: ${watchHistoryItem}`);
-  console.debug(`Show item: ${showItem}`);
-  console.debug(`Show episodes: ${showEpisodes}`);
-
-  //const itemAdded = watchHistoryItem !== null;
-
-  /*let status = 'Airing';
-  if ('end_date' in animeItem && animeItem.end_date !== null) {
-    status = 'Finished';
-  }
+function createShow (watchHistoryItem, showItem) {
+  const itemAdded = watchHistoryItem !== null;
 
   const resultHTML = `
         <div class="col-md-3 col-5 item">
-            <img class="img-fluid" src="${animeItem.main_picture.large}" />
+            <img class="img-fluid" src="${showItem.image.original}" />
         </div>
 
         <div class="col-md-9 col-7">
-            <h5>${animeItem.title}</h5>
-            <b>Released</b>: ${animeItem.start_date}<br>
-            <b>Status</b>: ${status}
+            <h5>${showItem.name}</h5>
+            <b>Released</b>: ${showItem.premiered}<br>
+            <b>Status</b>: ${showItem.status}
              <div class="card mt-2 col-7 col-md-3">
                 <div class="card-header">Links</div>
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="col-6 col-md-5">
-                            <a href="https://myanimelist.net/anime/${animeItem.mal_id}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
-                        </div>
-                        <div id="anidbLink" class="col-6 col-md-5 d-none">
-                            <a href="https://anidb.net/anime/${animeItem.anidb_id}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
+                            <a href="${showItem.url}" target="_blank"><img class="img-fluid" src="/includes/icons/${apiName}.png" /></a>
                         </div>
                     </div>
                 </div>
@@ -97,8 +85,8 @@ function createShow (watchHistoryItem, showItem, showEpisodes) {
         </div>
 
         <div class="col-md-3 col-7 mt-1">
-            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('anime', ${animeItem.mal_id})"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItemWrapper('anime', '${animeItem.id}')"><i class="fa fa-minus"></i> Remove</button>
+            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('show', ${showItem.id})"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItemWrapper('show', '${showItem.id}')"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div id="synopsisCol" class="mt-2 col-12">
@@ -107,17 +95,13 @@ function createShow (watchHistoryItem, showItem, showEpisodes) {
                     <div id="synopsisCardHeader" class="card-header">Synopsis</div>
                 </a>
                 <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
-                    <div class="card-body">${animeItem.synopsis}</div>
+                    <div class="card-body">${showItem.summary}</div>
                 </div>
             </div>
        </div>
     `;
 
-  document.getElementById('anime').innerHTML = resultHTML;
-
-  if ('anidb_id' in animeItem) {
-    document.getElementById('anidbLink').classList.remove('d-none');
-  }*/
+  document.getElementById('show').innerHTML = resultHTML;
 }
 
 /* exported addItemWrapper */
@@ -140,16 +124,16 @@ function removeItemWrapper (type, id) {
   });
 }
 
-function createEpisodesList (animeId, episodes) {
+function createEpisodesList (showId, showEpisodes) {
   let tableHTML = '';
-  episodes.items.forEach(function (episode) {
-    const episodeId = episode.id;
-    const episodeNumber = episode.episode_number;
-    const episodeDate = episode.air_date;
+
+  showEpisodes.forEach(function (episode) {
+    const episodeId = `S${episode.season.toFixed(2)}E${episode.number.toFixed(2)}`;
+    const episodeDate = episode.airdate;
     const episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
 
     let rowClass = 'episodeRow';
-    let onClickAction = `window.location='/episode?collection_name=anime&id=${animeId}&episode_id=${episodeId}'`;
+    let onClickAction = `window.location='/episode?collection_name=show&id=${showId}&episode_id=${episodeId}'`;
     if (!episodeAired) {
       rowClass = 'bg-secondary';
       onClickAction = '';
@@ -157,8 +141,8 @@ function createEpisodesList (animeId, episodes) {
 
     tableHTML += `
             <tr onclick="${onClickAction}" class=${rowClass}>
-                <td class="small">${episodeNumber}</td>
-                <td class="text-truncate small">${episode.title}</td>
+                <td class="small">${episodeId}</td>
+                <td class="text-truncate small">${episode.name}</td>
                 <td class="small">${episodeDate}</td>
             </tr>
         `;
