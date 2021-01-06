@@ -1,6 +1,6 @@
-/* global AnimeApi, TvMazeApi, accessToken */
+/* global MalApi, TvMazeApi, accessToken */
 
-const animeApi = new AnimeApi();
+const malApi = new MalApi();
 const tvMazeApi = new TvMazeApi();
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -14,9 +14,7 @@ if (accessToken === null) {
   document.getElementById('showResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
-animeRequest = animeApi.search(searchString);
-
-animeApi.search(searchString).then(function (response) {
+malApi.search(searchString).then(function (response) {
   createAnimeResults(response.data);
 }).catch(function (error) {
   console.log(error);
@@ -32,7 +30,7 @@ function createAnimeResults (animes) {
   let resultHTML = '';
   console.debug(animes);
   for (let i=0; i<animes.items.length; i++) {
-    resultHTML += createResultAnimeItem(animes.items[i]);
+    resultHTML += createResultAnimeItem(animes.data[i].node);
   }
 
   document.getElementById('animeResults').innerHTML = resultHTML;
