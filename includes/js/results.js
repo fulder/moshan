@@ -29,7 +29,7 @@ tvMazeApi.search(searchString).then(function (response) {
 function createAnimeResults (animes) {
   let resultHTML = '';
   console.debug(animes);
-  for (let i=0; i<animes.items.length; i++) {
+  for (let i=0; i<animes.data.length; i++) {
     resultHTML += createResultAnimeItem(animes.data[i].node);
   }
 
