@@ -75,6 +75,13 @@ function createAnime (apiAnimeItem, watchHistoryItem, animeItem) {
     status = 'Finished';
   }
 
+  let anidb_id = '';
+  let id = '';
+  if (animeItem !== null) {
+    anidb_id = animeItem.anidb_id;
+    id = animeItem.id;
+  }
+
   const resultHTML = `
         <div class="col-md-3 col-5 item">
             <img class="img-fluid" src="${apiAnimeItem.main_picture.large}" />
@@ -92,7 +99,7 @@ function createAnime (apiAnimeItem, watchHistoryItem, animeItem) {
                             <a href="https://myanimelist.net/anime/${apiAnimeItem.id}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
                         </div>
                         <div id="anidbLink" class="col-6 col-md-5 d-none">
-                            <a href="https://anidb.net/anime/${animeItem.anidb_id}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
+                            <a href="https://anidb.net/anime/${anidb_id}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
                         </div>
                     </div>
                 </div>
@@ -100,8 +107,8 @@ function createAnime (apiAnimeItem, watchHistoryItem, animeItem) {
         </div>
 
         <div class="col-md-3 col-7 mt-1">
-            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('anime', '${apiName}', ${animeItem.mal_id})"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItemWrapper('anime', '${animeItem.id}')"><i class="fa fa-minus"></i> Remove</button>
+            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('anime', '${apiName}', ${apiAnimeItem.id})"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItemWrapper('anime', '${id}')"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div id="synopsisCol" class="mt-2 col-12">
@@ -110,7 +117,7 @@ function createAnime (apiAnimeItem, watchHistoryItem, animeItem) {
                     <div id="synopsisCardHeader" class="card-header">Synopsis</div>
                 </a>
                 <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
-                    <div class="card-body">${animeItem.synopsis}</div>
+                    <div class="card-body">${apiAnimeItem.synopsis}</div>
                 </div>
             </div>
        </div>
@@ -118,7 +125,7 @@ function createAnime (apiAnimeItem, watchHistoryItem, animeItem) {
 
   document.getElementById('anime').innerHTML = resultHTML;
 
-  if ('anidb_id' in animeItem) {
+  if (animeItem !== null && 'anidb_id' in animeItem) {
     document.getElementById('anidbLink').classList.remove('d-none');
   }
 }
