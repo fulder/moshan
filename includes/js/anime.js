@@ -1,4 +1,3 @@
-/* global axios */
 /* global AnimeApi, MalApi, WatchHistoryApi */
 
 const animeApi = new AnimeApi();
@@ -19,55 +18,52 @@ if (episodePage === null) {
 
 let totalPages = 0;
 
-let requests = [];
 if (id !== null) {
-  apiId = getAnimeApiId(apiName, id);
-
-  const moshanAnimeRequest = animeApi.getAnimeById(id);
-  const watchHistoryRequest = watchHistoryApi.getWatchHistoryItem('anime', id);
-  const animeEpisodesRequest = animeApi.getAnimeEpisodes(id, episodePage);
-
-  requests.push(moshanAnimeRequest, watchHistoryRequest, animeEpisodesRequest);
+  getAnimeById();
+}
+else if (apiId !== null && apiName === 'mal') {
+  getAnimeByMalId();
 }
 
-let apiAnimeItem;
-if (apiName === 'mal') {
-  apiAnimeItem = malApi.getAnimeById(apiId);
-}
-requests.push(apiAnimeItem);
+async function getAnimeById() {
+  try {
+    const animeItem = await animeApi.getAnimeById(id).data;
+    const apiID = animeItem[`${apiName}_id`];
 
-axios.all(requests).then(axios.spread((...responses) => {
-  const apiAnimeItem = responses.shift().data;
-  const animeId = apiAnimeItem.id;
+    const requests = [
+      malApi.getAnimeById(apiID),
+      animeApi.getAnimeEpisodes(id, episodePage),
+      watchHistoryApi.getWatchHistoryItem('anime', id),
+    ];
+    const [apiAnimeRes, animeEpisodesRes, watchHistoryItemRes] = await Promise.all(requests);
 
-  let animeItem = null;
-  let animeEpisodes = null;
-  let watchHistoryItem = null;
-
-  if (responses.length > 1) {
-    animeItem = responses[0].data;
-    watchHistoryItem = responses[1].data;
-    animeEpisodes = responses[2].data;
+    createAnime(apiAnimeRes.data, animeItem);
+    createEpisodesList(animeId, animeEpisodesRes.data, watchHistoryItemRes.data);
+  } catch(error) {
+    console.log(error);
   }
-
-  createAnime(apiAnimeItem, watchHistoryItem, animeItem);
-
-  if (animeEpisodes !== null) {
-    createEpisodesList(animeId, animeEpisodes);
-  }
-})).catch(errors => {
-  console.log(errors);
-});
-
-function getAnimeApiId(apiName, animeId) {
-  animeApi.getAnimeById(animeId).then(response => {
-    return response[`${apiName}_id`];
-  }).catch(error => {
-      console.log(error);
-  });
 }
 
-function createAnime (apiAnimeItem, watchHistoryItem, animeItem) {
+async function getAnimeByMalId() {
+  try {
+    const animeItem = await animeApi.getAnimeByApiId(apiName, apiId).data;
+
+    if (animeItem !== null && 'id' in animeItem) {
+      // anime cached in mal use anime UUID instead
+      id = animeItem.id;
+      getAnimeById();
+      return;
+    }
+
+    apiAnimeItem = await malApi.getAnimeById(apiId).data;
+
+    createAnime(apiAnimeItem, null, null);
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
   const itemAdded = watchHistoryItem !== null;
 
   let status = 'Airing';
@@ -75,63 +71,29 @@ function createAnime (apiAnimeItem, watchHistoryItem, animeItem) {
     status = 'Finished';
   }
 
-  let anidb_id = '';
-  let id = '';
-  if (animeItem !== null) {
-    anidb_id = animeItem.anidb_id;
-    id = animeItem.id;
-  }
-
-  const resultHTML = `
-        <div class="col-md-3 col-5 item">
-            <img class="img-fluid" src="${apiAnimeItem.main_picture.large}" />
-        </div>
-
-        <div class="col-md-9 col-7">
-            <h5>${apiAnimeItem.title}</h5>
-            <b>Released</b>: ${apiAnimeItem.start_date}<br>
-            <b>Status</b>: ${status}
-             <div class="card mt-2 col-7 col-md-3">
-                <div class="card-header">Links</div>
-                <div class="card-body p-1">
-                    <div class="row">
-                        <div class="col-6 col-md-5">
-                            <a href="https://myanimelist.net/anime/${apiAnimeItem.id}" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
-                        </div>
-                        <div id="anidbLink" class="col-6 col-md-5 d-none">
-                            <a href="https://anidb.net/anime/${anidb_id}" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-7 mt-1">
-            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('anime', '${apiName}', ${apiAnimeItem.id})"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItemWrapper('anime', '${id}')"><i class="fa fa-minus"></i> Remove</button>
-        </div>
-
-        <div id="synopsisCol" class="mt-2 col-12">
-            <div class="card">
-                <a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">
-                    <div id="synopsisCardHeader" class="card-header">Synopsis</div>
-                </a>
-                <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
-                    <div class="card-body">${apiAnimeItem.synopsis}</div>
-                </div>
-            </div>
-       </div>
-    `;
-
-  document.getElementById('anime').innerHTML = resultHTML;
+  document.getElementById('poster').src = apiAnimeItem.main_picture.large;
+  document.getElementById('titles').innerHTML = apiAnimeItem.title;
+  document.getElementById('start-date').innerHTML = apiAnimeItem.start_date;
+  document.getElementById('status').innerHTML = status;
+  document.getElementById('synopsis').innerHTML = apiAnimeItem.synopsis;
+  document.getElementById('mal-link').href = `https://myanimelist.net/anime/${apiAnimeItem.id}`;
 
   if (animeItem !== null && 'anidb_id' in animeItem) {
-    document.getElementById('anidbLink').classList.remove('d-none');
+    document.getElementById('anidb-link').href = `https://anidb.net/anime/${animeItem.anidb_id}`;
+    document.getElementById('anidb-link-div').classList.remove('d-none');
   }
+
+  if (itemAdded) {
+    document.getElementById('add-button').classList.remove('d-none');
+  } else {
+    document.getElementById('remove-button').classList.remove('d-none');
+  }
+
+  document.getElementById('anime').classList.remove('d-none');
 }
 
-/* exported addItemWrapper */
-async function addItemWrapper (type, apiName, id) {
+/* exported addItem */
+async function addItem (type) {
   try {
     const animeApiResponse = await animeApi.addAnime(apiName, id);
     const animeId = animeApiResponse.data.id;
@@ -144,8 +106,8 @@ async function addItemWrapper (type, apiName, id) {
   }
 }
 
-/* exported removeItemWrapper */
-async function removeItemWrapper (type, id) {
+/* exported removeItem */
+async function removeItem (type) {
   try {
     await watchHistoryApi.removeWatchHistoryItem(type, id);
     document.getElementById('addButton').classList.remove('d-none');
