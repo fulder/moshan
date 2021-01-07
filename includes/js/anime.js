@@ -27,13 +27,13 @@ else if (apiId !== null && apiName === 'mal') {
 
 async function getAnimeById() {
   try {
-    const animeItem = await animeApi.getAnimeById(id);
+    const animeItemRes = await animeApi.getAnimeById(id);
     console.debug(animeItem);
 
-    const apiID = animeItem.data[`${apiName}_id`];
+    const apiId = animeItemRes.data[`${apiName}_id`];
 
     const requests = [
-      malApi.getAnimeById(apiID),
+      malApi.getAnimeById(apiId),
       animeApi.getAnimeEpisodes(id, episodePage),
       watchHistoryApi.getWatchHistoryItem('anime', id),
     ];
@@ -48,7 +48,8 @@ async function getAnimeById() {
 
 async function getAnimeByMalId() {
   try {
-    const animeItem = await animeApi.getAnimeByApiId(apiName, apiId).data;
+    const animeItemRes = await animeApi.getAnimeByApiId(apiName, apiId);
+    const animeItem = animeItemRes.data;
 
     if (animeItem !== null && 'id' in animeItem) {
       // anime cached in mal use anime UUID instead
@@ -56,9 +57,9 @@ async function getAnimeByMalId() {
       return getAnimeById();
     }
 
-    apiAnimeItem = await malApi.getAnimeById(apiId).data;
+    const apiAnimeItemRes = await malApi.getAnimeById(apiId);
 
-    createAnime(apiAnimeItem, null, null);
+    createAnime(apiAnimeItemRes.data, null, null);
   } catch(error) {
     console.log(error);
   }
