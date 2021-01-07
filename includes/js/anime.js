@@ -74,7 +74,7 @@ function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
   }
 
   document.getElementById('poster').src = apiAnimeItem.main_picture.large;
-  document.getElementById('titles').innerHTML = apiAnimeItem.title;
+  document.getElementById('title').innerHTML = apiAnimeItem.title;
   document.getElementById('start-date').innerHTML = apiAnimeItem.start_date;
   document.getElementById('status').innerHTML = status;
   document.getElementById('synopsis').innerHTML = apiAnimeItem.synopsis;
