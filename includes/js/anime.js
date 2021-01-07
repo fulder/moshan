@@ -28,6 +28,8 @@ else if (apiId !== null && apiName === 'mal') {
 async function getAnimeById() {
   try {
     const animeItem = await animeApi.getAnimeById(id).data;
+    console.debug(animeItem);
+    
     const apiID = animeItem[`${apiName}_id`];
 
     const requests = [
