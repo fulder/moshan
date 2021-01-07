@@ -5,8 +5,8 @@ const malApi = new MalApi();
 const watchHistoryApi = new WatchHistoryApi();
 
 const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get('id');
 const apiName = urlParams.get('api_name');
+let id = urlParams.get('id');
 let apiId = urlParams.get('api_id');
 let episodePage = urlParams.get('episode_page');
 
