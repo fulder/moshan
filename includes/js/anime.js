@@ -87,9 +87,9 @@ function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
   }
 
   if (itemAdded) {
-    document.getElementById('add-button').classList.remove('d-none');
-  } else {
     document.getElementById('remove-button').classList.remove('d-none');
+  } else {
+    document.getElementById('add-button').classList.remove('d-none');
   }
 
   document.getElementById('anime').classList.remove('d-none');
