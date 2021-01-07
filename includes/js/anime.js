@@ -27,10 +27,10 @@ else if (apiId !== null && apiName === 'mal') {
 
 async function getAnimeById() {
   try {
-    const animeItem = await animeApi.getAnimeById(id).data;
+    const animeItem = await animeApi.getAnimeById(id);
     console.debug(animeItem);
-    
-    const apiID = animeItem[`${apiName}_id`];
+
+    const apiID = animeItem.data[`${apiName}_id`];
 
     const requests = [
       malApi.getAnimeById(apiID),
@@ -53,8 +53,7 @@ async function getAnimeByMalId() {
     if (animeItem !== null && 'id' in animeItem) {
       // anime cached in mal use anime UUID instead
       id = animeItem.id;
-      getAnimeById();
-      return;
+      return getAnimeById();
     }
 
     apiAnimeItem = await malApi.getAnimeById(apiId).data;
