@@ -16,7 +16,11 @@ class AnimeApi {
   }
 
   getAnimeByApiId (apiName, id) {
-    return this.apiAxios.get(`/anime?${apiName}_id=${id}`);
+    const options = {
+      validateStatus: allowedNotFoundStatus,
+    };
+
+    return this.apiAxios.get(`/anime?${apiName}_id=${id}`, options);
   }
 
   getAnimeById (id) {
