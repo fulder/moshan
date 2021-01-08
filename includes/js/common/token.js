@@ -3,7 +3,7 @@
 
 let accessToken = localStorage.getItem('moshan_access_token');
 let parsedToken = null;
-
+let checkTokenPromise = null;
 
 if (accessToken !== null) {
   parsedToken = parseJwt(accessToken);
@@ -17,7 +17,18 @@ function parseJwt (token) {
   }
 }
 
-/* exported checkToken */
+/* exported axiosTokenInterceptor */
+async function axiosTokenInterceptor (config) {
+  if (checkTokenPromise === null) {
+    checkTokenPromise = checkToken();
+  }
+
+  await checkTokenPromise;
+  checkTokenPromise = null;
+  config.headers.Authorization = accessToken;
+  return config;
+}
+
 async function checkToken () {
   const currentTimeStamp = Math.floor(Date.now() / 1000);
 

@@ -50,7 +50,14 @@ class WatchHistoryApi {
 
   getWatchHistoryEpisode (collectionName, itemId, episodeId) {
     const options = {
-      validateStatus: allowedNotFoundStatus,
+      validateStatus: function (status) {
+        if (status >= 200 && status < 300) {
+          return true;
+        } else if (status === 404) {
+          return true;
+        }
+        return false;
+      },
     };
 
     return this.apiAxios.get(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, options);
