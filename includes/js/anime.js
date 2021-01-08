@@ -48,10 +48,15 @@ async function getAnimeById() {
 }
 
 async function getAnimeByMalId() {
+  let animeItem = null;
   try {
     const animeItemRes = await animeApi.getAnimeByApiId(apiName, apiId);
-    const animeItem = animeItemRes.data;
+    animeItem = animeItemRes.data;
+  } catch(error){
+    console.log(error);
+  }
 
+  try {
     if (animeItem !== null && 'id' in animeItem) {
       // anime cached in mal use anime UUID instead
       id = animeItem.id;
