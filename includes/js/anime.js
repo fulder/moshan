@@ -109,7 +109,7 @@ async function addItem (type) {
     const animeApiResponse = await animeApi.addAnime(apiName, apiId);
     const animeId = animeApiResponse.data.id;
 
-    await watchHistoryApi.addWatchHistoryItem(type, apiName, animeId);
+    await watchHistoryApi.addWatchHistoryItem(type, animeId);
     document.getElementById('addButton').classList.add('d-none');
     document.getElementById('removeButton').classList.remove('d-none');
   } catch (error) {
