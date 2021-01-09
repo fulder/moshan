@@ -29,6 +29,8 @@ async function getAnimeById() {
   let watchHistoryItem = null;
   try {
     watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem('anime', id);
+    console.debug(watchHistoryItemRes);
+    
     watchHistoryItem = watchHistoryItemRes.data;
   } catch(error) {
     if (error.response.status != 404) {
