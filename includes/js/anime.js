@@ -26,6 +26,16 @@ else if (apiId !== null && apiName === 'mal') {
 }
 
 async function getAnimeById() {
+  let watchHistoryItem;
+  try {
+    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem('anime', id);
+    watchHistoryItem = watchHistoryItemRes.data;
+  } catch(error) {
+    if (error.response.status != 404) {
+      console.log(error);
+    }
+  }
+
   try {
     const animeItemRes = await animeApi.getAnimeById(id);
     const animeItem = animeItemRes.data;
@@ -36,12 +46,11 @@ async function getAnimeById() {
     const requests = [
       malApi.getAnimeById(apiId),
       animeApi.getAnimeEpisodes(id, episodePage),
-      watchHistoryApi.getWatchHistoryItem('anime', id),
     ];
-    const [apiAnimeRes, animeEpisodesRes, watchHistoryItemRes] = await Promise.all(requests);
+    const [apiAnimeRes, animeEpisodesRes] = await Promise.all(requests);
 
     createAnime(apiAnimeRes.data, animeItem);
-    createEpisodesList(id, animeEpisodesRes.data, watchHistoryItemRes.data);
+    createEpisodesList(id, animeEpisodesRes.data, watchHistoryItem);
   } catch(error) {
     console.log(error);
   }
