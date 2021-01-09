@@ -107,7 +107,7 @@ function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
 async function addItem (type) {
   try {
     const animeApiResponse = await animeApi.addAnime(apiName, apiId);
-    const animeId = animeApiResponse.data.id;
+    const animeId = animeApiResponse.data.anime_id;
 
     await watchHistoryApi.addWatchHistoryItem(type, animeId);
     document.getElementById('addButton').classList.add('d-none');
