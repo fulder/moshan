@@ -24,10 +24,9 @@ class WatchHistoryApi {
     return this.apiAxios.delete(`/watch-history/collection/${collectionName}/${id}`);
   }
 
-  addWatchHistoryItem (collectionName, apiName, id) {
+  addWatchHistoryItem (collectionName, id) {
     const data = {
-      api_name: apiName,
-      item_add_id: id,
+      id: id,
     };
     return this.apiAxios.post(`/watch-history/collection/${collectionName}`, data);
   }
