@@ -38,23 +38,25 @@ async function getAnimeById() {
     }
   }
 
-  try {
-    const animeItemRes = await animeApi.getAnimeById(id);
-    const animeItem = animeItemRes.data;
-    console.debug(animeItem);
+  const animeItemRes = await animeApi.getAnimeById(id);
+  const animeItem = animeItemRes.data;
+  console.debug(animeItem);
+  const apiId = animeItem[`${apiName}_id`];
 
-    const apiId = animeItem[`${apiName}_id`];
+  let apiAnimeItem;
+  let hasEpisodes = false;
 
-    const requests = [
-      malApi.getAnimeById(apiId),
-      animeApi.getAnimeEpisodes(id, episodePage),
-    ];
-    const [apiAnimeRes, animeEpisodesRes] = await Promise.all(requests);
+  if (apiName == 'mal') {
+    apiAnimeRes = await malApi.getAnimeById(apiId);
+    apiAnimeItem = apiAnimeRes.data;
+    hasEpisodes = 'num_episodes' in apiAnimeItem && apiAnimeItem.num_episodes > 1;
+  }
 
-    createAnime(apiAnimeRes.data, animeItem, watchHistoryItem);
+  createAnime(apiAnimeItem, animeItem, watchHistoryItem);
+
+  if (hasEpisodes) {
+    animeEpisodesRes = await animeApi.getAnimeEpisodes(id, episodePage),
     createEpisodesList(id, animeEpisodesRes.data, watchHistoryItem);
-  } catch(error) {
-    console.log(error);
   }
 }
 
@@ -76,13 +78,8 @@ async function getAnimeByMalId() {
     return getAnimeById();
   }
 
-  try {
-    const apiAnimeItemRes = await malApi.getAnimeById(apiId);
-
-    createAnime(apiAnimeItemRes.data, null, null);
-  } catch(error) {
-    console.log(error);
-  }
+  const apiAnimeItemRes = await malApi.getAnimeById(apiId);
+  createAnime(apiAnimeItemRes.data, null, null);
 }
 
 function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
