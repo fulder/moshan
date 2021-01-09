@@ -61,7 +61,8 @@ async function getAnimeByMalId() {
   if (animeItem !== null && 'id' in animeItem) {
     // anime cached in mal use anime UUID instead
     id = animeItem.id;
-    return getAnimeById();
+
+    //return getAnimeById();
   }
 
   try {
