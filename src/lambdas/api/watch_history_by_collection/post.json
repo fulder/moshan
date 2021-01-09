@@ -17,5 +17,8 @@
       "title": "Item UUID",
       "description": "The UUID for the collection item"
     }
-  }
+  },
+  "required": [
+    "id"
+  ]
 }
