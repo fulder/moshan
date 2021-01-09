@@ -105,7 +105,7 @@ function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
 /* exported addItem */
 async function addItem (type) {
   try {
-    const animeApiResponse = await animeApi.addAnime(apiName, id);
+    const animeApiResponse = await animeApi.addAnime(apiName, apiId);
     const animeId = animeApiResponse.data.id;
 
     await watchHistoryApi.addWatchHistoryItem(type, apiName, animeId);
