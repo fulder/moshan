@@ -86,6 +86,9 @@ async function getAnimeByMalId() {
 function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
   const itemAdded = watchHistoryItem !== null;
 
+  console.debug(`Item added: ${itemAdded}`);
+  console.debug(watchHistoryItem);
+
   let status = 'Airing';
   if ('end_date' in apiAnimeItem && apiAnimeItem.end_date !== null) {
     status = 'Finished';
