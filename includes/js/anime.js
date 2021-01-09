@@ -110,8 +110,8 @@ async function addItem (type) {
     const animeId = animeApiResponse.data.anime_id;
 
     await watchHistoryApi.addWatchHistoryItem(type, animeId);
-    document.getElementById('addButton').classList.add('d-none');
-    document.getElementById('removeButton').classList.remove('d-none');
+    document.getElementById('add-button').classList.add('d-none');
+    document.getElementById('remove-button').classList.remove('d-none');
   } catch (error) {
     console.log(error);
   }
@@ -121,8 +121,8 @@ async function addItem (type) {
 async function removeItem (type) {
   try {
     await watchHistoryApi.removeWatchHistoryItem(type, id);
-    document.getElementById('addButton').classList.remove('d-none');
-    document.getElementById('removeButton').classList.add('d-none');
+    document.getElementById('add-button').classList.remove('d-none');
+    document.getElementById('remove-button').classList.add('d-none');
   } catch (error) {
     console.log(error);
   }
