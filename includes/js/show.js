@@ -128,7 +128,10 @@ function createEpisodesList (showId, showEpisodes) {
   let tableHTML = '';
 
   showEpisodes.forEach(function (episode) {
-    const episodeId = `S${episode.season.toFixed(2)}E${episode.number.toFixed(2)}`;
+    const seasonNbr = (episode.season < 10 ? '0' : '') + episode.season;
+    const episodeNbr = (episode.episode < 10 ? '0' : '') + episode.episode;
+
+    const episodeId = `S${seasonNbr}E${episodeNbr}`;
     const episodeDate = episode.airdate;
     const episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
 
