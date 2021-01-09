@@ -30,7 +30,7 @@ async function getAnimeById() {
   try {
     watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem('anime', id);
     console.debug(watchHistoryItemRes);
-    
+
     watchHistoryItem = watchHistoryItemRes.data;
   } catch(error) {
     if (error.response.status != 404) {
@@ -51,7 +51,7 @@ async function getAnimeById() {
     ];
     const [apiAnimeRes, animeEpisodesRes] = await Promise.all(requests);
 
-    createAnime(apiAnimeRes.data, animeItem);
+    createAnime(apiAnimeRes.data, animeItem, watchHistoryItem);
     createEpisodesList(id, animeEpisodesRes.data, watchHistoryItem);
   } catch(error) {
     console.log(error);
