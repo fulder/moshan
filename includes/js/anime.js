@@ -53,16 +53,18 @@ async function getAnimeByMalId() {
     const animeItemRes = await animeApi.getAnimeByApiId(apiName, apiId);
     animeItem = animeItemRes.data;
   } catch(error){
-    console.log(error);
+    if (error.response.status != 404) {
+        console.log(error);
+    }
+  }
+
+  if (animeItem !== null && 'id' in animeItem) {
+    // anime cached in mal use anime UUID instead
+    id = animeItem.id;
+    return getAnimeById();
   }
 
   try {
-    if (animeItem !== null && 'id' in animeItem) {
-      // anime cached in mal use anime UUID instead
-      id = animeItem.id;
-      return getAnimeById();
-    }
-
     const apiAnimeItemRes = await malApi.getAnimeById(apiId);
 
     createAnime(apiAnimeItemRes.data, null, null);
