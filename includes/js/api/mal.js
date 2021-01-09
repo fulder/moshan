@@ -21,6 +21,6 @@ class MalApi {
   }
 
   getAnimeById(id) {
-    return this.apiAxios.get(`/anime/${id}?fields=start_date`);
+    return this.apiAxios.get(`/anime/${id}?fields=start_date,num_episodes`);
   }
 }
