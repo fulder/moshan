@@ -415,3 +415,31 @@ def test_handler_post_invalid_body_schema(mocked_post):
         'body': '{"message": "Invalid post schema", "error": "Additional properties are not allowed (\'invalid\' was unexpected)"}',
         'statusCode': 400
     }
+
+
+@patch("api.watch_history_by_collection.watch_history_db.add_item")
+@patch("api.watch_history_by_collection.shows_api.get_show")
+def test_handler_post_show_without_id(mocked_get_show, mocked_post):
+    mocked_get_show.return_value = True
+    mocked_post.return_value = True
+
+    event = {
+        "headers": {
+            "authorization": TEST_JWT
+        },
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "pathParameters": {
+            "collection_name": "show",
+        },
+        "body": '{}'
+    }
+
+    ret = handle(event, None)
+    assert ret == {
+        'body': '{"message": "Invalid post schema", "error": "\'id\' is a required property"}',
+        'statusCode': 400
+    }
