@@ -26,7 +26,7 @@ else if (apiId !== null && apiName === 'mal') {
 }
 
 async function getAnimeById() {
-  let watchHistoryItem;
+  let watchHistoryItem = null;
   try {
     watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem('anime', id);
     watchHistoryItem = watchHistoryItemRes.data;
