@@ -49,7 +49,7 @@ async function getAnimeById() {
   if (apiName == 'mal') {
     apiAnimeRes = await malApi.getAnimeById(apiId);
     apiAnimeItem = apiAnimeRes.data;
-    hasEpisodes = 'num_episodes' in apiAnimeItem && apiAnimeItem.num_episodes > 1;
+    hasEpisodes = 'num_episodes' in apiAnimeItem && apiAnimeItem.num_episodes != 1;
   }
 
   createAnime(apiAnimeItem, animeItem, watchHistoryItem);
