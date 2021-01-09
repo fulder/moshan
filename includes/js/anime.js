@@ -164,6 +164,7 @@ function createEpisodesList (animeId, episodes) {
   });
 
   document.getElementById('episodeTableBody').innerHTML = tableHTML;
+  document.getElementById('episodesTable').classList.remove('d-none');
 
   if (document.getElementById('episodesPages').innerHTML === '') {
     let paginationHTML = '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>';
