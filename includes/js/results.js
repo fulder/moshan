@@ -27,14 +27,12 @@ async function getResults() {
   const animeRes = await animeApi.search(qParams);
   const showRes = await showApi.search(qParams);
 
-  createAnimeResults(animeRes);
-  createShowResults(showRes);
+  createAnimeResults(animeRes.data);
+  createShowResults(showRes.data);
 }
 
 function createAnimeResults (animes) {
   let resultHTML = '';
-  console.debug(animes);
-  console.debug(animes.data);
   for (let i=0; i<animes.data.length; i++) {
     resultHTML += createResultAnimeItem(animes.data[i].node);
   }
