@@ -73,7 +73,7 @@ async function getItemByApiId() {
   if (item !== null && 'id' in item) {
     // item cached use UUID instead
     id = item.id;
-    return getItemById();
+    return getItemByMoshanId();
   }
 
   const apiItemRes = await api.getItemById(apiId);
