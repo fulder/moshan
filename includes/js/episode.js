@@ -92,17 +92,17 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
   });
 }
 
-function onCalendarClose (selectedDates, dateStr) {
+async function onCalendarClose (selectedDates, dateStr) {
   const date = new Date(dateStr).toISOString();
 
-  patchWatchDate(date);
+  await patchWatchDate(date);
 }
 
 /* exported setCurrentWatchDate */
-function setCurrentWatchDate() {
+async function setCurrentWatchDate() {
   const dateNow = new Date();
 
-  patchWatchDate(dateNow.toISOString());
+  await patchWatchDate(dateNow.toISOString());
   calendarInstance.setDate(dateNow);
 }
 
