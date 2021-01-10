@@ -29,3 +29,23 @@ function MoshanEpisode(id, number, title, air_date) {
   this.air_date = air_date;
   this.aired = Date.parse(this.air_date) <= (new Date()).getTime();;
 }
+
+/* exported getMoshanApiByCollectionName */
+function getMoshanApiByCollectionName(collection) {
+  switch(collection) {
+    case 'show':
+      return new ShowApi();
+    case 'anime':
+      return new AnimeApi();
+  }
+}
+
+/* exported getApiByName */
+function getApiByName(name) {
+  switch(name) {
+    case 'mal':
+      return new MalApi();
+    case 'tvmaze':
+      return new TvMazeApi();
+  }
+}

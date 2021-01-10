@@ -1,4 +1,4 @@
-/* global WatchHistoryApi */
+/* global WatchHistoryApi, getMoshanApiByCollectionName, getApiByName */
 const urlParams = new URLSearchParams(window.location.search);
 const collection = urlParams.get('collection');
 const apiName = urlParams.get('api_name');
@@ -9,26 +9,8 @@ let episodePage = urlParams.get('episode_page');
 document.getElementById('headTitle').innerHTML = `Moshan - ${collection}`;
 
 const watchHistoryApi = new WatchHistoryApi();
-
-let moshanApi;
-switch(collection) {
-  case 'show':
-    moshanApi = new ShowApi();
-    break;
-  case 'anime':
-    moshanApi = new AnimeApi();
-    break;
-}
-
-let api;
-switch(apiName) {
-  case 'mal':
-    api = new MalApi();
-    break;
-  case 'tvmaze':
-    api = new TvMazeApi();
-    break;
-}
+const moshanApi = getMoshanApiByCollectionName(collection);
+const api = getApiByName(apiName);
 
 
 // quickfix for anime episodes, use moshan api until

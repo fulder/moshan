@@ -1,7 +1,6 @@
 /* global axios, flatpickr */
 /* global AnimeApi, WatchHistoryApi */
 
-const animeApi = new AnimeApi();
 const watchHistoryApi = new WatchHistoryApi();
 
 const urlParams = new URLSearchParams(window.location.search);
