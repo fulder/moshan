@@ -77,7 +77,7 @@ async function getItemByApiId() {
 
   if (item !== null && 'id' in item) {
     // item cached use UUID instead
-    id = item.id;
+    qParams.id = item.id;
     return getItemByMoshanId();
   }
 
