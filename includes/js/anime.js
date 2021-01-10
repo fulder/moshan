@@ -13,9 +13,9 @@ const watchHistoryApi = new WatchHistoryApi();
 let moshanApi;
 switch(collection) {
   case 'show':
-    moshanApi = new Show();
+    moshanApi = new ShowApi();
   case 'anime':
-    moshanApi = new Anime();
+    moshanApi = new AnimeApi();
 }
 
 let api;
