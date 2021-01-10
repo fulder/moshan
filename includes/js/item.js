@@ -198,7 +198,7 @@ function loadEpisodes (page) {
   document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.remove('active');
 
   episodePage = page;
-  episodesApi.getEpisodes(id, episodePage).then(function (response) {
+  episodeApi.getEpisodes(id, episodePage).then(function (response) {
     createEpisodesList(response.data);
   }).catch(function (error) {
     console.log(error);
