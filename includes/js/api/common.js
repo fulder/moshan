@@ -37,7 +37,7 @@ function MoshanEpisode(id, number, title, air_date, previous_id, next_id) {
 function getMoshanApiByCollectionName(collection) {
   switch(collection) {
     case 'show':
-      return new ShowApi();
+      return new ShowsApi();
     case 'anime':
       return new AnimeApi();
   }
