@@ -39,12 +39,16 @@ class TvMazeApi {
     const episodeNbr = (episode.number < 10 ? '0' : '') + episode.number;
 
     const episodeId = `S${seasonNbr}E${episodeNbr}`;
-    
+
     return new MoshanEpisode(
       episodeId,
       episode.number,
       episode.name,
       episode.airdate
     );
+  }
+
+  hasEpisodes() {
+    return true;
   }
 }
