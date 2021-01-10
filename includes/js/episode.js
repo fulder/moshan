@@ -1,11 +1,12 @@
 /* global flatpickr, getMoshanApiByCollectionName, getApiByName */
 /* global WatchHistoryApi */
 const urlParams = new URLSearchParams(window.location.search);
-const apiUrlParams = new ApiQueryParams(urlParams);
+const qParams = new ApiQueryParams(urlParams);
+
 
 const watchHistoryApi = new WatchHistoryApi();
 // quickfix until e.g. MAL epi implements episodes endpoints
-const episodeApi = collection == 'anime' ? getMoshanApiByCollectionName(collection) : getApiByName(apiName);
+const episodeApi = qParams.collection == 'anime' ? getMoshanApiByCollectionName(collection) : getApiByName(apiName);
 
 let datesWatched;
 let calendarInstance;
@@ -52,11 +53,11 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
   document.getElementById('watched_amount').innerHTML = watchedAmount;
 
   if (moshanEpisode.previous_id !== null) {
-    document.getElementById('previous_episode').href = `/episode/?collection=${collection}&id=${id}&episode_id=${moshanEpisode.previous_id}`;
+    document.getElementById('previous_episode').href = `/episode/?collection=${qParams.collection}&id=${qParams.id}&episode_id=${moshanEpisode.previous_id}`;
     document.getElementById('previous_episode').classList.remove('d-none');
   }
   if (moshanEpisode.next_id !== null) {
-    document.getElementById('next_episode').href = `/episode/?collection=${collection}&id=${id}&episode_id=${moshanEpisode.next_id}`;
+    document.getElementById('next_episode').href = `/episode/?collection=${qParams.collection}&id=${qParams.id}&episode_id=${moshanEpisode.next_id}`;
     document.getElementById('next_episode').classList.remove('d-none');
   }
 
@@ -113,7 +114,7 @@ async function patchWatchDate(date) {
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
   console.debug(datesWatched);
 
-  await watchHistoryApi.updateWatchHistoryEpisode(collection, id, episodeId, datesWatched);
+  await watchHistoryApi.updateWatchHistoryEpisode(qParams.collection, qParams.id, qParams.episode_id, datesWatched);
 }
 
 /* exported removeWatchDate */
@@ -131,19 +132,19 @@ async function removeWatchDate() {
       calendarInstance.setDate(datesWatched[datesWatched.length - 1]);
   }
 
-  await watchHistoryApi.updateWatchHistoryEpisode(collection, id, episodeId, datesWatched);
+  await watchHistoryApi.updateWatchHistoryEpisode(qParams.collection, qParams.id, qParams.episode_id, datesWatched);
 }
 
 /* exported addEpisode */
 async function addEpisode () {
-  await watchHistoryApi.addWatchHistoryEpisode(collection, id, episodeId);
+  await watchHistoryApi.addWatchHistoryEpisode(qParams.collection, qParams.id, qParams.episode_id);
   document.getElementById('add_button').classList.add('d-none');
   document.getElementById('remove_button').classList.remove('d-none');
 }
 
 /* exported removeEpisode */
 async function removeEpisode () {
-  await watchHistoryApi.removeWatchHistoryEpisode(collection, id, episodeId);
+  await watchHistoryApi.removeWatchHistoryEpisode(qParams.collection, qParams.id, qParams.episode_id);
   document.getElementById('add_button').classList.remove('d-none');
   document.getElementById('remove_button').classList.add('d-none');
 }
