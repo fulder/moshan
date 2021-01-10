@@ -11,8 +11,6 @@ document.getElementById('headTitle').innerHTML = `Moshan - ${collection}`;
 const watchHistoryApi = new WatchHistoryApi();
 const moshanApi = getMoshanApiByCollectionName(collection);
 const api = getApiByName(apiName);
-
-
 // quickfix for anime episodes, use moshan api until
 // e.g. MAL api implements episode routes
 const episodeApi = collection == 'anime' ? moshanApi: api;
@@ -141,7 +139,7 @@ async function removeItem () {
 function createEpisodesList (id, episodes) {
   let tableHTML = '';
   episodes.items.forEach(function (episode) {
-    episode = api.getMoshanEpisode(episode);
+    episode = episodeApi.getMoshanEpisode(episode);
 
     let rowClass = 'episodeRow';
     let onClickAction = `window.location='/episode?collection=${collection}&api_name=${apiName}&id=${id}&episode_id=${episode.id}'`;
