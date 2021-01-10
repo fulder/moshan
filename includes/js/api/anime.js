@@ -27,8 +27,8 @@ class AnimeApi {
     return this.apiAxios.get(`/anime/${id}/episodes?limit=${limit}&start=${start}`);
   }
 
-  getEpisode (id, episodeId) {
-    return this.apiAxios.get(`/anime/${id}/episode/${episodeId}`);
+  getEpisode (apiQueryParams) {
+    return this.apiAxios.get(`/anime/${apiQueryParams.id}/episode/${apiQueryParams.episode_id}`);
   }
 
   addItem(apiName, apiId) {
@@ -45,7 +45,7 @@ class AnimeApi {
         episodes.total_pages
     );
   }
-  
+
   getMoshanEpisode(episode) {
     const nextId = 'id_links' in episode && 'next' in episode['id_links'] ? episode['id_links']['next'] : null;
     const previousId = 'id_links' in episode && 'previous' in episode['id_links'] ? episode['id_links']['previous'] : null;

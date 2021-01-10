@@ -43,8 +43,8 @@ class WatchHistoryApi {
     return this.apiAxios.post(`/watch-history/collection/${collectionName}/${itemId}/episode`, data);
   }
 
-  removeWatchHistoryEpisode (collectionName, itemId, episodeId) {
-    return this.apiAxios.delete(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`);
+  removeWatchHistoryEpisode (apiQueryParams) {
+    return this.apiAxios.delete(`/watch-history/collection/${apiQueryParams.collection_name}/${apiQueryParams.id}/episode/${apiQueryParams.episode_id}`);
   }
 
   getWatchHistoryEpisode (collectionName, itemId, episodeId) {
