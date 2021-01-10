@@ -85,8 +85,8 @@ function createShow (watchHistoryItem, showItem) {
         </div>
 
         <div class="col-md-3 col-7 mt-1">
-            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItemWrapper('show', ${showItem.id})"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItemWrapper('show', '${showItem.id}')"><i class="fa fa-minus"></i> Remove</button>
+            <button id="addButton" class="btn btn-success ${itemAdded ? 'd-none' : ''}" onclick="addItem('show')"><i class="fa fa-plus"></i> Add</button>
+            <button id="removeButton" class="btn btn-danger ${!itemAdded ? 'd-none' : ''}" onclick="removeItem('show')"><i class="fa fa-minus"></i> Remove</button>
         </div>
 
         <div id="synopsisCol" class="mt-2 col-12">
@@ -104,24 +104,29 @@ function createShow (watchHistoryItem, showItem) {
   document.getElementById('show').innerHTML = resultHTML;
 }
 
-/* exported addItemWrapper */
-function addItemWrapper (type, id) {
-  watchHistoryApi.addWatchHistoryItem(type, id).then(function () {
-    document.getElementById('addButton').classList.add('d-none');
-    document.getElementById('removeButton').classList.remove('d-none');
-  }).catch(function (error) {
+/* exported addItem */
+async function addItem (type) {
+  try {
+    const animeApiResponse = await showApi.addShow(apiName, apiId);
+    const animeId = animeApiResponse.data.anime_id;
+
+    await watchHistoryApi.addWatchHistoryItem(type, animeId);
+    document.getElementById('add-button').classList.add('d-none');
+    document.getElementById('remove-button').classList.remove('d-none');
+  } catch (error) {
     console.log(error);
-  });
+  }
 }
 
-/* exported removeItemWrapper */
-function removeItemWrapper (type, id) {
-  watchHistoryApi.removeWatchHistoryItem(type, id).then(function () {
-    document.getElementById('addButton').classList.remove('d-none');
-    document.getElementById('removeButton').classList.add('d-none');
-  }).catch(function (error) {
+/* exported removeItem */
+async function removeItem (type) {
+  try {
+    await watchHistoryApi.removeWatchHistoryItem(type, id);
+    document.getElementById('add-button').classList.remove('d-none');
+    document.getElementById('remove-button').classList.add('d-none');
+  } catch (error) {
     console.log(error);
-  });
+  }
 }
 
 function createEpisodesList (showId, showEpisodes) {
