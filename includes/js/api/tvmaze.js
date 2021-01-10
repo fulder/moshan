@@ -22,8 +22,8 @@ class TvMazeApi {
     return this.apiAxios.get(`/shows/${id}/episodes`);
   }
 
-  getEpisode(apiQueryParams) {
-    return this.apiAxios.get(`/episodes/${apiQueryParams.episode_id}`);
+  getEpisode(qParams) {
+    return this.apiAxios.get(`/episodes/${qParams.episode_id}`);
   }
 
   getMoshanItem(show) {
