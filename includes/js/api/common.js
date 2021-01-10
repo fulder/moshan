@@ -28,7 +28,7 @@ function MoshanEpisode(id, number, title, air_date, previous_id, next_id) {
   this.title = title;
   this.air_date = air_date;
   this.aired = Date.parse(this.air_date) <= (new Date()).getTime();
-  this.status = moshanEpisode.aired ? 'Aired' : 'Not Aired';
+  this.status = this.aired ? 'Aired' : 'Not Aired';
   this.previous_id = previous_id;
   this.next_id = next_id;
 }
