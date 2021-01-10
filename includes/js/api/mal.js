@@ -41,15 +41,6 @@ class MalApi {
     );
   }
 
-  getMoshanEpisode(episode) {
-    return new MoshanEpisode(
-      episode.id,
-      episode.episode_number,
-      episode.title,
-      episode.air_date
-    );
-  }
-
   hasEpisodes(anime) {
     return 'num_episodes' in anime && anime.num_episodes != 1;
   }
