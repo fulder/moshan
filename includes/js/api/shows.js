@@ -15,18 +15,18 @@ class ShowsApi {
     });
   }
 
-  getItemById(id) {
-    return this.apiAxios.get(`/shows/${id}`);
+  getItemById(qParams) {
+    return this.apiAxios.get(`/shows/${qParams.id}`);
   }
 
-  getItemByApiId (apiName, id) {
-    return this.apiAxios.get(`/shows?${apiName}_id=${id}`);
+  getItemByApiId (qParams) {
+    return this.apiAxios.get(`/shows?${qParams.api_name}_id=${qParams.api_id}`);
   }
 
-  addItem(apiName, apiId) {
+  addItem(qParams) {
     const data = {
-      api_name: apiName,
-      api_id: apiId,
+      api_name: qParams.api_name,
+      api_id: qParams.api_id,
     };
     return this.apiAxios.post('/show', data);
   }

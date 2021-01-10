@@ -20,19 +20,19 @@ class WatchHistoryApi {
     return this.apiAxios.get(`/watch-history/collection/${collectionName}`);
   }
 
-  removeWatchHistoryItem (collectionName, id) {
-    return this.apiAxios.delete(`/watch-history/collection/${collectionName}/${id}`);
+  removeWatchHistoryItem (qParams) {
+    return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}`);
   }
 
-  addWatchHistoryItem (collectionName, id) {
+  addWatchHistoryItem (qParams) {
     const data = {
-      id: id,
+      id: qParams.id,
     };
-    return this.apiAxios.post(`/watch-history/collection/${collectionName}`, data);
+    return this.apiAxios.post(`/watch-history/collection/${qParams.collection}`, data);
   }
 
   getWatchHistoryItem (qParams) {
-    return this.apiAxios.get(`/watch-history/collection/${qParams.collection}/${id}`);
+    return this.apiAxios.get(`/watch-history/collection/${qParams.collection}/${qParam.id}`);
   }
 
   addWatchHistoryEpisode (qParams) {

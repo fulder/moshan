@@ -15,26 +15,26 @@ class AnimeApi {
     });
   }
 
-  getItemByApiId (apiName, id) {
-    return this.apiAxios.get(`/anime?${apiName}_id=${id}`);
+  getItemByApiId (qParam) {
+    return this.apiAxios.get(`/anime?${qParam.api_name}_id=${qParam.api_id}`);
   }
 
-  getItemById (id) {
-    return this.apiAxios.get(`/anime/${id}`);
+  getItemById (qParams) {
+    return this.apiAxios.get(`/anime/${qParams.id}`);
   }
 
-  getEpisodes (id, start = 1, limit = 100) {
-    return this.apiAxios.get(`/anime/${id}/episodes?limit=${limit}&start=${start}`);
+  getEpisodes (qParam) {
+    return this.apiAxios.get(`/anime/${qParam.id}/episodes?limit=100&start=${qParam.episode_page}`);
   }
 
-  getEpisode (apiQueryParams) {
-    return this.apiAxios.get(`/anime/${apiQueryParams.id}/episode/${apiQueryParams.episode_id}`);
+  getEpisode (qParams) {
+    return this.apiAxios.get(`/anime/${qParams.id}/episode/${qParams.episode_id}`);
   }
 
-  addItem(apiName, apiId) {
+  addItem(qParams) {
     const data = {
-      api_name: apiName,
-      api_id: apiId,
+      api_name: qParams.api_name,
+      api_id: qParams.api_id,
     };
     return this.apiAxios.post('/anime', data);
   }
