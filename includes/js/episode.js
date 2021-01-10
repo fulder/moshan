@@ -15,7 +15,7 @@ getEpisodes();
 async function getEpisodes() {
   let watchHistoryEpisode = null;
   try {
-    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(apiUrlParams);
+    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(qParams);
     watchHistoryEpisode = watchHistoryRes.data;
   } catch(error) {
     if (error.response.status != 404) {
