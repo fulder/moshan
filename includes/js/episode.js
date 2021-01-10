@@ -4,6 +4,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const collection = urlParams.get('collection');
 const apiName = urlParams.get('api_name');
 const id = urlParams.get('id');
+const apiId = urlParams.get('api_id');
 const episodeId = urlParams.get('episode_id');
 
 const watchHistoryApi = new WatchHistoryApi();
