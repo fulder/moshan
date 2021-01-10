@@ -32,7 +32,7 @@ class WatchHistoryApi {
   }
 
   getWatchHistoryItem (qParams) {
-    return this.apiAxios.get(`/watch-history/collection/${qParams.collection}/${qParam.id}`);
+    return this.apiAxios.get(`/watch-history/collection/${qParams.collection}/${qParams.id}`);
   }
 
   addWatchHistoryEpisode (qParams) {
