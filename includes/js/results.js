@@ -37,7 +37,7 @@ function createAnimeResults (animes) {
   for (let i=0; i<animes.data.length; i++) {
     resultHTML += createResultAnimeItem(animes.data[i].node);
   }
-  consolde.debug(resultHTML);
+  console.debug(resultHTML);
 
   document.getElementById('animeResults').innerHTML = resultHTML;
 }
