@@ -1,27 +1,15 @@
 /* global WatchHistoryApi, getMoshanApiByCollectionName, getApiByName */
 const urlParams = new URLSearchParams(window.location.search);
-const collection = urlParams.get('collection');
-const apiName = urlParams.get('api_name');
-let id = urlParams.get('id');
-let apiId = urlParams.get('api_id');
-let episodePage = urlParams.get('episode_page');
+const qParams = new ApiQueryParams(urlParams);
 
-document.getElementById('headTitle').innerHTML = `Moshan - ${collection}`;
+document.getElementById('headTitle').innerHTML = `Moshan - ${qParams.collection}`;
 
 const watchHistoryApi = new WatchHistoryApi();
-const moshanApi = getMoshanApiByCollectionName(collection);
-const api = getApiByName(apiName);
+const moshanApi = getMoshanApiByCollectionName(qParams.collection);
+const api = getApiByName(qParams.api_name);
 // quickfix for anime episodes, use moshan api until
 // e.g. MAL api implements episode routes
-const episodeApi = collection == 'anime' ? moshanApi: api;
-const episodeItemId = collection == 'anime' ? id : apiId;
-
-if (episodePage === null) {
-  episodePage = 1;
-} else {
-  episodePage = parseInt(episodePage);
-}
-
+const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 let totalPages = 0;
 
 if (id !== null) {
@@ -31,10 +19,24 @@ else if (apiId !== null) {
   getItemByApiId();
 }
 
+function ApiQueryParams(urlParams) {
+  this.collection = urlParams.get('collection');
+  this.api_name = urlParams.get('api_name');
+  this.id = urlParams.get('id');
+  this.api_id = urlParams.get('api_id');
+  this.episode_page = urlParams.get('episode_page');
+
+  if (this.episode_page === null) {
+    this.episode_page = 1;
+  } else {
+    this.episode_page = parseInt(this.episode_page);
+  }
+}
+
 async function getItemByMoshanId() {
   let watchHistoryItem = null;
   try {
-    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem(collection, id);
+    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem(qParam);
     console.debug(watchHistoryItemRes);
 
     watchHistoryItem = watchHistoryItemRes.data;
@@ -49,13 +51,13 @@ async function getItemByMoshanId() {
   console.debug(item);
   const apiId = item[`${apiName}_id`];
 
-  const apiRes = await api.getItemById(apiId);
+  const apiRes = await api.getItemById({'api_id': apiId});
   const moshanItem = api.getMoshanItem(apiRes.data);
 
   createItem(moshanItem, item, watchHistoryItem);
 
   if (moshanItem.has_episodes) {
-    const episodesRes = await episodeApi.getEpisodes(episodeItemId, episodePage);
+    const episodesRes = await episodeApi.getEpisodes(qParam);
     const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
     createEpisodesList(moshanEpisodes);
   }
@@ -64,7 +66,7 @@ async function getItemByMoshanId() {
 async function getItemByApiId() {
   let item = null;
   try {
-    const itemRes = await moshanApi.getItemByApiId(apiName, apiId);
+    const itemRes = await moshanApi.getItemByApiId(qParam);
     item = itemRes.data;
   } catch(error){
     console.debug(error);
@@ -79,14 +81,14 @@ async function getItemByApiId() {
     return getItemByMoshanId();
   }
 
-  const apiRes = await api.getItemById(apiId);
+  const apiRes = await api.getItemById(qParams);
   const moshanItem = api.getMoshanItem(apiRes.data);
 
   createItem(moshanItem, null, null);
 
   // can't lookup anime episodes in anime API if the item doesn't exist
   if (collection != 'anime' && moshanItem.has_episodes) {
-    const episodesRes = await episodeApi.getEpisodes(episodeItemId, episodePage);
+    const episodesRes = await episodeApi.getEpisodes(qParams);
     const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
     createEpisodesList(moshanEpisodes);
   }
@@ -124,10 +126,10 @@ function createItem (moshanItem, item, watchHistoryItem) {
 /* exported addItem */
 async function addItem () {
   try {
-    const addItemRes = await moshanApi.addItem(apiName, apiId);
+    const addItemRes = await moshanApi.addItem(qParams);
     const id = addItemRes.data.id;
 
-    await watchHistoryApi.addWatchHistoryItem(collection, id);
+    await watchHistoryApi.addWatchHistoryItem({'collection': qParams.collection, 'id': id});
     document.getElementById('add-button').classList.add('d-none');
     document.getElementById('remove-button').classList.remove('d-none');
   } catch (error) {
@@ -138,7 +140,7 @@ async function addItem () {
 /* exported removeItem */
 async function removeItem () {
   try {
-    await watchHistoryApi.removeWatchHistoryItem(collection, id);
+    await watchHistoryApi.removeWatchHistoryItem(qParams);
     document.getElementById('add-button').classList.remove('d-none');
     document.getElementById('remove-button').classList.add('d-none');
   } catch (error) {

@@ -20,8 +20,8 @@ class MalApi {
     return this.apiAxios.get(`/anime?q=${searchString}`);
   }
 
-  getItemById(id) {
-    return this.apiAxios.get(`/anime/${id}?fields=start_date,num_episodes,synopsis`);
+  getItemById(qParams) {
+    return this.apiAxios.get(`/anime/${qParams.api_id}?fields=start_date,num_episodes,synopsis`);
   }
 
   getMoshanItem(anime) {
