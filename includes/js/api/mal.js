@@ -43,5 +43,4 @@ class MalApi {
       hasEpisodes
     );
   }
-
 }
