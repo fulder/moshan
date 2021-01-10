@@ -49,11 +49,11 @@ async function getItemByMoshanId() {
   const apiId = item[`${apiName}_id`];
 
   const apiRes = await api.getItemById(apiId);
-  const apiItem = apiRes.data;
+  const moshanItem = api.getMoshanItem(apiRes.data);
 
-  createItem(apiItem, item, watchHistoryItem);
+  createItem(moshanItem, item, watchHistoryItem);
 
-  if (apiItem.has_episodes) {
+  if (moshanItem.has_episodes) {
     episodeRes = await episodeApi.getEpisodes(id, episodePage),
     createEpisodesList(id, episodeRes.data, watchHistoryItem);
   }
@@ -77,22 +77,21 @@ async function getItemByApiId() {
     return getItemByMoshanId();
   }
 
-  const apiItemRes = await api.getItemById(apiId);
-  const apiItem = apiItemRes.data;
+  const apiRes = await api.getItemById(apiId);
+  const moshanItem = api.getMoshanItem(apiRes.data);
 
-  createItem(apiItem, null, null);
+  createItem(moshanItem, null, null);
 
-  if (apiItem.has_episodes) {
+  if (moshanItem.has_episodes) {
     episodeRes = await episodeApi.getEpisodes(id, episodePage),
     createEpisodesList(id, episodeRes.data, watchHistoryItem);
   }
 }
 
-function createItem (apiItem, item, watchHistoryItem) {
+function createItem (moshanItem, item, watchHistoryItem) {
   const itemAdded = watchHistoryItem !== null;
   console.debug(`Item added: ${itemAdded}`);
 
-  const moshanItem = api.getMoshanItem(apiItem);
   console.debug(moshanItem);
 
   document.getElementById('poster').src = moshanItem.poster;
