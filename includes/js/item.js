@@ -36,7 +36,7 @@ function QueryParams(urlParams) {
 async function getItemByMoshanId() {
   let watchHistoryItem = null;
   try {
-    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem(qParam);
+    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem(qParams);
     console.debug(watchHistoryItemRes);
 
     watchHistoryItem = watchHistoryItemRes.data;
@@ -57,7 +57,7 @@ async function getItemByMoshanId() {
   createItem(moshanItem, item, watchHistoryItem);
 
   if (moshanItem.has_episodes) {
-    const episodesRes = await episodeApi.getEpisodes(qParam);
+    const episodesRes = await episodeApi.getEpisodes(qParams);
     const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
     createEpisodesList(moshanEpisodes);
   }
