@@ -14,6 +14,7 @@ const api = getApiByName(apiName);
 // quickfix for anime episodes, use moshan api until
 // e.g. MAL api implements episode routes
 const episodeApi = collection == 'anime' ? moshanApi: api;
+const episodeItemId = collection == 'anime' ? id : apiId;
 
 if (episodePage === null) {
   episodePage = 1;
@@ -54,7 +55,7 @@ async function getItemByMoshanId() {
   createItem(moshanItem, item, watchHistoryItem);
 
   if (moshanItem.has_episodes) {
-    episodeRes = await episodeApi.getEpisodes(id, episodePage),
+    episodeRes = await episodeApi.getEpisodes(episodeItemId, episodePage),
     createEpisodesList(id, episodeRes.data, watchHistoryItem);
   }
 }
@@ -84,7 +85,7 @@ async function getItemByApiId() {
 
   // can't lookup anime episodes in anime API if the item doesn't exist
   if (collection != 'anime' && moshanItem.has_episodes) {
-    episodeRes = await episodeApi.getEpisodes(id, episodePage),
+    episodeRes = await episodeApi.getEpisodes(episodeItemId, episodePage),
     createEpisodesList(id, episodeRes.data, watchHistoryItem);
   }
 }
