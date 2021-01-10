@@ -3,7 +3,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new ApiQueryParams(urlParams);
 
-
 const watchHistoryApi = new WatchHistoryApi();
 // quickfix until e.g. MAL epi implements episodes endpoints
 const episodeApi = qParams.collection == 'anime' ? getMoshanApiByCollectionName(collection) : getApiByName(apiName);
@@ -24,7 +23,7 @@ async function getEpisodes() {
     }
   }
 
-  const apiEpisodeRes = await episodeApi.getEpisode(apiQueryParams);
+  const apiEpisodeRes = await episodeApi.getEpisode(qParams);
   const moshanEpisode = episodeApi.getMoshanEpisode(apiEpisodeRes.data);
 
   createEpisodePage(moshanEpisode, watchHistoryEpisode);
@@ -114,7 +113,7 @@ async function patchWatchDate(date) {
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
   console.debug(datesWatched);
 
-  await watchHistoryApi.updateWatchHistoryEpisode(qParams.collection, qParams.id, qParams.episode_id, datesWatched);
+  await watchHistoryApi.updateWatchHistoryEpisode(qParams, datesWatched);
 }
 
 /* exported removeWatchDate */
@@ -132,19 +131,19 @@ async function removeWatchDate() {
       calendarInstance.setDate(datesWatched[datesWatched.length - 1]);
   }
 
-  await watchHistoryApi.updateWatchHistoryEpisode(qParams.collection, qParams.id, qParams.episode_id, datesWatched);
+  await watchHistoryApi.updateWatchHistoryEpisode(qParams, datesWatched);
 }
 
 /* exported addEpisode */
 async function addEpisode () {
-  await watchHistoryApi.addWatchHistoryEpisode(qParams.collection, qParams.id, qParams.episode_id);
+  await watchHistoryApi.addWatchHistoryEpisode(qParams);
   document.getElementById('add_button').classList.add('d-none');
   document.getElementById('remove_button').classList.remove('d-none');
 }
 
 /* exported removeEpisode */
 async function removeEpisode () {
-  await watchHistoryApi.removeWatchHistoryEpisode(qParams.collection, qParams.id, qParams.episode_id);
+  await watchHistoryApi.removeWatchHistoryEpisode(qParams);
   document.getElementById('add_button').classList.remove('d-none');
   document.getElementById('remove_button').classList.add('d-none');
 }
