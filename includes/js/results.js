@@ -14,17 +14,17 @@ if (accessToken === null) {
   document.getElementById('showResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
-malApi.search(searchString).then(function (response) {
-  createAnimeResults(response.data);
-}).catch(function (error) {
-  console.log(error);
-});
+getResults();
 
-tvMazeApi.search(searchString).then(function (response) {
-  createShowResults(response.data);
-}).catch(function (error) {
-  console.log(error);
-});
+async function getResults() {
+  const animeReq = malApi.search(searchString);
+  const showReq = tvMazeApi.search(searchString);
+
+  const [animeRes, showRes] = await Promise.all([animeReq, showReq]);
+
+  createAnimeResults(animeRes);
+  createShowResults(showRes);
+}
 
 function createAnimeResults (animes) {
   let resultHTML = '';
