@@ -5,7 +5,7 @@ const qParams = new ApiQueryParams(urlParams);
 
 const watchHistoryApi = new WatchHistoryApi();
 // quickfix until e.g. MAL epi implements episodes endpoints
-const episodeApi = qParams.collection == 'anime' ? getMoshanApiByCollectionName(qParams.collection) : getApiByName(qParams.apiName);
+const episodeApi = qParams.collection == 'anime' ? getMoshanApiByCollectionName(qParams.collection) : getApiByName(qParams.api_name);
 
 let datesWatched;
 let calendarInstance;
