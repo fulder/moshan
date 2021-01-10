@@ -41,7 +41,7 @@ async function getItemByMoshanId() {
 
     watchHistoryItem = watchHistoryItemRes.data;
   } catch(error) {
-    if (error.response.status != 404) {
+    if (!('response' in error && error.response.status == 404)) {
       console.log(error);
     }
   }
@@ -70,8 +70,8 @@ async function getItemByApiId() {
     item = itemRes.data;
   } catch(error){
     console.debug(error);
-    if (error.response.status != 404) {
-        console.log(error);
+    if (!('response' in error && error.response.status == 404)) {
+      console.log(error);
     }
   }
 
