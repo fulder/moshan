@@ -26,13 +26,13 @@ class MalApi {
 
   getMoshanItem(anime) {
     console.debug(anime);
-    
+
     let status = 'Airing';
     if ('end_date' in anime && anime.end_date !== null) {
       status = 'Finished';
     }
 
-    return MoshanItem(
+    return new MoshanItem(
       anime.main_picture.large,
       anime.title,
       anime.start_date,
