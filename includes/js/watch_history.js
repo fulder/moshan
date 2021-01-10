@@ -14,10 +14,10 @@ getCollections();
 
 async function getCollections() {
   const animeRes = await watchHistoryApi.getWatchHistoryByCollection('anime');
-  getAnimeItems(animeRes.data);
+  await getAnimeItems(animeRes.data);
 }
 
-function getAnimeItems (response) {
+async function getAnimeItems (response) {
   console.debug('WatchHistory anime response:');
   console.debug(response);
 
@@ -32,29 +32,27 @@ function getAnimeItems (response) {
   let res = true;
   let itemCreated = false;
 
-  axios.all(animeApiRequests).then(axios.spread((...animeResponses) => {
-    console.debug('Anime responses:');
-    console.debug(animeResponses);
+  const animeResponses = await Promise.all(animeApiRequests);
 
-    for (let i = 0; i < animeResponses.length; i++) {
-      const itemHTML = createHistoryAnimeItem(animeResponses[i].data);
+  console.debug('Anime responses:');
+  console.debug(animeResponses);
 
-      resultHTML += itemHTML;
+  for (let i = 0; i < animeResponses.length; i++) {
+    const itemHTML = createHistoryAnimeItem(animeResponses[i].data);
 
-      itemCreated = itemHTML !== '';
-      res = res && itemCreated;
-    }
+    resultHTML += itemHTML;
 
-    if (res) {
-      document.getElementById('itemsLoadingAlert').className = 'd-none';
-    } else {
-      document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
-    }
+    itemCreated = itemHTML !== '';
+    res = res && itemCreated;
+  }
 
-    document.getElementById('animeWatchHistory').innerHTML = resultHTML;
-  })).catch(errors => {
-    console.log(errors);
-  });
+  if (res) {
+    document.getElementById('itemsLoadingAlert').className = 'd-none';
+  } else {
+    document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
+  }
+
+  document.getElementById('animeWatchHistory').innerHTML = resultHTML;
 }
 
 function createHistoryAnimeItem (anime) {
