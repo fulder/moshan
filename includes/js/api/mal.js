@@ -16,8 +16,8 @@ class MalApi {
     });
   }
 
-  search(searchString) {
-    return this.apiAxios.get(`/anime?q=${searchString}`);
+  search(qParams) {
+    return this.apiAxios.get(`/anime?q=${qParams.search}`);
   }
 
   getItemById(qParams) {

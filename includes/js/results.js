@@ -1,10 +1,9 @@
-/* global MalApi, TvMazeApi, accessToken */
-
-const malApi = new MalApi();
-const tvMazeApi = new TvMazeApi();
-
+/* global accessToken */
 const urlParams = new URLSearchParams(window.location.search);
-const searchString = urlParams.get('search');
+const qParams = new QueryParams(urlParams);
+
+const animeApi = getApiByName(qParams.anime_api);
+const showApi = getApiByName(qParams.show_api);
 
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
@@ -16,9 +15,15 @@ if (accessToken === null) {
 
 getResults();
 
+function QueryParams(urlParams) {
+  this.search = urlParams.get('search');
+  this.anime_api = urlParams.get('anime_api');
+  this.show_api = urlParams.get('show_api');
+}
+
 async function getResults() {
-  const animeReq = malApi.search(searchString);
-  const showReq = tvMazeApi.search(searchString);
+  const animeReq = animeApi.search(qParams);
+  const showReq = showApi.search(qParams);
 
   const [animeRes, showRes] = await Promise.all([animeReq, showReq]);
 
@@ -48,7 +53,7 @@ function createResultAnimeItem (anime) {
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/item/index.html?collection=anime&api_name=mal&api_id=${externalId}">
+      <a href="/item/index.html?collection=anime&api_name=${qParams.anime_api}&api_id=${externalId}">
         <img class="img-fluid" src=${poster} />
         <p class="text-truncate small">${title}</p>
       </a>
@@ -79,7 +84,7 @@ function createResultShowItem (show) {
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/item/index.html?collection=show&api_name=tvmaze&api_id=${externalId}">
+      <a href="/item/index.html?collection=show&api_name=${qParams.show_api}&api_id=${externalId}">
         <img class="img-fluid" src=${poster} />
         <p class="text-truncate small">${title}</p>
       </a>
