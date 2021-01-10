@@ -49,23 +49,23 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
     watchedAmount = datesWatched.length;
   }
 
-  document.getElementById('title').innerHTML = episode.title;
-  document.getElementById('air_date').innerHTML = episode.air_date;
-  document.getElementById('status').innerHTML = episode.status;
+  document.getElementById('title').innerHTML = moshanEpisode.title;
+  document.getElementById('air_date').innerHTML = moshanEpisode.air_date;
+  document.getElementById('status').innerHTML = moshanEpisode.status;
   document.getElementById('watched_amount').innerHTML = watchedAmount;
 
-  if (episode.previous_id !== null) {
-    document.getElementById('previous_episode').href = `/episode/?collection_name=${collection}&id=${id}&episode_id=${episode.previous_episode}`;
+  if (moshanEpisode.previous_id !== null) {
+    document.getElementById('previous_episode').href = `/episode/?collection_name=${collection}&id=${id}&episode_id=${moshanEpisode.previous_episode}`;
     document.getElementById('previous_episode').classList.remove('d-none');
   }
-  if (episode.next_id !== null) {
-    document.getElementById('next_episode').href = `/episode/?collection_name=${collection}&id=${id}&episode_id=${episode.next_id}`;
+  if (moshanEpisode.next_id !== null) {
+    document.getElementById('next_episode').href = `/episode/?collection_name=${collection}&id=${id}&episode_id=${moshanEpisode.next_id}`;
     document.getElementById('next_episode').classList.remove('d-none');
   }
 
-  if (episodeAdded && episode.aired) {
+  if (episodeAdded && moshanEpisode.aired) {
     document.getElementById('remove_button').classList.remove('d-none');
-  } else if(!episode.aired) {
+  } else if(!moshanEpisode.aired) {
     document.getElementById('add_button_not_aired').classList.remove('d-none');
   } else {
     document.getElementById('add_button').classList.remove('d-none');
