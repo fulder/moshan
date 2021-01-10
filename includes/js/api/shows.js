@@ -15,7 +15,7 @@ class ShowsApi {
     });
   }
 
-  getItemById (id) {
+  getItemById(id) {
     return this.apiAxios.get(`/show/${id}`);
   }
 
