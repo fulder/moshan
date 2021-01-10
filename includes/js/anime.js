@@ -1,6 +1,6 @@
 /* global WatchHistoryApi, getApiFromName */
 const urlParams = new URLSearchParams(window.location.search);
-const collection = urlParams.get('collection_name');
+const collection = urlParams.get('collection');
 const apiName = urlParams.get('api_name');
 let id = urlParams.get('id');
 let apiId = urlParams.get('api_id');
