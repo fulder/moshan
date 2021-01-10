@@ -20,7 +20,7 @@ class MalApi {
     return this.apiAxios.get(`/anime?q=${searchString}`);
   }
 
-  getAnimeById(id) {
+  getItemById(id) {
     return this.apiAxios.get(`/anime/${id}?fields=start_date,num_episodes,synopsis`);
   }
 
@@ -37,9 +37,20 @@ class MalApi {
       anime.title,
       anime.start_date,
       status,
-      anime.synopsis,
-      anime.id,
-      null
+      anime.synopsis
     );
+  }
+
+  getMoshanEpisode(episode) {
+    return new MoshanEpisode(
+      episode.id,
+      episode.episode_number,
+      episode.title,
+      episode.air_date
+    );
+  }
+
+  hasEpisodes(anime) {
+    return 'num_episodes' in anime && anime.num_episodes != 1;
   }
 }

@@ -14,11 +14,37 @@ class TvMazeApi {
     return this.apiAxios.get(`/search/shows?q=${searchString}`);
   }
 
-  getShowById(id) {
+  getItemById(id) {
     return this.apiAxios.get(`/shows/${id}`);
   }
 
-  getShowEpisodes(id) {
+  getEpisodes(id) {
     return this.apiAxios.get(`/shows/${id}/episodes`);
+  }
+
+  getMoshanItem(show) {
+    console.debug(show);
+
+    return new MoshanItem(
+      show.image.original,
+      show.name,
+      show.premiered,
+      show.status,
+      show.summary
+    );
+  }
+
+  getMoshanEpisode(episode) {
+    const seasonNbr = (episode.season < 10 ? '0' : '') + episode.season;
+    const episodeNbr = (episode.number < 10 ? '0' : '') + episode.number;
+
+    const episodeId = `S${seasonNbr}E${episodeNbr}`;
+    
+    return new MoshanEpisode(
+      episodeId,
+      episode.number,
+      episode.name,
+      episode.airdate
+    );
   }
 }
