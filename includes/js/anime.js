@@ -89,7 +89,7 @@ function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
   console.debug(watchHistoryItem);
 
   const moshanItem = malApi.getMoshanItem(apiAnimeItem);
-  console.debug(mochanItem);
+  console.debug(moshanItem);
 
   document.getElementById('poster').src = moshanItem.poster;
   document.getElementById('title').innerHTML = moshanItem.title;
