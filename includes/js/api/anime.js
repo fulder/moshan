@@ -40,9 +40,12 @@ class AnimeApi {
   }
 
   getMoshanEpisodes(episodes) {
-    return episodes.items;
+    return new MoshanEpisodes(
+        episodes.items,
+        episodes.total_pages
+    );
   }
-
+  
   getMoshanEpisode(episode) {
     const nextId = 'id_links' in episode && 'next' in episode['id_links'] ? episode['id_links']['next'] : null;
     const previousId = 'id_links' in episode && 'previous' in episode['id_links'] ? episode['id_links']['previous'] : null;

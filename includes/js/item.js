@@ -149,7 +149,7 @@ async function removeItem () {
 function createEpisodesList (moshanEpisodes) {
   let tableHTML = '';
 
-  moshanEpisodes.forEach(function (episode) {
+  moshanEpisodes.episodes.forEach(function (episode) {
     episode = episodeApi.getMoshanEpisode(episode);
 
     let rowClass = 'bg-secondary';
@@ -178,7 +178,7 @@ function createEpisodesList (moshanEpisodes) {
   if (document.getElementById('episodesPages').innerHTML === '') {
     let paginationHTML = '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>';
 
-    totalPages = episodes.total_pages;
+    totalPages = moshanEpisodes.total_pages;
     for (let i = 1; i <= totalPages; i++) {
       let className = 'page-item';
       if (i === episodePage) {

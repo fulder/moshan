@@ -22,6 +22,12 @@ function MoshanItem(poster, title, start_date, status, synopsis, has_episodes) {
   this.has_episodes = has_episodes;
 }
 
+/* exported MoshanEpisodes */
+function MoshanEpisodes(episodes, total_pages) {
+  this.episodes = episodes;
+  this.total_pages = total_pages;
+}
+
 /* exported MoshanEpisode */
 function MoshanEpisode(id, number, title, air_date, previous_id, next_id) {
   this.id = id;
