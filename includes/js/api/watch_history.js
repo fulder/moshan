@@ -35,25 +35,24 @@ class WatchHistoryApi {
     return this.apiAxios.get(`/watch-history/collection/${collectionName}/${id}`);
   }
 
-  addWatchHistoryEpisode (collectionName, itemId, episodeId, episodeNumber) {
+  addWatchHistoryEpisode (qParams) {
     const data = {
-      episode_id: episodeId,
-      episode_number: episodeNumber,
+      episode_id: qParams.episode_id,
     };
-    return this.apiAxios.post(`/watch-history/collection/${collectionName}/${itemId}/episode`, data);
+    return this.apiAxios.post(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode`, data);
   }
 
-  removeWatchHistoryEpisode (apiQueryParams) {
-    return this.apiAxios.delete(`/watch-history/collection/${apiQueryParams.collection}/${apiQueryParams.id}/episode/${apiQueryParams.episode_id}`);
+  removeWatchHistoryEpisode (qParams) {
+    return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}`);
   }
 
   getWatchHistoryEpisode (collectionName, itemId, episodeId) {
     return this.apiAxios.get(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`);
   }
 
-  updateWatchHistoryEpisode (collectionName, itemId, episodeId, watchDates = []) {
+  updateWatchHistoryEpisode (qParams, watchDates = []) {
     const data = {};
     data.dates_watched = watchDates;
-    return this.apiAxios.patch(`/watch-history/collection/${collectionName}/${itemId}/episode/${episodeId}`, data);
+    return this.apiAxios.patch(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}`, data);
   }
 }
