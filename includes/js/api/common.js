@@ -22,12 +22,15 @@ function MoshanItem(poster, title, start_date, status, synopsis) {
 }
 
 /* exported MoshanEpisode */
-function MoshanEpisode(id, number, title, air_date) {
+function MoshanEpisode(id, number, title, air_date, previous_id, next_id) {
   this.id = id;
   this.number = number;
   this.title = title;
   this.air_date = air_date;
-  this.aired = Date.parse(this.air_date) <= (new Date()).getTime();;
+  this.aired = Date.parse(this.air_date) <= (new Date()).getTime();
+  this.status = moshanEpisode.aired ? 'Aired' : 'Not Aired';
+  this.previous_id = previous_id;
+  this.next_id = next_id;
 }
 
 /* exported getMoshanApiByCollectionName */

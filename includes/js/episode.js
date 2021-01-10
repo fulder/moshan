@@ -1,82 +1,71 @@
-/* global axios, flatpickr */
-/* global AnimeApi, WatchHistoryApi */
-
-const watchHistoryApi = new WatchHistoryApi();
-
+/* global flatpickr */
+/* global WatchHistoryApi */
 const urlParams = new URLSearchParams(window.location.search);
-
-const collectionName = urlParams.get('collection_name');
+const collection = urlParams.get('collection');
 const id = urlParams.get('id');
 const episodeId = urlParams.get('episode_id');
 
-const watchHistoryRequest = watchHistoryApi.getWatchHistoryEpisode(collectionName, id, episodeId);
-const requests = [watchHistoryRequest];
+const watchHistoryApi = new WatchHistoryApi();
+// quickfix until e.g. MAL epi implements episodes endpoints
+const episodeApi = collection == 'anime' ? getMoshanApiBycollection(collection) : getApiByName(apiName);
 
 let datesWatched;
 let calendarInstance;
 
-if (collectionName === 'anime') {
-  const animeRequest = animeApi.getAnimeEpisode(id, episodeId);
-  requests.push(animeRequest);
+getEpisodes();
+
+async function getEpisodes() {
+  let watchHistoryEpisode = null;
+  try {
+    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(collection, id, episodeId);
+    watchHisotryEpisode = watchHistoryRes.data;
+  } catch(error) {
+    if (error.response.status != 404) {
+      console.log(error);
+    }
+  }
+
+  const apiEpisodeRes = await episodesApi.getEpisode(id, episodeId);
+  const moshanEpisode = episodeApi.getMoshanEpisode(apiEpisodeRes.data);
+
+  createEpisodePage(moshanEpisode, watchHistoryEpisode);
 }
 
-axios.all(requests).then(axios.spread((...responses) => {
-  const watchHistoryEpisode = responses[0].data;
-  const animeEpisode = responses[1].data;
-
-  createEpisodePage(animeEpisode, watchHistoryEpisode);
-})).catch(error => {
-  console.log(error);
-});
-
-function createEpisodePage (animeEpisode, watchHistoryEpisode) {
-  console.debug(animeEpisode);
+function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
+  console.debug(moshanEpisode);
   console.debug(watchHistoryEpisode);
 
-  const episodeAdded = watchHistoryEpisode !== '';
-  const episodeAired = Date.parse(animeEpisode.air_date) <= (new Date()).getTime();
-  const status = episodeAired ? 'Aired' : 'Not Aired';
+  const episodeAdded = watchHistoryEpisode !== null;
 
   datesWatched = watchHistoryEpisode['dates_watched'];
   const latestWatchDate = datesWatched !== undefined && datesWatched.length > 0 ? datesWatched[datesWatched.length-1] : '';
   console.debug(`Latest watch date: ${latestWatchDate}`);
-  const watchDateLength = datesWatched === undefined ? 0 : datesWatched.length;
+  const watchedAmount = datesWatched === undefined ? 0 : datesWatched.length;
 
-  const nextEpisode = 'id_links' in animeEpisode && 'next' in animeEpisode['id_links'] ? animeEpisode['id_links']['next'] : '';
-  const previousEpisode = 'id_links' in animeEpisode && 'previous' in animeEpisode['id_links'] ? animeEpisode['id_links']['previous'] : '';
 
-  const resultHTML = `
-        <div class="col-md-3 col-5 item">
-            <img class="img-fluid" src="/includes/img/image_not_available.png" />
-        </div>
+  document.getElementById('title').innerHTML = episode.title;
+  document.getElementById('air_date').innerHTML = episode.air_date;
+  document.getElementById('status').innerHTML = episode.status;
+  document.getElementById('watched_amount').innerHTML = watchedAmount;
 
-        <div class="col-md-9 col-7">
-            <h5>${animeEpisode.title}</h5>
-            <b>Aired</b>: ${animeEpisode.air_date}<br>
-            <b>Status</b>: ${status}<br>
-            <a class="${previousEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${previousEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-left"></i></a>
-            <a class="${nextEpisode === '' ? 'd-none' : ''}" href="/episode/?collection_name=${collectionName}&id=${id}&episode_id=${nextEpisode}"><i class="fas fa-2x fa-arrow-alt-circle-right"></i></a>
-        </div>
+  if (episode.previous_id !== null) {
+    document.getElementById('previous_episode').href = `/episode/?collection_name=${collection}&id=${id}&episode_id=${episode.previous_episode}`;
+    document.getElementById('previous_episode').classList.remove('d-none');
+  }
+  if (episode.next_id !== null) {
+    document.getElementById('next_episode').href = `/episode/?collection_name=${collection}&id=${id}&episode_id=${episode.next_id}`;
+    document.getElementById('next_episode').classList.remove('d-none');
+  }
 
-        <div class="col-md-4 col-10 mt-1">
-            <button id="addButton" class="btn btn-success ${!episodeAired || episodeAdded ? 'd-none' : ''}" onclick="addEpisodeWrapper('anime', '${animeEpisode.id}')"><i class="fa fa-plus"></i> Add</button>
-            <button id="removeButton" class="btn btn-danger ${!episodeAired || !episodeAdded ? 'd-none' : ''}" onclick="removeEpisodeWrapper('anime', '${animeEpisode.id}')"><i class="fa fa-minus"></i> Remove</button>
-            <button class="btn btn-secondary ${!episodeAired ? '" disabled' : 'd-none"'}><i class="fa fa-plus"></i> Add</button>
-            <b>Watched</b>:<span id="watchedAmount">${watchDateLength}</span>
-            <div class="input-group input-group-sm pt-1">
-              <div class="input-group-prepend">
-                <span class="input-group-text">Date</span>
-              </div>
+  if (episodeAdded && episode.aired) {
+    document.getElementById('remove_button').classList.remove('d-none');
+  } else if(!episode.aired) {
+    document.getElementById('add_button_not_aired').classList.remove('d-none');
+  } else {
+    document.getElementById('add_button').classList.remove('d-none');
+  }
 
-              <input id="flatpickr" type="text" class="form-control" ${!episodeAired ? 'disabled' : ''}>
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate()"><i class="fas fa-calendar-day"></i></button><button class="btn btn-danger" type="button" onclick="removeWatchDate()"><i class="far fa-calendar-times"></i></button>
-              </div>
-            </div>
-        </div>
-    `;
-
-  document.getElementById('episode').innerHTML = resultHTML;
+  document.getElementById('episode').classList.remove('d-none');
 
   calendarInstance = flatpickr('#flatpickr', {
     enableTime: true,
@@ -111,7 +100,7 @@ function setCurrentWatchDate() {
   calendarInstance.setDate(dateNow);
 }
 
-function patchWatchDate(date) {
+async function patchWatchDate(date) {
   if (datesWatched === undefined || datesWatched.length == 0) {
     datesWatched = [date];
   } else {
@@ -121,16 +110,11 @@ function patchWatchDate(date) {
   document.getElementById('watchedAmount').innerHTML = datesWatched.length;
   console.debug(datesWatched);
 
-  watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
-    console.debug('Response from patchWatchDate');
-    console.debug(response);
-  }).catch(function (error) {
-    console.log(error);
-  });
+  await watchHistoryApi.updateWatchHistoryEpisode(collection, id, episodeId, datesWatched);
 }
 
 /* exported removeWatchDate */
-function removeWatchDate() {
+async function removeWatchDate() {
   if (datesWatched === undefined || datesWatched.length == 0) {
     return;
   }
@@ -144,30 +128,19 @@ function removeWatchDate() {
       calendarInstance.setDate(datesWatched[datesWatched.length - 1]);
   }
 
-  watchHistoryApi.updateWatchHistoryEpisode(collectionName, id, episodeId, datesWatched).then(function (response) {
-    console.debug('Response from removeWatchDate');
-    console.debug(response);
-  }).catch(function (error) {
-    console.log(error);
-  });
+  await watchHistoryApi.updateWatchHistoryEpisode(collection, id, episodeId, datesWatched);
 }
 
-/* exported addEpisodeWrapper */
-function addEpisodeWrapper (type, episodeId) {
-  watchHistoryApi.addWatchHistoryEpisode(type, id, episodeId).then(function () {
-    document.getElementById('addButton').classList.add('d-none');
-    document.getElementById('removeButton').classList.remove('d-none');
-  }).catch(function (error) {
-    console.log(error);
-  });
+/* exported addEpisode */
+async function addEpisode () {
+  await watchHistoryApi.addWatchHistoryEpisode(collection, id, episodeId);
+  document.getElementById('addButton').classList.add('d-none');
+  document.getElementById('removeButton').classList.remove('d-none');
 }
 
-/* exported removeEpisodeWrapper */
-function removeEpisodeWrapper (type, episodeId) {
-  watchHistoryApi.removeWatchHistoryEpisode(type, id, episodeId).then(function () {
-    document.getElementById('addButton').classList.remove('d-none');
-    document.getElementById('removeButton').classList.add('d-none');
-  }).catch(function (error) {
-    console.log(error);
-  });
+/* exported removeEpisode */
+async function removeEpisode () {
+  await watchHistoryApi.removeWatchHistoryEpisode(collection, id, episodeId);
+  document.getElementById('addButton').classList.remove('d-none');
+  document.getElementById('removeButton').classList.add('d-none');
 }
