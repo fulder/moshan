@@ -134,7 +134,7 @@ function createEpisodesList (showId, showEpisodes) {
 
   showEpisodes.forEach(function (episode) {
     const seasonNbr = (episode.season < 10 ? '0' : '') + episode.season;
-    const episodeNbr = (episode.episode < 10 ? '0' : '') + episode.episode;
+    const episodeNbr = (episode.number < 10 ? '0' : '') + episode.number;
 
     const episodeId = `S${seasonNbr}E${episodeNbr}`;
     const episodeDate = episode.airdate;
