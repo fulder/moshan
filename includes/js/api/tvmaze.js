@@ -36,7 +36,7 @@ class TvMazeApi {
   }
 
   getMoshanEpisodes(episodes) {
-    return episodes;
+    return episodes.reversed();
   }
 
   getMoshanEpisode(episode) {
