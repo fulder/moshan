@@ -10,12 +10,12 @@ if (accessToken === null) {
   document.getElementById('animeWatchHistory').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
+getCollections();
 
-watchHistoryApi.getWatchHistoryByCollection('anime').then(function (response) {
-  getAnimeItems(response.data);
-}).catch(function (error) {
-  console.log(error);
-});
+async function getCollections() {
+  const animeRes = await watchHistoryApi.getWatchHistoryByCollection('anime');
+  getAnimeItems(animeRes.data);
+}
 
 function getAnimeItems (response) {
   console.debug('WatchHistory anime response:');
