@@ -22,6 +22,10 @@ class TvMazeApi {
     return this.apiAxios.get(`/shows/${id}/episodes`);
   }
 
+  getEpisode(id) {
+    return this.apiAxios.get(`/shows/${id}/episodes/{id}`);
+  }
+
   getMoshanItem(show) {
     console.debug(show);
 
