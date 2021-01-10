@@ -24,7 +24,7 @@ function getAnimeItems (response) {
   let animeApiRequests = [];
   for (let i = 0; i < response.items.length; i++) {
     const watchHistoryAnime = response.items[i];
-    animeRequest = animeApi.getItemById(watchHistoryAnime.item_id);
+    animeRequest = animeApi.getItemById({'id': watchHistoryAnime.item_id});
     animeApiRequests.push(animeRequest);
   }
 
