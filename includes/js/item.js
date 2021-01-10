@@ -78,7 +78,14 @@ async function getItemByApiId() {
   }
 
   const apiItemRes = await api.getItemById(apiId);
-  createItem(apiItemRes.data, null, null);
+  const apiItem = apiItemRes.data;
+
+  createItem(apiItem, null, null);
+
+  if (apiItem.has_episodes) {
+    episodeRes = await episodeApi.getEpisodes(id, episodePage),
+    createEpisodesList(id, episodeRes.data, watchHistoryItem);
+  }
 }
 
 function createItem (apiItem, item, watchHistoryItem) {
