@@ -35,6 +35,10 @@ class TvMazeApi {
     );
   }
 
+  getMoshanEpisodes(episodes) {
+    return episodes;
+  }
+
   getMoshanEpisode(episode) {
     const seasonNbr = (episode.season < 10 ? '0' : '') + episode.season;
     const episodeNbr = (episode.number < 10 ? '0' : '') + episode.number;
