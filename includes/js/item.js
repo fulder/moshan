@@ -56,7 +56,7 @@ async function getItemByMoshanId() {
 
   if (moshanItem.has_episodes) {
     const episodesRes = await episodeApi.getEpisodes(episodeItemId, episodePage);
-    const moshanEpisodes = api.getMoshanEpisodes(episodesRes.data);
+    const moshanEpisodes = episodesApi.getMoshanEpisodes(episodesRes.data);
     createEpisodesList(moshanEpisodes);
   }
 }
@@ -86,8 +86,9 @@ async function getItemByApiId() {
 
   // can't lookup anime episodes in anime API if the item doesn't exist
   if (collection != 'anime' && moshanItem.has_episodes) {
-    episodeRes = await episodeApi.getEpisodes(episodeItemId, episodePage),
-    createEpisodesList(episodeRes.data);
+    const episodesRes = await episodeApi.getEpisodes(episodeItemId, episodePage);
+    const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
+    createEpisodesList(moshanEpisodes);
   }
 }
 
@@ -214,7 +215,7 @@ async function loadEpisodes (page) {
   episodePage = page;
 
   const episodesRes = await episodeApi.getEpisodes(id, episodePage);
-  const moshanEpisodes = api.getMoshanEpisodes(episodesRes.data);
+  const moshanEpisodes = episodesApi.getMoshanEpisodes(episodesRes.data);
   createEpisodesList(moshanEpisodes);
 
   document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.add('active');
