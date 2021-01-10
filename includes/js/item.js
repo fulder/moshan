@@ -38,7 +38,6 @@ async function getItemByMoshanId() {
   try {
     watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem(qParams);
     console.debug(watchHistoryItemRes);
-
     watchHistoryItem = watchHistoryItemRes.data;
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
