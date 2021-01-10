@@ -182,7 +182,7 @@ function createEpisodesList (moshanEpisodes) {
     totalPages = moshanEpisodes.total_pages;
     for (let i = 1; i <= totalPages; i++) {
       let className = 'page-item';
-      if (i === episodePage) {
+      if (i === qParams.episode_page) {
         className = 'page-item active';
       }
       paginationHTML += `<li id="episodePage${i}" class="${className}"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`;
@@ -195,32 +195,32 @@ function createEpisodesList (moshanEpisodes) {
 
 /* exported loadPreviousEpisodes */
 function loadPreviousEpisodes () {
-  if (episodePage > 1) {
-    loadEpisodes(episodePage - 1);
+  if (qParams.episode_page > 1) {
+    loadEpisodes(qParams.episode_page - 1);
   }
 }
 
 /* exported loadNextEpisodes */
 function loadNextEpisodes () {
-  if (episodePage < totalPages) {
-    loadEpisodes(episodePage + 1);
+  if (qParams.episode_page < totalPages) {
+    loadEpisodes(qParams.episode_page + 1);
   }
 }
 
 async function loadEpisodes (page) {
-  if (episodePage === page) {
+  if (qParams.episode_page === page) {
     return;
   }
-  document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.remove('active');
+  document.getElementById('episodesPages').getElementsByTagName('LI')[qParams.episode_page].classList.remove('active');
 
-  episodePage = page;
+  qParams.episode_page = page;
 
-  const episodesRes = await episodeApi.getEpisodes(id, episodePage);
+  const episodesRes = await episodeApi.getEpisodes(qParams);
   const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
   createEpisodesList(moshanEpisodes);
 
-  document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.add('active');
+  document.getElementById('episodesPages').getElementsByTagName('LI')[qParams.episode_page].classList.add('active');
 
-  urlParams.set('episode_page', page);
+  urlParams.set('episode_page', qParams.episode_page);
   history.pushState({}, null, `?${urlParams.toString()}`);
 }
