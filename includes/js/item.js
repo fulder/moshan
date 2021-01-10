@@ -144,7 +144,7 @@ function createEpisodesList (id, episodes) {
     episode = api.getMoshanEpisode(episode);
 
     let rowClass = 'episodeRow';
-    let onClickAction = `window.location='/episode?collection_name=${collection}&id=${id}&episode_id=${episode.id}'`;
+    let onClickAction = `window.location='/episode?collection=${collection}&api_name=${apiName}&id=${id}&episode_id=${episode.id}'`;
     if (!episode.aired) {
       rowClass = 'bg-secondary';
       onClickAction = '';
