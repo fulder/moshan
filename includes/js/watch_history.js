@@ -68,7 +68,7 @@ function createHistoryAnimeItem (anime) {
 
   const resultHTML = `
       <div id="poster-anime-${animeId}" class="col-4 col-md-2 poster">
-        <a href="/anime?api_name=mal&id=${animeId}">
+        <a href="/anime?collection=anime&api_name=mal&id=${animeId}">
           <img class="img-fluid" src="${poster}" />
           <p class="text-truncate small">${title}</p>
         </a>
