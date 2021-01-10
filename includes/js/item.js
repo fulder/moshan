@@ -46,7 +46,7 @@ async function getItemByMoshanId() {
     }
   }
 
-  const itemRes = await moshanApi.getItemById(id);
+  const itemRes = await moshanApi.getItemById(qParams.id);
   const item = itemRes.data;
   console.debug(item);
   const apiId = item[`${apiName}_id`];
