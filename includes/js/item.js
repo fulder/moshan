@@ -62,7 +62,7 @@ async function getItemByMoshanId() {
 async function getItemByApiId() {
   let item = null;
   try {
-    const itemRes = await api.getItemByApiId(apiName, apiId);
+    const itemRes = await moshanApi.getItemByApiId(apiName, apiId);
     item = itemRes.data;
   } catch(error){
     if (error.response.status != 404) {
