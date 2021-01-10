@@ -55,8 +55,9 @@ async function getItemByMoshanId() {
   createItem(moshanItem, item, watchHistoryItem);
 
   if (moshanItem.has_episodes) {
-    episodeRes = await episodeApi.getEpisodes(episodeItemId, episodePage),
-    createEpisodesList(id, episodeRes.data);
+    const episodeRes = await episodeApi.getEpisodes(episodeItemId, episodePage);
+    const moshanEpisodes = api.getMoshanEpisodes(episodesRes.data);
+    createEpisodesList(emoshanEpisodes);
   }
 }
 
@@ -144,16 +145,21 @@ async function removeItem () {
   }
 }
 
-function createEpisodesList (id, episodes) {
+function createEpisodesList (moshanEpisodes) {
   let tableHTML = '';
-  episodes.items.forEach(function (episode) {
+
+  moshanEpisodes.forEach(function (episode) {
     episode = episodeApi.getMoshanEpisode(episode);
 
-    let rowClass = 'episodeRow';
-    let onClickAction = `window.location='/episode?collection=${collection}&api_name=${apiName}&id=${id}&episode_id=${episode.id}'`;
-    if (!episode.aired) {
-      rowClass = 'bg-secondary';
-      onClickAction = '';
+    let rowClass = 'bg-secondary';
+    let onClickAction = '';
+
+    if (episode.aired && id !== null) {
+      rowClass = 'episodeRow';
+      onClickAction = `window.location='/episode?collection=${collection}&api_name=${apiName}&id=${id}&episode_id=${episode.id}'`;
+    } else if (episode.aired && apiId !== null) {
+      rowClass = 'episodeRow';
+      onClickAction = `window.location='/episode?collection=${collection}&api_name=${apiName}&api_id=${apiId}&episode_id=${episode.id}'`;
     }
 
     tableHTML += `
@@ -199,18 +205,17 @@ function loadNextEpisodes () {
   }
 }
 
-function loadEpisodes (page) {
+async function loadEpisodes (page) {
   if (episodePage === page) {
     return;
   }
   document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.remove('active');
 
   episodePage = page;
-  episodeApi.getEpisodes(id, episodePage).then(function (response) {
-    createEpisodesList(response.data);
-  }).catch(function (error) {
-    console.log(error);
-  });
+
+  const episodesRes = await episodeApi.getEpisodes(id, episodePage);
+  const moshanEpisodes = api.getMoshanEpisodes(episodesRes.data);
+  createEpisodesList(moshanEpisodes);
 
   document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.add('active');
 

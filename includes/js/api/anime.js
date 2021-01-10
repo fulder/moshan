@@ -39,6 +39,10 @@ class AnimeApi {
     return this.apiAxios.post('/anime', data);
   }
 
+  getMoshanEpisodes(episodes) {
+    return episodes.items;
+  }
+
   getMoshanEpisode(episode) {
     const nextId = 'id_links' in episode && 'next' in episode['id_links'] ? episode['id_links']['next'] : null;
     const previousId = 'id_links' in episode && 'previous' in episode['id_links'] ? episode['id_links']['previous'] : null;
