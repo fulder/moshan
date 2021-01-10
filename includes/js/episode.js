@@ -19,7 +19,7 @@ async function getEpisodes() {
   let watchHistoryEpisode = null;
   try {
     const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(collection, id, episodeId);
-    watchHisotryEpisode = watchHistoryRes.data;
+    watchHistoryEpisode = watchHistoryRes.data;
   } catch(error) {
     if (error.response.status != 404) {
       console.log(error);
