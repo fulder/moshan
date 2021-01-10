@@ -1,7 +1,7 @@
 /* global flatpickr, getMoshanApiByCollectionName, getApiByName */
 /* global WatchHistoryApi */
 const urlParams = new URLSearchParams(window.location.search);
-const qParams = new ApiQueryParams(urlParams);
+const qParams = new QueryParams(urlParams);
 
 const watchHistoryApi = new WatchHistoryApi();
 // quickfix until e.g. MAL epi implements episodes endpoints
@@ -12,7 +12,7 @@ let calendarInstance;
 
 getEpisodes();
 
-function ApiQueryParams(urlParams) {
+function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
   this.api_name = urlParams.get('api_name');
   this.id = urlParams.get('id');

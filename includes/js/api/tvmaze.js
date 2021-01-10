@@ -10,8 +10,8 @@ class TvMazeApi {
     });
   }
 
-  search (searchString) {
-    return this.apiAxios.get(`/search/shows?q=${searchString}`);
+  search (qParams) {
+    return this.apiAxios.get(`/search/shows?q=${qParams.search}`);
   }
 
   getItemById(qParams) {

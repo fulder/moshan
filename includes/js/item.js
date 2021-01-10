@@ -1,6 +1,6 @@
 /* global WatchHistoryApi, getMoshanApiByCollectionName, getApiByName */
 const urlParams = new URLSearchParams(window.location.search);
-const qParams = new ApiQueryParams(urlParams);
+const qParams = new QueryParams(urlParams);
 
 document.getElementById('headTitle').innerHTML = `Moshan - ${qParams.collection}`;
 
@@ -19,7 +19,7 @@ else if (apiId !== null) {
   getItemByApiId();
 }
 
-function ApiQueryParams(urlParams) {
+function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
   this.api_name = urlParams.get('api_name');
   this.id = urlParams.get('id');
