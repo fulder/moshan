@@ -13,7 +13,7 @@ async function axiosTokenInterceptor (config) {
 }
 
 /* exported MoshanItem */
-function MoshanItem(  airing,  title,  start_date,  status,  synopsis,  mal_link,  anidb_link) {
+function MoshanItem(poster, title, start_date, status, synopsis, mal_link, anidb_link) {
   this.poster = poster;
   this.title = title;
   this.start_date = start_date;
