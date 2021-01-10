@@ -14,16 +14,20 @@ let moshanApi;
 switch(collection) {
   case 'show':
     moshanApi = new ShowApi();
+    break;
   case 'anime':
     moshanApi = new AnimeApi();
+    break;
 }
 
 let api;
 switch(apiName) {
   case 'mal':
     api = new MalApi();
+    break;
   case 'tvmaze':
     api = new TvMazeApi();
+    break;
 }
 
 
