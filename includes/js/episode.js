@@ -140,13 +140,13 @@ async function removeWatchDate() {
 /* exported addEpisode */
 async function addEpisode () {
   await watchHistoryApi.addWatchHistoryEpisode(collection, id, episodeId);
-  document.getElementById('addButton').classList.add('d-none');
-  document.getElementById('removeButton').classList.remove('d-none');
+  document.getElementById('add_button').classList.add('d-none');
+  document.getElementById('remove_button').classList.remove('d-none');
 }
 
 /* exported removeEpisode */
 async function removeEpisode () {
   await watchHistoryApi.removeWatchHistoryEpisode(collection, id, episodeId);
-  document.getElementById('addButton').classList.remove('d-none');
-  document.getElementById('removeButton').classList.add('d-none');
+  document.getElementById('add_button').classList.remove('d-none');
+  document.getElementById('remove_button').classList.add('d-none');
 }
