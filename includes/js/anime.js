@@ -1,14 +1,20 @@
-/* global AnimeApi, MalApi, WatchHistoryApi */
-
-const animeApi = new AnimeApi();
-const malApi = new MalApi();
-const watchHistoryApi = new WatchHistoryApi();
-
+/* global WatchHistoryApi, getApiFromName */
 const urlParams = new URLSearchParams(window.location.search);
+const collection = urlParams.get('collection_name');
 const apiName = urlParams.get('api_name');
 let id = urlParams.get('id');
 let apiId = urlParams.get('api_id');
 let episodePage = urlParams.get('episode_page');
+
+document.getElementById('headTitle').innerHTML = `Moshan - ${collection}`;
+
+const watchHistoryApi = new WatchHistoryApi();
+const moshanApi = getApiFromName(collection);
+const api = getApiFromName(apiName);
+
+// quickfix for anime episodes, use moshan api until
+// e.g. MAL api implements episode routes
+const episodeApi = collection == 'anime' ? moshanApi: api;
 
 if (episodePage === null) {
   episodePage = 1;
@@ -19,16 +25,16 @@ if (episodePage === null) {
 let totalPages = 0;
 
 if (id !== null) {
-  getAnimeById();
+  getItemByMoshanId();
 }
-else if (apiId !== null && apiName === 'mal') {
-  getAnimeByMalId();
+else if (apiId !== null) {
+  getItemByApiId();
 }
 
-async function getAnimeById() {
+async function getItemByMoshanId() {
   let watchHistoryItem = null;
   try {
-    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem('anime', id);
+    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem(collection, id);
     console.debug(watchHistoryItemRes);
 
     watchHistoryItem = watchHistoryItemRes.data;
@@ -38,57 +44,48 @@ async function getAnimeById() {
     }
   }
 
-  const animeItemRes = await animeApi.getAnimeById(id);
-  const animeItem = animeItemRes.data;
-  console.debug(animeItem);
-  const apiId = animeItem[`${apiName}_id`];
+  const itemRes = await api.getItemById(id);
+  const item = itemRes.data;
+  console.debug(item);
+  const apiId = item[`${apiName}_id`];
 
-  let apiAnimeItem;
-  let hasEpisodes = false;
+  const apiRes = await api.getItemById(apiId);
+  const apiItem = apiRes.data;
 
-  if (apiName == 'mal') {
-    apiAnimeRes = await malApi.getAnimeById(apiId);
-    apiAnimeItem = apiAnimeRes.data;
-    hasEpisodes = 'num_episodes' in apiAnimeItem && apiAnimeItem.num_episodes != 1;
-  }
+  createItem(apiItem, item, watchHistoryItem);
 
-  createAnime(apiAnimeItem, animeItem, watchHistoryItem);
-
-  if (hasEpisodes) {
-    animeEpisodesRes = await animeApi.getAnimeEpisodes(id, episodePage),
-    createEpisodesList(id, animeEpisodesRes.data, watchHistoryItem);
+  if (api.hasEpisodes(apiItem)) {
+    episodeRes = await episodeApi.getEpisodes(id, episodePage),
+    createEpisodesList(id, episodeRes.data, watchHistoryItem);
   }
 }
 
-async function getAnimeByMalId() {
-  let animeItem = null;
+async function getItemByApiId() {
+  let item = null;
   try {
-    const animeItemRes = await animeApi.getAnimeByApiId(apiName, apiId);
-    animeItem = animeItemRes.data;
+    const itemRes = await api.getItemByApiId(apiName, apiId);
+    item = itemRes.data;
   } catch(error){
     if (error.response.status != 404) {
         console.log(error);
     }
   }
 
-  if (animeItem !== null && 'id' in animeItem) {
-    // anime cached in mal use anime UUID instead
-    id = animeItem.id;
-
-    return getAnimeById();
+  if (item !== null && 'id' in item) {
+    // item cached use UUID instead
+    id = item.id;
+    return getItemById();
   }
 
-  const apiAnimeItemRes = await malApi.getAnimeById(apiId);
-  createAnime(apiAnimeItemRes.data, null, null);
+  const apiItemRes = await api.getItemById(apiId);
+  createItem(apiItemRes.data, null, null);
 }
 
-function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
+function createItem (apiItem, item, watchHistoryItem) {
   const itemAdded = watchHistoryItem !== null;
-
   console.debug(`Item added: ${itemAdded}`);
-  console.debug(watchHistoryItem);
 
-  const moshanItem = malApi.getMoshanItem(apiAnimeItem);
+  const moshanItem = api.getMoshanItem(apiItem);
   console.debug(moshanItem);
 
   document.getElementById('poster').src = moshanItem.poster;
@@ -96,12 +93,15 @@ function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
   document.getElementById('start-date').innerHTML = moshanItem.start_date;
   document.getElementById('status').innerHTML = moshanItem.status;
   document.getElementById('synopsis').innerHTML = moshanItem.synopsis;
-  document.getElementById('mal-link').href = `https://myanimelist.net/anime/${moshanItem.id}`;
 
-  if (animeItem !== null && 'anidb_id' in animeItem) {
-    document.getElementById('anidb-link').href = `https://anidb.net/anime/${animeItem.anidb_id}`;
-    document.getElementById('anidb-link-div').classList.remove('d-none');
-  }
+  // TODO: store links in api and loop through them creating the links dynamically
+  /*let links = '';
+  links += `
+    <div class="col-6 col-md-5">
+        <a id="mal-link" href=${apiLink} target="_blank"><img class="img-fluid" src="/includes/icons/${apiName}.png" /></a>
+    </div>
+  `;
+  document.getElementById('links').innerHTML = links;*/
 
   if (itemAdded) {
     document.getElementById('remove-button').classList.remove('d-none');
@@ -109,16 +109,16 @@ function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
     document.getElementById('add-button').classList.remove('d-none');
   }
 
-  document.getElementById('anime').classList.remove('d-none');
+  document.getElementById('item').classList.remove('d-none');
 }
 
 /* exported addItem */
-async function addItem (type) {
+async function addItem () {
   try {
-    const animeApiResponse = await animeApi.addAnime(apiName, apiId);
-    const animeId = animeApiResponse.data.anime_id;
+    const addItemRes = await moshanApi.addItem(apiName, apiId);
+    const id = addItemRes.data.id;
 
-    await watchHistoryApi.addWatchHistoryItem(type, animeId);
+    await watchHistoryApi.addWatchHistoryItem(collection, id);
     document.getElementById('add-button').classList.add('d-none');
     document.getElementById('remove-button').classList.remove('d-none');
   } catch (error) {
@@ -127,9 +127,9 @@ async function addItem (type) {
 }
 
 /* exported removeItem */
-async function removeItem (type) {
+async function removeItem () {
   try {
-    await watchHistoryApi.removeWatchHistoryItem(type, id);
+    await watchHistoryApi.removeWatchHistoryItem(collection, id);
     document.getElementById('add-button').classList.remove('d-none');
     document.getElementById('remove-button').classList.add('d-none');
   } catch (error) {
@@ -137,26 +137,23 @@ async function removeItem (type) {
   }
 }
 
-function createEpisodesList (animeId, episodes) {
+function createEpisodesList (id, episodes) {
   let tableHTML = '';
   episodes.items.forEach(function (episode) {
-    const episodeId = episode.id;
-    const episodeNumber = episode.episode_number;
-    const episodeDate = episode.air_date;
-    const episodeAired = Date.parse(episodeDate) <= (new Date()).getTime();
+    episode = api.getMoshanEpisode(episode);
 
     let rowClass = 'episodeRow';
-    let onClickAction = `window.location='/episode?collection_name=anime&id=${animeId}&episode_id=${episodeId}'`;
-    if (!episodeAired) {
+    let onClickAction = `window.location='/episode?collection_name=${collection}&id=${id}&episode_id=${episode.id}'`;
+    if (!episode.aired) {
       rowClass = 'bg-secondary';
       onClickAction = '';
     }
 
     tableHTML += `
             <tr onclick="${onClickAction}" class=${rowClass}>
-                <td class="small">${episodeNumber}</td>
+                <td class="small">${episode.number}</td>
                 <td class="text-truncate small">${episode.title}</td>
-                <td class="small">${episodeDate}</td>
+                <td class="small">${episode.air_date}</td>
             </tr>
         `;
   });
@@ -202,7 +199,7 @@ function loadEpisodes (page) {
   document.getElementById('episodesPages').getElementsByTagName('LI')[episodePage].classList.remove('active');
 
   episodePage = page;
-  animeApi.getAnimeEpisodes(id, episodePage).then(function (response) {
+  episodesApi.getEpisodes(id, episodePage).then(function (response) {
     createEpisodesList(response.data);
   }).catch(function (error) {
     console.log(error);

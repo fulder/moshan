@@ -30,8 +30,8 @@ if (id !== null) {
 let showRequest;
 let showEpisodesRequest;
 if (apiName === 'tvmaze') {
-  showRequest = tvMazeApi.getShowById(apiId);
-  showEpisodesRequest = tvMazeApi.getShowEpisodes(apiId);
+  showRequest = tvMazeApi.getItemById(apiId);
+  showEpisodesRequest = tvMazeApi.getItemEpisodes(apiId);
 }
 requests.push(showRequest, showEpisodesRequest);
 
@@ -53,7 +53,7 @@ axios.all(requests).then(axios.spread((...responses) => {
 });
 
 function getShowApiId(apiName, showId) {
-  showsApi.getShowById(showId).then(response => {
+  showsApi.getItemById(showId).then(response => {
     return response[`${apiName}_id`];
   }).catch(error => {
       console.log(error);

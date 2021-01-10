@@ -15,23 +15,23 @@ class AnimeApi {
     });
   }
 
-  getAnimeByApiId (apiName, id) {
+  getItemByApiId (apiName, id) {
     return this.apiAxios.get(`/anime?${apiName}_id=${id}`);
   }
 
-  getAnimeById (id) {
+  getItemById (id) {
     return this.apiAxios.get(`/anime/${id}`);
   }
 
-  getAnimeEpisodes (id, start = 1, limit = 100) {
+  getEpisodes (id, start = 1, limit = 100) {
     return this.apiAxios.get(`/anime/${id}/episodes?limit=${limit}&start=${start}`);
   }
 
-  getAnimeEpisode (id, episodeId) {
+  getEpisode (id, episodeId) {
     return this.apiAxios.get(`/anime/${id}/episode/${episodeId}`);
   }
 
-  addAnime(apiName, apiId) {
+  addItem(apiName, apiId) {
     const data = {
       api_name: apiName,
       api_id: apiId,

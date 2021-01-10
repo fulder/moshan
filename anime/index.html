@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <title>Moshan - Anime</title>
+    <title id="headTitle"></title>
 </head>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light px-2">
@@ -81,7 +81,7 @@
 <body>
 
 <div class="container-fluid">
-    <div id="anime" class="row d-none">
+    <div id="item" class="row d-none">
       <div class="col-md-3 col-5 item">
           <img id="poster" class="img-fluid" />
       </div>
@@ -93,21 +93,14 @@
            <div class="card mt-2 col-7 col-md-3">
               <div class="card-header">Links</div>
               <div class="card-body p-1">
-                  <div class="row">
-                      <div class="col-6 col-md-5">
-                          <a id="mal-link" target="_blank"><img class="img-fluid" src="/includes/icons/mal.png" /></a>
-                      </div>
-                      <div id="anidb-link-div" class="col-6 col-md-5 d-none">
-                          <a id="anidb-link" target="_blank"><img class="img-fluid" src="/includes/icons/anidb.png" /></a>
-                      </div>
-                  </div>
+                  <div id="links" class="row"></div>
               </div>
           </div>
       </div>
 
       <div class="col-md-3 col-7 mt-1">
-          <button id="add-button" class="btn btn-success d-none" onclick="addItem('anime')"><i class="fa fa-plus"></i> Add</button>
-          <button id="remove-button" class="btn btn-danger d-none" onclick="removeItem('anime')"><i class="fa fa-minus"></i> Remove</button>
+          <button id="add-button" class="btn btn-success d-none" onclick="addItem()"><i class="fa fa-plus"></i> Add</button>
+          <button id="remove-button" class="btn btn-danger d-none" onclick="removeItem()"><i class="fa fa-minus"></i> Remove</button>
       </div>
 
       <div id="synopsisCol" class="mt-2 col-12">
@@ -150,6 +143,8 @@
 <script src="/includes/js/api/common.js"></script>
 <script src="/includes/js/api/anime.js"></script>
 <script src="/includes/js/api/mal.js"></script>
+<script src="/includes/js/api/tvmaze.js"></script>
+
 <script src="/includes/js/api/watch_history.js"></script>
 <script src="/includes/js/anime.js"></script>
 

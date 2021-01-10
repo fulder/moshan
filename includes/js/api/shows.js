@@ -15,7 +15,15 @@ class ShowsApi {
     });
   }
 
-  getShowById (id) {
+  getItemById (id) {
     return this.apiAxios.get(`/show/${id}`);
+  }
+
+  addItem(apiName, apiId) {
+    const data = {
+      api_name: apiName,
+      api_id: apiId,
+    };
+    return this.apiAxios.post('/show', data);
   }
 }
