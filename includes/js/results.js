@@ -2,8 +2,12 @@
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
-const animeApi = getApiByName(qParams.anime_api);
-const showApi = getApiByName(qParams.show_api);
+// Will be moved to profile settings in the future
+const animeApiName = 'mal';
+const showApiName = 'tvmaze';
+
+const animeApi = getApiByName(animeApiName);
+const showApi = getApiByName(showApiName);
 
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
@@ -17,8 +21,6 @@ getResults();
 
 function QueryParams(urlParams) {
   this.search = urlParams.get('search');
-  this.anime_api = urlParams.get('anime_api');
-  this.show_api = urlParams.get('show_api');
 }
 
 async function getResults() {
@@ -53,7 +55,7 @@ function createResultAnimeItem (anime) {
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/item/index.html?collection=anime&api_name=${qParams.anime_api}&api_id=${externalId}">
+      <a href="/item/index.html?collection=anime&api_name=${animeApiName}&api_id=${externalId}">
         <img class="img-fluid" src=${poster} />
         <p class="text-truncate small">${title}</p>
       </a>
@@ -84,7 +86,7 @@ function createResultShowItem (show) {
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/item/index.html?collection=show&api_name=${qParams.show_api}&api_id=${externalId}">
+      <a href="/item/index.html?collection=show&api_name=${showApiName}&api_id=${externalId}">
         <img class="img-fluid" src=${poster} />
         <p class="text-truncate small">${title}</p>
       </a>
