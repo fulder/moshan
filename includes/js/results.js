@@ -34,6 +34,7 @@ async function getResults() {
 function createAnimeResults (animes) {
   let resultHTML = '';
   console.debug(animes);
+  console.degbu(animes.data.length);
   for (let i=0; i<animes.data.length; i++) {
     resultHTML += createResultAnimeItem(animes.data[i].node);
   }
