@@ -30,7 +30,8 @@ class TvMazeApi {
       show.name,
       show.premiered,
       show.status,
-      show.summary
+      show.summary,
+      true
     );
   }
 
@@ -44,8 +45,7 @@ class TvMazeApi {
       episodeId,
       episode.number,
       episode.name,
-      episode.airdate,
-      true
+      episode.airdate
     );
   }
 }
