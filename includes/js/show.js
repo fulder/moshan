@@ -132,7 +132,7 @@ async function removeItem (type) {
 function createEpisodesList (showId, showEpisodes) {
   let tableHTML = '';
 
-  showEpisodes.forEach(function (episode) {
+  showEpisodes.reverse().forEach(function (episode) {
     const seasonNbr = (episode.season < 10 ? '0' : '') + episode.season;
     const episodeNbr = (episode.number < 10 ? '0' : '') + episode.number;
 
