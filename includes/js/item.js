@@ -82,7 +82,8 @@ async function getItemByApiId() {
 
   createItem(moshanItem, null, null);
 
-  if (moshanItem.has_episodes) {
+  // can't lookup anime episodes in anime API if the item doesn't exist
+  if (collection != 'anime' && moshanItem.has_episodes) {
     episodeRes = await episodeApi.getEpisodes(id, episodePage),
     createEpisodesList(id, episodeRes.data, watchHistoryItem);
   }
