@@ -24,10 +24,8 @@ function QueryParams(urlParams) {
 }
 
 async function getResults() {
-  const animeReq = animeApi.search(qParams);
-  const showReq = showApi.search(qParams);
-
-  const [animeRes, showRes] = await Promise.all([animeReq, showReq]);
+  const animeRes = await animeApi.search(qParams);
+  const showRes = await showApi.search(qParams);
 
   createAnimeResults(animeRes);
   createShowResults(showRes);
