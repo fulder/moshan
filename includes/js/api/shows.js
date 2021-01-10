@@ -3,7 +3,7 @@
 class ShowsApi {
   constructor () {
     this.apiAxios = axios.create({
-      baseURL: 'https://api.shows.moshan.tv/v1',
+      baseURL: 'https://api.show.moshan.tv/v1',
       headers: {
         'Content-Type': 'application/json',
       },
