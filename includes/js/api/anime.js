@@ -15,16 +15,16 @@ class AnimeApi {
     });
   }
 
-  getItemByApiId (qParam) {
-    return this.apiAxios.get(`/anime?${qParam.api_name}_id=${qParam.api_id}`);
+  getItemByApiId (qParams) {
+    return this.apiAxios.get(`/anime?${qParams.api_name}_id=${qParams.api_id}`);
   }
 
   getItemById (qParams) {
     return this.apiAxios.get(`/anime/${qParams.id}`);
   }
 
-  getEpisodes (qParam) {
-    return this.apiAxios.get(`/anime/${qParam.id}/episodes?limit=100&start=${qParam.episode_page}`);
+  getEpisodes (qParams) {
+    return this.apiAxios.get(`/anime/${qParams.id}/episodes?limit=100&start=${qParams.episode_page}`);
   }
 
   getEpisode (qParams) {
