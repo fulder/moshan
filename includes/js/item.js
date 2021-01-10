@@ -56,7 +56,7 @@ async function getItemByMoshanId() {
 
   if (moshanItem.has_episodes) {
     episodeRes = await episodeApi.getEpisodes(episodeItemId, episodePage),
-    createEpisodesList(id, episodeRes.data, watchHistoryItem);
+    createEpisodesList(id, episodeRes.data);
   }
 }
 
@@ -86,7 +86,7 @@ async function getItemByApiId() {
   // can't lookup anime episodes in anime API if the item doesn't exist
   if (collection != 'anime' && moshanItem.has_episodes) {
     episodeRes = await episodeApi.getEpisodes(episodeItemId, episodePage),
-    createEpisodesList(id, episodeRes.data, watchHistoryItem);
+    createEpisodesList(id, episodeRes.data);
   }
 }
 
