@@ -1,17 +1,11 @@
 /* global flatpickr, getMoshanApiByCollectionName, getApiByName */
 /* global WatchHistoryApi */
 const urlParams = new URLSearchParams(window.location.search);
-const collection = urlParams.get('collection');
-const apiName = urlParams.get('api_name');
-const id = urlParams.get('id');
-const apiId = urlParams.get('api_id');
-const episodeId = urlParams.get('episode_id');
+const apiUrlParams = new ApiQueryParams(urlParams);
 
 const watchHistoryApi = new WatchHistoryApi();
 // quickfix until e.g. MAL epi implements episodes endpoints
 const episodeApi = collection == 'anime' ? getMoshanApiByCollectionName(collection) : getApiByName(apiName);
-const episodeItemId = collection == 'anime' ? id : apiId;
-
 
 let datesWatched;
 let calendarInstance;
@@ -21,7 +15,7 @@ getEpisodes();
 async function getEpisodes() {
   let watchHistoryEpisode = null;
   try {
-    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(collection, id, episodeId);
+    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(apiUrlParams);
     watchHistoryEpisode = watchHistoryRes.data;
   } catch(error) {
     if (error.response.status != 404) {
@@ -29,7 +23,7 @@ async function getEpisodes() {
     }
   }
 
-  const apiEpisodeRes = await episodeApi.getEpisode(episodeItemId, episodeId);
+  const apiEpisodeRes = await episodeApi.getEpisode(apiQueryParams);
   const moshanEpisode = episodeApi.getMoshanEpisode(apiEpisodeRes.data);
 
   createEpisodePage(moshanEpisode, watchHistoryEpisode);
