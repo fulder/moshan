@@ -39,6 +39,5 @@ class MalApi {
       anime.id,
       null
     );
-
   }
 }
