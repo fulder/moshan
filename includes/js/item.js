@@ -12,10 +12,10 @@ const api = getApiByName(qParams.api_name);
 const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 let totalPages = 0;
 
-if (id !== null) {
+if (qParams.id !== null) {
   getItemByMoshanId();
 }
-else if (apiId !== null) {
+else if (qParams.api_id !== null) {
   getItemByApiId();
 }
 
