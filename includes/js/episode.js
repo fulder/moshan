@@ -2,6 +2,7 @@
 /* global WatchHistoryApi */
 const urlParams = new URLSearchParams(window.location.search);
 const collection = urlParams.get('collection');
+const apiName = urlParams.get('api_name');
 const id = urlParams.get('id');
 const episodeId = urlParams.get('episode_id');
 
