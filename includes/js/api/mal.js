@@ -32,16 +32,16 @@ class MalApi {
       status = 'Finished';
     }
 
+    const hasEpisodes = 'num_episodes' in anime && anime.num_episodes != 1;
+
     return new MoshanItem(
       anime.main_picture.large,
       anime.title,
       anime.start_date,
       status,
-      anime.synopsis
+      anime.synopsis,
+      hasEpisodes
     );
   }
 
-  hasEpisodes(anime) {
-    return 'num_episodes' in anime && anime.num_episodes != 1;
-  }
 }

@@ -53,7 +53,7 @@ async function getItemByMoshanId() {
 
   createItem(apiItem, item, watchHistoryItem);
 
-  if (api.hasEpisodes(apiItem)) {
+  if (apiItem.has_episodes) {
     episodeRes = await episodeApi.getEpisodes(id, episodePage),
     createEpisodesList(id, episodeRes.data, watchHistoryItem);
   }

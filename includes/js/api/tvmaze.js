@@ -44,11 +44,8 @@ class TvMazeApi {
       episodeId,
       episode.number,
       episode.name,
-      episode.airdate
+      episode.airdate,
+      true
     );
-  }
-
-  hasEpisodes() {
-    return true;
   }
 }
