@@ -1,4 +1,4 @@
-/* global axios */
+/* global axios, MoshanItem */
 /* exported MalApi */
 class MalApi {
   constructor () {
@@ -22,5 +22,23 @@ class MalApi {
 
   getAnimeById(id) {
     return this.apiAxios.get(`/anime/${id}?fields=start_date,num_episodes,synopsis`);
+  }
+
+  getMoshanItem(anime) {
+    let status = 'Airing';
+    if ('end_date' in anime && anime.end_date !== null) {
+      status = 'Finished';
+    }
+
+    return MoshanItem(
+      anime.main_picture.large,
+      anime.title,
+      anime.start_date,
+      status,
+      anime.synopsis,
+      anime.id,
+      null
+    );
+
   }
 }
