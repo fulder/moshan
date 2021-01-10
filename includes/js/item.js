@@ -63,7 +63,7 @@ async function getItemByMoshanId() {
     }
   }
 
-  const itemRes = await api.getItemById(id);
+  const itemRes = await api.getItemById(apiId);
   const item = itemRes.data;
   console.debug(item);
   const apiId = item[`${apiName}_id`];
