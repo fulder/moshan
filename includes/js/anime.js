@@ -88,17 +88,14 @@ function createAnime (apiAnimeItem, animeItem, watchHistoryItem) {
   console.debug(`Item added: ${itemAdded}`);
   console.debug(watchHistoryItem);
 
-  let status = 'Airing';
-  if ('end_date' in apiAnimeItem && apiAnimeItem.end_date !== null) {
-    status = 'Finished';
-  }
+  const moshanItem = malApi.getMoshanItem(apiAnimeItem);
 
-  document.getElementById('poster').src = apiAnimeItem.main_picture.large;
-  document.getElementById('title').innerHTML = apiAnimeItem.title;
-  document.getElementById('start-date').innerHTML = apiAnimeItem.start_date;
-  document.getElementById('status').innerHTML = status;
-  document.getElementById('synopsis').innerHTML = apiAnimeItem.synopsis;
-  document.getElementById('mal-link').href = `https://myanimelist.net/anime/${apiAnimeItem.id}`;
+  document.getElementById('poster').src = moshanItem.poster;
+  document.getElementById('title').innerHTML = moshanItem.title;
+  document.getElementById('start-date').innerHTML = moshanItem.start_date;
+  document.getElementById('status').innerHTML = moshanItem.status;
+  document.getElementById('synopsis').innerHTML = moshanItem.synopsis;
+  document.getElementById('mal-link').href = `https://myanimelist.net/anime/${moshanItem.id}`;
 
   if (animeItem !== null && 'anidb_id' in animeItem) {
     document.getElementById('anidb-link').href = `https://anidb.net/anime/${animeItem.anidb_id}`;
