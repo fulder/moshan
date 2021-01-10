@@ -113,7 +113,7 @@ async function patchWatchDate(date) {
     datesWatched[datesWatched.length - 1] = date;
   }
 
-  document.getElementById('watchedAmount').innerHTML = datesWatched.length;
+  document.getElementById('watched_amount').innerHTML = datesWatched.length;
   console.debug(datesWatched);
 
   await watchHistoryApi.updateWatchHistoryEpisode(collection, id, episodeId, datesWatched);
@@ -126,7 +126,7 @@ async function removeWatchDate() {
   }
 
   datesWatched.pop();
-  document.getElementById('watchedAmount').innerHTML = datesWatched.length;
+  document.getElementById('watched_amount').innerHTML = datesWatched.length;
 
   if (datesWatched.length == 0) {
       calendarInstance.clear();
