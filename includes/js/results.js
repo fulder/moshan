@@ -48,7 +48,7 @@ function createResultAnimeItem (anime) {
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/anime/index.html?api_name=mal&api_id=${externalId}">
+      <a href="/anime/index.html?collection=anime&api_name=mal&api_id=${externalId}">
         <img class="img-fluid" src=${poster} />
         <p class="text-truncate small">${title}</p>
       </a>
@@ -79,7 +79,7 @@ function createResultShowItem (show) {
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/show/index.html?api_name=tvmaze&api_id=${externalId}">
+      <a href="/show/index.html?collection=show&api_name=tvmaze&api_id=${externalId}">
         <img class="img-fluid" src=${poster} />
         <p class="text-truncate small">${title}</p>
       </a>
