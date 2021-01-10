@@ -16,7 +16,11 @@ class ShowsApi {
   }
 
   getItemById(id) {
-    return this.apiAxios.get(`/show/${id}`);
+    return this.apiAxios.get(`/shows/${id}`);
+  }
+
+  getItemByApiId (apiName, id) {
+    return this.apiAxios.get(`/shows?${apiName}_id=${id}`);
   }
 
   addItem(apiName, apiId) {
