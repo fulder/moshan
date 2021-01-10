@@ -40,15 +40,6 @@ function MoshanEpisode(id, number, title, air_date, previous_id, next_id) {
   this.next_id = next_id;
 }
 
-/* exported ApiQueryParams */
-function ApiQueryParams(urlParams) {
-  this.collection = urlParams.get('collection');
-  this.api_name = urlParams.get('api_name');
-  this.id = urlParams.get('id');
-  this.api_id = urlParams.get('api_id');
-  this.episode_id = urlParams.get('episode_id');
-}
-
 /* exported getMoshanApiByCollectionName */
 function getMoshanApiByCollectionName(collection) {
   switch(collection) {
