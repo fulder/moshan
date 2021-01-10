@@ -50,7 +50,7 @@ class TvMazeApi {
 
     return new MoshanEpisode(
       episodeId,
-      episode.number,
+      episodeId,
       episode.name,
       episode.airdate
     );
