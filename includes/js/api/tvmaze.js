@@ -49,7 +49,7 @@ class TvMazeApi {
     const episodeId = `S${seasonNbr}E${episodeNbr}`;
 
     return new MoshanEpisode(
-      episodeId,
+      episode.id,
       episodeId,
       episode.name,
       episode.airdate
