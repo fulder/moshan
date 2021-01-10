@@ -55,11 +55,11 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
   document.getElementById('watched_amount').innerHTML = watchedAmount;
 
   if (moshanEpisode.previous_id !== null) {
-    document.getElementById('previous_episode').href = `/episode/?collection_name=${collection}&id=${id}&episode_id=${moshanEpisode.previous_episode}`;
+    document.getElementById('previous_episode').href = `/episode/?collection=${collection}&id=${id}&episode_id=${moshanEpisode.previous_id}`;
     document.getElementById('previous_episode').classList.remove('d-none');
   }
   if (moshanEpisode.next_id !== null) {
-    document.getElementById('next_episode').href = `/episode/?collection_name=${collection}&id=${id}&episode_id=${moshanEpisode.next_id}`;
+    document.getElementById('next_episode').href = `/episode/?collection=${collection}&id=${id}&episode_id=${moshanEpisode.next_id}`;
     document.getElementById('next_episode').classList.remove('d-none');
   }
 
