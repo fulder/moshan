@@ -91,7 +91,6 @@ async function getItemByApiId() {
 function createItem (moshanItem, item, watchHistoryItem) {
   const itemAdded = watchHistoryItem !== null;
   console.debug(`Item added: ${itemAdded}`);
-
   console.debug(moshanItem);
 
   document.getElementById('poster').src = moshanItem.poster;
