@@ -156,12 +156,12 @@ function createEpisodesList (moshanEpisodes) {
     let rowClass = 'bg-secondary';
     let onClickAction = '';
 
-    if (episode.aired && id !== null) {
+    if (episode.aired && qParams.id !== null) {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${collection}&api_name=${apiName}&id=${id}&episode_id=${episode.id}'`;
-    } else if (episode.aired && apiId !== null) {
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${qParams.api_name}&id=${qParams.id}&episode_id=${episode.id}'`;
+    } else if (episode.aired && qParams.api_id !== null) {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${collection}&api_name=${apiName}&api_id=${apiId}&episode_id=${episode.id}'`;
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_id=${episode.id}'`;
     }
 
     tableHTML += `
