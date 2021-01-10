@@ -29,17 +29,3 @@ function MoshanEpisode(id, number, title, air_date) {
   this.air_date = air_date;
   this.aired = Date.parse(this.air_date) <= (new Date()).getTime();;
 }
-
-/* exported getApiFromName */
-function getApiFromName(apiName) {
-  switch(apiName) {
-    case 'mal':
-      return new MalApi();
-    case 'tvmaze':
-      return new TvMazeApi();
-    case 'anime':
-      return new Anime();
-    case 'show':
-      return new Show();
-  }
-}
