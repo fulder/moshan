@@ -19,7 +19,7 @@ class TvMazeApi {
   }
 
   getEpisodes(qParams) {
-    return this.apiAxios.get(`/shows/${qParams.id}/episodes`);
+    return this.apiAxios.get(`/shows/${qParams.api_id}/episodes`);
   }
 
   getEpisode(qParams) {
