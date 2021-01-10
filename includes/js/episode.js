@@ -26,7 +26,7 @@ async function getEpisodes() {
     }
   }
 
-  const apiEpisodeRes = await episodesApi.getEpisode(id, episodeId);
+  const apiEpisodeRes = await episodeApi.getEpisode(id, episodeId);
   const moshanEpisode = episodeApi.getMoshanEpisode(apiEpisodeRes.data);
 
   createEpisodePage(moshanEpisode, watchHistoryEpisode);
