@@ -35,6 +35,7 @@ class MalApi {
     const hasEpisodes = 'num_episodes' in anime && anime.num_episodes != 1;
 
     return new MoshanItem(
+      anime.id,
       anime.main_picture.large,
       anime.title,
       anime.start_date,

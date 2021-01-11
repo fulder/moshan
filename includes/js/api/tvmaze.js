@@ -30,6 +30,7 @@ class TvMazeApi {
     console.debug(show);
 
     return new MoshanItem(
+      show.id,
       show.image.original,
       show.name,
       show.premiered,
