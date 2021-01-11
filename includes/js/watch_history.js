@@ -15,7 +15,7 @@ getCollections();
 
 async function getCollections() {
   const animeRes = await watchHistoryApi.getWatchHistoryByCollection('anime');
-  const showRes = await watchHistoryApi.getWatchHistoryByCollection('shows');
+  const showRes = await watchHistoryApi.getWatchHistoryByCollection('show');
 
   await getAnimeItems(animeRes.data);
   await getShowItems(showRes.data);
