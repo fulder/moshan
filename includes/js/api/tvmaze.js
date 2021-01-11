@@ -31,7 +31,7 @@ class TvMazeApi {
 
     return new MoshanItem(
       show.id,
-      show.image.original,
+      show.image.medium,
       show.name,
       show.premiered,
       show.status,
