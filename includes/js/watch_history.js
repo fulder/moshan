@@ -89,19 +89,29 @@ async function getShowItems (response) {
   let showsApiRequests = [];
   for (let i = 0; i < response.items.length; i++) {
     const watchHistoryItem = response.items[i];
-    const showRes = await showApi.getItemById({'id': watchHistoryItem.id});
-    const showRequest = api.getItemById({'api_id': showRes.tvmaze_id});
+    const showRequest = showApi.getItemById({'id': watchHistoryItem.id});
     showsApiRequests.push(showRequest);
+  }
+
+  const showResponses = await Promise.all(showsApiRequests);
+  console.debug('Moshan show responses');
+  console.debug(showResponses);
+
+  let apiRequests = [];
+  for (let i = 0; i < showResponses.length; i++) {
+    const showApiResponse = showResponses[i];
+    const showRequest = api.getItemById({'api_id': showApiResponse.id});
+    apiRequests.push(showRequest);
   }
 
   let resultHTML = '';
   let res = true;
   let itemCreated = false;
 
-  const showResponses = await Promise.all(showsApiRequests);
+  const apiResponses = await Promise.all(apiRequests);
 
-  console.debug('Show responses:');
-  console.debug(showResponses);
+  console.debug('Show api responses:');
+  console.debug(apiResponses);
 
   for (let i = 0; i < showResponses.length; i++) {
     const moshanItem = api.getMoshanItem(showResponses[i].data);
