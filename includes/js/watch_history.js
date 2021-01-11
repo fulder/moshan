@@ -8,6 +8,7 @@ if (accessToken === null) {
 } else {
   document.getElementById('logInAlert').className = 'd-none';
   document.getElementById('animeWatchHistory').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+  document.getElementById('showsWatchHistory').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
 getCollections();
@@ -85,8 +86,8 @@ async function getShowItems (response) {
 
   let showsApiRequests = [];
   for (let i = 0; i < response.items.length; i++) {
-    const watchHistoryAnime = response.items[i];
-    showRequest = api.getItemById({'api_id': watchHistoryAnime.tvmaze_id});
+    const watchHistoryItem = response.items[i];
+    showRequest = api.getItemById({'api_id': watchHistoryItem.tvmaze_id});
     showsApiRequests.push(showRequest);
   }
 
@@ -94,13 +95,13 @@ async function getShowItems (response) {
   let res = true;
   let itemCreated = false;
 
-  const animeResponses = await Promise.all(showsApiRequests);
+  const showResponses = await Promise.all(showsApiRequests);
 
   console.debug('Show responses:');
   console.debug(showResponses);
 
-  for (let i = 0; i < animeResponses.length; i++) {
-    const moshanItem = api.getMoshanItem(animeResponses[i].data);
+  for (let i = 0; i < showResponses.length; i++) {
+    const moshanItem = api.getMoshanItem(showResponses[i].data);
     const itemHTML = createHistoryShowItem(moshanItem);
 
     resultHTML += itemHTML;
