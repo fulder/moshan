@@ -89,7 +89,7 @@ async function getShowItems (response) {
   let showsApiRequests = [];
   for (let i = 0; i < response.items.length; i++) {
     const watchHistoryItem = response.items[i];
-    const showRequest = showApi.getItemById({'id': watchHistoryItem.id});
+    const showRequest = showApi.getItemById({'id': watchHistoryItem.item_id});
     showsApiRequests.push(showRequest);
   }
 
