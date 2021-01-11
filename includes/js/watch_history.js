@@ -1,7 +1,9 @@
-/* global WatchHistoryApi, AnimeApi, TvMazeApi, accessToken */
+/* global WatchHistoryApi, AnimeApi, ShowsApi, TvMazeApi, accessToken */
 const watchHistoryApi = new WatchHistoryApi();
 const animeApi = new AnimeApi();
 const api = new TvMazeApi();
+const showApi = new ShowsApi();
+
 
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
@@ -87,7 +89,8 @@ async function getShowItems (response) {
   let showsApiRequests = [];
   for (let i = 0; i < response.items.length; i++) {
     const watchHistoryItem = response.items[i];
-    showRequest = api.getItemById({'api_id': watchHistoryItem.tvmaze_id});
+    const showRes = await showApi.getItemById({'id': watchHistoryItem.id});
+    const showRequest = api.getItemById({'api_id': showRes.tvmaze_id});
     showsApiRequests.push(showRequest);
   }
 
