@@ -100,7 +100,7 @@ async function getShowItems (response) {
   let apiRequests = [];
   for (let i = 0; i < showResponses.length; i++) {
     const showApiResponse = showResponses[i];
-    const showRequest = api.getItemById({'api_id': showApiResponse.id});
+    const showRequest = api.getItemById({'api_id': showApiResponse.tvmaze_id});
     apiRequests.push(showRequest);
   }
 
