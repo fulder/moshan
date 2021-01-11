@@ -139,7 +139,7 @@ function createHistoryShowItem (moshanItem) {
 
   const resultHTML = `
       <div id="poster-show-${moshanItem.id}" class="col-4 col-md-2 poster">
-        <a href="/item?collection=anime&api_name=tvmaze&api_id=${moshanItem.id}">
+        <a href="/item?collection=show&api_name=tvmaze&api_id=${moshanItem.id}">
           <img class="img-fluid" src="${moshanItem.poster}" />
           <p class="text-truncate small">${moshanItem.title}</p>
         </a>
