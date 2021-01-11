@@ -36,7 +36,7 @@ class MalApi {
 
     return new MoshanItem(
       anime.id,
-      anime.main_picture.large,
+      anime.main_picture.medium,
       anime.title,
       anime.start_date,
       status,
