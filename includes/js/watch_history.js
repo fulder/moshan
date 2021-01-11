@@ -1,6 +1,7 @@
-/* global WatchHistoryApi, AnimeApi, accessToken */
+/* global WatchHistoryApi, AnimeApi, TvMazeApi, accessToken */
 const watchHistoryApi = new WatchHistoryApi();
 const animeApi = new AnimeApi();
+const api = new TvMazeApi();
 
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
@@ -13,7 +14,10 @@ getCollections();
 
 async function getCollections() {
   const animeRes = await watchHistoryApi.getWatchHistoryByCollection('anime');
+  const showRes = await watchHistoryApi.getWatchHistoryByCollection('shows');
+
   await getAnimeItems(animeRes.data);
+  await getShowItems(showRes.data);
 }
 
 async function getAnimeItems (response) {
@@ -68,6 +72,62 @@ function createHistoryAnimeItem (anime) {
         <a href="/item?collection=anime&api_name=mal&id=${animeId}">
           <img class="img-fluid" src="${poster}" />
           <p class="text-truncate small">${title}</p>
+        </a>
+    </div>
+  `;
+
+  return resultHTML;
+}
+
+async function getShowItems (response) {
+  console.debug('WatchHistory show response:');
+  console.debug(response);
+
+  let showsApiRequests = [];
+  for (let i = 0; i < response.items.length; i++) {
+    const watchHistoryAnime = response.items[i];
+    showRequest = api.getItemById({'api_id': watchHistoryAnime.tvmaze_id});
+    showsApiRequests.push(showRequest);
+  }
+
+  let resultHTML = '';
+  let res = true;
+  let itemCreated = false;
+
+  const animeResponses = await Promise.all(showsApiRequests);
+
+  console.debug('Show responses:');
+  console.debug(showResponses);
+
+  for (let i = 0; i < animeResponses.length; i++) {
+    const moshanItem = api.getMoshanItem(animeResponses[i].data);
+    const itemHTML = createHistoryShowItem(moshanItem);
+
+    resultHTML += itemHTML;
+
+    itemCreated = itemHTML !== '';
+    res = res && itemCreated;
+  }
+
+  if (res) {
+    document.getElementById('itemsLoadingAlert').className = 'd-none';
+  } else {
+    document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
+  }
+
+  document.getElementById('showsWatchHistory').innerHTML = resultHTML;
+}
+
+function createHistoryShowItem (moshanItem) {
+  if (moshanItem.title === undefined || moshanItem.poster === undefined) {
+    return '';
+  }
+
+  const resultHTML = `
+      <div id="poster-show-${moshanItem.id}" class="col-4 col-md-2 poster">
+        <a href="/item?collection=anime&api_name=tvmaze&api_id=${moshanItem.id}">
+          <img class="img-fluid" src="${moshanItem.poster}" />
+          <p class="text-truncate small">${moshanItem.title}</p>
         </a>
     </div>
   `;
