@@ -28,8 +28,6 @@ class TmdbApi {
   }
 
   getMoshanItem(movie) {
-    console.debug(movie);
-
     return new MoshanItem(
       movie.id,
       movie.poster_path,
