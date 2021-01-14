@@ -30,7 +30,7 @@ class TmdbApi {
   getMoshanItem(movie) {
     return new MoshanItem(
       movie.id,
-      movie.poster_path,
+      `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
       movie.title,
       movie.release_date,
       movie.status,
