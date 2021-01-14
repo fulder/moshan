@@ -48,11 +48,6 @@ function createResults(moshanItems, apiName) {
 }
 
 function createResultItem(moshanItem, apiName, collectionName) {
-  let poster = '/includes/img/image_not_available.png';
-  if (moshanItem.poster !== undefined) {
-    poster = moshanItem.poster;
-  }
-
   return `
     <div class="col-4 col-md-2 poster">
       <a href="/item/index.html?collection=${collectionName}&api_name=${apiName}&api_id=${moshanItem.id}">
