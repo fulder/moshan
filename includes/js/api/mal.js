@@ -16,8 +16,16 @@ class MalApi {
     });
   }
 
-  search(qParams) {
-    return this.apiAxios.get(`/anime?q=${qParams.search}`);
+  async search(qParams) {
+    res = await this.apiAxios.get(`/anime?q=${qParams.search}`);
+
+    const moshanItems = [];
+    for (let i=0; i<items.data.length; i++) {
+      const moshanItem = this.getMoshanItem(items.data[i].node);
+      moshanItems.push(moshanItem);
+    }
+    return moshanItems;
+
   }
 
   getItemById(qParams) {
@@ -41,7 +49,8 @@ class MalApi {
       anime.start_date,
       status,
       anime.synopsis,
-      hasEpisodes
+      hasEpisodes,
+      'anime'
     );
   }
 }

@@ -24,69 +24,36 @@ function QueryParams(urlParams) {
 }
 
 async function getResults() {
-  const animeRes = await animeApi.search(qParams);
-  const showRes = await showApi.search(qParams);
+  const animeMoshanItems = await animeApi.search(qParams);
+  const showMoshanItems = await showApi.search(qParams);
 
-  createAnimeResults(animeRes.data);
-  createShowResults(showRes.data);
+  createResults(animeMoshanItems, animeApiName);
+  createResults(showMoshanItems, showApiName);
 }
 
-function createAnimeResults (animes) {
+function createResults(moshanItems, apiName) {
   let resultHTML = '';
-  for (let i=0; i<animes.data.length; i++) {
-    resultHTML += createResultAnimeItem(animes.data[i].node);
+  for (let i=0; i<moshanItems.length; i++) {
+    resultHTML += createResultItem(animeMoshanItems[i], apiName);
   }
   console.debug(resultHTML);
 
-  document.getElementById('animeResults').innerHTML = resultHTML;
+  document.getElementById(`${moshanItems[0].collection_name}Results`).innerHTML = resultHTML;
 }
 
-function createResultAnimeItem (anime) {
-  console.debug(anime);
-  const title = anime.title;
-  const externalId = anime.id;
+function createResultItem(moshanItem, apiName) {
+  console.debug(moshanItem);
 
   let poster = '/includes/img/image_not_available.png';
-  if (anime.main_picture !== undefined) {
-    poster = anime.main_picture.medium;
+  if (moshanItem.poster !== undefined) {
+    poster = moshanItem.poster;
   }
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/item/index.html?collection=anime&api_name=${animeApiName}&api_id=${externalId}">
+      <a href="/item/index.html?collection=${moshanItem.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}">
         <img class="img-fluid" src=${poster} />
-        <p class="text-truncate small">${title}</p>
-      </a>
-    </div>
-  `;
-}
-
-function createShowResults (shows) {
-  let resultHTML = '';
-  console.debug(shows);
-  for (let i=0; i<shows.length; i++) {
-    resultHTML += createResultShowItem(shows[i].show);
-  }
-
-  document.getElementById('showResults').innerHTML = resultHTML;
-}
-
-function createResultShowItem (show) {
-  console.debug(show);
-  const title = show.name;
-
-  let poster = '/includes/img/image_not_available.png';
-  if (show.image !== null) {
-    poster = show.image.medium;
-  }
-
-  const externalId = show.id;
-
-  return `
-    <div class="col-4 col-md-2 poster">
-      <a href="/item/index.html?collection=show&api_name=${showApiName}&api_id=${externalId}">
-        <img class="img-fluid" src=${poster} />
-        <p class="text-truncate small">${title}</p>
+        <p class="text-truncate small">${moshanItem.title}</p>
       </a>
     </div>
   `;

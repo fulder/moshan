@@ -10,8 +10,14 @@ class TvMazeApi {
     });
   }
 
-  search (qParams) {
-    return this.apiAxios.get(`/search/shows?q=${qParams.search}`);
+  async search (qParams) {
+    res = await this.apiAxios.get(`/search/shows?q=${qParams.search}`);
+
+    const moshanItems = [];
+    for (let i=0; i<res.length; i++) {
+      moshanItems.push(this.getMoshanItem(res[i]));
+    }
+    return moshanItems;
   }
 
   getItemById(qParams) {
@@ -36,7 +42,8 @@ class TvMazeApi {
       show.premiered,
       show.status,
       show.summary,
-      true
+      true,
+      'show'
     );
   }
 

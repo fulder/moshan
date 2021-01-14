@@ -29,7 +29,8 @@ class TmdbApi {
       movie.release_date,
       movie.status,
       show.overview,
-      false
+      false,
+      'movie'
     );
   }
 }
