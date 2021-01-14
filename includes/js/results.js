@@ -33,7 +33,7 @@ async function getResults() {
 
 function createResults(moshanItems, apiName) {
   console.debug(moshanItems);
-  
+
   let resultHTML = '';
   for (let i=0; i<moshanItems.length; i++) {
     resultHTML += createResultItem(animeMoshanItems[i], apiName);
@@ -44,8 +44,6 @@ function createResults(moshanItems, apiName) {
 }
 
 function createResultItem(moshanItem, apiName) {
-  console.debug(moshanItem);
-
   let poster = '/includes/img/image_not_available.png';
   if (moshanItem.poster !== undefined) {
     poster = moshanItem.poster;
