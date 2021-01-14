@@ -38,7 +38,6 @@ function createResults(moshanItems, apiName) {
   for (let i=0; i<moshanItems.items.length; i++) {
     resultHTML += createResultItem(moshanItems.items[i], apiName, moshanItems.collection_name);
   }
-  console.debug(resultHTML);
 
   document.getElementById(`${moshanItems.collection_name}Results`).innerHTML = resultHTML;
 }
