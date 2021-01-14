@@ -41,6 +41,7 @@ function createResults(moshanItems, apiName) {
 
   let resultHTML = '';
   for (let i=0; i<moshanItems.items.length; i++) {
+    const moshanItem = moshanItems.items[i];
     resultHTML += `
       <div class="col-4 col-md-2 poster">
         <a href="/item/index.html?collection=${moshanItems.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}">
