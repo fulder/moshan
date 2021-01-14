@@ -20,16 +20,16 @@ class MalApi {
     const res = await this.apiAxios.get(`/anime?q=${qParams.search}`);
 
     const moshanItems = new MoshanItems('anime');
-    for (let i=0; i<res.data.length; i++) {
-      const moshanItem = this.getMoshanItem(res.data[i].data.node);
+    for (let i=0; i<res.data.data.length; i++) {
+      const moshanItem = this.getMoshanItem(res.data.data[i].node);
       moshanItems.items.push(moshanItem);
     }
     return moshanItems;
-
   }
 
-  getItemById(qParams) {
-    return this.apiAxios.get(`/anime/${qParams.api_id}?fields=start_date,num_episodes,synopsis`);
+  async getItemById(qParams) {
+    const res = this.apiAxios.get(`/anime/${qParams.api_id}?fields=start_date,num_episodes,synopsis`);
+    return this.getMoshanItem(res.data);
   }
 
   getMoshanItem(anime) {
