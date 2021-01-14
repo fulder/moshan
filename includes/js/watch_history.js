@@ -108,14 +108,13 @@ async function getShowItems (response) {
   let res = true;
   let itemCreated = false;
 
-  const apiResponses = await Promise.all(apiRequests);
+  const apiMoshanItems = await Promise.all(apiRequests);
 
   console.debug('Show api responses:');
   console.debug(apiResponses);
 
-  for (let i = 0; i < apiResponses.length; i++) {
-    const moshanItem = api.getMoshanItem(apiResponses[i].data);
-    const itemHTML = createHistoryShowItem(moshanItem);
+  for (let i = 0; i < apiMoshanItems.length; i++) {
+    const itemHTML = createHistoryShowItem(apiMoshanItems[i]);
 
     resultHTML += itemHTML;
 
