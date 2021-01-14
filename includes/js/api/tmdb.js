@@ -28,9 +28,14 @@ class TmdbApi {
   }
 
   getMoshanItem(movie) {
+    let poster = '/includes/img/image_not_available.png';
+    if (movie.poster_path !== null) {
+      poster = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
+    }
+
     return new MoshanItem(
       movie.id,
-      `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
+      poster,
       movie.title,
       movie.release_date,
       movie.status,

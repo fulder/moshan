@@ -40,9 +40,14 @@ class MalApi {
 
     const hasEpisodes = 'num_episodes' in anime && anime.num_episodes != 1;
 
+    let poster = '/includes/img/image_not_available.png';
+    if (anime.main_picture.medium !== undefined) {
+      poster = anime.main_picture.medium;
+    }
+
     return new MoshanItem(
       anime.id,
-      anime.main_picture.medium,
+      poster,
       anime.title,
       anime.start_date,
       status,
