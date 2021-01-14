@@ -21,7 +21,7 @@ class MalApi {
 
     const moshanItems = new MoshanItems('anime');
     for (let i=0; i<res.data.length; i++) {
-      const moshanItem = this.getMoshanItem(res.data[i].node);
+      const moshanItem = this.getMoshanItem(res.data[i].data.node);
       moshanItems.items.push(moshanItem);
     }
     return moshanItems;
