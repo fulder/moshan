@@ -32,6 +32,8 @@ async function getResults() {
 }
 
 function createResults(moshanItems, apiName) {
+  console.debug(moshanItems);
+  
   let resultHTML = '';
   for (let i=0; i<moshanItems.length; i++) {
     resultHTML += createResultItem(animeMoshanItems[i], apiName);
