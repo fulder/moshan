@@ -5,9 +5,11 @@ const qParams = new QueryParams(urlParams);
 // Will be moved to profile settings in the future
 const animeApiName = 'mal';
 const showApiName = 'tvmaze';
+const movieApiName = 'tmdb';
 
 const animeApi = getApiByName(animeApiName);
 const showApi = getApiByName(showApiName);
+const movieApi = getApiByName(movieApiName);
 
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
@@ -26,9 +28,11 @@ function QueryParams(urlParams) {
 async function getResults() {
   const animeMoshanItems = await animeApi.search(qParams);
   const showMoshanItems = await showApi.search(qParams);
+  const movieMoshanItems = await movieApi.search(qParams);
 
   createResults(animeMoshanItems, animeApiName);
   createResults(showMoshanItems, showApiName);
+  createResults(movieMoshanItems, movieApiName);
 }
 
 function createResults(moshanItems, apiName) {
