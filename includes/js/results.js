@@ -27,11 +27,11 @@ async function getResults() {
   const animeMoshanItems = await animeApi.search(qParams);
   const showMoshanItems = await showApi.search(qParams);
 
-  createResults(animeMoshanItems, animeApiName);
-  createResults(showMoshanItems, showApiName);
+  createResults(animeMoshanItems, animeApiName, 'anime');
+  createResults(showMoshanItems, showApiName, 'show');
 }
 
-function createResults(moshanItems, apiName) {
+function createResults(moshanItems, apiName, collectionName) {
   console.debug(moshanItems);
 
   let resultHTML = '';
@@ -40,7 +40,7 @@ function createResults(moshanItems, apiName) {
   }
   console.debug(resultHTML);
 
-  document.getElementById(`${moshanItems[0].collection_name}Results`).innerHTML = resultHTML;
+  document.getElementById(`${collectionName}Results`).innerHTML = resultHTML;
 }
 
 function createResultItem(moshanItem, apiName) {
