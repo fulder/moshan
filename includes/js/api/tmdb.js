@@ -12,7 +12,7 @@ class TmdbApi {
   }
 
   async search (qParams) {
-    const res = this.apiAxios.get(`/search/movie?query=${qParams.search}`);
+    const res = await this.apiAxios.get(`/search/movie?query=${qParams.search}`);
 
     const moshanItems = new MoshanItems('movie');
     for (let i=0; i<res.data.results.length; i++) {
@@ -23,7 +23,7 @@ class TmdbApi {
   }
 
   async getItemById(qParams) {
-    const res = this.apiAxios.get(`/movie/${qParams.api_id}?append_to_response=images`);
+    const res = await this.apiAxios.get(`/movie/${qParams.api_id}?append_to_response=images`);
     return this.getMoshanItem(res.data);
   }
 
