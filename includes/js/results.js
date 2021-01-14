@@ -41,19 +41,15 @@ function createResults(moshanItems, apiName) {
 
   let resultHTML = '';
   for (let i=0; i<moshanItems.items.length; i++) {
-    resultHTML += createResultItem(moshanItems.items[i], apiName, moshanItems.collection_name);
+    resultHTML += `
+      <div class="col-4 col-md-2 poster">
+        <a href="/item/index.html?collection=${collectionName}&api_name=${apiName}&api_id=${moshanItem.id}">
+          <img class="img-fluid" src=${moshanItem.poster} />
+          <p class="text-truncate small">${moshanItem.title}</p>
+        </a>
+      </div>
+    `;
   }
 
   document.getElementById(`${moshanItems.collection_name}Results`).innerHTML = resultHTML;
-}
-
-function createResultItem(moshanItem, apiName, collectionName) {
-  return `
-    <div class="col-4 col-md-2 poster">
-      <a href="/item/index.html?collection=${collectionName}&api_name=${apiName}&api_id=${moshanItem.id}">
-        <img class="img-fluid" src=${poster} />
-        <p class="text-truncate small">${moshanItem.title}</p>
-      </a>
-    </div>
-  `;
 }
