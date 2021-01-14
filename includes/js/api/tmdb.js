@@ -34,7 +34,7 @@ class TmdbApi {
       movie.title,
       movie.release_date,
       movie.status,
-      show.overview,
+      movie.overview,
       false,
       'movie'
     );
