@@ -17,11 +17,11 @@ class MalApi {
   }
 
   async search(qParams) {
-    res = await this.apiAxios.get(`/anime?q=${qParams.search}`);
+    const res = await this.apiAxios.get(`/anime?q=${qParams.search}`);
 
     const moshanItems = [];
-    for (let i=0; i<items.data.length; i++) {
-      const moshanItem = this.getMoshanItem(items.data[i].node);
+    for (let i=0; i<res.data.length; i++) {
+      const moshanItem = this.getMoshanItem(res.data[i].node);
       moshanItems.push(moshanItem);
     }
     return moshanItems;

@@ -11,7 +11,7 @@ class TvMazeApi {
   }
 
   async search (qParams) {
-    res = await this.apiAxios.get(`/search/shows?q=${qParams.search}`);
+    const res = await this.apiAxios.get(`/search/shows?q=${qParams.search}`);
 
     const moshanItems = [];
     for (let i=0; i<res.length; i++) {
