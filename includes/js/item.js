@@ -50,8 +50,7 @@ async function getItemByMoshanId() {
   console.debug(item);
   const apiId = item[`${qParams.api_name}_id`];
 
-  const apiRes = await api.getItemById({'api_id': apiId});
-  const moshanItem = api.getMoshanItem(apiRes.data);
+  const moshanItem = await api.getItemById({'api_id': apiId});
 
   createItem(moshanItem, item, watchHistoryItem);
 
@@ -80,8 +79,7 @@ async function getItemByApiId() {
     return getItemByMoshanId();
   }
 
-  const apiRes = await api.getItemById(qParams);
-  const moshanItem = api.getMoshanItem(apiRes.data);
+  const moshanItem = await api.getItemById(qParams);
 
   createItem(moshanItem, null, null);
 

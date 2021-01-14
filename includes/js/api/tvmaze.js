@@ -20,8 +20,9 @@ class TvMazeApi {
     return moshanItems;
   }
 
-  getItemById(qParams) {
-    return this.apiAxios.get(`/shows/${qParams.api_id}`);
+  async getItemById(qParams) {
+    const res = await this.apiAxios.get(`/shows/${qParams.api_id}`);
+    return this.getMoshanItem(res.data);
   }
 
   getEpisodes(qParams) {

@@ -11,12 +11,20 @@ class TmdbApi {
     });
   }
 
-  search (qParams) {
-    return this.apiAxios.get(`/search/movie?query=${qParams.search}`);
+  async search (qParams) {
+    const res = this.apiAxios.get(`/search/movie?query=${qParams.search}`);
+
+    const moshanItems = new MoshanItems('movie');
+    for (let i=0; i<res.data.results.length; i++) {
+      const moshanItem = this.getMoshanItem(res.data.results[i]);
+      moshanItems.items.push(moshanItem);
+    }
+    return moshanItems;
   }
 
-  getItemById(qParams) {
-    return this.apiAxios.get(`/movie/${qParams.api_id}?append_to_response=images`);
+  async getItemById(qParams) {
+    const res = this.apiAxios.get(`/movie/${qParams.api_id}?append_to_response=images`);
+    return this.getMoshanItem(res.data);
   }
 
   getMoshanItem(movie) {
@@ -24,7 +32,7 @@ class TmdbApi {
 
     return new MoshanItem(
       movie.id,
-      movie.poster[0].file_path,
+      movie.poster_path,
       movie.title,
       movie.release_date,
       movie.status,
