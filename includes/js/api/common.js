@@ -64,5 +64,7 @@ function getApiByName(name) {
       return new MalApi();
     case 'tvmaze':
       return new TvMazeApi();
+    case 'tmdb':
+      return new TmdbApi();
   }
 }
