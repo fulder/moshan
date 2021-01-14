@@ -27,23 +27,23 @@ async function getResults() {
   const animeMoshanItems = await animeApi.search(qParams);
   const showMoshanItems = await showApi.search(qParams);
 
-  createResults(animeMoshanItems, animeApiName, 'anime');
-  createResults(showMoshanItems, showApiName, 'show');
+  createResults(animeMoshanItems, animeApiName);
+  createResults(showMoshanItems, showApiName);
 }
 
-function createResults(moshanItems, apiName, collectionName) {
+function createResults(moshanItems, apiName) {
   console.debug(moshanItems);
 
   let resultHTML = '';
-  for (let i=0; i<moshanItems.length; i++) {
-    resultHTML += createResultItem(animeMoshanItems[i], apiName);
+  for (let i=0; i<moshanItems.items.length; i++) {
+    resultHTML += createResultItem(moshanItems.items[i], apiName, moshanItems.collection_name);
   }
   console.debug(resultHTML);
 
-  document.getElementById(`${collectionName}Results`).innerHTML = resultHTML;
+  document.getElementById(`${moshanItems.collection_name}Results`).innerHTML = resultHTML;
 }
 
-function createResultItem(moshanItem, apiName) {
+function createResultItem(moshanItem, apiName, collectionName) {
   let poster = '/includes/img/image_not_available.png';
   if (moshanItem.poster !== undefined) {
     poster = moshanItem.poster;
@@ -51,7 +51,7 @@ function createResultItem(moshanItem, apiName) {
 
   return `
     <div class="col-4 col-md-2 poster">
-      <a href="/item/index.html?collection=${moshanItem.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}">
+      <a href="/item/index.html?collection=${collectionName}&api_name=${apiName}&api_id=${moshanItem.id}">
         <img class="img-fluid" src=${poster} />
         <p class="text-truncate small">${moshanItem.title}</p>
       </a>
