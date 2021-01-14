@@ -17,6 +17,7 @@ if (accessToken === null) {
   document.getElementById('logInAlert').className = 'd-none';
   document.getElementById('animeResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
   document.getElementById('showResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+  document.getElementById('movieResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
 getResults();
