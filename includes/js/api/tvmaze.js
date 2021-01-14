@@ -34,8 +34,6 @@ class TvMazeApi {
   }
 
   getMoshanItem(show) {
-    console.debug(show);
-
     return new MoshanItem(
       show.id,
       show.image.medium,
