@@ -15,7 +15,7 @@ class TvMazeApi {
 
     const moshanItems = [];
     for (let i=0; i<res.data.length; i++) {
-      moshanItems.push(this.getMoshanItem(res.data[i]));
+      moshanItems.push(this.getMoshanItem(res.data[i].show));
     }
     return moshanItems;
   }
