@@ -43,7 +43,7 @@ function createResults(moshanItems, apiName) {
   for (let i=0; i<moshanItems.items.length; i++) {
     resultHTML += `
       <div class="col-4 col-md-2 poster">
-        <a href="/item/index.html?collection=${collectionName}&api_name=${apiName}&api_id=${moshanItem.id}">
+        <a href="/item/index.html?collection=${moshanItems.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}">
           <img class="img-fluid" src=${moshanItem.poster} />
           <p class="text-truncate small">${moshanItem.title}</p>
         </a>
