@@ -28,7 +28,7 @@ class MalApi {
   }
 
   async getItemById(qParams) {
-    const res = this.apiAxios.get(`/anime/${qParams.api_id}?fields=start_date,num_episodes,synopsis`);
+    const res = await this.apiAxios.get(`/anime/${qParams.api_id}?fields=start_date,num_episodes,synopsis`);
     return this.getMoshanItem(res.data);
   }
 
