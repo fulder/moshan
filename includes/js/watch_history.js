@@ -17,7 +17,8 @@ if (accessToken === null) {
 createCollections();
 
 async function createCollections() {
-  for (var collectionName in collectionNames) {
+  for (let i = 0; i < collectionNames.length; i++) {
+    const collectionName = collectionNames[i];
     document.getElementById(`${collectionName}WatchHistory`).innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 
     const res = await watchHistoryApi.getWatchHistoryByCollection(collectionName);
