@@ -17,13 +17,22 @@ if (accessToken === null) {
 createCollections();
 
 async function createCollections() {
+  const watchHistoryRequests = [];
   for (let i = 0; i < collectionNames.length; i++) {
     const collectionName = collectionNames[i];
     document.getElementById(`${collectionName}WatchHistory`).innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 
-    const res = await watchHistoryApi.getWatchHistoryByCollection(collectionName);
-    await createItems(res.data, collectionName);
+    const req = watchHistoryApi.getWatchHistoryByCollection(collectionName);
+    watchHistoryRequests.push(req);
   }
+
+
+  const responses = await Promise.all(watchHistoryRequests);
+
+  for (let i = 0; i < responses.length; i++) {
+      createItems(responses[i].data, collectionName);
+  }
+
 }
 
 async function createItems(wathcHistoryItems, collectionName) {
