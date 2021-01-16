@@ -6,6 +6,7 @@ import decimal_encoder
 import api_errors
 import logger
 import jwt_utils
+import movie_api
 import schema
 import shows_api
 import watch_history_db
@@ -100,7 +101,7 @@ def _post_collection_item(username, collection_name, body, token):
         elif collection_name == "show":
             shows_api.get_show(item_id, token)
         elif collection_name == "movie":
-            return {"statusCode": 501}  # TODO: Implement
+            movie_api.get_movie(item_id, token)
     except api_errors.HttpError as e:
         err_msg = f"Could not get {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")

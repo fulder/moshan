@@ -42,3 +42,12 @@ def mocked_show_api():
     shows_api.SHOW_API_URL = "https://mocked"
 
     return shows_api
+
+
+@pytest.fixture(scope='function')
+def mocked_movie_api():
+    import movie_api
+
+    movie_api.MOVIE_API_URL = "https://mocked"
+
+    return movie_api

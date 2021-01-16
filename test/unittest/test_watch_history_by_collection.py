@@ -284,9 +284,9 @@ def test_handler_post_show(mocked_get_show, mocked_post):
 
 
 @patch("api.watch_history_by_collection.watch_history_db.add_item")
-@patch("api.watch_history_by_collection.shows_api.get_show")
-def test_handler_post_movie(mocked_get_show, mocked_post):
-    mocked_get_show.return_value = True
+@patch("api.watch_history_by_collection.movie_api.get_movie")
+def test_handler_post_movie(mocked_get_movie, mocked_post):
+    mocked_get_movie.return_value = True
     mocked_post.return_value = True
 
     event = {
@@ -306,7 +306,7 @@ def test_handler_post_movie(mocked_get_show, mocked_post):
     }
 
     ret = handle(event, None)
-    assert ret == {'statusCode': 501}
+    assert ret == {'statusCode': 204}
 
 
 @patch("api.watch_history_by_collection.watch_history_db.update_item")
