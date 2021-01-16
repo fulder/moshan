@@ -47,8 +47,9 @@ async function createItems(wathcHistoryItems, collectionName) {
   let apiRequests = [];
   for (let i = 0; i < responses.length; i++) {
     const res = responses[i].data;
+    const apiId = res[`${apiName}_id`];
 
-    const req = api.getItemById({'api_id': res[apiName]});
+    const req = api.getItemById({'api_id': apiId});
     apiRequests.push(req);
   }
 
