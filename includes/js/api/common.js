@@ -54,6 +54,8 @@ function getMoshanApiByCollectionName(collection) {
       return new ShowsApi();
     case 'anime':
       return new AnimeApi();
+    case 'movie':
+      return new MovieApi();
   }
 }
 
