@@ -1,5 +1,8 @@
 let checkTokenPromise = null;
 
+/* exported collectionNames */
+const collectionNames = ['movie', 'show', 'anime'];
+
 /* exported axiosTokenInterceptor */
 async function axiosTokenInterceptor (config) {
   if (checkTokenPromise === null) {

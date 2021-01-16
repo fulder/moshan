@@ -1,9 +1,12 @@
-/* global WatchHistoryApi, AnimeApi, ShowsApi, TvMazeApi, accessToken */
+/* global WatchHistoryApi, accessToken, collectionNames */
 const watchHistoryApi = new WatchHistoryApi();
-const animeApi = new AnimeApi();
-const api = new TvMazeApi();
-const showApi = new ShowsApi();
 
+// TODO: move to profile settings
+const apiNamesMapping = {
+  'movie': 'tmdb',
+  'show': 'tvmaze',
+  'anime': 'mal',
+};
 
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
@@ -13,95 +16,38 @@ if (accessToken === null) {
   document.getElementById('showsWatchHistory').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 }
 
-getCollections();
+createCollections();
 
-async function getCollections() {
-  const animeRes = await watchHistoryApi.getWatchHistoryByCollection('anime');
-  const showRes = await watchHistoryApi.getWatchHistoryByCollection('show');
-
-  await getAnimeItems(animeRes.data);
-  await getShowItems(showRes.data);
+async function createCollections() {
+  for (var collectionName in collectionNames) {
+    const res = await watchHistoryApi.getWatchHistoryByCollection(collectionName);
+    await createItems(res.data, collectionName);
+  }
 }
 
-async function getAnimeItems (response) {
-  console.debug('WatchHistory anime response:');
-  console.debug(response);
+async function createItems(wathcHistoryItems, collectionName) {
+  const moshanApi = getMoshanApiByCollectionName(collectionName);
 
-  let animeApiRequests = [];
-  for (let i = 0; i < response.items.length; i++) {
-    const watchHistoryAnime = response.items[i];
-    animeRequest = animeApi.getItemById({'id': watchHistoryAnime.item_id});
-    animeApiRequests.push(animeRequest);
+  let requests = [];
+  for (let i = 0; i < wathcHistoryItems.items.length; i++) {
+    const watchHistoryItem = wathcHistoryItems.items[i];
+
+    const req = moshanApi.getItemById({'id': watchHistoryItem.item_id});
+    requests.push(req);
   }
 
-  let resultHTML = '';
-  let res = true;
-  let itemCreated = false;
+  const responses = await Promise.all(requests);
+  console.debug('Moshan responses');
+  console.debug(responses);
 
-  const animeResponses = await Promise.all(animeApiRequests);
-
-  console.debug('Anime responses:');
-  console.debug(animeResponses);
-
-  for (let i = 0; i < animeResponses.length; i++) {
-    const itemHTML = createHistoryAnimeItem(animeResponses[i].data);
-
-    resultHTML += itemHTML;
-
-    itemCreated = itemHTML !== '';
-    res = res && itemCreated;
-  }
-
-  if (res) {
-    document.getElementById('itemsLoadingAlert').className = 'd-none';
-  } else {
-    document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
-  }
-
-  document.getElementById('animeWatchHistory').innerHTML = resultHTML;
-}
-
-function createHistoryAnimeItem (anime) {
-  if (!('title' in anime) || !('main_picture' in anime)) {
-    return '';
-  }
-
-  const animeId = anime.id;
-  const title = anime.title;
-  const poster = anime.main_picture.medium;
-
-  const resultHTML = `
-      <div id="poster-anime-${animeId}" class="col-4 col-md-2 poster">
-        <a href="/item?collection=anime&api_name=mal&id=${animeId}">
-          <img class="img-fluid" src="${poster}" />
-          <p class="text-truncate small">${title}</p>
-        </a>
-    </div>
-  `;
-
-  return resultHTML;
-}
-
-async function getShowItems (response) {
-  console.debug('WatchHistory show response:');
-  console.debug(response);
-
-  let showsApiRequests = [];
-  for (let i = 0; i < response.items.length; i++) {
-    const watchHistoryItem = response.items[i];
-    const showRequest = showApi.getItemById({'id': watchHistoryItem.item_id});
-    showsApiRequests.push(showRequest);
-  }
-
-  const showResponses = await Promise.all(showsApiRequests);
-  console.debug('Moshan show responses');
-  console.debug(showResponses);
+  const apiName = apiNamesMapping[collectionName];
 
   let apiRequests = [];
-  for (let i = 0; i < showResponses.length; i++) {
-    const showApiResponse = showResponses[i].data;
-    const showRequest = api.getItemById({'api_id': showApiResponse.tvmaze_id});
-    apiRequests.push(showRequest);
+  for (let i = 0; i < responses.length; i++) {
+    const res = responses[i].data;
+
+    const req = moshanApi.getItemById({'api_id': res[apiName]});
+    apiRequests.push(req);
   }
 
   let resultHTML = '';
@@ -110,11 +56,19 @@ async function getShowItems (response) {
 
   const apiMoshanItems = await Promise.all(apiRequests);
 
-  console.debug('Show api responses:');
+  console.debug('Api responses:');
   console.debug(apiMoshanItems);
 
   for (let i = 0; i < apiMoshanItems.length; i++) {
-    const itemHTML = createHistoryShowItem(apiMoshanItems[i]);
+    const moshanItem = apiMoshanItems[i];
+    const itemHTML = `
+        <div id="poster-show-${moshanItem.id}" class="col-4 col-md-2 poster">
+          <a href="/item?collection=${collectionName}&api_name=${apiName}&api_id=${moshanItem.id}">
+            <img class="img-fluid" src="${moshanItem.poster}" />
+            <p class="text-truncate small">${moshanItem.title}</p>
+          </a>
+      </div>
+    `;
 
     resultHTML += itemHTML;
 
@@ -128,22 +82,5 @@ async function getShowItems (response) {
     document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
   }
 
-  document.getElementById('showsWatchHistory').innerHTML = resultHTML;
-}
-
-function createHistoryShowItem (moshanItem) {
-  if (moshanItem.title === undefined || moshanItem.poster === undefined) {
-    return '';
-  }
-
-  const resultHTML = `
-      <div id="poster-show-${moshanItem.id}" class="col-4 col-md-2 poster">
-        <a href="/item?collection=show&api_name=tvmaze&api_id=${moshanItem.id}">
-          <img class="img-fluid" src="${moshanItem.poster}" />
-          <p class="text-truncate small">${moshanItem.title}</p>
-        </a>
-    </div>
-  `;
-
-  return resultHTML;
+  document.getElementById(`${collectionName}WatchHistory`).innerHTML = resultHTML;
 }
