@@ -26,14 +26,12 @@ async function createCollections() {
     watchHistoryRequests.push(req);
   }
 
-
   const responses = await Promise.all(watchHistoryRequests);
 
   for (let i = 0; i < collectionNames.length; i++) {
       const collectionName = collectionNames[i];
       createItems(responses[i].data, collectionName);
   }
-
 }
 
 async function createItems(wathcHistoryItems, collectionName) {
