@@ -102,13 +102,13 @@
           <button id="add_button" class="btn btn-success d-none" onclick="addItem()"><i class="fa fa-plus"></i> Add</button>
           <button id="remove_button" class="btn btn-danger d-none" onclick="removeItem()"><i class="fa fa-minus"></i> Remove</button>
           <b>Watched</b>:<span id="watched_amount"></span>
-          <div class="input-group input-group-sm pt-1">
+          <div id="calendar_group" class="input-group input-group-sm pt-1 d-none">
             <div class="input-group-prepend">
               <span class="input-group-text">Date</span>
             </div>
 
-            <input id="calendar" type="text" class="form-control d-none">
-            <div id="calendar_buttons" class="input-group-append d-none">
+            <input id="calendar" type="text" class="form-control">
+            <div class="input-group-append d-none">
               <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate()"><i class="fas fa-calendar-day"></i></button><button class="btn btn-danger" type="button" onclick="removeWatchDate()"><i class="far fa-calendar-times"></i></button>
             </div>
           </div>

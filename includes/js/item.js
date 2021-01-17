@@ -145,8 +145,7 @@ function createItem (moshanItem, item, watchHistoryItem) {
       onClose: onCalendarClose,
     });
 
-    document.getElementById('calendar').classList.remove('d-none');
-    document.getElementById('calendar_buttons').classList.remove('d-none');
+    document.getElementById('calendar_group').classList.remove('d-none');
   }
 
   document.getElementById('item').classList.remove('d-none');
