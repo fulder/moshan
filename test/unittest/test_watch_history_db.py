@@ -236,21 +236,24 @@ def test_update_item(mocked_watch_history_db):
     UPDATE_VALUES = {}
     mocked_watch_history_db.table.update_item = mock_func
 
-    mocked_watch_history_db.add_item(TEST_USERNAME, "MOVIE", "123123")
+    mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123", {"review": "review_text"})
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
-            '#updated_at': 'updated_at'
+            '#updated_at': 'updated_at',
+            "#review": "review"
         },
         'ExpressionAttributeValues': {
             ':collection_name': 'MOVIE',
-            ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            ":review": "review_text"
         },
         'Key': {
             'username': TEST_USERNAME,
-            'item_id': '123123'},
-        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
+            'item_id': '123'},
+        'UpdateExpression': 'SET #review=:review,#collection_name=:collection_name,'
+                            '#updated_at=:updated_at REMOVE deleted_at'
     }
 
 
