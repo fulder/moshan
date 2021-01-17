@@ -13,6 +13,7 @@ const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 
 let totalPages = 0;
 let calendarInstance;
+let datesWatched;
 
 if (qParams.id !== null) {
   getItemByMoshanId();
