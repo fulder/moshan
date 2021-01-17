@@ -132,7 +132,7 @@ function createItem (moshanItem, item, watchHistoryItem) {
     document.getElementById('add_button').classList.remove('d-none');
   }
 
-  if (moshanItem.has_episodes) {
+  if (!moshanItem.has_episodes) {
     calendarInstance = flatpickr('#calendar', {
       enableTime: true,
       dateFormat: 'Y-m-d H:i',
