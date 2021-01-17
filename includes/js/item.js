@@ -10,7 +10,9 @@ const api = getApiByName(qParams.api_name);
 // quickfix for anime episodes, use moshan api until
 // e.g. MAL api implements episode routes
 const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
+
 let totalPages = 0;
+let calendarInstance;
 
 if (qParams.id !== null) {
   getItemByMoshanId();
@@ -96,11 +98,23 @@ function createItem (moshanItem, item, watchHistoryItem) {
   console.debug(`Item added: ${itemAdded}`);
   console.debug(moshanItem);
 
+  let watchedAmount = 0;
+  let latestWatchDate = '';
+
+  if (itemAdded && 'dates_watched' in watchHistoryItem && watchHistoryItem['dates_watched'].length > 0) {
+    datesWatched = watchHistoryItem['dates_watched'];
+
+    latestWatchDate = datesWatched[datesWatched.length-1];
+    console.debug(`Latest watch date: ${latestWatchDate}`);
+    watchedAmount = datesWatched.length;
+  }
+
   document.getElementById('poster').src = moshanItem.poster;
   document.getElementById('title').innerHTML = moshanItem.title;
   document.getElementById('start-date').innerHTML = moshanItem.start_date;
   document.getElementById('status').innerHTML = moshanItem.status;
   document.getElementById('synopsis').innerHTML = moshanItem.synopsis;
+  document.getElementById('watched_amount').innerHTML = watchedAmount;
 
   // TODO: store links in api and loop through them creating the links dynamically
   /*let links = '';
@@ -116,6 +130,18 @@ function createItem (moshanItem, item, watchHistoryItem) {
   } else {
     document.getElementById('add-button').classList.remove('d-none');
   }
+
+  calendarInstance = flatpickr('#flatpickr', {
+    enableTime: true,
+    dateFormat: 'Y-m-d H:i',
+    time_24hr: true,
+    defaultDate: latestWatchDate,
+    locale: {
+      firstDayOfWeek: 1, // start week on Monday
+    },
+    weekNumbers: true,
+    onClose: onCalendarClose,
+  });
 
   document.getElementById('item').classList.remove('d-none');
 }
@@ -221,4 +247,49 @@ async function loadEpisodes (page) {
 
   urlParams.set('episode_page', qParams.episode_page);
   history.pushState({}, null, `?${urlParams.toString()}`);
+}
+
+async function onCalendarClose (selectedDates, dateStr) {
+  const date = new Date(dateStr).toISOString();
+
+  await patchWatchDate(date);
+}
+
+/* exported setCurrentWatchDate */
+async function setCurrentWatchDate() {
+  const dateNow = new Date();
+
+  await patchWatchDate(dateNow.toISOString());
+  calendarInstance.setDate(dateNow);
+}
+
+async function patchWatchDate(date) {
+  if (datesWatched === undefined || datesWatched.length == 0) {
+    datesWatched = [date];
+  } else {
+    datesWatched[datesWatched.length - 1] = date;
+  }
+
+  document.getElementById('watched_amount').innerHTML = datesWatched.length;
+  console.debug(datesWatched);
+
+  await watchHistoryApi.updateWatchHistoryItem(qParams, datesWatched);
+}
+
+/* exported removeWatchDate */
+async function removeWatchDate() {
+  if (datesWatched === undefined || datesWatched.length == 0) {
+    return;
+  }
+
+  datesWatched.pop();
+  document.getElementById('watched_amount').innerHTML = datesWatched.length;
+
+  if (datesWatched.length == 0) {
+      calendarInstance.clear();
+  } else {
+      calendarInstance.setDate(datesWatched[datesWatched.length - 1]);
+  }
+
+  await watchHistoryApi.updateWatchHistoryItem(qParams, datesWatched);
 }

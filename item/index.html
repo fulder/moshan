@@ -98,9 +98,20 @@
           </div>
       </div>
 
-      <div class="col-md-3 col-7 mt-1">
-          <button id="add-button" class="btn btn-success d-none" onclick="addItem()"><i class="fa fa-plus"></i> Add</button>
-          <button id="remove-button" class="btn btn-danger d-none" onclick="removeItem()"><i class="fa fa-minus"></i> Remove</button>
+      <div class="col-md-4 col-10 mt-1">
+          <button id="add_button" class="btn btn-success d-none" onclick="addItem()"><i class="fa fa-plus"></i> Add</button>
+          <button id="remove_button" class="btn btn-danger d-none" onclick="removeItem()"><i class="fa fa-minus"></i> Remove</button>
+          <b>Watched</b>:<span id="watched_amount"></span>
+          <div class="input-group input-group-sm pt-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Date</span>
+            </div>
+
+            <input id="flatpickr" type="text" class="form-control">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate()"><i class="fas fa-calendar-day"></i></button><button class="btn btn-danger" type="button" onclick="removeWatchDate()"><i class="far fa-calendar-times"></i></button>
+            </div>
+          </div>
       </div>
 
       <div id="synopsisCol" class="mt-2 col-12">
