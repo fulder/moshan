@@ -7,7 +7,7 @@ import watch_history_db
 
 log = logger.get_logger("watch_history")
 
-ALLOWED_SORT = ["rating", "date_watched", "state"]
+ALLOWED_SORT = ["rating", "dates_watched", "state"]
 
 
 def handle(event, context):

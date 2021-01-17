@@ -9,7 +9,7 @@
       "rating": 3,
       "overview": "My overview text",
       "review": "Very long review about the item",
-      "date_watched": [
+      "dates_watched": [
         "2020-01-01 10:00:00",
         "2020-01-02 11:00:00"
       ],
@@ -40,7 +40,7 @@
       "description": "Review for the item",
       "maxLength": 80000
     },
-    "date_watched": {
+    "dates_watched": {
       "$id": "#/properties/name",
       "type": "array",
       "title": "Watch date(s)",

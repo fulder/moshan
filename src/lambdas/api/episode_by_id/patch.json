@@ -7,9 +7,9 @@
   "examples": [
     {
       "rating": 3,
-      "overview": "My ovweview text",
+      "overview": "My overview text",
       "review": "Very long review about the episode",
-      "date_watched": [
+      "dates_watched": [
         "2020-01-01 10:00:00",
         "2020-01-02 11:00:00"
       ]

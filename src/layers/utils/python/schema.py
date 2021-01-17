@@ -6,7 +6,7 @@ import logger
 log = logger.get_logger(__name__)
 
 COLLECTION_NAMES = ["anime", "show", "movie"]
-ALLOWED_SORT = ["rating", "date_watched", "state"]
+ALLOWED_SORT = ["rating", "dates_watched", "state"]
 
 
 class ValidationException(Exception):

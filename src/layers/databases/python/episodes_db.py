@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 import boto3
+import dateutil.parser
 from boto3.dynamodb.conditions import Key, Attr
 from dynamodb_json import json_util
 
@@ -74,6 +75,15 @@ def get_episode(username, collection_name, episode_id):
 def update_episode(username, collection_name, episode_id, data):
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if "dates_watched" in data:
+        latest_date = dateutil.parser.parse(data["dates_watched"][0])
+
+        for watch_date in data["dates_watched"]:
+            next_date = dateutil.parser.parse(watch_date)
+            if next_date > latest_date:
+                latest_date = next_date
+                data["latest_watch_date"] = watch_date
 
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
