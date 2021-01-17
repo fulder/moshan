@@ -35,7 +35,7 @@ class TvMazeApi {
 
   getMoshanItem(show) {
     let poster = '/includes/img/image_not_available.png';
-    if (show.image.medium !== undefined) {
+    if (show.image !== null && show.image.medium !== undefined) {
       poster = show.image.medium;
     }
 
