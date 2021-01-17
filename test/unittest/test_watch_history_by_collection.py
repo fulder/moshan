@@ -71,7 +71,7 @@ def test_handler_sort(mocked_get_watch_history):
             "authorization": TEST_JWT
         },
         "queryStringParameters": {
-            "sort": "date_watched"
+            "sort": "dates_watched"
         },
         "pathParameters": {
             "collection_name": "test_collection"

@@ -52,8 +52,8 @@ class WatchHistory(core.Stack):
             index_name="rating"
         )
         self.watch_history_table.add_local_secondary_index(
-            sort_key=Attribute(name="date_watched", type=AttributeType.STRING),
-            index_name="date_watched"
+            sort_key=Attribute(name="dates_watched", type=AttributeType.STRING),
+            index_name="dates_watched"
         )
         self.watch_history_table.add_local_secondary_index(
             sort_key=Attribute(name="state", type=AttributeType.STRING),
