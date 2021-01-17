@@ -132,17 +132,22 @@ function createItem (moshanItem, item, watchHistoryItem) {
     document.getElementById('add_button').classList.remove('d-none');
   }
 
-  calendarInstance = flatpickr('#flatpickr', {
-    enableTime: true,
-    dateFormat: 'Y-m-d H:i',
-    time_24hr: true,
-    defaultDate: latestWatchDate,
-    locale: {
-      firstDayOfWeek: 1, // start week on Monday
-    },
-    weekNumbers: true,
-    onClose: onCalendarClose,
-  });
+  if (moshanItem.has_episodes) {
+    calendarInstance = flatpickr('#calendar', {
+      enableTime: true,
+      dateFormat: 'Y-m-d H:i',
+      time_24hr: true,
+      defaultDate: latestWatchDate,
+      locale: {
+        firstDayOfWeek: 1, // start week on Monday
+      },
+      weekNumbers: true,
+      onClose: onCalendarClose,
+    });
+
+    document.getElementById('calendar').classList.remove('d-none');
+    document.getElementById('calendar_buttons').classList.remove('d-none');
+  }
 
   document.getElementById('item').classList.remove('d-none');
 }
