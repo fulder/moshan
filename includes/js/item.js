@@ -105,7 +105,7 @@ function createItem (moshanItem, item, watchHistoryItem) {
   if (itemAdded && 'dates_watched' in watchHistoryItem && watchHistoryItem['dates_watched'].length > 0) {
     datesWatched = watchHistoryItem['dates_watched'];
 
-    latestWatchDate = datesWatched[datesWatched.length-1];
+    latestWatchDate = watchHistoryItem['latest_watch_date'];
     console.debug(`Latest watch date: ${latestWatchDate}`);
     watchedAmount = datesWatched.length;
   }

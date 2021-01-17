@@ -49,7 +49,7 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
   if (episodeAdded && 'dates_watched' in watchHistoryEpisode && watchHistoryEpisode['dates_watched'].length > 0) {
     datesWatched = watchHistoryEpisode['dates_watched'];
 
-    latestWatchDate = datesWatched[datesWatched.length-1];
+    latestWatchDate = watchHistoryItem['latest_watch_date'];
     console.debug(`Latest watch date: ${latestWatchDate}`);
     watchedAmount = datesWatched.length;
   }
