@@ -52,8 +52,8 @@ class WatchHistory(core.Stack):
             index_name="rating"
         )
         self.watch_history_table.add_local_secondary_index(
-            sort_key=Attribute(name="dates_watched", type=AttributeType.STRING),
-            index_name="dates_watched"
+            sort_key=Attribute(name="latest_watch_date", type=AttributeType.STRING),
+            index_name="latest_watch_date"
         )
         self.watch_history_table.add_local_secondary_index(
             sort_key=Attribute(name="state", type=AttributeType.STRING),
@@ -66,6 +66,10 @@ class WatchHistory(core.Stack):
             partition_key=Attribute(name="username", type=AttributeType.STRING),
             sort_key=Attribute(name="id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
+        )
+        self.episodes_table.add_local_secondary_index(
+            sort_key=Attribute(name="latest_watch_date", type=AttributeType.STRING),
+            index_name="latest_watch_date"
         )
 
     def _create_lambdas_config(self):
