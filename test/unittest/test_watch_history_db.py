@@ -257,6 +257,35 @@ def test_update_item(mocked_watch_history_db):
     }
 
 
+def test_update_item_dates_watched(mocked_watch_history_db):
+    global UPDATE_VALUES
+    UPDATE_VALUES = {}
+    mocked_watch_history_db.table.update_item = mock_func
+
+    mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123", {"dates_watched": ["2020-12-20T15:30:09.909Z", "2021-12-20T15:30:09.909Z"]})
+
+    assert UPDATE_VALUES == {
+        'ExpressionAttributeNames': {
+            '#collection_name': 'collection_name',
+            '#updated_at': 'updated_at',
+            '#dates_watched': 'dates_watched',
+            '#latest_watch_date': 'latest_watch_date',
+        },
+        'ExpressionAttributeValues': {
+            ':collection_name': 'MOVIE',
+            ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            ':dates_watched': ['2020-12-20T15:30:09.909Z',
+                               '2021-12-20T15:30:09.909Z'],
+            ':latest_watch_date': '2021-12-20T15:30:09.909Z',
+        },
+        'Key': {
+            'username': TEST_USERNAME,
+            'item_id': '123'},
+        'UpdateExpression': 'SET #dates_watched=:dates_watched,#collection_name=:collection_name,'
+                            '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date REMOVE deleted_at'
+    }
+
+
 def test_delete_item(mocked_watch_history_db):
     global UPDATE_VALUES
     UPDATE_VALUES = {}
