@@ -241,6 +241,35 @@ def test_update_episode_dates_watched(mocked_episodes_db):
     }
 
 
+def test_update_episode_dates_watched_one_date(mocked_episodes_db):
+    global UPDATE_VALUES
+    UPDATE_VALUES = {}
+    mocked_episodes_db.table.update_item = mock_func
+
+    mocked_episodes_db.update_episode(TEST_USERNAME, "MOVIE", "123",
+                                      {"dates_watched": ["2020-12-20T15:30:09.909Z"]})
+
+    assert UPDATE_VALUES == {
+        'ExpressionAttributeNames': {
+            '#collection_name': 'collection_name',
+            '#updated_at': 'updated_at',
+            '#dates_watched': 'dates_watched',
+            '#latest_watch_date': 'latest_watch_date',
+        },
+        'ExpressionAttributeValues': {
+            ':collection_name': 'MOVIE',
+            ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            ':dates_watched': ['2020-12-20T15:30:09.909Z'],
+            ':latest_watch_date': '2020-12-20T15:30:09.909Z',
+        },
+        'Key': {
+            'username': TEST_USERNAME,
+            'id': '123'},
+        'UpdateExpression': 'SET #dates_watched=:dates_watched,#collection_name=:collection_name,'
+                            '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date REMOVE deleted_at'
+    }
+
+
 def test_delete_episode(mocked_episodes_db):
     global UPDATE_VALUES
     UPDATE_VALUES = {}

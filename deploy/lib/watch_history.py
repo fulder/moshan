@@ -39,6 +39,7 @@ class WatchHistory(core.Stack):
         self.watch_history_table = Table(
             self,
             "watch_history",
+            table_name="watch-history-items",
             partition_key=Attribute(name="username", type=AttributeType.STRING),
             sort_key=Attribute(name="item_id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
@@ -63,6 +64,7 @@ class WatchHistory(core.Stack):
         self.episodes_table = Table(
             self,
             "episodes",
+            table_name="watch-history-episodes",
             partition_key=Attribute(name="username", type=AttributeType.STRING),
             sort_key=Attribute(name="id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
