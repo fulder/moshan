@@ -126,9 +126,9 @@ function createItem (moshanItem, item, watchHistoryItem) {
   document.getElementById('links').innerHTML = links;*/
 
   if (itemAdded) {
-    document.getElementById('remove-button').classList.remove('d-none');
+    document.getElementById('remove_button').classList.remove('d-none');
   } else {
-    document.getElementById('add-button').classList.remove('d-none');
+    document.getElementById('add_button').classList.remove('d-none');
   }
 
   calendarInstance = flatpickr('#flatpickr', {
