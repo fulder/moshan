@@ -154,8 +154,8 @@ async function addItem () {
     const id = addItemRes.data.id;
 
     await watchHistoryApi.addWatchHistoryItem({'collection': qParams.collection, 'id': id});
-    document.getElementById('add-button').classList.add('d-none');
-    document.getElementById('remove-button').classList.remove('d-none');
+    document.getElementById('add_button').classList.add('d-none');
+    document.getElementById('remove_button').classList.remove('d-none');
   } catch (error) {
     console.log(error);
   }
@@ -165,8 +165,8 @@ async function addItem () {
 async function removeItem () {
   try {
     await watchHistoryApi.removeWatchHistoryItem(qParams);
-    document.getElementById('add-button').classList.remove('d-none');
-    document.getElementById('remove-button').classList.add('d-none');
+    document.getElementById('add_button').classList.remove('d-none');
+    document.getElementById('remove_button').classList.add('d-none');
   } catch (error) {
     console.log(error);
   }
