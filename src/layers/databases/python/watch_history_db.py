@@ -122,7 +122,7 @@ def get_watch_history(username, collection_name=None, index_name=None, limit=100
         if start_page == start:
             res = p
 
-    if start > start_page:
+    if start_page != 0 and start > start_page:
         raise InvalidStartOffset
 
     log.debug(f"get_watch_history response: {res}")
@@ -160,11 +160,15 @@ def _watch_history_generator(username, limit, collection_name=None, index_name=N
 
     page_iterator = paginator.paginate(**query_kwargs)
 
+    items = []
     for p in page_iterator:
-        items = []
         for i in p["Items"]:
             item = json_util.loads(i)
             items.append(item)
 
         if len(items) >= limit:
             yield items
+            items = []
+
+    if len(items) > 0:
+        yield items
