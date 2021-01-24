@@ -155,9 +155,9 @@ function createItem (moshanItem, item, watchHistoryItem) {
 async function addItem () {
   try {
     const addItemRes = await moshanApi.addItem(qParams);
-    const id = addItemRes.data.id;
+    qParams.id = addItemRes.data.id;
 
-    await watchHistoryApi.addWatchHistoryItem({'collection': qParams.collection, 'id': id});
+    await watchHistoryApi.addWatchHistoryItem(qParams);
     document.getElementById('add_button').classList.add('d-none');
     document.getElementById('remove_button').classList.remove('d-none');
   } catch (error) {
