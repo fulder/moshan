@@ -114,6 +114,9 @@ class WatchHistory(core.Stack):
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
+                    "ANIME_API_URL": self.anime_api_url,
+                    "SHOWS_API_URL": self.show_api_url,
+                    "MOVIE_API_URL": self.movie_api_url
                 },
                 "concurrent_executions": 10,
                 "policies": [
