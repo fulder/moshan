@@ -75,8 +75,9 @@ def test_handler_delete(mocked_delete):
     assert ret == {'statusCode': 204}
 
 
+@patch("api.item_by_collection.anime_api.get_anime")
 @patch("api.item_by_collection.watch_history_db.update_item")
-def test_handler_patch(mocked_post):
+def test_handler_patch(mocked_get_anime, mocked_post):
     mocked_post.return_value = True
 
     event = {
