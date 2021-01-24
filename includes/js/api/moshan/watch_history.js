@@ -3,7 +3,7 @@
 class WatchHistoryApi {
   constructor () {
     this.apiAxios = axios.create({
-      baseURL: 'https://api.watch-history.moshan.tv/v1',
+      baseURL: 'https://api.watch-history.moshan.tv',
       headers: {
         'Content-Type': 'application/json',
       },
