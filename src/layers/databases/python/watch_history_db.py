@@ -166,9 +166,9 @@ def _watch_history_generator(username, limit, collection_name=None, index_name=N
             item = json_util.loads(i)
             items.append(item)
 
-        if len(items) >= limit:
-            yield items
-            items = []
+            if len(items) == limit:
+                yield items
+                items = []
 
     if len(items) > 0:
         yield items
