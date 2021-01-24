@@ -32,7 +32,6 @@ def test_get_watch_history(mocked_watch_history_db):
         "TableName": None,
         "KeyConditionExpression": "username = :username",
         "ExpressionAttributeValues": {":username": {"S": "TEST_USERNAME"}},
-        "Limit": 100,
         "ScanIndexForward": False,
         'FilterExpression': 'attribute_not_exists(deleted_at)',
     }
@@ -54,7 +53,6 @@ def test_get_watch_history_changed_limit(mocked_watch_history_db):
         "TableName": None,
         "KeyConditionExpression": "username = :username",
         "ExpressionAttributeValues": {":username": {"S": "TEST_USERNAME"}},
-        "Limit": 10,
         "ScanIndexForward": False,
         'FilterExpression': 'attribute_not_exists(deleted_at)',
     }
@@ -78,7 +76,6 @@ def test_get_watch_history_by_collection_name(mocked_watch_history_db):
         },
         "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
         "KeyConditionExpression": "username = :username",
-        "Limit": 10,
         "ScanIndexForward": False,
         "TableName": None,
 
@@ -104,7 +101,6 @@ def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
         },
         "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
         "KeyConditionExpression": "username = :username",
-        "Limit": 10,
         "IndexName": "test_index",
         "ScanIndexForward": False,
         "TableName": None
@@ -131,7 +127,6 @@ def test_get_watch_history_by_with_start(mocked_watch_history_db):
         },
         "FilterExpression": "attribute_not_exists(deleted_at) and collection_name = :collection_name",
         "KeyConditionExpression": "username = :username",
-        "Limit": 1,
         "IndexName": "test_index",
         "ScanIndexForward": False,
         "TableName": None
