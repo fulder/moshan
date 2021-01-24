@@ -146,7 +146,6 @@ def _watch_history_generator(username, limit, collection_name=None, index_name=N
         "ExpressionAttributeValues": {
             ":username": {"S": username}
         },
-        "Limit": limit,
         "ScanIndexForward": False,
         "FilterExpression": "attribute_not_exists(deleted_at)"
     }
@@ -166,4 +165,6 @@ def _watch_history_generator(username, limit, collection_name=None, index_name=N
         for i in p["Items"]:
             item = json_util.loads(i)
             items.append(item)
-        yield items
+
+        if len(items) >= limit:
+            yield items
