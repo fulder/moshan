@@ -110,7 +110,7 @@ class WatchHistory(core.Stack):
                 "timeout": 10
             },
             "api-item_by_collection": {
-                "layers": ["utils", "databases"],
+                "layers": ["utils", "databases", "api"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
