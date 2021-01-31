@@ -6,19 +6,27 @@
   "default": {},
   "examples": [
     {
-      "id": "b24ed2d5-8e77-4fe0-b5a1-d0e68cf4d9c5"
+      "api_name": "tmdb",
+      "api_id": "123"
     }
   ],
   "additionalProperties": false,
   "properties": {
-    "id": {
-      "$id": "#/properties/id",
+    "api_name": {
+      "$id": "#/properties/api_name",
       "type": "string",
-      "title": "Item UUID",
-      "description": "The UUID for the collection item"
+      "title": "Item API name",
+      "description": "The name of the third party API to use for this item post"
+    },
+    "api_id": {
+      "$id": "#/properties/api_name",
+      "type": "string",
+      "title": "Item API ID",
+      "description": "The item ID from the third party API"
     }
   },
   "required": [
-    "id"
+    "api_name",
+    "api_id"
   ]
 }
