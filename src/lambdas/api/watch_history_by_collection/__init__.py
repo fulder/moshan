@@ -109,4 +109,4 @@ def _post_collection_item(username, collection_name, body, token):
 
     item_id = res.json()["id"]
     watch_history_db.add_item(username, collection_name, item_id)
-    return {"statusCode": 204}
+    return {"statusCode": 204, "id": item_id}
