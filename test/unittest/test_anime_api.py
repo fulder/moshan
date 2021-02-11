@@ -18,7 +18,7 @@ def test_get_anime(mocked_get, mocked_anime_api):
 
 
 @patch("anime_api.requests.get")
-def test_post_anime_invalid_code(mocked_get, mocked_anime_api):
+def test_get_anime_invalid_code(mocked_get, mocked_anime_api):
     m = MagicMock()
     m.status_code = 404
     mocked_get.return_value = m
