@@ -20,3 +20,11 @@ def post_show(body, token):
         raise api_errors.HttpError("Invalid response during show post", res.status_code)
 
     return res.json()
+
+
+def post_episode(item_id, body, token):
+    res = requests.post(f"{SHOWS_API_URL}/shows/{item_id}/episodes", headers={"Authorization": token}, json=body)
+    if res.status_code != 200:
+        raise api_errors.HttpError("Invalid response during show post", res.status_code)
+
+    return res.json()
