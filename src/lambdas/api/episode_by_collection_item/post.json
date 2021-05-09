@@ -6,21 +6,14 @@
   "default": {},
   "examples": [
     {
-      "api_id": "123",
-      "api_episode_id": "456",
+      "api_id": "456",
       "api_name": "tvmaze"
     }
   ],
   "additionalProperties": false,
   "properties": {
     "api_id": {
-      "$id": "#/properties/api_name",
-      "type": "string",
-      "title": "Item API ID",
-      "description": "The item ID from the third party API"
-    },
-    "api_episode_id": {
-      "$id": "#/properties/episode_id",
+      "$id": "#/properties/api_id",
       "type": "string",
       "title": "Episode ID",
       "description": "ID of the item episode to add"
@@ -67,7 +60,6 @@
   },
   "required": [
     "api_name",
-    "api_id",
-    "episode_id"
+    "api_id"
   ]
 }
