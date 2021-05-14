@@ -12,7 +12,7 @@ app = core.App()
 
 env = {"region": "eu-west-1"}
 
-anime_api_url = "https://api.anime.moshan.tv/v1"
+anime_api_url = "https://api.anime.moshan.tv"
 show_api_url = "https://api.show.moshan.tv"
 movie_api_url = "https://api.movie.moshan.tv"
 domain_name = "api.watch-history.moshan.tv"
