@@ -20,3 +20,11 @@ def post_anime(body, token):
         raise api_errors.HttpError("Invalid response in anime post", res.status_code)
 
     return res.json()
+
+
+def post_episode(item_id, body, token):
+    res = requests.post(f"{ANIME_API_URL}/anime/{item_id}/episodes", headers={"Authorization": token}, json=body)
+    if res.status_code != 200:
+        raise api_errors.HttpError("Invalid response in anime episode post", res.status_code)
+
+    return res.json()
