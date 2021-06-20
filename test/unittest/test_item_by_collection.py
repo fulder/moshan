@@ -50,7 +50,7 @@ class TestGet:
         ret = handle(event, None)
         assert ret == {
             'statusCode': 400,
-                       'body': '{"message": "Invalid collection name, allowed values: [\'anime\', \'show\', \'movie\']"}'
+            'body': '{"message": "Invalid collection name, allowed values: [\'anime\', \'show\', \'movie\']"}'
         }
 
 
@@ -101,15 +101,29 @@ class TestPatch:
         ["anime", "show", "movie"]
     )
     @patch("api.item_by_collection.anime_api.get_anime")
+    @patch("api.item_by_collection.shows_api.get_show")
+    @patch("api.item_by_collection.movie_api.get_movie")
     @patch("api.item_by_collection.watch_history_db.update_item")
-    def test_success(self, mocked_get_anime, mocked_post, collection_name):
+    def test_success(self, a, s, m, mocked_post, collection_name):
         mocked_post.return_value = True
         event = copy.deepcopy(self.event)
         event["pathParameters"]["collection_name"] = collection_name
 
-        ret = handle(self.event, None)
+        ret = handle(event, None)
 
         assert ret == {'statusCode': 204}
+
+    @patch("api.item_by_collection.anime_api.get_anime")
+    def test_api_error(self, mocked_get_anime):
+        mocked_get_anime.side_effect = HttpError("test-error", 503)
+
+        ret = handle(self.event, None)
+
+        assert ret == {
+            "body": '{"message": "Could not get anime"}',
+            "error": "test-error",
+            "statusCode": 503
+        }
 
     @patch("api.item_by_collection.anime_api.get_anime")
     @patch("api.item_by_collection.watch_history_db.update_item")
