@@ -2,6 +2,7 @@ import copy
 from unittest.mock import patch
 
 from api.episode_by_id import handle
+from api_errors import HttpError
 from episodes_db import NotFoundError
 
 TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6IlRFU1RfQ0xJRU5UX0lEIn0.ud_dRdguJwmKv4XO-c4JD-dKGffSvXsxuAxZq9uWV-g"
@@ -93,7 +94,7 @@ class TestPatch:
 
     @patch("api.episode_by_id.episodes_db.update_episode")
     @patch("api.episode_by_collection_item.anime_api.post_episode")
-    def test_success(self, mocked_post_episode, mocked_post):
+    def test_success_anime(self, mocked_post_episode, mocked_post):
         mocked_post.return_value = True
         mocked_post_episode.return_value.json.return_value = {
             "id": "123"
@@ -101,6 +102,32 @@ class TestPatch:
 
         ret = handle(self.event, None)
         assert ret == {'statusCode': 204}
+
+    @patch("api.episode_by_id.episodes_db.update_episode")
+    @patch("api.episode_by_collection_item.shows_api.post_episode")
+    def test_success_show(self, mocked_post_episode, mocked_post):
+        mocked_post.return_value = True
+        mocked_post_episode.return_value.json.return_value = {
+            "id": "123"
+        }
+        event = copy.deepcopy(self.event)
+        event["pathParameters"]["collection_name"] = "show"
+
+        ret = handle(event, None)
+        assert ret == {'statusCode': 204}
+
+    @patch("api.episode_by_id.episodes_db.update_episode")
+    @patch("api.episode_by_collection_item.anime_api.post_episode")
+    def test_api_error(self, mocked_post_episode, mocked_post):
+        mocked_post.return_value = True
+        mocked_post_episode.side_effect = HttpError("test api error", 503)
+
+        ret = handle(self.event, None)
+        assert ret == {
+            "body": '{"message": "Could not post anime"}',
+            "error": "test api error",
+            "statusCode": 503
+        }
 
     @patch("api.episode_by_id.episodes_db.update_episode")
     def test_invalid_body_type(self, mocked_post):
