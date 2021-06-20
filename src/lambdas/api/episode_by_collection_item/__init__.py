@@ -28,7 +28,11 @@ def handle(event, context):
     method = event["requestContext"]["http"]["method"]
 
     if collection_name not in schema.COLLECTION_NAMES:
-        return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
+        msg = f"Invalid collection name, allowed values: " \
+              f"{schema.COLLECTION_NAMES}"
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"message": msg})}
 
     if method == "GET":
         query_params = event.get("queryStringParameters")
@@ -73,12 +77,6 @@ def _post_episode(username, collection_name, item_id, body, token):
         return {
             "statusCode": 400,
             "body": "Invalid post body"
-        }
-
-    if collection_name not in schema.COLLECTION_NAMES:
-        return {
-            "statusCode": 400,
-            "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})
         }
 
     try:
