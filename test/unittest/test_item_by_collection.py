@@ -96,10 +96,16 @@ class TestPatch:
         "body": '{"rating": 3, "overview": "My overview", "review": "My review"}'
     }
 
+    @pytest.mark.parametrize(
+        "collection_name",
+        ["anime", "show", "movie"]
+    )
     @patch("api.item_by_collection.anime_api.get_anime")
     @patch("api.item_by_collection.watch_history_db.update_item")
-    def test_success(self, mocked_get_anime, mocked_post):
+    def test_success(self, mocked_get_anime, mocked_post, collection_name):
         mocked_post.return_value = True
+        event = copy.deepcopy(self.event)
+        event["pathParameters"]["collection_name"] = collection_name
 
         ret = handle(self.event, None)
 
