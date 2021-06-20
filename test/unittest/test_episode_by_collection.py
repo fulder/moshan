@@ -181,8 +181,12 @@ def test_handler_post_with_empty_body(mocked_post):
 
 
 @patch("api.episode_by_collection_item.episodes_db.add_episode")
-def test_handler_post(mocked_post):
+@patch("api.episode_by_collection_item.anime_api.post_episode")
+def test_handler_post(mocked_post_episode, mocked_post):
     mocked_post.return_value = True
+    mocked_post_episode.return_value.json.return_value = {
+        "id": "123"
+    }
 
     event = {
         "headers": {
