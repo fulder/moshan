@@ -3,7 +3,7 @@
 class AnimeApi {
   constructor () {
     this.apiAxios = axios.create({
-      baseURL: 'https://api.anime.moshan.tv/v1',
+      baseURL: 'https://api.anime.moshan.tv',
       headers: {
         'Content-Type': 'application/json',
       },
