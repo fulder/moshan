@@ -128,7 +128,7 @@ class WatchHistory(core.Stack):
                 "timeout": 5
             },
             "api-episode_by_collection_item": {
-                "layers": ["utils", "databases"],
+                "layers": ["utils", "databases", "api"],
                 "variables": {
                     "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "DEBUG"
