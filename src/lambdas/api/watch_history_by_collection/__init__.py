@@ -94,18 +94,19 @@ def _post_collection_item(username, collection_name, body, token):
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
-    item_id = body["id"]
+    res = None
     try:
         if collection_name == "anime":
-            anime_api.get_anime(item_id, token)
+            res = anime_api.post_anime(body, token)
         elif collection_name == "show":
-            shows_api.get_show(item_id, token)
+            res = shows_api.post_show(body, token)
         elif collection_name == "movie":
-            movie_api.get_movie(item_id, token)
+            res = movie_api.post_movie(body, token)
     except api_errors.HttpError as e:
-        err_msg = f"Could not get {collection_name}"
+        err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code, "body": json.dumps({"message": err_msg}), "error": str(e)}
 
+    item_id = res.json()["id"]
     watch_history_db.add_item(username, collection_name, item_id)
-    return {"statusCode": 204}
+    return {"statusCode": 204, "id": item_id}

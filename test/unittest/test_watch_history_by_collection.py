@@ -232,9 +232,11 @@ def test_handler_post_with_empty_body(mocked_post):
 
 
 @patch("api.watch_history_by_collection.watch_history_db.add_item")
-@patch("api.watch_history_by_collection.anime_api.get_anime")
-def test_handler_post_anime(mocked_get_anime, mocked_post):
-    mocked_get_anime.return_value = True
+@patch("api.watch_history_by_collection.anime_api.post_anime")
+def test_handler_post_anime(mocked_post_anime, mocked_post):
+    mocked_post_anime.return_value.json.return_value = {
+        "id": "123"
+    }
     mocked_post.return_value = True
 
     event = {
@@ -248,19 +250,20 @@ def test_handler_post_anime(mocked_get_anime, mocked_post):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
         },
-        "body": '{ "id": "123" }'
+        "body": '{ "api_id": "123", "api_name": "mal" }'
     }
 
     ret = handle(event, None)
-    assert ret == {'statusCode': 204}
+    assert ret == {'statusCode': 204, 'id': "123"}
 
 
 @patch("api.watch_history_by_collection.watch_history_db.add_item")
-@patch("api.watch_history_by_collection.shows_api.get_show")
-def test_handler_post_show(mocked_get_show, mocked_post):
-    mocked_get_show.return_value = True
+@patch("api.watch_history_by_collection.shows_api.post_show")
+def test_handler_post_show(mocked_post_show, mocked_post):
+    mocked_post_show.return_value.json.return_value = {
+        "id": "123"
+    }
     mocked_post.return_value = True
 
     event = {
@@ -273,20 +276,21 @@ def test_handler_post_show(mocked_get_show, mocked_post):
             }
         },
         "pathParameters": {
-            "collection_name": "show",
-            "item_id": "123"
+            "collection_name": "show"
         },
-        "body": '{ "id": "123" }'
+        "body": '{ "api_id": "123", "api_name": "tvmaze" }'
     }
 
     ret = handle(event, None)
-    assert ret == {'statusCode': 204}
+    assert ret == {'statusCode': 204, "id": "123"}
 
 
 @patch("api.watch_history_by_collection.watch_history_db.add_item")
-@patch("api.watch_history_by_collection.movie_api.get_movie")
-def test_handler_post_movie(mocked_get_movie, mocked_post):
-    mocked_get_movie.return_value = True
+@patch("api.watch_history_by_collection.movie_api.post_movie")
+def test_handler_post_movie(mocked_post_movie, mocked_post):
+    mocked_post_movie.return_value.json.return_value = {
+        "id": "123"
+    }
     mocked_post.return_value = True
 
     event = {
@@ -299,19 +303,18 @@ def test_handler_post_movie(mocked_get_movie, mocked_post):
             }
         },
         "pathParameters": {
-            "collection_name": "movie",
-            "item_id": "123"
+            "collection_name": "movie"
         },
-        "body": '{ "id": "123" }'
+        "body": '{ "api_id": "123", "api_name": "tmdb" }'
     }
 
     ret = handle(event, None)
-    assert ret == {'statusCode': 204}
+    assert ret == {'statusCode': 204, "id": "123"}
 
 
 @patch("api.watch_history_by_collection.watch_history_db.update_item")
-@patch("api.watch_history_by_collection.anime_api.get_anime")
-def test_handler_get_anime_api_error(mocked_get_anime, mocked_post):
+@patch("api.watch_history_by_collection.anime_api.post_anime")
+def test_handler_post_anime_api_error(mocked_get_anime, mocked_post):
     mocked_get_anime.side_effect = HttpError("test_error", 403)
     mocked_post.return_value = True
 
@@ -326,14 +329,13 @@ def test_handler_get_anime_api_error(mocked_get_anime, mocked_post):
         },
         "pathParameters": {
             "collection_name": "anime",
-            "item_id": "123"
         },
-        "body": '{ "id": "123" }'
+        "body": '{ "api_id": "123", "api_name": "mal" }'
     }
 
     ret = handle(event, None)
     assert ret == {
-        'body': '{"message": "Could not get anime"}',
+        'body': '{"message": "Could not post anime"}',
         'error': 'test_error',
         'statusCode': 403
     }
@@ -435,11 +437,11 @@ def test_handler_post_show_without_id(mocked_get_show, mocked_post):
         "pathParameters": {
             "collection_name": "show",
         },
-        "body": '{}'
+        "body": '{"api_name": "tvmaze"}'
     }
 
     ret = handle(event, None)
     assert ret == {
-        'body': '{"message": "Invalid post schema", "error": "\'id\' is a required property"}',
+        'body': '{"message": "Invalid post schema", "error": "\'api_id\' is a required property"}',
         'statusCode': 400
     }
