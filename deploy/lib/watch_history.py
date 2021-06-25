@@ -143,7 +143,7 @@ class WatchHistory(core.Stack):
                 "timeout": 10
             },
             "api-episode_by_id": {
-                "layers": ["utils", "databases"],
+                "layers": ["utils", "databases", "api"],
                 "variables": {
                     "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO"
