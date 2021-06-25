@@ -2,11 +2,14 @@ import json
 import os
 from json import JSONDecodeError
 
+import anime_api
+import api_errors
 import decimal_encoder
 import logger
 import jwt_utils
 import schema
 import episodes_db
+import shows_api
 
 log = logger.get_logger("episode_by_collection_item")
 
@@ -25,14 +28,18 @@ def handle(event, context):
     method = event["requestContext"]["http"]["method"]
 
     if collection_name not in schema.COLLECTION_NAMES:
-        return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
+        msg = f"Invalid collection name, allowed values: " \
+              f"{schema.COLLECTION_NAMES}"
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"message": msg})}
 
     if method == "GET":
         query_params = event.get("queryStringParameters")
         return _get_episodes(username, collection_name, item_id, query_params)
     elif method == "POST":
         body = event.get("body")
-        return _post_episode(username, collection_name, item_id, body)
+        return _post_episode(username, collection_name, item_id, body, auth_header)
 
 
 def _get_episodes(username, collection_name, item_id, query_params):
@@ -62,7 +69,7 @@ def _get_episodes(username, collection_name, item_id, query_params):
         return {"statusCode": 200, "body": json.dumps({"episodes": []})}
 
 
-def _post_episode(username, collection_name, item_id, body):
+def _post_episode(username, collection_name, item_id, body, token):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -72,16 +79,23 @@ def _post_episode(username, collection_name, item_id, body):
             "body": "Invalid post body"
         }
 
-    if collection_name not in schema.COLLECTION_NAMES:
-        return {
-            "statusCode": 400,
-            "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})
-        }
-
     try:
         schema.validate_schema(POST_SCHEMA_PATH, body)
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
-    episodes_db.add_episode(username, collection_name, item_id, body["episode_id"])
+    res = None
+    try:
+        if collection_name == "anime":
+            res = anime_api.post_episode(item_id, body, token)
+        elif collection_name == "show":
+            res = shows_api.post_episode(item_id, body, token)
+    except api_errors.HttpError as e:
+        err_msg = f"Could not post {collection_name}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code, "body": json.dumps({"message": err_msg}), "error": str(e)}
+
+    episode_id = res.json()["id"]
+
+    episodes_db.add_episode(username, collection_name, item_id, episode_id)
     return {"statusCode": 204}
