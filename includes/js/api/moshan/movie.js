@@ -16,7 +16,7 @@ class MovieApi {
   }
 
   getItemByApiId (qParams) {
-    return this.apiAxios.get(`/movies?${qParams.api_name}_id=${qParams.api_id}`);
+    return this.apiAxios.get(`/movies?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
   }
 
   getItemById (qParams) {
