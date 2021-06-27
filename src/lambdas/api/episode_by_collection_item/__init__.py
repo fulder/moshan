@@ -95,7 +95,7 @@ def _post_episode(username, collection_name, item_id, body, token):
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code, "body": json.dumps({"message": err_msg}), "error": str(e)}
 
-    episode_id = res.json()["id"]
+    episode_id = res["id"]
 
     episodes_db.add_episode(username, collection_name, item_id, episode_id)
     return {"statusCode": 204}
