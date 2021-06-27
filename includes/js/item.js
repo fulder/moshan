@@ -39,7 +39,7 @@ async function getItemByApiId() {
     watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItemByApiId(qParams);
     console.debug(watchHistoryItemRes);
     watchHistoryItem = watchHistoryItemRes.data;
-    qParams.item_id = watchHistoryItem.id;
+    qParams.id = watchHistoryItem.item_id;
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
       console.log(error);
@@ -151,10 +151,10 @@ function createEpisodesList (moshanEpisodes) {
 
     if (episode.aired && qParams.id !== null) {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}&item_id=${qParams.item_id}&api_name=${qParams.api_name}&id=${qParams.id}&episode_id=${episode.id}'`;
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&item_id=${qParams.id}&api_name=${qParams.api_name}&id=${qParams.id}&episode_id=${episode.id}'`;
     } else if (episode.aired && qParams.api_id !== null) {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}&item_id=${qParams.item_id}&api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_id=${episode.id}'`;
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&item_id=${qParams.id}&api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_id=${episode.id}'`;
     }
 
     tableHTML += `
