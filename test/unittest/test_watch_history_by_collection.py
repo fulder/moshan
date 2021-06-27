@@ -249,7 +249,7 @@ class TestPost:
     @patch("api.watch_history_by_collection.watch_history_db.add_item")
     @patch("api.watch_history_by_collection.anime_api.post_anime")
     def test_success(self, mocked_post_anime, mocked_post):
-        mocked_post_anime.return_value.json.return_value = {
+        mocked_post_anime.return_value = {
             "id": "123"
         }
         mocked_post.return_value = True
@@ -285,7 +285,7 @@ class TestPost:
     @patch("api.watch_history_by_collection.watch_history_db.add_item")
     @patch("api.watch_history_by_collection.shows_api.post_show")
     def test_show_success(self, mocked_post_show, mocked_post):
-        mocked_post_show.return_value.json.return_value = {
+        mocked_post_show.return_value = {
             "id": "123"
         }
         mocked_post.return_value = True
@@ -299,7 +299,7 @@ class TestPost:
     @patch("api.watch_history_by_collection.watch_history_db.add_item")
     @patch("api.watch_history_by_collection.movie_api.post_movie")
     def test_movie_success(self, mocked_post_movie, mocked_post):
-        mocked_post_movie.return_value.json.return_value = {
+        mocked_post_movie.return_value = {
             "id": "123"
         }
         mocked_post.return_value = True
