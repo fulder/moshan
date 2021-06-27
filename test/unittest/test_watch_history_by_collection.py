@@ -74,7 +74,7 @@ def test_handler_sort(mocked_get_watch_history):
             "sort": "dates_watched"
         },
         "pathParameters": {
-            "collection_name": "test_collection"
+            "collection_name": "movie"
         },
         "requestContext": {
             "http": {
@@ -101,7 +101,7 @@ def test_handler_limit_and_start(mocked_get_watch_history):
             "start": "23"
         },
         "pathParameters": {
-            "collection_name": "test_collection"
+            "collection_name": "movie"
         },
         "requestContext": {
             "http": {
@@ -382,7 +382,7 @@ def test_handler_post_invalid_body(mocked_post):
             }
         },
         "pathParameters": {
-            "collection_name": "INVALID",
+            "collection_name": "movie",
             "item_id": "123"
         },
         "body": "INVALID"

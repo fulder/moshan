@@ -36,19 +36,20 @@ def handle(event, context):
         }
 
     if method == "GET":
-        query_params = event.get("queryStringParameters")
-        return _get(username, collection_name, query_params, auth_header)
+        query_params = event.get("queryStringParameters", {})
+        return _get(username, collection_name, auth_header, query_params)
     elif method == "POST":
         body = event.get("body")
         return _post_collection_item(username, collection_name, body,
                                      auth_header)
 
 
-def _get(username, collection_name, query_params, auth_header):
+def _get(username, collection_name, auth_header, query_params):
     if "api_name" in query_params and "api_id" in query_params:
         api_name = query_params["api_name"]
         api_id = query_params["api_id"]
-        return _get_by_api_id(collection_name, api_name, api_id, username, auth_header)
+        return _get_by_api_id(collection_name, api_name, api_id, username,
+                              auth_header)
     else:
         return _get_watch_history(username, collection_name, query_params)
 
