@@ -15,12 +15,9 @@ let totalPages = 0;
 let calendarInstance;
 let datesWatched;
 
-if (qParams.id !== null) {
-  getItemByMoshanId();
-}
-else if (qParams.api_id !== null) {
-  getItemByApiId();
-}
+
+getItemByApiId();
+
 
 function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
@@ -36,10 +33,10 @@ function QueryParams(urlParams) {
   }
 }
 
-async function getItemByMoshanId() {
+async function getItemByApiId() {
   let watchHistoryItem = null;
   try {
-    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItem(qParams);
+    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItemByApiId(qParams);
     console.debug(watchHistoryItemRes);
     watchHistoryItem = watchHistoryItemRes.data;
   } catch(error) {
@@ -48,43 +45,9 @@ async function getItemByMoshanId() {
     }
   }
 
-  const itemRes = await moshanApi.getItemById(qParams);
-  const item = itemRes.data;
-  console.debug(item);
-  const apiId = item[`${qParams.api_name}_id`];
-
-  const moshanItem = await api.getItemById({'api_id': apiId});
-
-  createItem(moshanItem, item, watchHistoryItem);
-
-  if (moshanItem.has_episodes) {
-    const episodesRes = await episodeApi.getEpisodes(qParams);
-    const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
-    createEpisodesList(moshanEpisodes);
-  }
-}
-
-async function getItemByApiId() {
-  let item = null;
-  try {
-    const itemRes = await moshanApi.getItemByApiId(qParams);
-    item = itemRes.data;
-  } catch(error){
-    console.debug(error);
-    if (!('response' in error && error.response.status == 404)) {
-      console.log(error);
-    }
-  }
-
-  if (item !== null && 'id' in item) {
-    // item cached use UUID instead
-    qParams.id = item.id;
-    return getItemByMoshanId();
-  }
-
   const moshanItem = await api.getItemById(qParams);
 
-  createItem(moshanItem, null, null);
+  createItem(moshanItem, watchHistoryItem);
 
   // can't lookup anime episodes in anime API if the item doesn't exist
   if (qParams.collection != 'anime' && moshanItem.has_episodes) {
@@ -94,7 +57,7 @@ async function getItemByApiId() {
   }
 }
 
-function createItem (moshanItem, item, watchHistoryItem) {
+function createItem (moshanItem, watchHistoryItem) {
   const itemAdded = watchHistoryItem !== null;
   console.debug(`Item added: ${itemAdded}`);
   console.debug(moshanItem);
