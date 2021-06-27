@@ -208,6 +208,27 @@ class TestGet:
             "body": json.dumps({"items": []})
         }
 
+    @patch("api.watch_history_by_collection.watch_history_db.get_item")
+    @patch("api.watch_history_by_collection.anime_api.get_anime_by_api_id")
+    def test_by_api_id_not_found(self, mocked_get_anime,
+                                 mocked_get_watch_history):
+        mocked_get_anime.return_value = {
+            "id": 123
+        }
+        mocked_get_watch_history.side_effect = NotFoundError
+
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"] = {
+            "api_id": 123,
+            "api_name": "mal"
+        }
+
+        ret = handle(event, None)
+
+        assert ret == {
+            "statusCode": 404
+        }
+
 
 class TestPost:
     event = {
