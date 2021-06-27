@@ -42,6 +42,73 @@ class TestGet:
             "statusCode": 200
         }
 
+    @patch("api.watch_history_by_collection.watch_history_db.get_item")
+    @patch("api.watch_history_by_collection.anime_api.get_anime_by_api_id")
+    def test_success_by_api_id_anime(self, mocked_get_anime, mocked_get_watch_history):
+        item_data = self.watch_history_ret["items"][0]
+        mocked_get_anime.return_value = {
+            "id": 123
+        }
+        mocked_get_watch_history.return_value = item_data
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"] = {
+            "api_id": 123,
+            "api_name": "mal"
+        }
+
+        ret = handle(event, None)
+
+        assert ret == {
+            "body": json.dumps(item_data),
+            "statusCode": 200
+        }
+
+    @patch("api.watch_history_by_collection.watch_history_db.get_item")
+    @patch("api.watch_history_by_collection.shows_api.get_show_by_api_id")
+    def test_success_by_api_id_shows(self, mocked_get_show,
+                                     mocked_get_watch_history):
+        item_data = self.watch_history_ret["items"][0]
+        mocked_get_show.return_value = {
+            "id": 123
+        }
+        mocked_get_watch_history.return_value = item_data
+        event = copy.deepcopy(self.event)
+        event["pathParameters"]["collection_name"] = "show"
+        event["queryStringParameters"] = {
+            "api_id": 123,
+            "api_name": "tvdb"
+        }
+
+        ret = handle(event, None)
+
+        assert ret == {
+            "body": json.dumps(item_data),
+            "statusCode": 200
+        }
+
+    @patch("api.watch_history_by_collection.watch_history_db.get_item")
+    @patch("api.watch_history_by_collection.movie_api.get_movie_by_api_id")
+    def test_success_by_api_id_movie(self, mocked_get_movie,
+                                     mocked_get_watch_history):
+        item_data = self.watch_history_ret["items"][0]
+        mocked_get_movie.return_value = {
+            "id": 123
+        }
+        mocked_get_watch_history.return_value = item_data
+        event = copy.deepcopy(self.event)
+        event["pathParameters"]["collection_name"] = "movie"
+        event["queryStringParameters"] = {
+            "api_id": 123,
+            "api_name": "mal"
+        }
+
+        ret = handle(event, None)
+
+        assert ret == {
+            "body": json.dumps(item_data),
+            "statusCode": 200
+        }
+
     def test_invalid_sort(self):
         event = copy.deepcopy(self.event)
         event["queryStringParameters"] = {
