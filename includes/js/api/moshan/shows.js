@@ -20,7 +20,7 @@ class ShowsApi {
   }
 
   getItemByApiId (qParams) {
-    return this.apiAxios.get(`/shows?${qParams.api_name}_id=${qParams.api_id}`);
+    return this.apiAxios.get(`/shows?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
   }
 
   addItem(qParams) {
