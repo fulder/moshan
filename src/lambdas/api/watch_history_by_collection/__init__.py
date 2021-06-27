@@ -69,9 +69,15 @@ def _get_by_api_id(collection_name, api_name, api_id, username, token):
         return {"statusCode": e.status_code,
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
-    item = watch_history_db.get_item(username, collection_name, ret["id"])
-    return {"statusCode": 200,
-            "body": json.dumps(item, cls=decimal_encoder.DecimalEncoder)}
+    try:
+        item = watch_history_db.get_item(username, collection_name, ret["id"])
+
+        return {"statusCode": 200,
+                "body": json.dumps(item, cls=decimal_encoder.DecimalEncoder)}
+    except watch_history_db.NotFoundError:
+        return {
+            "statusCode": 404
+        }
 
 
 def _get_watch_history(username, collection_name, query_params):
