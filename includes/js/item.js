@@ -154,7 +154,7 @@ function createEpisodesList (moshanEpisodes) {
       onClickAction = `window.location='/episode?collection=${qParams.collection}&item_id=${qParams.item_id}&api_name=${qParams.api_name}&id=${qParams.id}&episode_id=${episode.id}'`;
     } else if (episode.aired && qParams.api_id !== null) {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}}&item_id=${qParams.item_id}&api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_id=${episode.id}'`;
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&item_id=${qParams.item_id}&api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_id=${episode.id}'`;
     }
 
     tableHTML += `
