@@ -35,11 +35,50 @@ def handle(event, context):
             "body": json.dumps({"message": msg})}
 
     if method == "GET":
-        query_params = event.get("queryStringParameters")
-        return _get_episodes(username, collection_name, item_id, query_params)
+        query_params = event.get("queryStringParameters", {})
+        return _get(username, collection_name,
+                    item_id, auth_header, query_params)
     elif method == "POST":
         body = event.get("body")
-        return _post_episode(username, collection_name, item_id, body, auth_header)
+        return _post_episode(username, collection_name,
+                             item_id, body, auth_header)
+
+
+def _get(username, collection_name, item_id, auth_header, query_params):
+    if "api_name" in query_params and "api_id" in query_params:
+        api_name = query_params["api_name"]
+        api_id = query_params["api_id"]
+        return _get_episode_by_api_id(
+            collection_name, item_id, api_name, api_id, username,
+            auth_header)
+    else:
+        return _get_episodes(username, collection_name, item_id, query_params)
+
+
+def _get_episode_by_api_id(collection_name, item_id, api_name, api_id,
+                           username, token):
+    ret = None
+    try:
+        if collection_name == "anime":
+            ret = anime_api.get_episode_by_api_id(item_id, api_name, api_id,
+                                                  token)
+        elif collection_name == "show":
+            ret = shows_api.get_episode_by_api_id(api_name, api_id, token)
+    except api_errors.HttpError as e:
+        err_msg = f"Could not get {collection_name} episode"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code,
+                "body": json.dumps({"message": err_msg}), "error": str(e)}
+
+    try:
+        item = episodes_db.get_episode(username, collection_name, ret["id"])
+
+        return {"statusCode": 200,
+                "body": json.dumps(item, cls=decimal_encoder.DecimalEncoder)}
+    except episodes_db.NotFoundError:
+        return {
+            "statusCode": 404
+        }
 
 
 def _get_episodes(username, collection_name, item_id, query_params):
@@ -53,18 +92,22 @@ def _get_episodes(username, collection_name, item_id, query_params):
     try:
         limit = int(limit)
     except ValueError:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid limit type"})}
+        return {"statusCode": 400,
+                "body": json.dumps({"message": "Invalid limit type"})}
     try:
         start = int(start)
     except ValueError:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid start type"})}
+        return {"statusCode": 400,
+                "body": json.dumps({"message": "Invalid start type"})}
 
     if limit > 100:
         limit = 100
 
     try:
-        episodes = episodes_db.get_episodes(username, collection_name, item_id, limit=limit, start=start)
-        return {"statusCode": 200, "body": json.dumps(episodes, cls=decimal_encoder.DecimalEncoder)}
+        episodes = episodes_db.get_episodes(username, collection_name, item_id,
+                                            limit=limit, start=start)
+        return {"statusCode": 200, "body": json.dumps(episodes,
+                                                      cls=decimal_encoder.DecimalEncoder)}
     except episodes_db.NotFoundError:
         return {"statusCode": 200, "body": json.dumps({"episodes": []})}
 
@@ -82,7 +125,8 @@ def _post_episode(username, collection_name, item_id, body, token):
     try:
         schema.validate_schema(POST_SCHEMA_PATH, body)
     except schema.ValidationException as e:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
+        return {"statusCode": 400, "body": json.dumps(
+            {"message": "Invalid post schema", "error": str(e)})}
 
     res = None
     try:
@@ -93,7 +137,8 @@ def _post_episode(username, collection_name, item_id, body, token):
     except api_errors.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
-        return {"statusCode": e.status_code, "body": json.dumps({"message": err_msg}), "error": str(e)}
+        return {"statusCode": e.status_code,
+                "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     episode_id = res["id"]
 

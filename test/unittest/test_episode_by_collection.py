@@ -90,6 +90,91 @@ class TestGetEpisodes:
 
         assert ret == {"statusCode": 200, "body": json.dumps({"episodes": []})}
 
+    @patch("api.episode_by_collection_item.episodes_db.get_episode")
+    @patch("api.episode_by_collection_item.anime_api.get_episode_by_api_id")
+    def test_anime_by_api_id_success(self, mocked_get_anime,
+                                     mocked_get_episode):
+        mocked_get_anime.return_value = {
+            "id": "123"
+        }
+        mocked_get_episode.return_value = {
+            "collection_name": "anime",
+            "item_id": Decimal(123),
+            "episode_id": Decimal(345),
+        }
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"] = {
+            "api_id": "123",
+            "api_name": "mal",
+        }
+
+        ret = handle(event, None)
+        assert ret == {
+            'body': '{"collection_name": "anime", "item_id": 123, "episode_id": 345}',
+            "statusCode": 200
+        }
+
+    @patch("api.episode_by_collection_item.episodes_db.get_episode")
+    @patch("api.episode_by_collection_item.shows_api.get_episode_by_api_id")
+    def test_show_by_api_id_success(self, mocked_get_shows,
+                                    mocked_get_episode):
+        mocked_get_shows.return_value = {
+            "id": "123"
+        }
+        mocked_get_episode.return_value = {
+            "collection_name": "show",
+            "item_id": Decimal(123),
+            "episode_id": Decimal(345),
+        }
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"] = {
+            "api_id": "123",
+            "api_name": "tvdb",
+        }
+        event["pathParameters"]["collection_name"] = "show"
+
+        ret = handle(event, None)
+        assert ret == {
+            "body": '{"collection_name": "show", "item_id": 123, "episode_id": 345}',
+            "statusCode": 200
+        }
+
+    @patch("api.episode_by_collection_item.shows_api.get_episode_by_api_id")
+    def test_show_by_api_id_http_error(self, mocked_get_shows):
+        mocked_get_shows.side_effect = HttpError("test-error", 409)
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"] = {
+            "api_id": "123",
+            "api_name": "tvdb",
+        }
+        event["pathParameters"]["collection_name"] = "show"
+
+        ret = handle(event, None)
+        assert ret == {
+            "body": '{"message": "Could not get show episode"}',
+            "error": "test-error",
+            "statusCode": 409
+        }
+
+    @patch("api.episode_by_collection_item.episodes_db.get_episode")
+    @patch("api.episode_by_collection_item.anime_api.get_episode_by_api_id")
+    def test_anime_by_api_id_not_found(self, mocked_get_anime,
+                                     mocked_get_episode):
+        mocked_get_anime.return_value = {
+            "id": "123"
+        }
+        mocked_get_episode.side_effect = NotFoundError
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"] = {
+            "api_id": "123",
+            "api_name": "mal",
+        }
+
+        ret = handle(event, None)
+        assert ret == {
+            "statusCode": 404
+        }
+
 
 class TestPost:
     event = {
