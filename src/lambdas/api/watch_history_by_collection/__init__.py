@@ -27,23 +27,63 @@ def handle(event, context):
 
     method = event["requestContext"]["http"]["method"]
 
+    if collection_name not in schema.COLLECTION_NAMES:
+        err = f"Invalid collection name, " \
+              f"allowed values: {schema.COLLECTION_NAMES}"
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"message": err})
+        }
+
     if method == "GET":
-        query_params = event.get("queryStringParameters")
-        return _get_watch_history(username, collection_name, query_params, auth_header)
+        query_params = event.get("queryStringParameters", {})
+        return _get(username, collection_name, auth_header, query_params)
     elif method == "POST":
         body = event.get("body")
-        return _post_collection_item(username, collection_name, body, auth_header)
+        return _post_collection_item(username, collection_name, body,
+                                     auth_header)
 
 
-def _get_watch_history(username, collection_name, query_params, token):
+def _get(username, collection_name, auth_header, query_params):
+    if "api_name" in query_params and "api_id" in query_params:
+        api_name = query_params["api_name"]
+        api_id = query_params["api_id"]
+        return _get_by_api_id(collection_name, api_name, api_id, username,
+                              auth_header)
+    else:
+        return _get_watch_history(username, collection_name, query_params)
+
+
+def _get_by_api_id(collection_name, api_name, api_id, username, token):
+    ret = None
+    try:
+        if collection_name == "anime":
+            ret = anime_api.get_anime_by_api_id(api_name, api_id, token)
+        elif collection_name == "show":
+            ret = shows_api.get_show_by_api_id(api_name, api_id, token)
+        elif collection_name == "movie":
+            ret = movie_api.get_movie_by_api_id(api_name, api_id, token)
+    except api_errors.HttpError as e:
+        err_msg = f"Could not get {collection_name}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code,
+                "body": json.dumps({"message": err_msg}), "error": str(e)}
+
+    item = watch_history_db.get_item(username, collection_name, ret["id"])
+    return {"statusCode": 200,
+            "body": json.dumps(item, cls=decimal_encoder.DecimalEncoder)}
+
+
+def _get_watch_history(username, collection_name, query_params):
     sort = None
     if query_params:
         sort = query_params.get("sort")
 
     if sort and sort not in schema.ALLOWED_SORT:
+        err = f"Invalid sort specified. Allowed values: {schema.ALLOWED_SORT}"
         return {
             "statusCode": 400,
-            "body": json.dumps({"error": f"Invalid sort specified. Allowed values: {schema.ALLOWED_SORT}"})
+            "body": json.dumps({"error": err})
         }
 
     limit = 20
@@ -56,19 +96,25 @@ def _get_watch_history(username, collection_name, query_params, token):
     try:
         limit = int(limit)
     except ValueError:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid limit type"})}
+        return {"statusCode": 400,
+                "body": json.dumps({"message": "Invalid limit type"})}
     try:
         start = int(start)
     except ValueError:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid start type"})}
+        return {"statusCode": 400,
+                "body": json.dumps({"message": "Invalid start type"})}
 
     if limit > 20:
         limit = 20
 
     try:
-        watch_history = watch_history_db.get_watch_history(username, collection_name=collection_name, index_name=sort,
-                                                           limit=limit, start=start)
-        return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
+        watch_history = watch_history_db.get_watch_history(username,
+                                                           collection_name=collection_name,
+                                                           index_name=sort,
+                                                           limit=limit,
+                                                           start=start)
+        return {"statusCode": 200, "body": json.dumps(watch_history,
+                                                      cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
         return {"statusCode": 200, "body": json.dumps({"items": []})}
 
@@ -83,16 +129,11 @@ def _post_collection_item(username, collection_name, body, token):
             "body": "Invalid post body"
         }
 
-    if collection_name not in schema.COLLECTION_NAMES:
-        return {
-            "statusCode": 400,
-            "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})
-        }
-
     try:
         schema.validate_schema(POST_SCHEMA_PATH, body)
     except schema.ValidationException as e:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
+        return {"statusCode": 400, "body": json.dumps(
+            {"message": "Invalid post schema", "error": str(e)})}
 
     res = None
     try:
@@ -105,7 +146,8 @@ def _post_collection_item(username, collection_name, body, token):
     except api_errors.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
-        return {"statusCode": e.status_code, "body": json.dumps({"message": err_msg}), "error": str(e)}
+        return {"statusCode": e.status_code,
+                "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     item_id = res.json()["id"]
     watch_history_db.add_item(username, collection_name, item_id)
