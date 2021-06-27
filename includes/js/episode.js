@@ -10,7 +10,7 @@ const episodeApi = qParams.collection == 'anime' ? getMoshanApiByCollectionName(
 let datesWatched;
 let calendarInstance;
 
-getEpisodes();
+getEpisode();
 
 function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
@@ -20,7 +20,7 @@ function QueryParams(urlParams) {
   this.episode_id = urlParams.get('episode_id');
 }
 
-async function getEpisodes() {
+async function getEpisode() {
   let watchHistoryEpisode = null;
   try {
     const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(qParams);
