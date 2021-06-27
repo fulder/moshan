@@ -75,7 +75,7 @@ def _patch_episode(username, collection_name, item_id, body, token):
         return {"statusCode": e.status_code,
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
-    episode_id = res.json()["id"]
+    episode_id = res["id"]
 
     episodes_db.update_episode(username, collection_name, episode_id, body)
     return {"statusCode": 204}
