@@ -44,7 +44,8 @@ class TestGet:
 
     @patch("api.watch_history_by_collection.watch_history_db.get_item")
     @patch("api.watch_history_by_collection.anime_api.get_anime_by_api_id")
-    def test_success_by_api_id_anime(self, mocked_get_anime, mocked_get_watch_history):
+    def test_success_by_api_id_anime(self, mocked_get_anime,
+                                     mocked_get_watch_history):
         item_data = self.watch_history_ret["items"][0]
         mocked_get_anime.return_value = {
             "id": 123
@@ -107,6 +108,23 @@ class TestGet:
         assert ret == {
             "body": json.dumps(item_data),
             "statusCode": 200
+        }
+
+    @patch("api.watch_history_by_collection.anime_api.get_anime_by_api_id")
+    def test_get_by_api_id_http_error(self, mocked_get_anime):
+        mocked_get_anime.side_effect = HttpError("test-error", 503)
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"] = {
+            "api_id": 123,
+            "api_name": "mal"
+        }
+
+        ret = handle(event, None)
+
+        assert ret == {
+            "body": '{"message": "Could not get anime"}',
+            "error": "test-error",
+            "statusCode": 503
         }
 
     def test_invalid_sort(self):
