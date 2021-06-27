@@ -131,7 +131,9 @@ class WatchHistory(core.Stack):
                 "layers": ["utils", "databases", "api"],
                 "variables": {
                     "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
-                    "LOG_LEVEL": "DEBUG"
+                    "LOG_LEVEL": "DEBUG",
+                    "ANIME_API_URL": self.anime_api_url,
+                    "SHOWS_API_URL": self.show_api_url,
                 },
                 "concurrent_executions": 10,
                 "policies": [
