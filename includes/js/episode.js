@@ -25,6 +25,7 @@ async function getEpisode() {
   try {
     const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(qParams);
     watchHistoryEpisode = watchHistoryRes.data;
+    qParams.api_id = watchHistoryEpisode[`${qParams.api_name}_id`];
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
       console.log(error);
