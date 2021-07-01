@@ -28,7 +28,7 @@ class AnimeApi {
   }
 
   getEpisode (qParams) {
-    return this.apiAxios.get(`/anime/${qParams.id}/episode/${qParams.episode_id}`);
+    return this.apiAxios.get(`/anime/${qParams.id}/episodes/${qParams.episode_id}`);
   }
 
   addItem(qParams) {
