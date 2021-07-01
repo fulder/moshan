@@ -32,7 +32,8 @@ def handle(event, context):
         return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
 
     if method == "GET":
-        return _get_episode(username, collection_name, episode_id)
+        return _get_episode(username, collection_name, item_id,
+                            episode_id, auth_header)
     elif method == "PATCH":
         body = event.get("body")
         return _patch_episode(username, collection_name, item_id, episode_id,
@@ -41,10 +42,27 @@ def handle(event, context):
         return _delete_episode(username, collection_name, episode_id)
 
 
-def _get_episode(username, collection_name, episode_id):
+def _get_episode(username, collection_name, item_id, episode_id, token):
+    s_ret = None
     try:
-        ret = episodes_db.get_episode(username, collection_name, episode_id)
-        return {"statusCode": 200, "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
+        if collection_name == "anime":
+            s_ret = anime_api.get_episode(item_id, episode_id, token)
+        elif collection_name == "show":
+            s_ret = shows_api.get_episode(item_id, episode_id, token)
+    except api_errors.HttpError as e:
+        err_msg = f"Could not get {collection_name} episode for " \
+                  f"item: {item_id} and episode_id: {episode_id}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code,
+                "body": json.dumps({"message": err_msg}), "error": str(e)}
+
+    try:
+        w_ret = episodes_db.get_episode(username, collection_name, episode_id)
+        ret = {**w_ret, **s_ret}
+        return {
+            "statusCode": 200,
+            "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)
+        }
     except episodes_db.NotFoundError as e:
         log.debug(f"Not found episode. Error: {e}")
         return {"statusCode": 404}
