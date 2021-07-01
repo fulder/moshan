@@ -28,10 +28,6 @@ class AnimeApi {
   }
 
   getEpisode (qParams) {
-    return this.apiAxios.get(`/anime/${qParams.id}/episodes/${qParams.episode_id}`);
-  }
-
-  getEpisodeByApiId (qParams) {
     return this.apiAxios.get(`/anime/${qParams.id}/episodes?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
   }
 
