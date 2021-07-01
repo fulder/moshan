@@ -43,6 +43,10 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
 
   const episodeAdded = watchHistoryEpisode !== null;
 
+  if (episodeAdded) {
+    qParams.episode_id = watchHistoryEpisode;
+  }
+
   let watchedAmount = 0;
   let latestWatchDate = '';
 
