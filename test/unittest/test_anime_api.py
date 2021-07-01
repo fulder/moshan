@@ -70,6 +70,27 @@ def test_post_anime_invalid_code(mocked_post, mocked_anime_api):
     with pytest.raises(api_errors.HttpError):
         mocked_anime_api.post_anime({}, "TEST_TOKEN")
 
+@patch("anime_api.requests.get")
+def test_get_episode(mocked_get, mocked_anime_api):
+    m = MagicMock()
+    m.status_code = 200
+    m.json.return_value = {"anime_id": "123"}
+    mocked_get.return_value = m
+
+    ret = mocked_anime_api.get_episode("123", "ep_id", "TEST_TOKEN")
+
+    assert ret == {"anime_id": "123"}
+
+
+@patch("anime_api.requests.get")
+def test_get_episode_invalid_code(mocked_get, mocked_anime_api):
+    m = MagicMock()
+    m.status_code = 404
+    mocked_get.return_value = m
+
+    with pytest.raises(api_errors.HttpError):
+        mocked_anime_api.get_episode("123", "ep_id", "TEST_TOKEN")
+
 
 @patch("anime_api.requests.get")
 def test_get_episode_by_api_id(mocked_get, mocked_anime_api):
