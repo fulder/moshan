@@ -27,17 +27,64 @@ class TestGet:
     }
 
     @patch("api.item_by_collection.watch_history_db.get_item")
-    def test_success(self, mocked_get):
+    @patch("api.item_by_collection.anime_api.get_anime")
+    def test_success_anime(self, mocked_anime_get, mocked_get):
+        mocked_anime_get.return_value = {"mal_id": 564}
         mocked_get.return_value = {"collection_name": "anime", "item_id": 123}
 
         ret = handle(self.event, None)
         assert ret == {
-            "body": '{"collection_name": "anime", "item_id": 123}',
+            "body": '{"collection_name": "anime", '
+                    '"item_id": 123, "mal_id": 564}',
             "statusCode": 200
         }
 
     @patch("api.item_by_collection.watch_history_db.get_item")
-    def test_not_found(self, mocked_get):
+    @patch("api.item_by_collection.shows_api.get_show")
+    def test_success_show(self, mocked_show_get, mocked_get):
+        mocked_show_get.return_value = {"tvdb_id": 564}
+        mocked_get.return_value = {"collection_name": "show", "item_id": 123}
+        event = copy.deepcopy(self.event)
+        event["pathParameters"]["collection_name"] = "show"
+
+        ret = handle(event, None)
+        assert ret == {
+            "body": '{"collection_name": "show", '
+                    '"item_id": 123, "tvdb_id": 564}',
+            "statusCode": 200
+        }
+
+    @patch("api.item_by_collection.watch_history_db.get_item")
+    @patch("api.item_by_collection.movie_api.get_movie")
+    def test_success_movie(self, mocked_movie_get, mocked_get):
+        mocked_movie_get.return_value = {"tmdb_id": 564}
+        mocked_get.return_value = {"collection_name": "movie", "item_id": 123}
+        event = copy.deepcopy(self.event)
+        event["pathParameters"]["collection_name"] = "movie"
+
+        ret = handle(event, None)
+        assert ret == {
+            "body": '{"collection_name": "movie", '
+                    '"item_id": 123, "tmdb_id": 564}',
+            "statusCode": 200
+        }
+
+    @patch("api.item_by_collection.watch_history_db.get_item")
+    @patch("api.item_by_collection.anime_api.get_anime")
+    def test_anime_http_error(self, mocked_anime_get, mocked_get):
+        mocked_anime_get.side_effect = HttpError("test-error", 409)
+        mocked_get.return_value = {"collection_name": "anime", "item_id": 123}
+
+        ret = handle(self.event, None)
+        assert ret == {
+            "body": '{"message": "Could not get anime item with id: 123"}',
+            "error": "test-error",
+            "statusCode": 409
+        }
+
+    @patch("api.item_by_collection.watch_history_db.get_item")
+    @patch("api.item_by_collection.anime_api.get_anime")
+    def test_not_found(self, mocked_anime_get, mocked_get):
         mocked_get.side_effect = NotFoundError
 
         ret = handle(self.event, None)
