@@ -30,6 +30,14 @@ def post_anime(body, token):
     return res.json()
 
 
+def get_episode(anime_id, episode_id, token):
+    res = requests.get(f"{ANIME_API_URL}/anime/{anime_id}/episodes/{episode_id}", headers={"Authorization": token})
+    if res.status_code != 200:
+        raise api_errors.HttpError("Invalid response in get_episode_by_api_id", res.status_code)
+
+    return res.json()
+
+
 def get_episode_by_api_id(anime_id, api_name, api_id, token):
     res = requests.get(f"{ANIME_API_URL}/anime/{anime_id}/episodes?api_name={api_name}&api_id={api_id}", headers={"Authorization": token})
     if res.status_code != 200:

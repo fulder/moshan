@@ -35,7 +35,8 @@ def handle(event, context):
         return _get_episode(username, collection_name, episode_id)
     elif method == "PATCH":
         body = event.get("body")
-        return _patch_episode(username, collection_name, item_id, body, auth_header)
+        return _patch_episode(username, collection_name, item_id, episode_id,
+                              body, auth_header)
     elif method == "DELETE":
         return _delete_episode(username, collection_name, episode_id)
 
@@ -49,7 +50,7 @@ def _get_episode(username, collection_name, episode_id):
         return {"statusCode": 404}
 
 
-def _patch_episode(username, collection_name, item_id, body, token):
+def _patch_episode(username, collection_name, item_id, episode_id, body, token):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -63,19 +64,17 @@ def _patch_episode(username, collection_name, item_id, body, token):
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
-    res = None
     try:
         if collection_name == "anime":
-            res = anime_api.post_episode(item_id, body, token)
+            anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
-            res = shows_api.post_episode(item_id, body, token)
+            shows_api.get_episode(item_id, episode_id, token)
     except api_errors.HttpError as e:
-        err_msg = f"Could not post {collection_name}"
+        err_msg = f"Could not get {collection_name} episode for " \
+                  f"item: {item_id} and episode_id: {episode_id}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code,
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
-
-    episode_id = res["id"]
 
     episodes_db.update_episode(username, collection_name, episode_id, body)
     return {"statusCode": 204}
