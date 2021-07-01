@@ -50,8 +50,7 @@ async function getItemByApiId() {
 
   createItem(moshanItem, watchHistoryItem);
 
-  // can't lookup anime episodes in anime API if the item doesn't exist
-  if (qParams.collection != 'anime' && moshanItem.has_episodes) {
+  if (watchHistoryItem !== null && moshanItem.has_episodes) {
     const episodesRes = await episodeApi.getEpisodes(qParams);
     const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
     createEpisodesList(moshanEpisodes);
@@ -63,6 +62,7 @@ function createItem (moshanItem, watchHistoryItem) {
   console.debug(`Item added: ${itemAdded}`);
   console.debug(moshanItem);
 
+  
   let watchedAmount = 0;
   let latestWatchDate = '';
 
