@@ -144,31 +144,31 @@ function createEpisodesList (moshanEpisodes) {
   let tableHTML = '';
 
   moshanEpisodes.episodes.forEach(function (episode) {
-    episode = episodeApi.getMoshanEpisode(episode);
+    moshanEpisode = episodeApi.getMoshanEpisode(episode);
 
     let rowClass = 'bg-secondary';
     let onClickAction = '';
 
     let episodeApiName = qParams.api_name;
-    let episodeApiId = episode.id;
+    let episodeApiId = moshanEpisode.id;
     if (qParams.api_name === 'mal') {
       episodeApiName = 'anidb';
       episodeApiId = episode.anidb_id;
     }
 
-    if (episode.aired && qParams.api_name !== 'mal') {
+    if (moshanEpisode.aired && qParams.api_name !== 'mal') {
       rowClass = 'episodeRow';
       onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${episodeApiName}&api_id=${episodeApiId}'`;
-    } else if (episode.aired && qParams.api_name === 'mal') {
+    } else if (moshanEpisode.aired && qParams.api_name === 'mal') {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${episodeApiName}&api_id=${episodeApiId}&episode_id=${episode.id}'`;
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${episodeApiName}&api_id=${episodeApiId}&episode_id=${moshanEpisode.id}'`;
     }
 
     tableHTML += `
             <tr onclick="${onClickAction}" class=${rowClass}>
-                <td class="small">${episode.number}</td>
-                <td class="text-truncate small">${episode.title}</td>
-                <td class="small">${episode.air_date}</td>
+                <td class="small">${moshanEpisode.number}</td>
+                <td class="text-truncate small">${moshanEpisode.title}</td>
+                <td class="small">${moshanEpisode.air_date}</td>
             </tr>
         `;
   });
