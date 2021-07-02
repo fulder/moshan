@@ -23,7 +23,7 @@ function QueryParams(urlParams) {
 async function getEpisode() {
   let watchHistoryEpisode = null;
   try {
-    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(qParams);
+    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisodeByApiId(qParams);
     watchHistoryEpisode = watchHistoryRes.data;
     qParams.api_id = watchHistoryEpisode[`${qParams.api_name}_id`];
   } catch(error) {

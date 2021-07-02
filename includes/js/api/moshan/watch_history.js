@@ -62,6 +62,10 @@ class WatchHistoryApi {
     return this.apiAxios.get(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}`);
   }
 
+  getWatchHistoryEpisodeByApiId (qParams) {
+    return this.apiAxios.get(`/watch-history/collection/${qParams.collection}/${qParams.id}/episodes?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
+  }
+
   updateWatchHistoryEpisode (qParams, watchDates = []) {
     const data = {};
     data.dates_watched = watchDates;
