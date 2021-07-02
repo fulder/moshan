@@ -45,7 +45,7 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
   const episodeAdded = watchHistoryEpisode !== null;
 
   if (episodeAdded) {
-    qParams.episode_id = watchHistoryEpisode.episode_id;
+    qParams.episode_id = watchHistoryEpisode.id;
   }
 
   let watchedAmount = 0;
