@@ -259,7 +259,7 @@ class TestPost:
 
         ret = handle(self.event, None)
         assert ret == {
-            "statusCode": 204,
+            "statusCode": 200,
             "id": "123"
         }
 
@@ -297,7 +297,7 @@ class TestPost:
         event["body"] = '{ "api_id": "123", "api_name": "tvmaze" }'
 
         ret = handle(event, None)
-        assert ret == {"statusCode": 204, "id": "123"}
+        assert ret == {"statusCode": 200, "id": "123"}
 
     @patch("api.watch_history_by_collection.watch_history_db.add_item")
     @patch("api.watch_history_by_collection.movie_api.post_movie")
@@ -312,7 +312,7 @@ class TestPost:
 
         ret = handle(event, None)
         assert ret == {
-            "statusCode": 204,
+            "statusCode": 200,
             "id": "123"
         }
 

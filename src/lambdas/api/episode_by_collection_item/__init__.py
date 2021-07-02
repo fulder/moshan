@@ -143,4 +143,7 @@ def _post_episode(username, collection_name, item_id, body, token):
     episode_id = res["id"]
 
     episodes_db.add_episode(username, collection_name, item_id, episode_id)
-    return {"statusCode": 204}
+    return {
+        "statusCode": 200,
+        "body": json.dumps({"id": episode_id})
+    }
