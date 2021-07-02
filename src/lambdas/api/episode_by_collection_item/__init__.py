@@ -57,13 +57,13 @@ def _get(username, collection_name, item_id, auth_header, query_params):
 
 def _get_episode_by_api_id(collection_name, item_id, api_name, api_id,
                            username, token):
-    ret = None
+    s_ret = None
     try:
         if collection_name == "anime":
-            ret = anime_api.get_episode_by_api_id(item_id, api_name, api_id,
+            s_ret = anime_api.get_episode_by_api_id(item_id, api_name, api_id,
                                                   token)
         elif collection_name == "show":
-            ret = shows_api.get_episode_by_api_id(api_name, api_id, token)
+            s_ret = shows_api.get_episode_by_api_id(api_name, api_id, token)
     except api_errors.HttpError as e:
         err_msg = f"Could not get {collection_name} episode"
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -71,10 +71,10 @@ def _get_episode_by_api_id(collection_name, item_id, api_name, api_id,
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     try:
-        item = episodes_db.get_episode(username, collection_name, ret["id"])
-
+        w_ret = episodes_db.get_episode(username, collection_name, s_ret["id"])
+        ret = {**w_ret, **s_ret}
         return {"statusCode": 200,
-                "body": json.dumps(item, cls=decimal_encoder.DecimalEncoder)}
+                "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
     except episodes_db.NotFoundError:
         return {
             "statusCode": 404

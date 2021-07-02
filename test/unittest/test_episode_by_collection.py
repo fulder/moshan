@@ -94,14 +94,17 @@ class TestGetEpisodes:
     @patch("api.episode_by_collection_item.anime_api.get_episode_by_api_id")
     def test_anime_by_api_id_success(self, mocked_get_anime,
                                      mocked_get_episode):
-        mocked_get_anime.return_value = {
-            "id": "123"
+        s_data = {
+            "id": "123",
+            "mal_id": "456"
         }
-        mocked_get_episode.return_value = {
+        w_data = {
             "collection_name": "anime",
-            "item_id": Decimal(123),
-            "episode_id": Decimal(345),
+            "item_id": 123,
+            "episode_id": 345,
         }
+        mocked_get_anime.return_value = s_data
+        mocked_get_episode.return_value = w_data
         event = copy.deepcopy(self.event)
         event["queryStringParameters"] = {
             "api_id": "123",
@@ -109,8 +112,9 @@ class TestGetEpisodes:
         }
 
         ret = handle(event, None)
+        exp_data = {**w_data, **s_data}
         assert ret == {
-            'body': '{"collection_name": "anime", "item_id": 123, "episode_id": 345}',
+            "body": json.dumps(exp_data),
             "statusCode": 200
         }
 
@@ -118,14 +122,16 @@ class TestGetEpisodes:
     @patch("api.episode_by_collection_item.shows_api.get_episode_by_api_id")
     def test_show_by_api_id_success(self, mocked_get_shows,
                                     mocked_get_episode):
-        mocked_get_shows.return_value = {
-            "id": "123"
-        }
-        mocked_get_episode.return_value = {
+        w_ret = {
             "collection_name": "show",
-            "item_id": Decimal(123),
-            "episode_id": Decimal(345),
+            "item_id": 123,
+            "episode_id": 345,
         }
+        s_ret = {
+            "id": 123
+        }
+        mocked_get_shows.return_value = s_ret
+        mocked_get_episode.return_value = w_ret
         event = copy.deepcopy(self.event)
         event["queryStringParameters"] = {
             "api_id": "123",
@@ -134,8 +140,9 @@ class TestGetEpisodes:
         event["pathParameters"]["collection_name"] = "show"
 
         ret = handle(event, None)
+        exp_data = {**w_ret, **s_ret}
         assert ret == {
-            "body": '{"collection_name": "show", "item_id": 123, "episode_id": 345}',
+            "body": json.dumps(exp_data),
             "statusCode": 200
         }
 
@@ -159,7 +166,7 @@ class TestGetEpisodes:
     @patch("api.episode_by_collection_item.episodes_db.get_episode")
     @patch("api.episode_by_collection_item.anime_api.get_episode_by_api_id")
     def test_anime_by_api_id_not_found(self, mocked_get_anime,
-                                     mocked_get_episode):
+                                       mocked_get_episode):
         mocked_get_anime.return_value = {
             "id": "123"
         }
