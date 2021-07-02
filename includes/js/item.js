@@ -159,7 +159,7 @@ function createEpisodesList (moshanEpisodes) {
 
     if (episode.aired && qParams.id !== null) {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${qParams.api_name}&api_id=${episodeApiId}`;
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${qParams.api_name}&api_id=${episodeApiId}'`;
     }
 
     tableHTML += `
