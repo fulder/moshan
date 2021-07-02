@@ -150,16 +150,18 @@ function createEpisodesList (moshanEpisodes) {
     let onClickAction = '';
 
     let episodeApiId = episode[`${qParams.api_name}_id`];
+    let episodeApiName = qParams.api_name;
 
     if (qParams.api_name === 'mal') {
       // special case for MAL api, currently the supported api
       // is MAL for items and AniDB for episodes
       episodeApiId = episode.anidb_id;
+      episodeApiName = 'anidb';
     }
 
     if (episode.aired && qParams.id !== null) {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${qParams.api_name}&api_id=${episodeApiId}'`;
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${episodeApiName}&api_id=${episodeApiId}'`;
     }
 
     tableHTML += `
