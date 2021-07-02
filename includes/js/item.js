@@ -118,10 +118,8 @@ function createItem (moshanItem, watchHistoryItem) {
 /* exported addItem */
 async function addItem () {
   try {
-    const addItemRes = await moshanApi.addItem(qParams);
+    const addItemRes = await watchHistoryApi.addWatchHistoryItem(qParams);
     qParams.id = addItemRes.data.id;
-
-    await watchHistoryApi.addWatchHistoryItem(qParams);
     document.getElementById('add_button').classList.add('d-none');
     document.getElementById('remove_button').classList.remove('d-none');
   } catch (error) {
