@@ -156,7 +156,8 @@ async function removeWatchDate() {
 
 /* exported addEpisode */
 async function addEpisode () {
-  await watchHistoryApi.addWatchHistoryEpisode(qParams);
+  const addEpisodeRes = await watchHistoryApi.addWatchHistoryEpisode(qParams);
+  qParams.episode_id = addEpisodeRes.data.id;
   document.getElementById('add_button').classList.add('d-none');
   document.getElementById('remove_button').classList.remove('d-none');
 }
