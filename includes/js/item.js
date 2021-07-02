@@ -149,7 +149,7 @@ function createEpisodesList (moshanEpisodes) {
     let rowClass = 'bg-secondary';
     let onClickAction = '';
 
-    let episodeApiName = qParam.api_name;
+    let episodeApiName = qParams.api_name;
     let episodeApiId = episode.id;
     if (qParams.api_name === 'mal') {
       episodeApiName = 'anidb';
