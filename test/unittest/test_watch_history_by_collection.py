@@ -46,11 +46,12 @@ class TestGet:
     @patch("api.watch_history_by_collection.anime_api.get_anime_by_api_id")
     def test_success_by_api_id_anime(self, mocked_get_anime,
                                      mocked_get_watch_history):
-        item_data = self.watch_history_ret["items"][0]
-        mocked_get_anime.return_value = {
+        w_ret = self.watch_history_ret["items"][0]
+        s_ret = {
             "id": 123
         }
-        mocked_get_watch_history.return_value = item_data
+        mocked_get_anime.return_value = s_ret
+        mocked_get_watch_history.return_value = w_ret
         event = copy.deepcopy(self.event)
         event["queryStringParameters"] = {
             "api_id": 123,
@@ -58,9 +59,9 @@ class TestGet:
         }
 
         ret = handle(event, None)
-
+        exp_ret = {**w_ret, **s_ret}
         assert ret == {
-            "body": json.dumps(item_data),
+            "body": json.dumps(exp_ret),
             "statusCode": 200
         }
 
@@ -68,11 +69,12 @@ class TestGet:
     @patch("api.watch_history_by_collection.shows_api.get_show_by_api_id")
     def test_success_by_api_id_shows(self, mocked_get_show,
                                      mocked_get_watch_history):
-        item_data = self.watch_history_ret["items"][0]
-        mocked_get_show.return_value = {
+        w_ret = self.watch_history_ret["items"][0]
+        s_ret = {
             "id": 123
         }
-        mocked_get_watch_history.return_value = item_data
+        mocked_get_show.return_value = s_ret
+        mocked_get_watch_history.return_value = w_ret
         event = copy.deepcopy(self.event)
         event["pathParameters"]["collection_name"] = "show"
         event["queryStringParameters"] = {
@@ -81,9 +83,9 @@ class TestGet:
         }
 
         ret = handle(event, None)
-
+        exp_data = {**w_ret, **s_ret}
         assert ret == {
-            "body": json.dumps(item_data),
+            "body": json.dumps(exp_data),
             "statusCode": 200
         }
 
@@ -91,11 +93,12 @@ class TestGet:
     @patch("api.watch_history_by_collection.movie_api.get_movie_by_api_id")
     def test_success_by_api_id_movie(self, mocked_get_movie,
                                      mocked_get_watch_history):
-        item_data = self.watch_history_ret["items"][0]
-        mocked_get_movie.return_value = {
+        w_ret = self.watch_history_ret["items"][0]
+        s_ret = {
             "id": 123
         }
-        mocked_get_watch_history.return_value = item_data
+        mocked_get_movie.return_value = s_ret
+        mocked_get_watch_history.return_value = w_ret
         event = copy.deepcopy(self.event)
         event["pathParameters"]["collection_name"] = "movie"
         event["queryStringParameters"] = {
@@ -104,9 +107,9 @@ class TestGet:
         }
 
         ret = handle(event, None)
-
+        exp_data = {**w_ret, **s_ret}
         assert ret == {
-            "body": json.dumps(item_data),
+            "body": json.dumps(exp_data),
             "statusCode": 200
         }
 

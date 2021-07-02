@@ -55,14 +55,14 @@ def _get(username, collection_name, auth_header, query_params):
 
 
 def _get_by_api_id(collection_name, api_name, api_id, username, token):
-    ret = None
+    s_ret = None
     try:
         if collection_name == "anime":
-            ret = anime_api.get_anime_by_api_id(api_name, api_id, token)
+            s_ret = anime_api.get_anime_by_api_id(api_name, api_id, token)
         elif collection_name == "show":
-            ret = shows_api.get_show_by_api_id(api_name, api_id, token)
+            s_ret = shows_api.get_show_by_api_id(api_name, api_id, token)
         elif collection_name == "movie":
-            ret = movie_api.get_movie_by_api_id(api_name, api_id, token)
+            s_ret = movie_api.get_movie_by_api_id(api_name, api_id, token)
     except api_errors.HttpError as e:
         err_msg = f"Could not get {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -70,10 +70,10 @@ def _get_by_api_id(collection_name, api_name, api_id, username, token):
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     try:
-        item = watch_history_db.get_item(username, collection_name, ret["id"])
-
+        w_ret = watch_history_db.get_item(username, collection_name, s_ret["id"])
+        ret = {**w_ret, **s_ret}
         return {"statusCode": 200,
-                "body": json.dumps(item, cls=decimal_encoder.DecimalEncoder)}
+                "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
     except watch_history_db.NotFoundError:
         return {
             "statusCode": 404
