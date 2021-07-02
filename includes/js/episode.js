@@ -32,7 +32,7 @@ async function getEpisode() {
 
     watchHistoryEpisode = watchHistoryRes.data;
     qParams.api_id = watchHistoryEpisode[`${qParams.api_name}_id`];
-    qParams.id = watchHistoryEpisode.id;
+    qParams.episode_id = watchHistoryEpisode.id;
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
       console.log(error);
