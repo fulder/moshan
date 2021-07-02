@@ -204,19 +204,31 @@ class TestPost:
     @patch("api.episode_by_collection_item.anime_api.post_episode")
     def test_success_anime(self, mocked_post_episode, mocked_post):
         mocked_post.return_value = True
+        mocked_post_episode.return_value = {
+            "id": "123"
+        }
 
         ret = handle(self.event, None)
-        assert ret == {'statusCode': 204}
+        assert ret == {
+            "body": '{"id": "123"}',
+            "statusCode": 200
+        }
 
     @patch("api.episode_by_collection_item.episodes_db.add_episode")
     @patch("api.episode_by_collection_item.shows_api.post_episode")
     def test_success_show(self, mocked_post_episode, mocked_post):
         mocked_post.return_value = True
+        mocked_post_episode.return_value = {
+            "id": "123"
+        }
         event = copy.deepcopy(self.event)
         event["pathParameters"]["collection_name"] = "show"
 
         ret = handle(event, None)
-        assert ret == {'statusCode': 204}
+        assert ret == {
+            "body": '{"id": "123"}',
+            "statusCode": 200
+        }
 
     @patch("api.episode_by_collection_item.episodes_db.add_episode")
     @patch("api.episode_by_collection_item.anime_api.post_episode")
