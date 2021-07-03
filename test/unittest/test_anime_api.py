@@ -52,7 +52,7 @@ def test_get_anime_by_api_id_invalid_code(mocked_get, mocked_anime_api):
 @patch("anime_api.requests.post")
 def test_post_anime(mocked_post, mocked_anime_api):
     m = MagicMock()
-    m.status_code = 200
+    m.status_code = 202
     m.json.return_value = {"anime_id": "123"}
     mocked_post.return_value = m
 
