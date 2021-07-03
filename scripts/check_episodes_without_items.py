@@ -31,17 +31,9 @@ for page in paginator.paginate(TableName=EPISODES_TABLE_NAME):
                 }
             )
 
-
-
-
             if "Item" not in i and show_id not in ids:
                 ret = requests.get(
                     f"https://api.show.moshan.tv/shows/{show_id}",
                     headers={"Authorization": TOKEN})
                 print(ret.json()["tvmaze_id"])
                 ids.append(show_id)
-
-
-
-
-
