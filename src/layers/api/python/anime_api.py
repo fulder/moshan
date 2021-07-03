@@ -24,7 +24,7 @@ def get_anime_by_api_id(api_name, api_id, token):
 
 def post_anime(body, token):
     res = requests.post(f"{ANIME_API_URL}/anime", headers={"Authorization": token}, json=body)
-    if res.status_code != 200:
+    if res.status_code != 202:
         raise api_errors.HttpError("Invalid response in anime post", res.status_code)
 
     return res.json()
