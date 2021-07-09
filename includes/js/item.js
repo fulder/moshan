@@ -72,6 +72,13 @@ function createItem (moshanItem, watchHistoryItem) {
     watchedAmount = datesWatched.length;
   }
 
+  if ('overview' in watchHistoryItem) {
+      document.getElementById('overview').value = watchHistoryItem.overview;
+  }
+  if ('review' in watchHistoryItem) {
+      document.getElementById('review').value = watchHistoryItem.overview;
+  }
+
   document.getElementById('poster').src = moshanItem.poster;
   document.getElementById('title').innerHTML = moshanItem.title;
   document.getElementById('start-date').innerHTML = moshanItem.start_date;
