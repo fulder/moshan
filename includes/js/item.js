@@ -72,10 +72,10 @@ function createItem (moshanItem, watchHistoryItem) {
     watchedAmount = datesWatched.length;
   }
 
-  if ('overview' in watchHistoryItem) {
+  if (itemAdded && 'overview' in watchHistoryItem) {
       document.getElementById('overview').value = watchHistoryItem.overview;
   }
-  if ('review' in watchHistoryItem) {
+  if (itemAdded && 'review' in watchHistoryItem) {
       document.getElementById('review').value = watchHistoryItem.review;
   }
 
