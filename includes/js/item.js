@@ -76,7 +76,7 @@ function createItem (moshanItem, watchHistoryItem) {
       document.getElementById('overview').value = watchHistoryItem.overview;
   }
   if ('review' in watchHistoryItem) {
-      document.getElementById('review').value = watchHistoryItem.overview;
+      document.getElementById('review').value = watchHistoryItem.review;
   }
 
   document.getElementById('poster').src = moshanItem.poster;
