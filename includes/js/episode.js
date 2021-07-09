@@ -66,7 +66,8 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
     watchedAmount = datesWatched.length;
   }
 
-  document.getElementById('title').innerHTML = `${moshanEpisode.number} - ${moshanEpisode.title}`;
+  document.getElementById('title').innerHTML = moshanEpisode.title;
+  document.getElementById('number').innerHTML = moshanEpisode.number;
   document.getElementById('air_date').innerHTML = moshanEpisode.air_date;
   document.getElementById('status').innerHTML = moshanEpisode.status;
   document.getElementById('watched_amount').innerHTML = watchedAmount;
