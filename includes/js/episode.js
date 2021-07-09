@@ -66,17 +66,17 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
     watchedAmount = datesWatched.length;
   }
 
-  document.getElementById('title').innerHTML = moshanEpisode.title;
+  document.getElementById('title').innerHTML = `${moshanEpisode.id} - ${moshanEpisode.title}`;
   document.getElementById('air_date').innerHTML = moshanEpisode.air_date;
   document.getElementById('status').innerHTML = moshanEpisode.status;
   document.getElementById('watched_amount').innerHTML = watchedAmount;
 
   if (moshanEpisode.previous_id !== null) {
-    document.getElementById('previous_episode').href = `/episode/?collection=${qParams.collection}&id=${qParams.id}&episode_id=${moshanEpisode.previous_id}`;
+    document.getElementById('previous_episode').href = `/episode/?collection=${qParams.collection}&id=${qParams.id}&api_name=${qParams.api_name}&episode_id=${moshanEpisode.previous_id}`;
     document.getElementById('previous_episode').classList.remove('d-none');
   }
   if (moshanEpisode.next_id !== null) {
-    document.getElementById('next_episode').href = `/episode/?collection=${qParams.collection}&id=${qParams.id}&episode_id=${moshanEpisode.next_id}`;
+    document.getElementById('next_episode').href = `/episode/?collection=${qParams.collection}&id=${qParams.id}&api_name=${qParams.api_name}&episode_id=${moshanEpisode.next_id}`;
     document.getElementById('next_episode').classList.remove('d-none');
   }
 
