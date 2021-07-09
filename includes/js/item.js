@@ -15,9 +15,7 @@ let totalPages = 0;
 let calendarInstance;
 let datesWatched;
 
-
 getItemByApiId();
-
 
 function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
@@ -120,7 +118,7 @@ async function addItem () {
   try {
     const addItemRes = await watchHistoryApi.addWatchHistoryItem(qParams);
     console.debug(addItemRes);
-    
+
     qParams.id = addItemRes.data.id;
     document.getElementById('add_button').classList.add('d-none');
     document.getElementById('remove_button').classList.remove('d-none');
@@ -135,6 +133,18 @@ async function removeItem () {
     await watchHistoryApi.removeWatchHistoryItem(qParams);
     document.getElementById('add_button').classList.remove('d-none');
     document.getElementById('remove_button').classList.add('d-none');
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+/* exported saveItem */
+async function saveItem () {
+  overview = document.getElementById('overview').value;
+  review = document.getElementById('review').value;
+
+  try {
+    await watchHistoryApi.updateWatchHistoryItem(qParams, overview, review, datesWatched);
   } catch (error) {
     console.log(error);
   }
@@ -228,18 +238,18 @@ async function loadEpisodes (page) {
 async function onCalendarClose (selectedDates, dateStr) {
   const date = new Date(dateStr).toISOString();
 
-  await patchWatchDate(date);
+  await setWatchDate(date);
 }
 
 /* exported setCurrentWatchDate */
 async function setCurrentWatchDate() {
   const dateNow = new Date();
 
-  await patchWatchDate(dateNow.toISOString());
+  await setWatchDate(dateNow.toISOString());
   calendarInstance.setDate(dateNow);
 }
 
-async function patchWatchDate(date) {
+async function setWatchDate(date) {
   if (datesWatched === undefined || datesWatched.length == 0) {
     datesWatched = [date];
   } else {
@@ -248,8 +258,6 @@ async function patchWatchDate(date) {
 
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
   console.debug(datesWatched);
-
-  await watchHistoryApi.updateWatchHistoryItem(qParams, datesWatched);
 }
 
 /* exported removeWatchDate */
@@ -266,6 +274,4 @@ async function removeWatchDate() {
   } else {
       calendarInstance.setDate(datesWatched[datesWatched.length - 1]);
   }
-
-  await watchHistoryApi.updateWatchHistoryItem(qParams, datesWatched);
 }
