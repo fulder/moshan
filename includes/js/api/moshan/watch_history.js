@@ -52,7 +52,7 @@ class WatchHistoryApi {
     if (rating !== '') {
       data.rating = rating;
     }
-    return this.apiAxios.patch(`/watch-history/collection/${qParams.collection}/${qParams.id}`, data);
+    return this.apiAxios.put(`/watch-history/collection/${qParams.collection}/${qParams.id}`, data);
   }
 
   addWatchHistoryEpisode (qParams) {
@@ -78,6 +78,6 @@ class WatchHistoryApi {
   updateWatchHistoryEpisode (qParams, watchDates = []) {
     const data = {};
     data.dates_watched = watchDates;
-    return this.apiAxios.patch(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}`, data);
+    return this.apiAxios.put(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}`, data);
   }
 }
