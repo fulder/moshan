@@ -135,10 +135,15 @@ function createItem (moshanItem, watchHistoryItem) {
 }
 
 function getPatchData() {
+    let watchedDates = [];
+    if (calendarInstance !== null) {
+      watchedDates = calendarInstance.selectedDates;
+    }
+
     return new WatchHistoryApi.PatchItemData(
       document.getElementById('overview').value,
       document.getElementById('review').value,
-      calendarInstance.selectedDates
+      watchedDates
     );
 }
 
