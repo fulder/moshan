@@ -151,14 +151,7 @@ function getPatchData() {
     }
 
     rating = document.getElementById('user-rating').value;
-    if (rating === 'Rating') {
-      rating = null;
-    }
-
     status = document.getElementById('user-status').value;
-    if (status === 'Status') {
-      status = null;
-    }
 
     return new PatchItemData(
       document.getElementById('overview').value,
