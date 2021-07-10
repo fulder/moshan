@@ -159,5 +159,5 @@ def _post_collection_item(username, collection_name, body, token):
     watch_history_db.add_item(username, collection_name, item_id)
     return {
         "statusCode": 200,
-        "id": item_id
+        "body": json.dumps({"id": item_id})
     }
