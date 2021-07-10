@@ -126,14 +126,14 @@ class TestDelete:
         assert ret == {'statusCode': 204}
 
 
-class TestPatch:
+class TestPut:
     event = {
         "headers": {
             "authorization": TEST_JWT
         },
         "requestContext": {
             "http": {
-                "method": "PATCH"
+                "method": "PUT"
             }
         },
         "pathParameters": {
