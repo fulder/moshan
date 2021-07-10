@@ -40,16 +40,16 @@ class WatchHistoryApi {
     return this.apiAxios.get(`/watch-history/collection/${qParams.collection}?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
   }
 
-  updateWatchHistoryItem (qParams, overview, review, status = null, rating = null, watchDates = []) {
+  updateWatchHistoryItem (qParams, overview, review, status = '', rating = '', watchDates = []) {
     const data = {
       overview: overview,
       review: review,
       dates_watched: watchDates,
     };
-    if (status !== null) {
+    if (status !== '') {
       data.status = status;
     }
-    if (rating !== null) {
+    if (rating !== '') {
       data.rating = rating;
     }
     return this.apiAxios.patch(`/watch-history/collection/${qParams.collection}/${qParams.id}`, data);

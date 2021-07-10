@@ -150,14 +150,11 @@ function getPatchData() {
       }
     }
 
-    rating = document.getElementById('user-rating').value;
-    status = document.getElementById('user-status').value;
-
     return new PatchItemData(
       document.getElementById('overview').value,
       document.getElementById('review').value,
-      rating,
-      status,
+      document.getElementById('user-rating').value;
+      document.getElementById('user-status').value;
       watchedDates
     );
 }
