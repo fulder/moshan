@@ -14,7 +14,7 @@ import shows_api
 log = logger.get_logger("episodes_by_id")
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-PATCH_SCHEMA_PATH = os.path.join(CURRENT_DIR, "patch.json")
+PUT_SCHEMA_PATH = os.path.join(CURRENT_DIR, "put.json")
 
 
 def handle(event, context):
@@ -36,7 +36,7 @@ def handle(event, context):
                             episode_id, auth_header)
     elif method == "PATCH":
         body = event.get("body")
-        return _patch_episode(username, collection_name, item_id, episode_id,
+        return _put_episode(username, collection_name, item_id, episode_id,
                               body, auth_header)
     elif method == "DELETE":
         return _delete_episode(username, collection_name, episode_id)
@@ -68,7 +68,7 @@ def _get_episode(username, collection_name, item_id, episode_id, token):
         return {"statusCode": 404}
 
 
-def _patch_episode(username, collection_name, item_id, episode_id, body, token):
+def _put_episode(username, collection_name, item_id, episode_id, body, token):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -78,7 +78,7 @@ def _patch_episode(username, collection_name, item_id, episode_id, body, token):
         }
 
     try:
-        schema.validate_schema(PATCH_SCHEMA_PATH, body)
+        schema.validate_schema(PUT_SCHEMA_PATH, body)
     except schema.ValidationException as e:
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
