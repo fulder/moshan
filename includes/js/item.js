@@ -138,7 +138,7 @@ function getPatchData() {
     return new WatchHistoryApi.PatchItemData(
       document.getElementById('overview').value,
       document.getElementById('review').value,
-      selectedDates.selectedDates
+      calendarInstance.selectedDates
     );
 }
 
