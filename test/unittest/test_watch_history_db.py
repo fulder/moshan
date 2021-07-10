@@ -190,6 +190,12 @@ def test_add_item(mocked_watch_history_db):
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
             '#created_at': 'created_at',
+            '#dates_watched': 'dates_watched',
+            '#deleted_at': 'deleted_at',
+            '#overview': 'overview',
+            '#rating': 'rating',
+            '#review': 'review',
+            '#status': 'status',
             '#updated_at': 'updated_at'
         },
         'ExpressionAttributeValues': {
@@ -201,7 +207,7 @@ def test_add_item(mocked_watch_history_db):
             'username': TEST_USERNAME,
             'item_id': '123123'},
         'UpdateExpression': 'SET #created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at '
-                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating REMOVE dates_watched'
+                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #status REMOVE #rating REMOVE #dates_watched'
     }
 
 
@@ -218,6 +224,12 @@ def test_add_item_already_exists(mocked_watch_history_db):
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
+            '#dates_watched': 'dates_watched',
+            '#deleted_at': 'deleted_at',
+            '#overview': 'overview',
+            '#rating': 'rating',
+            '#review': 'review',
+            '#status': 'status',
             '#updated_at': 'updated_at'
         },
         'ExpressionAttributeValues': {
@@ -229,7 +241,7 @@ def test_add_item_already_exists(mocked_watch_history_db):
             'item_id': '123123'
         },
         'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at '
-                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating REMOVE dates_watched'
+                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #status REMOVE #rating REMOVE #dates_watched'
     }
 
 
@@ -244,8 +256,13 @@ def test_update_item(mocked_watch_history_db):
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
-            '#updated_at': 'updated_at',
-            "#review": "review"
+            '#dates_watched': 'dates_watched',
+            '#deleted_at': 'deleted_at',
+            '#overview': 'overview',
+            '#rating': 'rating',
+            '#review': 'review',
+            '#status': 'status',
+            '#updated_at': 'updated_at'
         },
         'ExpressionAttributeValues': {
             ':collection_name': 'MOVIE',
@@ -257,7 +274,7 @@ def test_update_item(mocked_watch_history_db):
             'item_id': '123'},
         'UpdateExpression': 'SET #review=:review,#collection_name=:collection_name,'
                             '#updated_at=:updated_at '
-                            'REMOVE deleted_at REMOVE overview REMOVE status REMOVE rating REMOVE dates_watched'
+                            'REMOVE #deleted_at REMOVE #overview REMOVE #status REMOVE #rating REMOVE #dates_watched'
     }
 
 
@@ -277,6 +294,11 @@ def test_update_item_dates_watched(mocked_watch_history_db):
             '#updated_at': 'updated_at',
             '#dates_watched': 'dates_watched',
             '#latest_watch_date': 'latest_watch_date',
+            '#deleted_at': 'deleted_at',
+            '#overview': 'overview',
+            '#rating': 'rating',
+            '#review': 'review',
+            '#status': 'status',
         },
         'ExpressionAttributeValues': {
             ':collection_name': 'MOVIE',
@@ -290,7 +312,7 @@ def test_update_item_dates_watched(mocked_watch_history_db):
             'item_id': '123'},
         'UpdateExpression': 'SET #dates_watched=:dates_watched,#collection_name=:collection_name,'
                             '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date '
-                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating'
+                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #status REMOVE #rating'
     }
 
 
@@ -305,9 +327,14 @@ def test_update_item_dates_watched_one_date(mocked_watch_history_db):
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
-            '#updated_at': 'updated_at',
             '#dates_watched': 'dates_watched',
+            '#deleted_at': 'deleted_at',
             '#latest_watch_date': 'latest_watch_date',
+            '#overview': 'overview',
+            '#rating': 'rating',
+            '#review': 'review',
+            '#status': 'status',
+            '#updated_at': 'updated_at'
         },
         'ExpressionAttributeValues': {
             ':collection_name': 'MOVIE',
@@ -320,7 +347,7 @@ def test_update_item_dates_watched_one_date(mocked_watch_history_db):
             'item_id': '123'},
         'UpdateExpression': 'SET #dates_watched=:dates_watched,#collection_name=:collection_name,'
                             '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date '
-                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating'
+                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #status REMOVE #rating'
     }
 
 
@@ -363,6 +390,12 @@ def test_add_item_exists(mocked_watch_history_db):
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
+            '#dates_watched': 'dates_watched',
+            '#deleted_at': 'deleted_at',
+            '#overview': 'overview',
+            '#rating': 'rating',
+            '#review': 'review',
+            '#status': 'status',
             '#updated_at': 'updated_at'
         },
         'ExpressionAttributeValues': {
@@ -372,7 +405,7 @@ def test_add_item_exists(mocked_watch_history_db):
         'Key': {
             'username': TEST_USERNAME, 'item_id': '123123'},
         'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at '
-                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating REMOVE dates_watched'
+                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #status REMOVE #rating REMOVE #dates_watched'
     }
 
 
