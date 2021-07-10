@@ -14,12 +14,19 @@ const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 let totalPages = 0;
 let calendarInstance;
 let datesWatched;
-let patchData = new PatchData();
+let savedPatchData;
 
 getItemByApiId();
 
 window.onbeforeunload = function(){
-  return 'Are you sure you want to leave?';
+  console.debug(savedPatchData);
+
+  currentPatchData = getPatchData();
+  console.debug(currentPatchData);
+
+  if (JSON.stringify(savedPatchData) !== JSON.stringify(currentPatchData)) {
+    return 'Are you sure you want to leave?';
+  }
 };
 
 function QueryParams(urlParams) {
@@ -75,16 +82,13 @@ function createItem (moshanItem, watchHistoryItem) {
     latestWatchDate = watchHistoryItem['latest_watch_date'];
     console.debug(`Latest watch date: ${latestWatchDate}`);
     watchedAmount = datesWatched.length;
-    patchData.dates_watched = latestWatchDate;
   }
 
   if (itemAdded && 'overview' in watchHistoryItem) {
       document.getElementById('overview').value = watchHistoryItem.overview;
-      patchData.overview = watchHistoryItem.overview;
   }
   if (itemAdded && 'review' in watchHistoryItem) {
       document.getElementById('review').value = watchHistoryItem.review;
-      patchData.review = watchHistoryItem.review;
   }
 
   document.getElementById('poster').src = moshanItem.poster;
@@ -126,6 +130,16 @@ function createItem (moshanItem, watchHistoryItem) {
   }
 
   document.getElementById('item').classList.remove('d-none');
+
+  savedPatchData = getPatchData();
+}
+
+function getPatchData() {
+    return new PatchData(
+      document.getElementById('overview').value,
+      document.getElementById('review').value,
+      selectedDates.selectedDates
+    );
 }
 
 /* exported addItem */
@@ -155,14 +169,14 @@ async function removeItem () {
 
 /* exported saveItem */
 async function saveItem () {
-  overview = document.getElementById('overview').value;
-  review = document.getElementById('review').value;
-
+  currentPatchData = getPatchData();
   try {
-    await watchHistoryApi.updateWatchHistoryItem(qParams, overview, review, datesWatched);
+    await watchHistoryApi.updateWatchHistoryItem(qParams, currentPatchData);
   } catch (error) {
     console.log(error);
   }
+
+  savedPatchData = currentPatchData;
 }
 
 function createEpisodesList (moshanEpisodes) {
