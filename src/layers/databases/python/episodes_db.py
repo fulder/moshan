@@ -57,7 +57,7 @@ def add_episode(username, collection_name, item_id, episode_id):
 
 def delete_episode(username, collection_name, episode_id):
     data = {"deleted_at": int(time.time())}
-    update_episode(username, collection_name, episode_id, data)
+    update_episode(username, collection_name, episode_id, data, clean_optional=False)
 
 
 def get_episode(username, collection_name, episode_id):
@@ -72,7 +72,7 @@ def get_episode(username, collection_name, episode_id):
     return res["Items"][0]
 
 
-def update_episode(username, collection_name, episode_id, data):
+def update_episode(username, collection_name, episode_id, data, clean_optional=True):
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -90,16 +90,17 @@ def update_episode(username, collection_name, episode_id, data):
     expression_attribute_names = {f'#{k}': k for k in data}
     expression_attribute_values = {f':{k}': v for k, v in data.items()}
 
-    optional_fields = [
-        "deleted_at",
-        "overview",
-        "review",
-        "rating",
-        "dates_watched"
-    ]
-    for o in optional_fields:
-        if o not in data:
-            update_expression += f" REMOVE {o}"
+    if clean_optional:
+        optional_fields = [
+            "deleted_at",
+            "overview",
+            "review",
+            "rating",
+            "dates_watched"
+        ]
+        for o in optional_fields:
+            if o not in data:
+                update_expression += f" REMOVE {o}"
 
     log.debug("Running update_item")
     log.debug(f"Update expression: {update_expression}")
