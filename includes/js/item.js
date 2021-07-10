@@ -12,7 +12,7 @@ const api = getApiByName(qParams.api_name);
 const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 
 let totalPages = 0;
-let calendarInstance;
+let calendarInstance = null;
 let datesWatched;
 let savedPatchData;
 
