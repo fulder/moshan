@@ -41,11 +41,16 @@ class WatchHistoryApi {
   }
 
   updateWatchHistoryItem (qParams, overview, review, status = '', rating = '', watchDates = []) {
-    const data = {
-      overview: overview,
-      review: review,
-      dates_watched: watchDates,
-    };
+    const data = {};
+    if (watchDates.length !== 0 ) {
+      data.dates_watched = watchDates;
+    }
+    if (overview !== '') {
+      data.overview = overview;
+    }
+    if (review !== '') {
+      data.review = review;
+    }
     if (status !== '') {
       data.status = status;
     }
