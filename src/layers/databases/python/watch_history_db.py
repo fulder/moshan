@@ -10,6 +10,14 @@ from dynamodb_json import json_util
 import logger
 
 DATABASE_NAME = os.getenv("DATABASE_NAME")
+OPTIONAL_FIELDS = [
+    "deleted_at",
+    "overview",
+    "review",
+    "status",
+    "rating",
+    "dates_watched",
+]
 
 table = None
 client = None
@@ -50,27 +58,32 @@ def add_item(username, collection_name, item_id):
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_item(username, collection_name, item_id, data)
+    update_item(username, collection_name, item_id, data,
+                clean_whitelist=["deleted_at"])
 
 
 def delete_item(username, collection_name, item_id):
     data = {"deleted_at": int(time.time())}
-    update_item(username, collection_name, item_id, data, clean_optional=False)
+    update_item(username, collection_name, item_id, data, clean_whitelist=[])
 
 
 def get_item(username, collection_name, item_id):
     res = _get_table().query(
-        KeyConditionExpression=Key("username").eq(username) & Key("item_id").eq(item_id),
-        FilterExpression=Attr("collection_name").eq(collection_name) & Attr("deleted_at").not_exists(),
+        KeyConditionExpression=Key("username").eq(username) & Key("item_id").eq(
+            item_id),
+        FilterExpression=Attr("collection_name").eq(collection_name) & Attr(
+            "deleted_at").not_exists(),
     )
 
     if not res["Items"]:
-        raise NotFoundError(f"Item with id: {item_id} not found. Collection name: {collection_name}")
+        raise NotFoundError(
+            f"Item with id: {item_id} not found. Collection name: {collection_name}")
 
     return res["Items"][0]
 
 
-def update_item(username, collection_name, item_id, data, clean_optional=True):
+def update_item(username, collection_name, item_id, data,
+                clean_whitelist=OPTIONAL_FIELDS):
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -89,22 +102,12 @@ def update_item(username, collection_name, item_id, data, clean_optional=True):
     expression_attribute_values = {f':{k}': v for k, v in data.items()}
 
     remove_names = []
-    if clean_optional:
-        optional_fields = [
-            "deleted_at",
-            "overview",
-            "review",
-            "status",
-            "rating",
-            "dates_watched",
-        ]
-        for o in optional_fields:
-            if o not in data:
-                remove_names.append(f"#{o}")
-                expression_attribute_names[f"#{o}"] = o
-
-        if len(remove_names) > 0:
-            update_expression += f" REMOVE {','.join(remove_names)}"
+    for o in OPTIONAL_FIELDS:
+        if o not in data and o in clean_whitelist:
+            remove_names.append(f"#{o}")
+            expression_attribute_names[f"#{o}"] = o
+    if len(remove_names) > 0:
+        update_expression += f" REMOVE {','.join(remove_names)}"
 
     log.debug("Running update_item")
     log.debug(f"Update expression: {update_expression}")
@@ -123,7 +126,8 @@ def update_item(username, collection_name, item_id, data, clean_optional=True):
     )
 
 
-def get_watch_history(username, collection_name=None, index_name=None, limit=100, start=1):
+def get_watch_history(username, collection_name=None, index_name=None,
+                      limit=100, start=1):
     start_page = 0
     res = []
 
@@ -131,7 +135,9 @@ def get_watch_history(username, collection_name=None, index_name=None, limit=100
         raise InvalidStartOffset
 
     total_pages = 0
-    for p in _watch_history_generator(username, limit=limit, collection_name=collection_name, index_name=index_name):
+    for p in _watch_history_generator(username, limit=limit,
+                                      collection_name=collection_name,
+                                      index_name=index_name):
         total_pages += 1
         start_page += 1
         if start_page == start:
@@ -152,7 +158,8 @@ def get_watch_history(username, collection_name=None, index_name=None, limit=100
     }
 
 
-def _watch_history_generator(username, limit, collection_name=None, index_name=None):
+def _watch_history_generator(username, limit, collection_name=None,
+                             index_name=None):
     paginator = _get_client().get_paginator('query')
 
     query_kwargs = {
@@ -168,8 +175,10 @@ def _watch_history_generator(username, limit, collection_name=None, index_name=N
     if index_name:
         query_kwargs["IndexName"] = index_name
     if collection_name:
-        query_kwargs["FilterExpression"] += " and collection_name = :collection_name"
-        query_kwargs["ExpressionAttributeValues"][":collection_name"] = {"S": collection_name}
+        query_kwargs[
+            "FilterExpression"] += " and collection_name = :collection_name"
+        query_kwargs["ExpressionAttributeValues"][":collection_name"] = {
+            "S": collection_name}
 
     log.debug(f"Query kwargs: {query_kwargs}")
 

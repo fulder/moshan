@@ -10,6 +10,13 @@ from dynamodb_json import json_util
 import logger
 
 DATABASE_NAME = os.getenv("EPISODES_DATABASE_NAME")
+OPTIONAL_FIELDS = [
+    "deleted_at",
+    "overview",
+    "review",
+    "rating",
+    "dates_watched"
+]
 
 table = None
 client = None
@@ -52,27 +59,33 @@ def add_episode(username, collection_name, item_id, episode_id):
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_episode(username, collection_name, episode_id, data)
+    update_episode(username, collection_name, episode_id, data,
+                   clean_whitelist=["deleted_at"])
 
 
 def delete_episode(username, collection_name, episode_id):
     data = {"deleted_at": int(time.time())}
-    update_episode(username, collection_name, episode_id, data, clean_optional=False)
+    update_episode(username, collection_name, episode_id, data,
+                   clean_whitelist=[])
 
 
 def get_episode(username, collection_name, episode_id):
     res = _get_table().query(
-        KeyConditionExpression=Key("username").eq(username) & Key("id").eq(episode_id),
-        FilterExpression=Attr("collection_name").eq(collection_name) & Attr("deleted_at").not_exists(),
+        KeyConditionExpression=Key("username").eq(username) & Key("id").eq(
+            episode_id),
+        FilterExpression=Attr("collection_name").eq(collection_name) & Attr(
+            "deleted_at").not_exists(),
     )
 
     if not res["Items"]:
-        raise NotFoundError(f"Episode with id: {episode_id} not found. Collection name: {collection_name}")
+        raise NotFoundError(
+            f"Episode with id: {episode_id} not found. Collection name: {collection_name}")
 
     return res["Items"][0]
 
 
-def update_episode(username, collection_name, episode_id, data, clean_optional=True):
+def update_episode(username, collection_name, episode_id, data,
+                   clean_whitelist=OPTIONAL_FIELDS):
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -91,21 +104,12 @@ def update_episode(username, collection_name, episode_id, data, clean_optional=T
     expression_attribute_values = {f':{k}': v for k, v in data.items()}
 
     remove_names = []
-    if clean_optional:
-        optional_fields = [
-            "deleted_at",
-            "overview",
-            "review",
-            "rating",
-            "dates_watched"
-        ]
-        for o in optional_fields:
-            if o not in data:
-                remove_names.append(f"#{o}")
-                expression_attribute_names[f"#{o}"] = o
-
-        if len(remove_names) > 0:
-            update_expression += f" REMOVE {','.join(remove_names)}"
+    for o in OPTIONAL_FIELDS:
+        if o not in data and o in clean_whitelist:
+            remove_names.append(f"#{o}")
+            expression_attribute_names[f"#{o}"] = o
+    if len(remove_names) > 0:
+        update_expression += f" REMOVE {','.join(remove_names)}"
 
     log.debug("Running update_item")
     log.debug(f"Update expression: {update_expression}")
@@ -132,7 +136,8 @@ def get_episodes(username, collection_name, item_id, limit=100, start=1):
         raise InvalidStartOffset
 
     total_pages = 0
-    for p in _episodes_generator(username, collection_name, item_id, limit=limit):
+    for p in _episodes_generator(username, collection_name, item_id,
+                                 limit=limit):
         total_pages += 1
         start_page += 1
         if start_page == start:
