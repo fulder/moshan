@@ -67,7 +67,8 @@ def test_get_watch_history_by_collection_name(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    mocked_watch_history_db.get_watch_history(TEST_USERNAME, collection_name="ANIME", limit=10)
+    mocked_watch_history_db.get_watch_history(TEST_USERNAME,
+                                              collection_name="ANIME", limit=10)
 
     assert UPDATE_VALUES == {
         "ExpressionAttributeValues": {
@@ -91,7 +92,9 @@ def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    mocked_watch_history_db.get_watch_history(TEST_USERNAME, collection_name="ANIME", index_name="test_index",
+    mocked_watch_history_db.get_watch_history(TEST_USERNAME,
+                                              collection_name="ANIME",
+                                              index_name="test_index",
                                               limit=10)
 
     assert UPDATE_VALUES == {
@@ -117,7 +120,9 @@ def test_get_watch_history_by_with_start(mocked_watch_history_db):
     mocked_watch_history_db.client.get_paginator.return_value = m
     m.paginate = mock_func
 
-    ret = mocked_watch_history_db.get_watch_history(TEST_USERNAME, collection_name="ANIME", index_name="test_index",
+    ret = mocked_watch_history_db.get_watch_history(TEST_USERNAME,
+                                                    collection_name="ANIME",
+                                                    index_name="test_index",
                                                     limit=1, start=2)
 
     assert UPDATE_VALUES == {
@@ -195,7 +200,8 @@ def test_add_item(mocked_watch_history_db):
         'Key': {
             'username': TEST_USERNAME,
             'item_id': '123123'},
-        'UpdateExpression': 'SET #created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
+        'UpdateExpression': 'SET #created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at '
+                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating REMOVE dates_watched'
     }
 
 
@@ -222,7 +228,8 @@ def test_add_item_already_exists(mocked_watch_history_db):
             'username': 'TEST_USERNAME',
             'item_id': '123123'
         },
-        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'
+        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at '
+                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating REMOVE dates_watched'
     }
 
 
@@ -231,7 +238,8 @@ def test_update_item(mocked_watch_history_db):
     UPDATE_VALUES = {}
     mocked_watch_history_db.table.update_item = mock_func
 
-    mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123", {"review": "review_text"})
+    mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123",
+                                        {"review": "review_text"})
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
@@ -248,7 +256,8 @@ def test_update_item(mocked_watch_history_db):
             'username': TEST_USERNAME,
             'item_id': '123'},
         'UpdateExpression': 'SET #review=:review,#collection_name=:collection_name,'
-                            '#updated_at=:updated_at REMOVE deleted_at'
+                            '#updated_at=:updated_at '
+                            'REMOVE deleted_at REMOVE overview REMOVE status REMOVE rating REMOVE dates_watched'
     }
 
 
@@ -258,7 +267,9 @@ def test_update_item_dates_watched(mocked_watch_history_db):
     mocked_watch_history_db.table.update_item = mock_func
 
     mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123",
-                                        {"dates_watched": ["2020-12-20T15:30:09.909Z", "2021-12-20T15:30:09.909Z"]})
+                                        {"dates_watched": [
+                                            "2020-12-20T15:30:09.909Z",
+                                            "2021-12-20T15:30:09.909Z"]})
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
@@ -278,7 +289,8 @@ def test_update_item_dates_watched(mocked_watch_history_db):
             'username': TEST_USERNAME,
             'item_id': '123'},
         'UpdateExpression': 'SET #dates_watched=:dates_watched,#collection_name=:collection_name,'
-                            '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date REMOVE deleted_at'
+                            '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date '
+                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating'
     }
 
 
@@ -287,7 +299,8 @@ def test_update_item_dates_watched_one_date(mocked_watch_history_db):
     UPDATE_VALUES = {}
     mocked_watch_history_db.table.update_item = mock_func
 
-    mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123", {"dates_watched": ["2020-12-20T15:30:09.909Z"]})
+    mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123", {
+        "dates_watched": ["2020-12-20T15:30:09.909Z"]})
 
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
@@ -306,7 +319,8 @@ def test_update_item_dates_watched_one_date(mocked_watch_history_db):
             'username': TEST_USERNAME,
             'item_id': '123'},
         'UpdateExpression': 'SET #dates_watched=:dates_watched,#collection_name=:collection_name,'
-                            '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date REMOVE deleted_at'
+                            '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date '
+                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating'
     }
 
 
@@ -357,7 +371,9 @@ def test_add_item_exists(mocked_watch_history_db):
         },
         'Key': {
             'username': TEST_USERNAME, 'item_id': '123123'},
-        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at REMOVE deleted_at'}
+        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at '
+                            'REMOVE deleted_at REMOVE overview REMOVE review REMOVE status REMOVE rating REMOVE dates_watched'
+    }
 
 
 def test_get_item(mocked_watch_history_db):
