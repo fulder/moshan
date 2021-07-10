@@ -150,12 +150,12 @@ function getPatchData() {
       }
     }
 
-    rating = document.getElementById('rating').value;
+    rating = document.getElementById('user-rating').value;
     if (rating === 'Rating') {
       rating = null;
     }
 
-    status = document.getElementById('status').value;
+    status = document.getElementById('user-status').value;
     if (status === 'Status') {
       status = null;
     }
