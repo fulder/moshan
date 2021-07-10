@@ -14,8 +14,13 @@ const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 let totalPages = 0;
 let calendarInstance;
 let datesWatched;
+let patchData;
 
 getItemByApiId();
+
+window.onbeforeunload = function(){
+  return 'Are you sure you want to leave?';
+};
 
 function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
@@ -70,13 +75,16 @@ function createItem (moshanItem, watchHistoryItem) {
     latestWatchDate = watchHistoryItem['latest_watch_date'];
     console.debug(`Latest watch date: ${latestWatchDate}`);
     watchedAmount = datesWatched.length;
+    pathData.watched_date = latestWatchDate;
   }
 
   if (itemAdded && 'overview' in watchHistoryItem) {
       document.getElementById('overview').value = watchHistoryItem.overview;
+      patchData.overview = watchHistoryItem.overview;
   }
   if (itemAdded && 'review' in watchHistoryItem) {
       document.getElementById('review').value = watchHistoryItem.review;
+      patchData.review = watchHistoryItem.review;
   }
 
   document.getElementById('poster').src = moshanItem.poster;
