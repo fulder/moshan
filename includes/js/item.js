@@ -156,10 +156,15 @@ function getPatchData() {
       }
     }
 
+    rating = document.getElementById('user-rating').value;
+    if (rating !== '') {
+        rating = parseInt(rating);
+    }
+
     return new PatchItemData(
       document.getElementById('overview').value,
       document.getElementById('review').value,
-      parseInt(document.getElementById('user-rating').value),
+      rating,
       document.getElementById('user-status').value,
       watchedDates
     );
