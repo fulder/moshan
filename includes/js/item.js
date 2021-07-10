@@ -29,10 +29,12 @@ window.onbeforeunload = function(){
   }
 };
 
-function PatchItemData(overview, review, watchDates = []) {
+function PatchItemData(overview, review, rating, status, watchDates = []) {
     this.watchDates = watchDates;
     this.overview = overview;
     this.review = review;
+    this.rating = rating;
+    this.status = status;
 }
 
 function QueryParams(urlParams) {
@@ -148,9 +150,21 @@ function getPatchData() {
       }
     }
 
+    rating = document.getElementById('rating').value;
+    if (rating === 'Rating') {
+      rating = null;
+    }
+
+    status = document.getElementById('status').value;
+    if (status === 'Status') {
+      status = null;
+    }
+
     return new PatchItemData(
       document.getElementById('overview').value,
       document.getElementById('review').value,
+      rating,
+      status,
       watchedDates
     );
 }
@@ -188,6 +202,8 @@ async function saveItem () {
       qParams,
       currentPatchData.overview,
       currentPatchData.review,
+      currentPatchData.status,
+      currentPatchData.rating,
       currentPatchData.watchDates
     );
   } catch (error) {
