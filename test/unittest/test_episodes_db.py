@@ -158,7 +158,7 @@ def test_add_episode(mocked_episodes_db):
         'Key': {'id': '123123', 'username': 'TEST_USERNAME'},
         'UpdateExpression': 'SET '
                             '#item_id=:item_id,#created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at '
-                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #rating REMOVE #dates_watched'
+                            'REMOVE #deleted_at,#overview,#review,#rating,#dates_watched'
     }
 
 
@@ -193,7 +193,7 @@ def test_add_episode_already_exists(mocked_episodes_db):
             'id': '123123'
         },
         'UpdateExpression': 'SET #item_id=:item_id,#collection_name=:collection_name,#updated_at=:updated_at '
-                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #rating REMOVE #dates_watched'
+                            'REMOVE #deleted_at,#overview,#review,#rating,#dates_watched'
     }
 
 
@@ -225,7 +225,7 @@ def test_update_episode(mocked_episodes_db):
             'id': '123'},
         'UpdateExpression': 'SET #overview=:overview,#collection_name=:collection_name,'
                             '#updated_at=:updated_at '
-                            'REMOVE #deleted_at REMOVE #review REMOVE #rating REMOVE #dates_watched'
+                            'REMOVE #deleted_at,#review,#rating,#dates_watched'
     }
 
 
@@ -262,7 +262,7 @@ def test_update_episode_dates_watched(mocked_episodes_db):
             'id': '123'},
         'UpdateExpression': 'SET #dates_watched=:dates_watched,#collection_name=:collection_name,'
                             '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date '
-                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #rating'
+                            'REMOVE #deleted_at,#overview,#review,#rating'
     }
 
 
@@ -297,7 +297,7 @@ def test_update_episode_dates_watched_one_date(mocked_episodes_db):
             'id': '123'},
         'UpdateExpression': 'SET #dates_watched=:dates_watched,#collection_name=:collection_name,'
                             '#updated_at=:updated_at,#latest_watch_date=:latest_watch_date '
-                            'REMOVE #deleted_at REMOVE #overview REMOVE #review REMOVE #rating'
+                            'REMOVE #deleted_at,#overview,#review,#rating'
     }
 
 
