@@ -100,7 +100,8 @@ def update_episode(username, collection_name, episode_id, data, clean_optional=T
         ]
         for o in optional_fields:
             if o not in data:
-                update_expression += f" REMOVE {o}"
+                update_expression += f" REMOVE #{o}"
+                expression_attribute_names[f"#{o}"] = o
 
     log.debug("Running update_item")
     log.debug(f"Update expression: {update_expression}")
