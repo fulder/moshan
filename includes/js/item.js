@@ -75,7 +75,7 @@ function createItem (moshanItem, watchHistoryItem) {
     latestWatchDate = watchHistoryItem['latest_watch_date'];
     console.debug(`Latest watch date: ${latestWatchDate}`);
     watchedAmount = datesWatched.length;
-    pathData.watched_date = latestWatchDate;
+    patchData.watched_date = latestWatchDate;
   }
 
   if (itemAdded && 'overview' in watchHistoryItem) {
