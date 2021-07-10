@@ -141,12 +141,8 @@ def test_add_episode(mocked_episodes_db):
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
             '#created_at': 'created_at',
-            '#dates_watched': 'dates_watched',
             '#deleted_at': 'deleted_at',
             '#item_id': 'item_id',
-            '#overview': 'overview',
-            '#rating': 'rating',
-            '#review': 'review',
             '#updated_at': 'updated_at'
         },
         'ExpressionAttributeValues': {
@@ -158,7 +154,7 @@ def test_add_episode(mocked_episodes_db):
         'Key': {'id': '123123', 'username': 'TEST_USERNAME'},
         'UpdateExpression': 'SET '
                             '#item_id=:item_id,#created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at '
-                            'REMOVE #deleted_at,#overview,#review,#rating,#dates_watched'
+                            'REMOVE #deleted_at'
     }
 
 
@@ -175,12 +171,8 @@ def test_add_episode_already_exists(mocked_episodes_db):
     assert UPDATE_VALUES == {
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
-            '#dates_watched': 'dates_watched',
             '#deleted_at': 'deleted_at',
             '#item_id': 'item_id',
-            '#overview': 'overview',
-            '#rating': 'rating',
-            '#review': 'review',
             '#updated_at': 'updated_at',
         },
         'ExpressionAttributeValues': {
@@ -193,7 +185,7 @@ def test_add_episode_already_exists(mocked_episodes_db):
             'id': '123123'
         },
         'UpdateExpression': 'SET #item_id=:item_id,#collection_name=:collection_name,#updated_at=:updated_at '
-                            'REMOVE #deleted_at,#overview,#review,#rating,#dates_watched'
+                            'REMOVE #deleted_at'
     }
 
 
