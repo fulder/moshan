@@ -29,6 +29,12 @@ window.onbeforeunload = function(){
   }
 };
 
+function PatchItemData(overview, review, watchDates = []) {
+    this.watchDates = watchDates;
+    this.overview = overview;
+    this.review = review;
+}
+
 function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
   this.api_name = urlParams.get('api_name');
@@ -140,7 +146,7 @@ function getPatchData() {
       watchedDates = calendarInstance.selectedDates;
     }
 
-    return new WatchHistoryApi.PatchItemData(
+    return new PatchItemData(
       document.getElementById('overview').value,
       document.getElementById('review').value,
       watchedDates
@@ -176,7 +182,12 @@ async function removeItem () {
 async function saveItem () {
   currentPatchData = getPatchData();
   try {
-    await watchHistoryApi.updateWatchHistoryItem(qParams, currentPatchData);
+    await watchHistoryApi.updateWatchHistoryItem(
+      qParams,
+      currentPatchData.overview,
+      currentPatchData.review,
+      currentPatchData.watchDates
+    );
   } catch (error) {
     console.log(error);
   }
