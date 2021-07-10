@@ -15,7 +15,7 @@ import watch_history_db
 log = logger.get_logger("watch_history")
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-PATCH_SCHEMA_PATH = os.path.join(CURRENT_DIR, "patch.json")
+PATCH_SCHEMA_PATH = os.path.join(CURRENT_DIR, "put.json")
 
 
 def handle(event, context):
@@ -33,7 +33,7 @@ def handle(event, context):
 
     if method == "GET":
         return _get_item(username, collection_name, item_id, auth_header)
-    elif method == "PATCH":
+    elif method == "PUT":
         body = event.get("body")
         return _patch_item(username, collection_name, item_id, body, auth_header)
     elif method == "DELETE":
