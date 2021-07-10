@@ -153,8 +153,8 @@ function getPatchData() {
     return new PatchItemData(
       document.getElementById('overview').value,
       document.getElementById('review').value,
-      document.getElementById('user-rating').value;
-      document.getElementById('user-status').value;
+      document.getElementById('user-rating').value,
+      document.getElementById('user-status').value,
       watchedDates
     );
 }
