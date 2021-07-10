@@ -143,8 +143,8 @@ function createItem (moshanItem, watchHistoryItem) {
 function getPatchData() {
     let watchedDates = [];
     if (calendarInstance !== null) {
-      for (let i = 1; i <= totalPages; i++) {
-        watchedDates[i] = calendarInstance.selectedDates[i].toISOString();
+      for (let i = 0; i < calendarInstance.selectedDates.length; i++) {
+        watchedDates.push(calendarInstance.selectedDates[i].toISOString());
       }
     }
 
