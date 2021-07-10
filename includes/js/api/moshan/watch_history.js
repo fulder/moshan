@@ -16,6 +16,12 @@ class WatchHistoryApi {
       });
   }
 
+  PatchItemData(overview, review, watchDates = []) {
+      this.dates_watched = watchDates;
+      this.overview = overview;
+      this.review = review;
+  }
+
   getWatchHistoryByCollection (collectionName) {
     return this.apiAxios.get(`/watch-history/collection/${collectionName}`);
   }
@@ -38,12 +44,6 @@ class WatchHistoryApi {
 
   getWatchHistoryItemByApiId (qParams) {
     return this.apiAxios.get(`/watch-history/collection/${qParams.collection}?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
-  }
-
-  PatchData(overview, review, watchDates = []) {
-      this.dates_watched = watchDates;
-      this.overview = overview;
-      this.review = review;
   }
 
   updateWatchHistoryItem (qParams, patchData) {
