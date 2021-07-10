@@ -14,7 +14,7 @@ const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 let totalPages = 0;
 let calendarInstance;
 let datesWatched;
-let patchData;
+let patchData = new PatchData();
 
 getItemByApiId();
 
@@ -75,7 +75,7 @@ function createItem (moshanItem, watchHistoryItem) {
     latestWatchDate = watchHistoryItem['latest_watch_date'];
     console.debug(`Latest watch date: ${latestWatchDate}`);
     watchedAmount = datesWatched.length;
-    patchData.watched_date = latestWatchDate;
+    patchData.dates_watched = latestWatchDate;
   }
 
   if (itemAdded && 'overview' in watchHistoryItem) {

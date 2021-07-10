@@ -40,13 +40,14 @@ class WatchHistoryApi {
     return this.apiAxios.get(`/watch-history/collection/${qParams.collection}?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
   }
 
-  updateWatchHistoryItem (qParams, overview, review, watchDates = []) {
-    const data = {
-      overview: overview,
-      review: review,
-      dates_watched: watchDates,
-    };
-    return this.apiAxios.patch(`/watch-history/collection/${qParams.collection}/${qParams.id}`, data);
+  PatchData(overview, review, watchDates = []) {
+      this.dates_watched = watchDates;
+      this.overview = overview;
+      this.review = review;
+  }
+
+  updateWatchHistoryItem (qParams, patchData) {
+    return this.apiAxios.patch(`/watch-history/collection/${qParams.collection}/${qParams.id}`, patchData);
   }
 
   addWatchHistoryEpisode (qParams) {
