@@ -91,6 +91,11 @@ def update_item(username, collection_name, item_id, data):
     if "deleted_at" not in data:
         update_expression += " REMOVE deleted_at"
 
+    if "status" not in data:
+        update_expression += " REMOVE status"
+    if "rating" not in data:
+        update_expression += " REMOVE rating"
+
     log.debug("Running update_item")
     log.debug(f"Update expression: {update_expression}")
     log.debug(f"Expression attribute names: {expression_attribute_names}")
