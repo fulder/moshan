@@ -59,7 +59,8 @@
         "finished",
         "following",
         "watching",
-        "dropped"
+        "dropped",
+        "backlog"
       ]
     }
   }
