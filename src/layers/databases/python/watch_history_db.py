@@ -88,13 +88,17 @@ def update_item(username, collection_name, item_id, data):
     expression_attribute_names = {f'#{k}': k for k in data}
     expression_attribute_values = {f':{k}': v for k, v in data.items()}
 
-    if "deleted_at" not in data:
-        update_expression += " REMOVE deleted_at"
-
-    if "status" not in data:
-        update_expression += " REMOVE status"
-    if "rating" not in data:
-        update_expression += " REMOVE rating"
+    optional_fields = [
+        "deleted_at",
+        "overview",
+        "review",
+        "status",
+        "rating",
+        "dates_watched"
+    ]
+    for o in optional_fields:
+        if o not in data:
+            update_expression += f" REMOVE {o}"
 
     log.debug("Running update_item")
     log.debug(f"Update expression: {update_expression}")
