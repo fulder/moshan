@@ -98,6 +98,12 @@ function createItem (moshanItem, watchHistoryItem) {
   if (itemAdded && 'review' in watchHistoryItem) {
       document.getElementById('review').value = watchHistoryItem.review;
   }
+  if (itemAdded && 'status' in watchHistoryItem) {
+      document.getElementById('user-status').value = watchHistoryItem.status;
+  }
+  if (itemAdded && 'rating' in watchHistoryItem) {
+      document.getElementById('user-rating').value = watchHistoryItem.rating;
+  }
 
   document.getElementById('poster').src = moshanItem.poster;
   document.getElementById('title').innerHTML = moshanItem.title;
