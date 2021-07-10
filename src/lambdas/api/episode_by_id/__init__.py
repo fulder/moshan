@@ -34,7 +34,7 @@ def handle(event, context):
     if method == "GET":
         return _get_episode(username, collection_name, item_id,
                             episode_id, auth_header)
-    elif method == "PATCH":
+    elif method == "PUT":
         body = event.get("body")
         return _put_episode(username, collection_name, item_id, episode_id,
                               body, auth_header)
