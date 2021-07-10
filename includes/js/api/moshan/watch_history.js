@@ -16,7 +16,7 @@ class WatchHistoryApi {
       });
   }
 
-  PatchItemData(overview, review, watchDates = []) {
+  static PatchItemData(overview, review, watchDates = []) {
       this.dates_watched = watchDates;
       this.overview = overview;
       this.review = review;

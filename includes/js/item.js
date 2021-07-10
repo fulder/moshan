@@ -135,7 +135,7 @@ function createItem (moshanItem, watchHistoryItem) {
 }
 
 function getPatchData() {
-    return new watchHistoryApi.PatchItemData(
+    return new WatchHistoryApi.PatchItemData(
       document.getElementById('overview').value,
       document.getElementById('review').value,
       selectedDates.selectedDates
