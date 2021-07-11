@@ -54,7 +54,7 @@ def _get_client():
 def add_item(username, collection_name, item_id):
     data = {}
     try:
-        get_item(username, collection_name, item_id)
+        get_item(username, collection_name, item_id, include_deleted=True)
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -67,12 +67,15 @@ def delete_item(username, collection_name, item_id):
     update_item(username, collection_name, item_id, data, clean_whitelist=[])
 
 
-def get_item(username, collection_name, item_id):
+def get_item(username, collection_name, item_id, include_deleted=False):
+    filter_exp = Attr("collection_name").eq(collection_name)
+    if not include_deleted:
+        filter_exp &= Attr("deleted_at").not_exists()
+
     res = _get_table().query(
         KeyConditionExpression=Key("username").eq(username) & Key("item_id").eq(
             item_id),
-        FilterExpression=Attr("collection_name").eq(collection_name) & Attr(
-            "deleted_at").not_exists(),
+        FilterExpression=filter_exp,
     )
 
     if not res["Items"]:
