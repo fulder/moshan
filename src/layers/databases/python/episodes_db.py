@@ -55,7 +55,7 @@ def add_episode(username, collection_name, item_id, episode_id):
         "item_id": item_id
     }
     try:
-        get_episode(username, collection_name, episode_id)
+        get_episode(username, collection_name, episode_id, include_deleted=True)
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -69,12 +69,15 @@ def delete_episode(username, collection_name, episode_id):
                    clean_whitelist=[])
 
 
-def get_episode(username, collection_name, episode_id):
+def get_episode(username, collection_name, episode_id, include_deleted=False):
+    filter_exp = Attr("collection_name").eq(collection_name)
+    if include_deleted:
+        filter_exp &= Attr("deleted_at").not_exists()
+
     res = _get_table().query(
         KeyConditionExpression=Key("username").eq(username) & Key("id").eq(
             episode_id),
-        FilterExpression=Attr("collection_name").eq(collection_name) & Attr(
-            "deleted_at").not_exists(),
+        FilterExpression=filter_exp,
     )
 
     if not res["Items"]:
