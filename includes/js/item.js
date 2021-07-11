@@ -104,6 +104,9 @@ function createItem (moshanItem, watchHistoryItem) {
   if (itemAdded && 'rating' in watchHistoryItem) {
       document.getElementById('user-rating').value = watchHistoryItem.rating;
   }
+  if (itemAdded && 'created_at' in watchHistoryItem) {
+      document.getElementById('user_added_date').innerHTML = watchHistoryItem.created_at;
+  }
 
   document.getElementById('poster').src = moshanItem.poster;
   document.getElementById('title').innerHTML = moshanItem.title;
@@ -111,7 +114,6 @@ function createItem (moshanItem, watchHistoryItem) {
   document.getElementById('status').innerHTML = moshanItem.status;
   document.getElementById('synopsis').innerHTML = moshanItem.synopsis;
   document.getElementById('watched_amount').innerHTML = watchedAmount;
-  document.getElementById('user_added_date').innerHTML = watchHistoryItem.created_at;
 
   // TODO: store links in api and loop through them creating the links dynamically
   /*let links = '';
