@@ -111,6 +111,7 @@ function createItem (moshanItem, watchHistoryItem) {
   document.getElementById('status').innerHTML = moshanItem.status;
   document.getElementById('synopsis').innerHTML = moshanItem.synopsis;
   document.getElementById('watched_amount').innerHTML = watchedAmount;
+  document.getElementById('user_added_date').innerHTML = moshanItem.created_at;
 
   // TODO: store links in api and loop through them creating the links dynamically
   /*let links = '';
