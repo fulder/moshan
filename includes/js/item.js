@@ -151,7 +151,7 @@ function createOneCalendar(calendarIndex, calDate=null) {
     </div>
   </div>`;
 
-  document.getElementById('watched-dates').innerHTML += html;
+  document.getElementById('watched-dates').appendChild(html);
 
   calendarInstances.push(flatpickr(`#${calendarId}`, {
     enableTime: true,
