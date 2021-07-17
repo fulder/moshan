@@ -137,7 +137,7 @@ function createItem (moshanItem, watchHistoryItem) {
   savedPatchData = getPatchData();
 }
 
-function createOneCalendar(calendarIndex, defaultDate=null) {
+function createOneCalendar(calendarIndex, calDate=null) {
   const calendarId = `calendar_${calendarIndex}`;
   const html = `
   <div id="calendar_group_${calendarIndex}" class="input-group input-group-sm pt-1">
@@ -153,21 +153,18 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
 
   document.getElementById('watched-dates').innerHTML += html;
 
-  console.debug(`#${calendarId}`);
-  const calInstance = flatpickr(`#${calendarId}`, {
+  calendarInstances.push(flatpickr(`#${calendarId}`, {
     enableTime: true,
     dateFormat: 'Y-m-d H:i',
     time_24hr: true,
-    defaultDate: defaultDate,
+    defaultDate: calDate,
     locale: {
       firstDayOfWeek: 1, // start week on Monday
     },
     weekNumbers: true,
     onClose: onCalendarClose,
-  });
+  }));
 
-  console.debug(calInstance);
-  calendarInstances.push(calInstance);
   console.debug(calendarInstances);
 }
 
