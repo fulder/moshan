@@ -168,7 +168,7 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
     onClose: onCalendarClose,
   });
 
-  calendarInstandes.push(calInstance);
+  calendarInstances.push(calInstance);
 }
 
 function getPatchData() {
