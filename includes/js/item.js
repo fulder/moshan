@@ -168,7 +168,7 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
     onClose: onCalendarClose,
   });
 
-  consolde.debug(calInstance);
+  console.debug(calInstance);
   calendarInstances.push(calInstance);
   console.debug(calendarInstances);
 }
