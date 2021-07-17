@@ -150,9 +150,6 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
     </div>
   </div>`;
 
-  if (calendarIndex > 0) {
-    document.getElementById(`new-calendar-button-${calendarIndex-1}`).classList.add('d-none');
-  }
   document.getElementById('watched-dates').innerHTML += html;
 
   const calInstance = flatpickr(`#calendar_${calendarIndex}`, {
@@ -363,7 +360,6 @@ async function removeWatchDate(calendarIndex) {
   } else {
       calendarInstances.splice(calendarIndex, 1);
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
-      document.getElementById(`new-calendar-button-${datesWatched.length-1}`).classList.remove('d-none');
   }
 }
 
