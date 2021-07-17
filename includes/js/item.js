@@ -80,12 +80,8 @@ function createItem (moshanItem, watchHistoryItem) {
   console.debug(`Item added: ${itemAdded}`);
   console.debug(moshanItem);
 
-
-  let watchedAmount = 0;
-
   if (itemAdded && 'dates_watched' in watchHistoryItem && watchHistoryItem['dates_watched'].length > 0) {
     datesWatched = watchHistoryItem['dates_watched'];
-    watchedAmount = datesWatched.length;
   }
 
   if (itemAdded && 'overview' in watchHistoryItem) {
@@ -109,7 +105,7 @@ function createItem (moshanItem, watchHistoryItem) {
   document.getElementById('start-date').innerHTML = moshanItem.start_date;
   document.getElementById('status').innerHTML = moshanItem.status;
   document.getElementById('synopsis').innerHTML = moshanItem.synopsis;
-  document.getElementById('watched_amount').innerHTML = watchedAmount;
+  document.getElementById('watched_amount').innerHTML = datesWatched.length;
 
   // TODO: store links in api and loop through them creating the links dynamically
   /*let links = '';
@@ -127,7 +123,11 @@ function createItem (moshanItem, watchHistoryItem) {
   }
 
   if (!moshanItem.has_episodes) {
-    for (let i=0; i<watchedAmount+1; i++) {
+    if (datesWatched.lenght === 0) {
+      createOneCalendar(i);
+    }
+
+    for (let i=0; i<datesWatched.length; i++) {
       createOneCalendar(i, datesWatched[datesWatched.length - (i + 1)]);
     }
   }
