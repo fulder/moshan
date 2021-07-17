@@ -176,7 +176,10 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
 function getPatchData() {
     let watchedDates = [];
     for (let i = 0; i < calendarInstances.length; i++) {
-      watchedDates.push(calendarInstances[i].selectedDates[0].toISOString());
+      dates = calendarInstances[i].selectedDates;
+      if (dates !== undefined) {
+        watchedDates.push(dates[0].toISOString());
+      }
     }
 
     rating = document.getElementById('user-rating').value;
