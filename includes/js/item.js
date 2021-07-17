@@ -147,7 +147,6 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" onclick="setWatchedDate(${calendarIndex})"><i class="fas fa-calendar-day"></i></button>
       <button class="btn btn-danger" type="button" onclick="removeWatchDate(${calendarIndex})"><i class="far fa-calendar-times"></i></button>
-      <button id="new-calendar-button-${calendarIndex}" class="btn btn-success rounded-circle" type="button" onclick="createOneCalendar(${calendarIndex+1})"><i class="fas fa-plus"></i></button>
     </div>
   </div>`;
 
@@ -366,4 +365,9 @@ async function removeWatchDate(calendarIndex) {
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
       document.getElementById(`new-calendar-button-${datesWatched.length-1}`).classList.remove('d-none');
   }
+}
+
+/* exported addCalendar */
+function addCalendar() {
+  reateOneCalendar(datesWatched.length);
 }
