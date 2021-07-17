@@ -175,7 +175,7 @@ function getPatchData() {
     let watchedDates = [];
     for (let i = 0; i < calendarInstances.length; i++) {
       const dates = calendarInstances[i].selectedDates;
-      if (dates !== undefined) {
+      if (dates.length !== 0) {
         watchedDates.push(dates[0].toISOString());
       }
     }
