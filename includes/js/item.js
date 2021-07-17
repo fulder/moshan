@@ -127,7 +127,7 @@ function createItem (moshanItem, watchHistoryItem) {
   }
 
   if (!moshanItem.has_episodes) {
-    for (let i=0; i<watchedAmount; i++) {
+    for (let i=0; i<watchedAmount+1; i++) {
       createOneCalendar(i, datesWatched[datesWatched.length - (i + 1)]);
     }
   }
