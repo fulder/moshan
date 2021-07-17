@@ -365,5 +365,5 @@ async function removeWatchDate(calendarIndex) {
 
 /* exported addCalendar */
 function addCalendar() {
-  reateOneCalendar(datesWatched.length);
+  createOneCalendar(datesWatched.length);
 }
