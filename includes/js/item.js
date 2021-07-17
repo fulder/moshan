@@ -128,7 +128,7 @@ function createItem (moshanItem, watchHistoryItem) {
 
   if (!moshanItem.has_episodes) {
     for (let i=0; i<watchedAmount; i++) {
-      createOneCalendar(i, datesWatched[datesWatched.length - i + 1]);
+      createOneCalendar(i, datesWatched[datesWatched.length - (i + 1)]);
     }
   }
 
@@ -169,14 +169,13 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
   });
 
   calendarInstances.push(calInstance);
+  console.debug(calendarInstances);
 }
 
 function getPatchData() {
     let watchedDates = [];
-    if (calendarInstances.length !== 0) {
-      for (let i = 0; i < calendarInstances.length; i++) {
-        watchedDates.push(calendarInstances[i].selectedDates[0].toISOString());
-      }
+    for (let i = 0; i < calendarInstances.length; i++) {
+      watchedDates.push(calendarInstances[i].selectedDates[0].toISOString());
     }
 
     rating = document.getElementById('user-rating').value;
