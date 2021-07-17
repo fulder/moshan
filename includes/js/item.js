@@ -173,7 +173,7 @@ function getPatchData() {
     let watchedDates = [];
     if (calendarInstances.length !== 0) {
       for (let i = 0; i < calendarInstances.length; i++) {
-        watchedDates.push(calendarInstances.selectedDates[0].toISOString());
+        watchedDates.push(calendarInstances[i].selectedDates[0].toISOString());
       }
     }
 
