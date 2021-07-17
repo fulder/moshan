@@ -12,7 +12,7 @@ const api = getApiByName(qParams.api_name);
 const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 
 let totalPages = 0;
-let calendarInstance = null;
+let calendarInstances = [];
 let datesWatched;
 let savedPatchData;
 
@@ -82,13 +82,9 @@ function createItem (moshanItem, watchHistoryItem) {
 
 
   let watchedAmount = 0;
-  let latestWatchDate = '';
 
   if (itemAdded && 'dates_watched' in watchHistoryItem && watchHistoryItem['dates_watched'].length > 0) {
     datesWatched = watchHistoryItem['dates_watched'];
-
-    latestWatchDate = watchHistoryItem['latest_watch_date'];
-    console.debug(`Latest watch date: ${latestWatchDate}`);
     watchedAmount = datesWatched.length;
   }
 
@@ -131,19 +127,9 @@ function createItem (moshanItem, watchHistoryItem) {
   }
 
   if (!moshanItem.has_episodes) {
-    calendarInstance = flatpickr('#calendar', {
-      enableTime: true,
-      dateFormat: 'Y-m-d H:i',
-      time_24hr: true,
-      defaultDate: latestWatchDate,
-      locale: {
-        firstDayOfWeek: 1, // start week on Monday
-      },
-      weekNumbers: true,
-      onClose: onCalendarClose,
-    });
-
-    document.getElementById('calendar_group').classList.remove('d-none');
+    for (let i=0; i<watchedAmount; i++) {
+      createOneCalendar(i, datesWatched[datesWatched.length - i]);
+    }
   }
 
   document.getElementById('item').classList.remove('d-none');
@@ -151,11 +137,43 @@ function createItem (moshanItem, watchHistoryItem) {
   savedPatchData = getPatchData();
 }
 
+function createOneCalendar(calendarIndex, defaultDate=null) {
+  const html = `
+  <div id="calendar_group_${calendarIndex}" class="input-group input-group-sm pt-1">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Date</span>
+    </div>
+    <input id="calendar" type="text" class="form-control">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="button" onclick="setWatchedDate(${calendarIndex})"><i class="fas fa-calendar-day"></i></button>
+      <button class="btn btn-danger" type="button" onclick="removeWatchDate(${calendarIndex})"><i class="far fa-calendar-times"></i></button>
+      <button id="new-calendar-button-${calendarIndex}" class="btn btn-success rounded-circle" type="button" onclick="createOneCalendar(${calendarIndex+1})"<i class="fa-solid fa-plus"></i></button>
+    </div>
+  </div>`;
+
+  if (calendarIndex > 0) {
+    document.getElementById(`new-calendar-button-${calendarIndex-1}`).classList.add('d-none');
+  }
+  document.getElementById('watched-dates').innerHTM += html;
+
+  calendarInstance[calendarIndex] = flatpickr(`#calendar_${calendarIndex}`, {
+    enableTime: true,
+    dateFormat: 'Y-m-d H:i',
+    time_24hr: true,
+    defaultDate: defaultDate,
+    locale: {
+      firstDayOfWeek: 1, // start week on Monday
+    },
+    weekNumbers: true,
+    onClose: onCalendarClose,
+  });
+}
+
 function getPatchData() {
     let watchedDates = [];
-    if (calendarInstance !== null) {
-      for (let i = 0; i < calendarInstance.selectedDates.length; i++) {
-        watchedDates.push(calendarInstance.selectedDates[i].toISOString());
+    if (calendarInstances.length !== 0) {
+      for (let i = 0; i < calendarInstances.length; i++) {
+        watchedDates.push(calendarInstances.selectedDates[0].toISOString());
       }
     }
 
@@ -309,18 +327,18 @@ async function onCalendarClose (selectedDates, dateStr) {
 }
 
 /* exported setCurrentWatchDate */
-async function setCurrentWatchDate() {
+async function setCurrentWatchDate(calendarIndex) {
   const dateNow = new Date();
 
-  await setWatchDate(dateNow.toISOString());
-  calendarInstance.setDate(dateNow);
+  await setWatchDate(calendarIndex, dateNow.toISOString());
+  calendarInstances[calendarIndex].setDate(dateNow);
 }
 
-async function setWatchDate(date) {
+async function setWatchDate(calendarIndex, date) {
   if (datesWatched === undefined || datesWatched.length == 0) {
     datesWatched = [date];
   } else {
-    datesWatched[datesWatched.length - 1] = date;
+    datesWatched[calendarIndex] = date;
   }
 
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
@@ -328,17 +346,19 @@ async function setWatchDate(date) {
 }
 
 /* exported removeWatchDate */
-async function removeWatchDate() {
+async function removeWatchDate(calendarIndex) {
   if (datesWatched === undefined || datesWatched.length == 0) {
     return;
   }
 
-  datesWatched.pop();
+  datesWatched.splice(calendarIndex, 1);
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
 
   if (datesWatched.length == 0) {
-      calendarInstance.clear();
+      calendarInstance[calendarIndex].clear();
   } else {
-      calendarInstance.setDate(datesWatched[datesWatched.length - 1]);
+      calendarInstance.splice(calendarIndex, 1);
+      document.getElementById(`calendar_group_${calendarIndex}`).remove();
+      document.getElementById(`new-calendar-button-${calendadatesWatched.length-1}`).classList.remove('d-none');
   }
 }

@@ -99,21 +99,13 @@
 
       <div class="col-md-7 col-12 mt-1">
           <div>
-            <button id="save_info" class="btn btn-success" onclick="saveItem()"><i class="fa fa-floppy-disks"></i> Save</button>
+            <button id="save_info" class="btn btn-success" onclick="saveItem()"><i class="fa fa-save"></i> Save</button>
             <button id="add_button" class="btn btn-success d-none" onclick="addItem()"><i class="fa fa-plus"></i> Add</button>
             <button id="remove_button" class="btn btn-danger d-none" onclick="removeItem()"><i class="fa fa-minus"></i> Remove</button>
           </div>
 
-          <div class="col-md-6 col-10">
-            <div id="calendar_group" class="input-group input-group-sm pt-1 d-none">
-              <div class="input-group-prepend">
-                <span class="input-group-text">Date</span>
-              </div>
-              <input id="calendar" type="text" class="form-control">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate()"><i class="fas fa-calendar-day"></i></button><button class="btn btn-danger" type="button" onclick="removeWatchDate()"><i class="far fa-calendar-times"></i></button>
-              </div>
-            </div>
+          <div id="watched-dates" class="col-md-6 col-10">
+
           </div>
 
           <div class="col-md-8 col-10 pt-1">
