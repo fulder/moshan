@@ -123,19 +123,8 @@ function createItem (moshanItem, watchHistoryItem) {
   }
 
   if (!moshanItem.has_episodes) {
-    calendarInstances = flatpickr('.fpCalendar', {
-      enableTime: true,
-      dateFormat: 'Y-m-d H:i',
-      time_24hr: true,
-      locale: {
-        firstDayOfWeek: 1, // start week on Monday
-      },
-      weekNumbers: true,
-      onClose: onCalendarClose,
-    });
-
     if (datesWatched.lenght === 0) {
-      createOneCalendar(i);
+      createOneCalendar(0);
     }
 
     for (let i=0; i<datesWatched.length; i++) {
@@ -148,13 +137,13 @@ function createItem (moshanItem, watchHistoryItem) {
   savedPatchData = getPatchData();
 }
 
-function createOneCalendar(calendarIndex, date=null) {
+function createOneCalendar(calendarIndex, defaultDate=null) {
   const html = `
   <div id="calendar_group_${calendarIndex}" class="input-group input-group-sm pt-1">
     <div class="input-group-prepend">
       <span class="input-group-text">Date</span>
     </div>
-    <input type="text" class="fpCalendar form-control">
+    <input id="calendar_${calendarIndex}" type="text" class="form-control">
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" onclick="setWatchedDate(${calendarIndex})"><i class="fas fa-calendar-day"></i></button>
       <button class="btn btn-danger" type="button" onclick="removeWatchDate(${calendarIndex})"><i class="far fa-calendar-times"></i></button>
@@ -167,7 +156,21 @@ function createOneCalendar(calendarIndex, date=null) {
   }
   document.getElementById('watched-dates').innerHTML += html;
 
-  calendarInstances[calendarIndex].setDate(date);
+  const calInstance = flatpickr(`#calendar_${calendarIndex}`, {
+    enableTime: true,
+    dateFormat: 'Y-m-d H:i',
+    time_24hr: true,
+    defaultDate: defaultDate,
+    locale: {
+      firstDayOfWeek: 1, // start week on Monday
+    },
+    weekNumbers: true,
+    onClose: onCalendarClose,
+  });
+
+  console.debug(calInstance);
+  calendarInstances.push(calInstance);
+  console.debug(calendarInstances);
 }
 
 function getPatchData() {
@@ -359,6 +362,7 @@ async function removeWatchDate(calendarIndex) {
   if (datesWatched.length == 0) {
       calendarInstances[calendarIndex].clear();
   } else {
+      calendarInstances.splice(calendarIndex, 1);
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
       document.getElementById(`new-calendar-button-${datesWatched.length-1}`).classList.remove('d-none');
   }
