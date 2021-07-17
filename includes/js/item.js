@@ -128,7 +128,7 @@ function createItem (moshanItem, watchHistoryItem) {
     }
 
     for (let i=0; i<datesWatched.length; i++) {
-      createOneCalendar(i, datesWatched[datesWatched.length - (i + 1)]);
+      createOneCalendar(i, datesWatched[i]);
     }
   }
 
@@ -168,6 +168,7 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
     onClose: onCalendarClose,
   });
 
+  consolde.debug(calInstance);
   calendarInstances.push(calInstance);
   console.debug(calendarInstances);
 }
