@@ -143,7 +143,7 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
     <div class="input-group-prepend">
       <span class="input-group-text">Date</span>
     </div>
-    <input id="calendar" type="text" class="form-control">
+    <input id="calendar_${calendarIndex}" type="text" class="form-control">
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" onclick="setWatchedDate(${calendarIndex})"><i class="fas fa-calendar-day"></i></button>
       <button class="btn btn-danger" type="button" onclick="removeWatchDate(${calendarIndex})"><i class="far fa-calendar-times"></i></button>
