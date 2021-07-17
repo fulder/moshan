@@ -152,6 +152,10 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
 
   document.getElementById('watched-dates').innerHTML += html;
 
+  if (calendarIndex > 0) {
+    console.debug(calendarInstances[0].selectedDates);
+  }
+
   const calInstance = flatpickr(`#calendar_${calendarIndex}`, {
     enableTime: true,
     dateFormat: 'Y-m-d H:i',
@@ -172,13 +176,13 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
 function getPatchData() {
     let watchedDates = [];
     for (let i = 0; i < calendarInstances.length; i++) {
-      dates = calendarInstances[i].selectedDates;
+      const dates = calendarInstances[i].selectedDates;
       if (dates !== undefined) {
         watchedDates.push(dates[0].toISOString());
       }
     }
 
-    rating = document.getElementById('user-rating').value;
+    let rating = document.getElementById('user-rating').value;
     if (rating !== '') {
         rating = parseInt(rating);
     }
