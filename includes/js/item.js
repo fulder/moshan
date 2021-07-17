@@ -361,6 +361,6 @@ async function removeWatchDate(calendarIndex) {
   } else {
       calendarInstances.splice(calendarIndex, 1);
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
-      document.getElementById(`new-calendar-button-${calendadatesWatched.length-1}`).classList.remove('d-none');
+      document.getElementById(`new-calendar-button-${datesWatched.length-1}`).classList.remove('d-none');
   }
 }
