@@ -13,7 +13,6 @@ const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 
 let totalPages = 0;
 let calendarInstances = [];
-let datesWatched;
 let savedPatchData;
 
 getItemByApiId();
@@ -80,6 +79,7 @@ function createItem (moshanItem, watchHistoryItem) {
   console.debug(`Item added: ${itemAdded}`);
   console.debug(moshanItem);
 
+  let datesWatched = 0;
   if (itemAdded && 'dates_watched' in watchHistoryItem && watchHistoryItem['dates_watched'].length > 0) {
     datesWatched = watchHistoryItem['dates_watched'];
   }
@@ -148,7 +148,7 @@ function createOneCalendar(calendarIndex, calDate=null) {
     </div>
     <input id="${calendarId}" type="text" class="form-control">
     <div class="input-group-append">
-      <button class="btn btn-primary" type="button" onclick="setWatchedDate(${calendarIndex})"><i class="fas fa-calendar-day"></i></button>
+      <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate(${calendarIndex})"><i class="fas fa-calendar-day"></i></button>
       <button class="btn btn-danger" type="button" onclick="removeWatchDate(${calendarIndex})"><i class="far fa-calendar-times"></i></button>
     </div>`;
 
@@ -163,7 +163,6 @@ function createOneCalendar(calendarIndex, calDate=null) {
       firstDayOfWeek: 1, // start week on Monday
     },
     weekNumbers: true,
-    onClose: onCalendarClose,
   }));
 
   console.debug(calendarInstances);
@@ -174,7 +173,8 @@ function getPatchData() {
     for (let i = 0; i < calendarInstances.length; i++) {
       const dates = calendarInstances[i].selectedDates;
       if (dates.length !== 0) {
-        watchedDates.push(dates[0].toISOString());
+        const isoDate = new Date(dates[0]).toISOString();
+        watchedDates.push(isoDate);
       }
     }
 
@@ -321,42 +321,26 @@ async function loadEpisodes (page) {
   history.pushState({}, null, `?${urlParams.toString()}`);
 }
 
-async function onCalendarClose (selectedDates, dateStr) {
-  const date = new Date(dateStr).toISOString();
-
-  await setWatchDate(date);
-}
-
 /* exported setCurrentWatchDate */
 async function setCurrentWatchDate(calendarIndex) {
   const dateNow = new Date();
 
-  await setWatchDate(calendarIndex, dateNow.toISOString());
+  await setWatchDate(dateNow.toISOString());
   calendarInstances[calendarIndex].setDate(dateNow);
-}
 
-async function setWatchDate(calendarIndex, date) {
-  if (datesWatched === undefined || datesWatched.length == 0) {
-    datesWatched = [date];
-  } else {
-    datesWatched[calendarIndex] = date;
-  }
-
-  document.getElementById('watched_amount').innerHTML = datesWatched.length;
-  console.debug(datesWatched);
+  document.getElementById('watched_amount').innerHTML += 1;
 }
 
 /* exported removeWatchDate */
 async function removeWatchDate(calendarIndex) {
-  if (datesWatched === undefined || datesWatched.length == 0) {
+  if (calendarInstances.length < 1) {
     return;
   }
 
-  datesWatched.splice(calendarIndex, 1);
-  document.getElementById('watched_amount').innerHTML = datesWatched.length;
+  document.getElementById('watched_amount').innerHTML -= 1;
 
-  if (datesWatched.length == 0) {
-      calendarInstances[calendarIndex].clear();
+  if (calendarInstances.length == 1) {
+      calendarInstances[0].clear();
   } else {
       calendarInstances.splice(calendarIndex, 1);
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
