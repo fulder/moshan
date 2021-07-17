@@ -156,7 +156,7 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
   }
   document.getElementById('watched-dates').innerHTM += html;
 
-  calendarInstances[calendarIndex] = flatpickr(`#calendar_${calendarIndex}`, {
+  const calInstance = flatpickr(`#calendar_${calendarIndex}`, {
     enableTime: true,
     dateFormat: 'Y-m-d H:i',
     time_24hr: true,
@@ -167,6 +167,8 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
     weekNumbers: true,
     onClose: onCalendarClose,
   });
+
+  calendarInstandes.push(calInstance);
 }
 
 function getPatchData() {
