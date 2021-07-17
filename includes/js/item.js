@@ -139,8 +139,10 @@ function createItem (moshanItem, watchHistoryItem) {
 
 function createOneCalendar(calendarIndex, calDate=null) {
   const calendarId = `calendar_${calendarIndex}`;
-  const html = `
-  <div id="calendar_group_${calendarIndex}" class="input-group input-group-sm pt-1">
+  const calendarDiv = document.createElement('div');
+  calendarDiv.id = `calendar_group_${calendarIndex}`;
+  calendarDiv.class = 'input-group input-group-sm pt-1';
+  calendarDiv.innerHTML = `
     <div class="input-group-prepend">
       <span class="input-group-text">Date</span>
     </div>
@@ -148,10 +150,9 @@ function createOneCalendar(calendarIndex, calDate=null) {
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" onclick="setWatchedDate(${calendarIndex})"><i class="fas fa-calendar-day"></i></button>
       <button class="btn btn-danger" type="button" onclick="removeWatchDate(${calendarIndex})"><i class="far fa-calendar-times"></i></button>
-    </div>
-  </div>`;
+    </div>`;
 
-  document.getElementById('watched-dates').appendChild(html);
+  document.getElementById('watched-dates').appendChild(calendarDiv);
 
   calendarInstances.push(flatpickr(`#${calendarId}`, {
     enableTime: true,
