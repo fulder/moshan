@@ -156,7 +156,7 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
   }
   document.getElementById('watched-dates').innerHTM += html;
 
-  calendarInstance[calendarIndex] = flatpickr(`#calendar_${calendarIndex}`, {
+  calendarInstances[calendarIndex] = flatpickr(`#calendar_${calendarIndex}`, {
     enableTime: true,
     dateFormat: 'Y-m-d H:i',
     time_24hr: true,
@@ -355,9 +355,9 @@ async function removeWatchDate(calendarIndex) {
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
 
   if (datesWatched.length == 0) {
-      calendarInstance[calendarIndex].clear();
+      calendarInstances[calendarIndex].clear();
   } else {
-      calendarInstance.splice(calendarIndex, 1);
+      calendarInstances.splice(calendarIndex, 1);
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
       document.getElementById(`new-calendar-button-${calendadatesWatched.length-1}`).classList.remove('d-none');
   }
