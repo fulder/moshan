@@ -154,6 +154,9 @@ function createOneCalendar(calendarIndex, defaultDate=null) {
   if (calendarIndex > 0) {
     document.getElementById(`new-calendar-button-${calendarIndex-1}`).classList.add('d-none');
   }
+  if (document.getElementById('watched-dates').innerHTM  === undefined) {
+      document.getElementById('watched-dates').innerHTM = '';
+  }
   document.getElementById('watched-dates').innerHTM += html;
 
   const calInstance = flatpickr(`#calendar_${calendarIndex}`, {
