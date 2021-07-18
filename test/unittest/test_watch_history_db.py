@@ -191,17 +191,19 @@ def test_add_item(mocked_watch_history_db):
             '#collection_name': 'collection_name',
             '#created_at': 'created_at',
             '#deleted_at': 'deleted_at',
-            '#updated_at': 'updated_at'
+            '#latest_watch_date': 'latest_watch_date',
+            '#updated_at': 'updated_at',
         },
         'ExpressionAttributeValues': {
             ':collection_name': 'MOVIE',
             ":created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            ':latest_watch_date': '0',
             ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
         'Key': {
             'username': TEST_USERNAME,
             'item_id': '123123'},
-        'UpdateExpression': 'SET #created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at '
+        'UpdateExpression': 'SET #latest_watch_date=:latest_watch_date,#created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at '
                             'REMOVE #deleted_at'
     }
 
@@ -220,17 +222,19 @@ def test_add_item_already_exists(mocked_watch_history_db):
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
             '#deleted_at': 'deleted_at',
+            '#latest_watch_date': 'latest_watch_date',
             '#updated_at': 'updated_at'
         },
         'ExpressionAttributeValues': {
             ':collection_name': 'MOVIE',
+            ':latest_watch_date': '0',
             ':updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
         'Key': {
             'username': 'TEST_USERNAME',
             'item_id': '123123'
         },
-        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at '
+        'UpdateExpression': 'SET #latest_watch_date=:latest_watch_date,#collection_name=:collection_name,#updated_at=:updated_at '
                             'REMOVE #deleted_at'
     }
 
@@ -381,15 +385,17 @@ def test_add_item_exists(mocked_watch_history_db):
         'ExpressionAttributeNames': {
             '#collection_name': 'collection_name',
             '#deleted_at': 'deleted_at',
+            '#latest_watch_date': 'latest_watch_date',
             '#updated_at': 'updated_at'
         },
         'ExpressionAttributeValues': {
             ':collection_name': 'MOVIE',
+            ':latest_watch_date': '0',
             ':updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
         'Key': {
             'username': TEST_USERNAME, 'item_id': '123123'},
-        'UpdateExpression': 'SET #collection_name=:collection_name,#updated_at=:updated_at '
+        'UpdateExpression': 'SET #latest_watch_date=:latest_watch_date,#collection_name=:collection_name,#updated_at=:updated_at '
                             'REMOVE #deleted_at'
     }
 
