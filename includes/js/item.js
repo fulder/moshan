@@ -342,7 +342,7 @@ function setCurrentWatchDate(calendarIndex) {
   const dateNow = new Date();
   calendarInstances[calendarIndex].setDate(dateNow);
 
-  if (previousDates.length !== 0) {
+  if (previousDates.length === 0) {
       const currentAmount = parseInt(document.getElementById('watched_amount').innerHTML);
       document.getElementById('watched_amount').innerHTML = currentAmount + 1;
   }
