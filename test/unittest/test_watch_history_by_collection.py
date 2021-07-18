@@ -149,7 +149,7 @@ class TestGet:
         mocked_get_watch_history.return_value = self.watch_history_ret
         event = copy.deepcopy(self.event)
         event["queryStringParameters"] = {
-            "sort": "dates_watched"
+            "sort": "latest_watch_date"
         }
 
         ret = handle(event, None)
