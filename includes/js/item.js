@@ -178,6 +178,8 @@ function getPatchData() {
      const childDiv = calendarDivs[i];
      const calendarNbr = childDiv.dataset.calendarNumber;
 
+     console.debug(calendarNbr);
+
      const dates = calendarInstances[calendarNbr].selectedDates;
      if (dates.length !== 0) {
        const isoDate = new Date(dates[0]).toISOString();
