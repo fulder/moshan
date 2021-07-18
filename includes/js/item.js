@@ -179,6 +179,10 @@ function getPatchData() {
      const childDiv = calendarDivs[i];
      const calendarNbr = childDiv.dataset.calendarNumber;
 
+     if (calendarNbr === undefined) {
+       continue;
+     }
+     
      console.debug(calendarNbr);
 
      const dates = calendarInstances[calendarNbr].selectedDates;
