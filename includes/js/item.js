@@ -182,7 +182,7 @@ function getPatchData() {
      if (calendarNbr === undefined) {
        continue;
      }
-     
+
      console.debug(calendarNbr);
 
      const dates = calendarInstances[calendarNbr].selectedDates;
@@ -338,8 +338,6 @@ async function loadEpisodes (page) {
 /* exported setCurrentWatchDate */
 async function setCurrentWatchDate(calendarIndex) {
   const dateNow = new Date();
-
-  await setWatchDate(dateNow.toISOString());
   calendarInstances[calendarIndex].setDate(dateNow);
 
   document.getElementById('watched_amount').innerHTML += 1;
