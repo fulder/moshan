@@ -12,7 +12,7 @@ const api = getApiByName(qParams.api_name);
 const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 
 let totalPages = 0;
-let calendarInstances = [];
+let calendarInstances = {};
 let savedPatchData;
 
 getItemByApiId();
@@ -138,23 +138,25 @@ function createItem (moshanItem, watchHistoryItem) {
 }
 
 function createOneCalendar(calendarIndex, calDate=null) {
-  const calendarId = `calendar_${calendarIndex}`;
+  const i = Math.floor(Math.random() * Date.now()).toString();
+  const calendarId = `calendar_${i}`;
+
   const calendarDiv = document.createElement('div');
-  calendarDiv.id = `calendar_group_${calendarIndex}`;
+  calendarDiv.id = `calendar_group_${calendarId}`;
   calendarDiv.className = 'input-group input-group-sm pt-1';
   calendarDiv.innerHTML = `
     <div class="input-group-prepend">
       <span class="input-group-text">Date</span>
     </div>
-    <input id="${calendarId}" type="text" class="form-control">
+    <input id="${calendarId}" type="text" class="form-control" data-calendar-number="${i}">
     <div class="input-group-append">
-      <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate(${calendarIndex})"><i class="fas fa-calendar-day"></i></button>
-      <button class="btn btn-danger" type="button" onclick="removeWatchDate(${calendarIndex})"><i class="far fa-calendar-times"></i></button>
+      <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate(${i})"><i class="fas fa-calendar-day"></i></button>
+      <button class="btn btn-danger" type="button" onclick="removeWatchDate(${i})"><i class="far fa-calendar-times"></i></button>
     </div>`;
 
   document.getElementById('watched-dates').appendChild(calendarDiv);
 
-  calendarInstances.push(flatpickr(`#${calendarId}`, {
+  calendarInstances[i] = flatpickr(`#${calendarId}`, {
     enableTime: true,
     dateFormat: 'Y-m-d H:i',
     time_24hr: true,
@@ -163,19 +165,24 @@ function createOneCalendar(calendarIndex, calDate=null) {
       firstDayOfWeek: 1, // start week on Monday
     },
     weekNumbers: true,
-  }));
+  });
 
   console.debug(calendarInstances);
 }
 
 function getPatchData() {
     let watchedDates = [];
-    for (let i = 0; i < calendarInstances.length; i++) {
-      const dates = calendarInstances[i].selectedDates;
-      if (dates.length !== 0) {
-        const isoDate = new Date(dates[0]).toISOString();
-        watchedDates.push(isoDate);
-      }
+    const calendarDivs = document.getElementById('watched-dates').getElementsByTagName('div');
+
+    for( i=0; i< calendarDivs.length; i++ ) {
+     const childDiv = calendarDivs[i];
+     const calendarNbr = childDiv.dataset.calendarNumber;
+
+     const dates = calendarInstances[calendarNbr].selectedDates;
+     if (dates.length !== 0) {
+       const isoDate = new Date(dates[0]).toISOString();
+       watchedDates.push(isoDate);
+     }
     }
 
     let rating = document.getElementById('user-rating').value;
@@ -333,14 +340,16 @@ async function setCurrentWatchDate(calendarIndex) {
 
 /* exported removeWatchDate */
 async function removeWatchDate(calendarIndex) {
-  if (calendarInstances.length < 1) {
+  const calendarAmount = Object.keys(calendarInstances).length;
+  if (calendarAmount < 1) {
     return;
   }
 
   document.getElementById('watched_amount').innerHTML -= 1;
 
-  if (calendarInstances.length == 1) {
-      calendarInstances[0].clear();
+  if (calendarAmount == 1) {
+      const firstKey = Object.keys(calendarInstances)[0];
+      calendarInstances[firstKey].clear();
   } else {
       calendarInstances.splice(calendarIndex, 1);
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
