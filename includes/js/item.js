@@ -337,10 +337,15 @@ async function loadEpisodes (page) {
 
 /* exported setCurrentWatchDate */
 function setCurrentWatchDate(calendarIndex) {
+  const previousDates = calendarInstances[calendarIndex].selectedDates;
+
   const dateNow = new Date();
   calendarInstances[calendarIndex].setDate(dateNow);
 
-  document.getElementById('watched_amount').innerHTML += 1;
+  if (previousDates.length !== 0) {
+      const currentAmount = parseInt(document.getElementById('watched_amount').innerHTML);
+      document.getElementById('watched_amount').innerHTML = currentAmount + 1;
+  }
 }
 
 /* exported removeWatchDate */
