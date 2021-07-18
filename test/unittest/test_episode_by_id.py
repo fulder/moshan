@@ -128,7 +128,8 @@ class TestPut:
     @patch("api.episode_by_collection_item.anime_api.get_episode")
     @patch("api.episode_by_id.watch_history_db.get_item")
     @patch("api.episode_by_id.watch_history_db.update_item")
-    def test_success_anime(self, mocked_update_item, mocked_get_item, mocked_get_episode, mocked_update_episode):
+    def test_success_anime(self, mocked_update_item, mocked_get_item,
+                           mocked_get_episode, mocked_update_episode):
         mocked_get_item.return_value = {
             "latest_watch_date": "2019-01-01"
         }
@@ -140,11 +141,28 @@ class TestPut:
     @patch("api.episode_by_id.episodes_db.update_episode")
     @patch("api.episode_by_collection_item.shows_api.get_episode")
     @patch("api.episode_by_id.watch_history_db.get_item")
-    def test_success_show(self, mocked_get_item, mocked_get_episode, mocked_update_episode):
+    def test_success_show(self, mocked_get_item, mocked_get_episode,
+                          mocked_update_episode):
         mocked_get_item.return_value = {
             "latest_watch_date": "2021-01-01"
         }
         mocked_update_episode.return_value = "2020-01-01"
+
+        event = copy.deepcopy(self.event)
+        event["pathParameters"]["collection_name"] = "show"
+
+        ret = handle(event, None)
+        assert ret == {'statusCode': 204}
+
+    @patch("api.episode_by_id.episodes_db.update_episode")
+    @patch("api.episode_by_collection_item.shows_api.get_episode")
+    @patch("api.episode_by_id.watch_history_db.get_item")
+    def test_missing_last_watch_date(self, mocked_get_item, mocked_get_episode,
+                                     mocked_update_episode):
+        mocked_get_item.return_value = {
+            "latest_watch_date": "2021-01-01"
+        }
+        mocked_update_episode.return_value = None
 
         event = copy.deepcopy(self.event)
         event["pathParameters"]["collection_name"] = "show"
