@@ -52,7 +52,9 @@ def _get_client():
 
 
 def add_item(username, collection_name, item_id):
-    data = {}
+    data = {
+        "latest_watch_date": "0"
+    }
     try:
         get_item(username, collection_name, item_id, include_deleted=True)
     except NotFoundError:
@@ -127,7 +129,6 @@ def update_item(username, collection_name, item_id, data,
         ExpressionAttributeNames=expression_attribute_names,
         ExpressionAttributeValues=expression_attribute_values
     )
-
 
 def get_watch_history(username, collection_name=None, index_name=None,
                       limit=100, start=1):
