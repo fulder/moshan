@@ -336,7 +336,7 @@ async function loadEpisodes (page) {
 }
 
 /* exported setCurrentWatchDate */
-async function setCurrentWatchDate(calendarIndex) {
+function setCurrentWatchDate(calendarIndex) {
   const dateNow = new Date();
   calendarInstances[calendarIndex].setDate(dateNow);
 
@@ -344,7 +344,7 @@ async function setCurrentWatchDate(calendarIndex) {
 }
 
 /* exported removeWatchDate */
-async function removeWatchDate(calendarIndex) {
+function removeWatchDate(calendarIndex) {
   const calendarAmount = Object.keys(calendarInstances).length;
   if (calendarAmount < 1) {
     return;
