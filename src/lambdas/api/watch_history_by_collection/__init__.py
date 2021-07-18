@@ -70,7 +70,8 @@ def _get_by_api_id(collection_name, api_name, api_id, username, token):
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     try:
-        w_ret = watch_history_db.get_item(username, collection_name, s_ret["id"])
+        w_ret = watch_history_db.get_item(username, collection_name,
+                                          s_ret["id"])
         ret = {**w_ret, **s_ret}
         return {"statusCode": 200,
                 "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
@@ -119,10 +120,17 @@ def _get_watch_history(username, collection_name, query_params):
                                                            index_name=sort,
                                                            limit=limit,
                                                            start=start)
-        return {"statusCode": 200, "body": json.dumps(watch_history,
-                                                      cls=decimal_encoder.DecimalEncoder)}
+        return {
+            "statusCode": 200, "body":
+                json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)
+        }
     except watch_history_db.NotFoundError:
         return {"statusCode": 200, "body": json.dumps({"items": []})}
+    except watch_history_db.InvalidStartOffset:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"message": "Invalid start offset"})
+        }
 
 
 def _post_collection_item(username, collection_name, body, token):
