@@ -1,6 +1,7 @@
 import json
 import os
 from json import JSONDecodeError
+import dateutil.parser
 
 import anime_api
 import api_errors
@@ -9,6 +10,7 @@ import logger
 import jwt_utils
 import schema
 import episodes_db
+import watch_history_db
 import shows_api
 
 log = logger.get_logger("episodes_by_id")
@@ -94,7 +96,30 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
         return {"statusCode": e.status_code,
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
-    episodes_db.update_episode(username, collection_name, episode_id, body)
+    item = watch_history_db.get_item(username, collection_name, item_id)
+
+    latest_watch_date = episodes_db.update_episode(
+        username,
+        collection_name,
+        episode_id,
+        body
+    )
+    if latest_watch_date is None:
+        return {"statusCode": 204}
+
+    # If episode watch date is changed check if its larger than current
+    # item latest date and update item if that's the case
+    ep_date = dateutil.parser.parse(latest_watch_date)
+
+    if (item["latest_watch_date"] == "0" or
+            ep_date > dateutil.parser.parse(item["latest_watch_date"])):
+        watch_history_db.update_item(
+            username,
+            collection_name,
+            item_id,
+            {"latest_watch_date": latest_watch_date}
+        )
+
     return {"statusCode": 204}
 
 

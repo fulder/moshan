@@ -155,6 +155,7 @@ class WatchHistory(core.Stack):
             "api-episode_by_id": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
+                    "DATABASE_NAME": self.watch_history_table.table_name,
                     "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url,
@@ -165,6 +166,10 @@ class WatchHistory(core.Stack):
                     PolicyStatement(
                         actions=["dynamodb:Query", "dynamodb:UpdateItem"],
                         resources=[self.episodes_table.table_arn]
+                    ),
+                    PolicyStatement(
+                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
+                        resources=[self.watch_history_table.table_arn]
                     )
                 ],
                 "timeout": 10
