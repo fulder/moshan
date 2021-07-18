@@ -151,8 +151,8 @@ function createOneCalendar(calDate=null) {
     </div>
     <input id="${calendarId}" type="text" class="form-control">
     <div class="input-group-append">
-      <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate(${i})"><i class="fas fa-calendar-day"></i></button>
-      <button class="btn btn-danger" type="button" onclick="removeWatchDate(${i})"><i class="far fa-calendar-times"></i></button>
+      <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate(${i}, this)"><i class="fas fa-calendar-day"></i></button>
+      <button class="btn btn-danger" type="button" onclick="removeWatchDate(${i}, this)"><i class="far fa-calendar-times"></i></button>
     </div>`;
 
   document.getElementById('watched-dates').appendChild(calendarDiv);
@@ -207,7 +207,7 @@ function getPatchData() {
 }
 
 /* exported addItem */
-async function addItem () {
+async function addItem (button) {
   try {
     const addItemRes = await watchHistoryApi.addWatchHistoryItem(qParams);
     console.debug(addItemRes);
@@ -218,10 +218,12 @@ async function addItem () {
   } catch (error) {
     console.log(error);
   }
+
+  button.blur();
 }
 
 /* exported removeItem */
-async function removeItem () {
+async function removeItem (button) {
   try {
     await watchHistoryApi.removeWatchHistoryItem(qParams);
     document.getElementById('add_button').classList.remove('d-none');
@@ -229,10 +231,12 @@ async function removeItem () {
   } catch (error) {
     console.log(error);
   }
+
+  button.blur();
 }
 
 /* exported saveItem */
-async function saveItem () {
+async function saveItem (button) {
   currentPatchData = getPatchData();
   try {
     await watchHistoryApi.updateWatchHistoryItem(
@@ -248,6 +252,7 @@ async function saveItem () {
   }
 
   savedPatchData = currentPatchData;
+  button.blur();
 }
 
 function createEpisodesList (moshanEpisodes) {
@@ -336,8 +341,7 @@ async function loadEpisodes (page) {
 }
 
 /* exported setCurrentWatchDate */
-function setCurrentWatchDate(calendarIndex) {
-  console.debug(this);
+function setCurrentWatchDate(calendarIndex, button) {
   const previousDates = calendarInstances[calendarIndex].selectedDates;
 
   const dateNow = new Date();
@@ -347,10 +351,12 @@ function setCurrentWatchDate(calendarIndex) {
       const currentAmount = parseInt(document.getElementById('watched_amount').innerHTML);
       document.getElementById('watched_amount').innerHTML = currentAmount + 1;
   }
+
+  button.blur();
 }
 
 /* exported removeWatchDate */
-function removeWatchDate(calendarIndex) {
+function removeWatchDate(calendarIndex, button) {
   const previousDates = calendarInstances[calendarIndex].selectedDates;
 
   const calendarAmount = Object.keys(calendarInstances).length;
@@ -369,9 +375,12 @@ function removeWatchDate(calendarIndex) {
       delete calendarInstances[calendarIndex];
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
   }
+
+  button.blur();
 }
 
 /* exported addCalendar */
-function addCalendar() {
+function addCalendar(button) {
   createOneCalendar();
+  button.blur();
 }
