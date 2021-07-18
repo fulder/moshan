@@ -142,7 +142,7 @@ function createOneCalendar(calDate=null) {
   const calendarId = `calendar_${i}`;
 
   const calendarDiv = document.createElement('div');
-  calendarDiv.id = `calendar_group_${calendarId}`;
+  calendarDiv.id = `calendar_group_${i}`;
   calendarDiv.className = 'input-group input-group-sm pt-1';
   calendarDiv.dataset.calendarNumber = i;
   calendarDiv.innerHTML = `
