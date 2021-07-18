@@ -130,6 +130,10 @@ def update_episode(username, collection_name, episode_id, data,
         ExpressionAttributeValues=expression_attribute_values
     )
 
+    if "latest_watch_date" in data:
+        return data["latest_watch_date"]
+    return None
+
 
 def get_episodes(username, collection_name, item_id, limit=100, start=1):
     start_page = 0
