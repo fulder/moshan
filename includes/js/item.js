@@ -144,11 +144,12 @@ function createOneCalendar(calendarIndex, calDate=null) {
   const calendarDiv = document.createElement('div');
   calendarDiv.id = `calendar_group_${calendarId}`;
   calendarDiv.className = 'input-group input-group-sm pt-1';
+  calendarDiv.dataset.calendarId = i;
   calendarDiv.innerHTML = `
     <div class="input-group-prepend">
       <span class="input-group-text">Date</span>
     </div>
-    <input id="${calendarId}" type="text" class="form-control" data-calendar-number="${i}">
+    <input id="${calendarId}" type="text" class="form-control">
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate(${i})"><i class="fas fa-calendar-day"></i></button>
       <button class="btn btn-danger" type="button" onclick="removeWatchDate(${i})"><i class="far fa-calendar-times"></i></button>
