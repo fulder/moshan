@@ -124,11 +124,11 @@ function createItem (moshanItem, watchHistoryItem) {
 
   if (!moshanItem.has_episodes) {
     if (datesWatched.lenght === 0) {
-      createOneCalendar(0);
+      createOneCalendar();
     }
 
     for (let i=0; i<datesWatched.length; i++) {
-      createOneCalendar(i, datesWatched[i]);
+      createOneCalendar(datesWatched[i]);
     }
   }
 
@@ -137,7 +137,7 @@ function createItem (moshanItem, watchHistoryItem) {
   savedPatchData = getPatchData();
 }
 
-function createOneCalendar(calendarIndex, calDate=null) {
+function createOneCalendar(calDate=null) {
   const i = Math.floor(Math.random() * Date.now()).toString();
   const calendarId = `calendar_${i}`;
 
@@ -356,12 +356,12 @@ async function removeWatchDate(calendarIndex) {
       const firstKey = Object.keys(calendarInstances)[0];
       calendarInstances[firstKey].clear();
   } else {
-      calendarInstances.splice(calendarIndex, 1);
+      delete calendarInstances[calendarIndex];
       document.getElementById(`calendar_group_${calendarIndex}`).remove();
   }
 }
 
 /* exported addCalendar */
 function addCalendar() {
-  createOneCalendar(calendarInstances.length);
+  createOneCalendar();
 }
