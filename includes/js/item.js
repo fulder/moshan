@@ -337,6 +337,7 @@ async function loadEpisodes (page) {
 
 /* exported setCurrentWatchDate */
 function setCurrentWatchDate(calendarIndex) {
+  console.debug(this);
   const previousDates = calendarInstances[calendarIndex].selectedDates;
 
   const dateNow = new Date();
