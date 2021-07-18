@@ -350,12 +350,16 @@ function setCurrentWatchDate(calendarIndex) {
 
 /* exported removeWatchDate */
 function removeWatchDate(calendarIndex) {
+  const previousDates = calendarInstances[calendarIndex].selectedDates;
+
   const calendarAmount = Object.keys(calendarInstances).length;
   if (calendarAmount < 1) {
     return;
   }
 
-  document.getElementById('watched_amount').innerHTML -= 1;
+  if (previousDates.length !== 0) {
+    document.getElementById('watched_amount').innerHTML -= 1;
+  }
 
   if (calendarAmount == 1) {
       const firstKey = Object.keys(calendarInstances)[0];
