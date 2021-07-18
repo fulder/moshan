@@ -200,6 +200,19 @@ class TestGet:
             "statusCode": 400
         }
 
+    def test_invalid_start_value(self):
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"] = {
+            "start": "0",
+        }
+
+        ret = handle(event, None)
+
+        assert ret == {
+            "body": '{"message": "Invalid start offset"}',
+            "statusCode": 400
+        }
+
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
     def test_not_found(self, mocked_get_watch_history):
         mocked_get_watch_history.side_effect = NotFoundError
