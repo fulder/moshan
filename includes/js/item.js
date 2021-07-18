@@ -79,7 +79,7 @@ function createItem (moshanItem, watchHistoryItem) {
   console.debug(`Item added: ${itemAdded}`);
   console.debug(moshanItem);
 
-  let datesWatched = 0;
+  let datesWatched = [];
   if (itemAdded && 'dates_watched' in watchHistoryItem && watchHistoryItem['dates_watched'].length > 0) {
     datesWatched = watchHistoryItem['dates_watched'];
   }
