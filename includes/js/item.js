@@ -292,7 +292,7 @@ function createEpisodesList (moshanEpisodes) {
   document.getElementById('episodesTable').classList.remove('d-none');
 
   if (document.getElementById('episodesPages').innerHTML === '') {
-    let paginationHTML = '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes()">Previous</a></li>';
+    let paginationHTML = '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes(this)">Previous</a></li>';
 
     totalPages = moshanEpisodes.total_pages;
     for (let i = 1; i <= totalPages; i++) {
@@ -300,29 +300,29 @@ function createEpisodesList (moshanEpisodes) {
       if (i === qParams.episode_page) {
         className = 'page-item active';
       }
-      paginationHTML += `<li id="episodePage${i}" class="${className}"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i})">${i}</a></li>`;
+      paginationHTML += `<li id="episodePage${i}" class="${className}"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i}, this)">${i}</a></li>`;
     }
-    paginationHTML += '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadNextEpisodes()">Next</a></li>';
+    paginationHTML += '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadNextEpisodes(this)">Next</a></li>';
 
     document.getElementById('episodesPages').innerHTML = paginationHTML;
   }
 }
 
 /* exported loadPreviousEpisodes */
-function loadPreviousEpisodes () {
+function loadPreviousEpisodes (button) {
   if (qParams.episode_page > 1) {
-    loadEpisodes(qParams.episode_page - 1);
+    loadEpisodes(qParams.episode_page - 1, button);
   }
 }
 
 /* exported loadNextEpisodes */
-function loadNextEpisodes () {
+function loadNextEpisodes (button) {
   if (qParams.episode_page < totalPages) {
-    loadEpisodes(qParams.episode_page + 1);
+    loadEpisodes(qParams.episode_page + 1, button);
   }
 }
 
-async function loadEpisodes (page) {
+async function loadEpisodes (page, button) {
   if (qParams.episode_page === page) {
     return;
   }
@@ -338,6 +338,8 @@ async function loadEpisodes (page) {
 
   urlParams.set('episode_page', qParams.episode_page);
   history.pushState({}, null, `?${urlParams.toString()}`);
+
+  button.blur();
 }
 
 /* exported setCurrentWatchDate */
