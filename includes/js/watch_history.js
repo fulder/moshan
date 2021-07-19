@@ -153,14 +153,14 @@ async function createItems(wathcHistoryItems, collectionName) {
 /* exported loadPreviousItems */
 function loadPreviousItems (collectionName) {
   if (qParams[`${collectionName}_page`] > 1) {
-    loadItems(qParams[`${collectionName}_page`] - 1);
+    loadItems(qParams[`${collectionName}_page`] - 1, collectionName);
   }
 }
 
 /* exported loadNextItems */
 function loadNextItems (collectionName) {
   if (qParams[`${collectionName}_page`] < totalPages) {
-    loadItems(qParams[`${collectionName}_page`] + 1);
+    loadItems(qParams[`${collectionName}_page`] + 1, collectionName);
   }
 }
 
