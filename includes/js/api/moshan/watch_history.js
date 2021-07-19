@@ -16,7 +16,7 @@ class WatchHistoryApi {
       });
   }
 
-  getWatchHistoryByCollection (collectionName, limit=12, start=1) {
+  getWatchHistoryByCollection (collectionName, start=1, limit=12) {
     return this.apiAxios.get(`/watch-history/collection/${collectionName}?limit=${limit}&start=${start}&sort=latest_watch_date`);
   }
 
