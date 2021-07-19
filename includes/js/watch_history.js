@@ -55,7 +55,7 @@ async function createCollections() {
 }
 
 function createPagniation(wathcHistoryItems, collectionName) {
-  const html = `
+  let html = `
     <li class="page-item">
       <a class="page-link" href="javascript:void(0)" onclick="loadPreviousItems(${collectionName})">
         <span aria-hidden="true">&laquo;</span>
