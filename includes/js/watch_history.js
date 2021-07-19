@@ -39,6 +39,7 @@ function QueryParams(urlParams) {
       this[limitName] = 12;
     } else {
       this[limitName]= parseInt(this[limitName]);
+      document.getElementById(`${collectionName}-limit`).value = this[limitName];
     }
   }
 }
