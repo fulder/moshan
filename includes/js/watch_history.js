@@ -23,12 +23,20 @@ createCollections();
 
 function QueryParams(urlParams) {
   for (let i = 0; i < collectionNames.length; i++) {
-    const qParamName = `${collectionNames[i]}_page`;
+    const pageName = `${collectionNames[i]}_page`;
+    const limitName = `${collectionNames[i]}_limit`;
 
-    this[qParamName] = urlParams.get(qParamName);
+    this[pageName] = urlParams.get(pageName);
 
     if (this[qParamName] === null) {
       this[qParamName] = 1;
+    } else {
+      this[qParamName]= parseInt(this[qParamName]);
+    }
+
+    this[limitName] = urlParams.get(limitName);
+    if (this[qParamName] === null) {
+      this[qParamName] = 12;
     } else {
       this[qParamName]= parseInt(this[qParamName]);
     }
