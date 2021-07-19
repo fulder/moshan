@@ -182,6 +182,6 @@ async function loadItems(page, collectionName) {
 
   document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]].classList.add('active');
 
-  urlParams.set(qParamsNae, qParams[qParamsName]);
+  urlParams.set(qParamsName, qParams[qParamsName]);
   history.pushState({}, null, `?${urlParams.toString()}`);
 }
