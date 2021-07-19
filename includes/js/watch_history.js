@@ -1,5 +1,10 @@
 /* global WatchHistoryApi, accessToken, collectionNames */
+const urlParams = new URLSearchParams(window.location.search);
+const qParams = new QueryParams(urlParams);
+
 const watchHistoryApi = new WatchHistoryApi();
+
+let totalPages = 0;
 
 // TODO: move to profile settings
 const apiNamesMapping = {
@@ -16,13 +21,27 @@ if (accessToken === null) {
 
 createCollections();
 
+function QueryParams(urlParams) {
+  for (let i = 0; i < collectionNames.length; i++) {
+    const qParamName = `${collectionNames[i]}_page`;
+
+    this[qParamName] = urlParams.get(qParamName);
+
+    if (this[qParamName] === null) {
+      this[qParamName] = 1;
+    } else {
+      this[qParamName]= parseInt(this[qParamName]);
+    }
+  }
+}
+
 async function createCollections() {
   const watchHistoryRequests = [];
   for (let i = 0; i < collectionNames.length; i++) {
     const collectionName = collectionNames[i];
     document.getElementById(`${collectionName}WatchHistory`).innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 
-    const req = watchHistoryApi.getWatchHistoryByCollection(collectionName);
+    const req = watchHistoryApi.getWatchHistoryByCollection(collectionName, start=qParams[`${collectionName}_page`]);
     watchHistoryRequests.push(req);
   }
 
@@ -30,8 +49,43 @@ async function createCollections() {
 
   for (let i = 0; i < collectionNames.length; i++) {
       const collectionName = collectionNames[i];
+      createPagniation(responses[i].data, collectionName);
       createItems(responses[i].data, collectionName);
   }
+}
+
+function createPagniation(wathcHistoryItems, collectionName) {
+  const html = `
+    <li class="page-item">
+      <a class="page-link" href="javascript:void(0)" onclick="loadPreviousItems(${collectionName})">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>`;
+
+  totalPages = watchHistoryItem.total_pages;
+  for (let i = 1; i <= totalPages; i++) {
+    let className = 'page-item';
+    if (i === qParams[`${collectionName}_page`]) {
+      className = 'page-item active';
+    }
+
+    html += `
+      <li class="${className}">
+        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, ${collectionName})">${i}</a>
+      </li>
+    `;
+  }
+
+  html += `
+    <li class="page-item">
+      <a class="page-link" href="javascript:void(0)" onclick="loadNextItems(${collectionName})">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>`;
+
+  document.getElementById('movies-pages').innerHTML = html;
 }
 
 async function createItems(wathcHistoryItems, collectionName) {
@@ -94,4 +148,40 @@ async function createItems(wathcHistoryItems, collectionName) {
   }
 
   document.getElementById(`${collectionName}WatchHistory`).innerHTML = resultHTML;
+}
+
+/* exported loadPreviousItems */
+function loadPreviousItems (collectionName) {
+  if (qParams[`${collectionName}_page`] > 1) {
+    loadEpisodes(qParams[`${collectionName}_page`] - 1);
+  }
+}
+
+/* exported loadNextItems */
+function loadNextItems (collectionName) {
+  if (qParams[`${collectionName}_page`] < totalPages) {
+    loadEpisodes(qParams[`${collectionName}_page`] + 1);
+  }
+}
+
+/* exported loadItems */
+async function loadItems(page, collectionName) {
+  const qParamsName = `${collectionName}_page`;
+  const divName = `${collectionName}-pages`;
+
+  if (qParams[qParamsName] === page) {
+    return;
+  }
+
+  document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]].classList.remove('active');
+
+  qParams[qParamsName] = page;
+
+  const req = await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=page);
+  createItems(req.data, collectionName);
+
+  document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]].classList.add('active');
+
+  urlParams.set(qParamsNae, qParams[qParamsName]);
+  history.pushState({}, null, `?${urlParams.toString()}`);
 }

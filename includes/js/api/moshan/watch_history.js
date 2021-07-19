@@ -16,8 +16,8 @@ class WatchHistoryApi {
       });
   }
 
-  getWatchHistoryByCollection (collectionName) {
-    return this.apiAxios.get(`/watch-history/collection/${collectionName}?limit=12&start=1&sort=latest_watch_date`);
+  getWatchHistoryByCollection (collectionName, limit=12, start=1) {
+    return this.apiAxios.get(`/watch-history/collection/${collectionName}?limit=${limit}&start=${start}&sort=latest_watch_date`);
   }
 
   removeWatchHistoryItem (qParams) {
