@@ -57,7 +57,7 @@ async function createCollections() {
 function createPagniation(wathcHistoryItems, collectionName) {
   let html = `
     <li class="page-item">
-      <a class="page-link" href="javascript:void(0)" onclick="loadPreviousItems('${collectionName}')">
+      <a class="page-link" href="javascript:void(0)" onclick="loadPreviousItems('${collectionName}', this)">
         <span aria-hidden="true">&laquo;</span>
         <span class="sr-only">Previous</span>
       </a>
@@ -72,14 +72,14 @@ function createPagniation(wathcHistoryItems, collectionName) {
 
     html += `
       <li class="${className}">
-        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, '${collectionName}')">${i}</a>
+        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, '${collectionName}', this)">${i}</a>
       </li>
     `;
   }
 
   html += `
     <li class="page-item">
-      <a class="page-link" href="javascript:void(0)" onclick="loadNextItems('${collectionName}')">
+      <a class="page-link" href="javascript:void(0)" onclick="loadNextItems('${collectionName}', this)">
         <span aria-hidden="true">&raquo;</span>
         <span class="sr-only">Next</span>
       </a>
@@ -151,21 +151,21 @@ async function createItems(wathcHistoryItems, collectionName) {
 }
 
 /* exported loadPreviousItems */
-function loadPreviousItems (collectionName) {
+function loadPreviousItems (collectionName, button) {
   if (qParams[`${collectionName}_page`] > 1) {
-    loadItems(qParams[`${collectionName}_page`] - 1, collectionName);
+    loadItems(qParams[`${collectionName}_page`] - 1, collectionName, button);
   }
 }
 
 /* exported loadNextItems */
-function loadNextItems (collectionName) {
+function loadNextItems (collectionName, button) {
   if (qParams[`${collectionName}_page`] < totalPages) {
-    loadItems(qParams[`${collectionName}_page`] + 1, collectionName);
+    loadItems(qParams[`${collectionName}_page`] + 1, collectionName, button);
   }
 }
 
 /* exported loadItems */
-async function loadItems(page, collectionName) {
+async function loadItems(page, collectionName, button) {
   const qParamsName = `${collectionName}_page`;
   const divName = `${collectionName}-pages`;
 
@@ -184,4 +184,6 @@ async function loadItems(page, collectionName) {
 
   urlParams.set(qParamsName, qParams[qParamsName]);
   history.pushState({}, null, `?${urlParams.toString()}`);
+
+  button.blur();
 }
