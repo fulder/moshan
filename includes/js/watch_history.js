@@ -63,7 +63,7 @@ function createPagniation(wathcHistoryItems, collectionName) {
       </a>
     </li>`;
 
-  totalPages = watchHistoryItem.total_pages;
+  totalPages = wathcHistoryItems.total_pages;
   for (let i = 1; i <= totalPages; i++) {
     let className = 'page-item';
     if (i === qParams[`${collectionName}_page`]) {
