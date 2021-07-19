@@ -50,3 +50,7 @@ body {
 .item-select {
   width: auto;
 }
+
+.watch-history-pagination {
+  height: 40px;
+}
