@@ -57,7 +57,7 @@ async function createCollections() {
 function createPagniation(wathcHistoryItems, collectionName) {
   let html = `
     <li class="page-item">
-      <a class="page-link" href="javascript:void(0)" onclick="loadPreviousItems(${collectionName})">
+      <a class="page-link" href="javascript:void(0)" onclick="loadPreviousItems('${collectionName}')">
         <span aria-hidden="true">&laquo;</span>
         <span class="sr-only">Previous</span>
       </a>
@@ -72,14 +72,14 @@ function createPagniation(wathcHistoryItems, collectionName) {
 
     html += `
       <li class="${className}">
-        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, ${collectionName})">${i}</a>
+        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, '${collectionName}')">${i}</a>
       </li>
     `;
   }
 
   html += `
     <li class="page-item">
-      <a class="page-link" href="javascript:void(0)" onclick="loadNextItems(${collectionName})">
+      <a class="page-link" href="javascript:void(0)" onclick="loadNextItems('${collectionName}')">
         <span aria-hidden="true">&raquo;</span>
         <span class="sr-only">Next</span>
       </a>
