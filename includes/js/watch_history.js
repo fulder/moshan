@@ -72,7 +72,10 @@ function createPagniation(wathcHistoryItems, collectionName) {
       </a>
     </li>`;
 
+
   totalPages = wathcHistoryItems.total_pages;
+  const currentLimit = qParams[`${collectionName}_limit`];
+
   for (let i = 1; i <= totalPages; i++) {
     let className = 'page-item';
     if (i === qParams[`${collectionName}_page`]) {
@@ -81,7 +84,7 @@ function createPagniation(wathcHistoryItems, collectionName) {
 
     html += `
       <li class="${className}">
-        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, '${collectionName}', this)">${i}</a>
+        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, ${currentLimit}, '${collectionName}', this)">${i}</a>
       </li>
     `;
   }
@@ -162,14 +165,14 @@ async function createItems(wathcHistoryItems, collectionName) {
 /* exported loadPreviousItems */
 function loadPreviousItems (collectionName, button) {
   if (qParams[`${collectionName}_page`] > 1) {
-    loadItems(qParams[`${collectionName}_page`] - 1, collectionName, button);
+    loadItems(qParams[`${collectionName}_page`] - 1, qParams[`${collectionName}_limit`], collectionName, button);
   }
 }
 
 /* exported loadNextItems */
 function loadNextItems (collectionName, button) {
   if (qParams[`${collectionName}_page`] < totalPages) {
-    loadItems(qParams[`${collectionName}_page`] + 1, collectionName, button);
+    loadItems(qParams[`${collectionName}_page`] + 1, qParams[`${collectionName}_limit`], collectionName, button);
   }
 }
 
