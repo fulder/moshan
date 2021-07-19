@@ -28,17 +28,17 @@ function QueryParams(urlParams) {
 
     this[pageName] = urlParams.get(pageName);
 
-    if (this[qParamName] === null) {
-      this[qParamName] = 1;
+    if (this[pageName] === null) {
+      this[pageName] = 1;
     } else {
-      this[qParamName]= parseInt(this[qParamName]);
+      this[pageName]= parseInt(this[pageName]);
     }
 
     this[limitName] = urlParams.get(limitName);
-    if (this[qParamName] === null) {
-      this[qParamName] = 12;
+    if (this[limitName] === null) {
+      this[limitName] = 12;
     } else {
-      this[qParamName]= parseInt(this[qParamName]);
+      this[limitName]= parseInt(this[limitName]);
     }
   }
 }
