@@ -85,7 +85,7 @@ function createPagniation(wathcHistoryItems, collectionName) {
       </a>
     </li>`;
 
-  document.getElementById('movies-pages').innerHTML = html;
+  document.getElementById(`${collectionName}-pages`).innerHTML = html;
 }
 
 async function createItems(wathcHistoryItems, collectionName) {
