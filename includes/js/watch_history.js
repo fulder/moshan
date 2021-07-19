@@ -50,7 +50,7 @@ async function createCollections() {
     const collectionName = collectionNames[i];
     document.getElementById(`${collectionName}WatchHistory`).innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 
-    const req = watchHistoryApi.getWatchHistoryByCollection(collectionName, start=qParams[`${collectionName}_page`]);
+    const req = watchHistoryApi.getWatchHistoryByCollection(collectionName, start=qParams[`${collectionName}_page`], limit=qParams[`${collectionName}_limit`]);
     watchHistoryRequests.push(req);
   }
 
