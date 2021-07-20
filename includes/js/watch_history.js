@@ -190,7 +190,7 @@ async function loadItems(page, limit, collectionName, button=undefined) {
     document.getElementById(divName).getElementsByTagName('LI')[qParams[pageParamName]].classList.remove('active');
     qParams[pageParamName] = page;
   }
-  if (limitChanged && page != 1) {
+  if (limitChanged) {
     page = page / (limit / qParams[limitParamName] );
     qParams[pageParamName] = page;
   }
