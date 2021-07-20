@@ -4,7 +4,7 @@ const qParams = new QueryParams(urlParams);
 
 const watchHistoryApi = new WatchHistoryApi();
 
-let totalPages = 0;
+let totalPages = {};
 
 // TODO: move to profile settings
 const apiNamesMapping = {
@@ -63,8 +63,8 @@ function createPagniation(wathcHistoryItems, collectionName) {
       </a>
     </li>`;
 
-  totalPages = wathcHistoryItems.total_pages;
-  for (let i = 1; i <= totalPages; i++) {
+  totalPages[collectionName] = wathcHistoryItems.total_pages;
+  for (let i = 1; i <= totalPages[collectionName]; i++) {
     let className = 'page-item';
     if (i === qParams[`${collectionName}_page`]) {
       className = 'page-item active';
@@ -159,7 +159,7 @@ function loadPreviousItems (collectionName, button) {
 
 /* exported loadNextItems */
 function loadNextItems (collectionName, button) {
-  if (qParams[`${collectionName}_page`] < totalPages) {
+  if (qParams[`${collectionName}_page`] < totalPages[collectionName]) {
     loadItems(qParams[`${collectionName}_page`] + 1, collectionName, button);
   }
 }
