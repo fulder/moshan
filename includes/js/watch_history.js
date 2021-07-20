@@ -173,53 +173,25 @@ function loadNextItems (collectionName, button) {
 }
 
 /* exported loadItems */
-async function loadItems(page, limit, collectionName, button=undefined) {
-  const pageParamName = `${collectionName}_page`;
-  const limitParamName = `${collectionName}_limit`;
+async function loadItems(page, collectionName, button) {
+  const qParamsName = `${collectionName}_page`;
   const divName = `${collectionName}-pages`;
 
-  const pageChanged = qParams[pageParamName] !== page;
-  const limitChanged = qParams[limitParamName] !== limit;
-
-  if (!pageChanged && !limitChanged) {
+  if (qParams[qParamsName] === page) {
     return;
   }
 
-  if (pageChanged) {
-    document.getElementById(divName).getElementsByTagName('LI')[qParams[pageParamName]].classList.remove('active');
-    qParams[pageParamName] = page;
-  }
-  if (limitChanged) {
-    page = page / (limit / qParams[limitParamName] );
-    qParams[pageParamName] = page;
-  }
+  document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]].classList.remove('active');
 
-  const req = await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=page, limit=limit);
+  qParams[qParamsName] = page;
+
+  const req = await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=page);
   createItems(req.data, collectionName);
 
-  if (limitChanged) {
-    createPagniation(req.data, collectionName);
-  }
+  document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]].classList.add('active');
 
-  document.getElementById(divName).getElementsByTagName('LI')[qParams[pageParamName]].classList.add('active');
+  urlParams.set(qParamsName, qParams[qParamsName]);
+  history.pushState({}, null, `?${urlParams.toString()}`);
 
-  if (pageChanged) {
-    urlParams.set(pageParamName, qParams[pageParamName]);
-    history.pushState({}, null, `?${urlParams.toString()}`);
-  }
-
-  if (limitChanged) {
-    urlParams.set(limitParamName, qParams[limitParamName]);
-    history.pushState({}, null, `?${urlParams.toString()}`);
-  }
-
-  if (button !== undefined) {
-    button.blur();
-  }
-}
-
-/* exported changeLimit */
-async function changeLimit(collectionName) {
-  const limit = document.getElementById(`${collectionName}-limit`).value;
-  loadItems(qParams[`${collectionName}_page`], limit, collectionName);
+  button.blur();
 }
