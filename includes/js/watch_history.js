@@ -192,9 +192,6 @@ async function loadItems(page, limit, collectionName, button=undefined) {
   }
   if (limitChanged) {
     page = Math.round(page / (limit / qParams[limitParamName] ));
-    if (page === 0) {
-      page = 1;
-    }
     qParams[pageParamName] = page;
   }
 
