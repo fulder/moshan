@@ -110,7 +110,7 @@ function createPagination(collectionName, start=1) {
   html += `
     <li class="page-item">
       <a class="page-link" href="javascript:void(0)" onclick="loadNextItems('${collectionName}', this)">
-        <span aria-hidden="true">&lt;</span>
+        <span aria-hidden="true">&gt;</span>
         <span class="sr-only">Next</span>
       </a>
     </li>`;
