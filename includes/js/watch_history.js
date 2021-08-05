@@ -48,14 +48,31 @@ async function createCollections() {
   const responses = await Promise.all(watchHistoryRequests);
 
   for (let i = 0; i < collectionNames.length; i++) {
+      const res = responses[i].data;
       const collectionName = collectionNames[i];
-      createPagniation(responses[i].data, collectionName);
+      totalPages[collectionName] = res.total_pages;
+
+      createPagniation(collectionName);
       createItems(responses[i].data, collectionName);
   }
 }
 
-function createPagniation(wathcHistoryItems, collectionName) {
+/* exported loadMorePages */
+function loadMorePages(collectionName, start, button) {
+  createPagination(collectionName, start);
+  button.blur();
+}
+
+function createPagniation(collectionName, start=1) {
   let html = `
+    <li class="page-item">
+      <a class="page-link" href="javascript:void(0)" onclick="loadItems(0, '${collectionName}', this)">
+        <span aria-hidden="true">&laquo;&laquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>`;
+
+  html += `
     <li class="page-item">
       <a class="page-link" href="javascript:void(0)" onclick="loadPreviousItems('${collectionName}', this)">
         <span aria-hidden="true">&laquo;</span>
@@ -63,8 +80,18 @@ function createPagniation(wathcHistoryItems, collectionName) {
       </a>
     </li>`;
 
-  totalPages[collectionName] = wathcHistoryItems.total_pages;
-  for (let i = 1; i <= totalPages[collectionName]; i++) {
+
+  if ( totalPages[collectionName] > 5 && start != 1 ) {
+    html += `
+      <li class="${className}">
+        <a class="page-link" href="javascript:void(0)" onclick="loadMorePages(${watchHistoryItems}, '${collectionName}', ${start-1}, this)">..</a>
+      </li>
+    `;
+  }
+
+  const end = totalPages[collectionName] - start > 5 ? 5: totalPages[collectionName];
+
+  for (; start <= end; start++) {
     let className = 'page-item';
     if (i === qParams[`${collectionName}_page`]) {
       className = 'page-item active';
@@ -72,15 +99,32 @@ function createPagniation(wathcHistoryItems, collectionName) {
 
     html += `
       <li class="${className}">
-        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, '${collectionName}', this)">${i}</a>
+        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${start}, '${collectionName}', this)">${i}</a>
       </li>
     `;
   }
+
+  if ( totalPages[collectionName] > start ) {
+    html += `
+      <li class="${className}">
+        <a class="page-link" href="javascript:void(0)" onclick="loadMorePages(${watchHistoryItems}, '${collectionName}', ${start+1})">..</a>
+      </li>
+    `;
+  }
+
 
   html += `
     <li class="page-item">
       <a class="page-link" href="javascript:void(0)" onclick="loadNextItems('${collectionName}', this)">
         <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>`;
+
+  html += `
+    <li class="page-item">
+      <a class="page-link" href="javascript:void(0)" onclick="loadItems(${totalPages[collectionName]}, '${collectionName}', this)">
+        <span aria-hidden="true">&raquo;&raquo;</span>
         <span class="sr-only">Next</span>
       </a>
     </li>`;
