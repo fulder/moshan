@@ -78,30 +78,30 @@ function createPagination(collectionName, start=1) {
   if ( totalPages[collectionName] > 5 && start != 1 ) {
     html += `
       <li class="page-item">
-        <a class="page-link" href="javascript:void(0)" onclick="loadMorePages('${collectionName}', ${start-1}, this)">..</a>
+        <a class="page-link" href="javascript:void(0)" onclick="createPagination('${collectionName}', ${start-1})">..</a>
       </li>
     `;
   }
 
   const end = totalPages[collectionName] - start > 5 ? 5: totalPages[collectionName];
 
-  for (; start <= end; start++) {
+  for (let i = start; i <= end; i++) {
     let className = 'page-item';
-    if (start === qParams[`${collectionName}_page`]) {
+    if (i === qParams[`${collectionName}_page`]) {
       className = 'page-item active';
     }
 
     html += `
       <li class="${className}">
-        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${start}, '${collectionName}', this)">${start}</a>
+        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, '${collectionName}', this)">${i}</a>
       </li>
     `;
   }
 
-  if ( totalPages[collectionName] > start ) {
+  if ( end != totalPages[collectionName] ) {
     html += `
       <li class="page-item">
-        <a class="page-link" href="javascript:void(0)" onclick="loadMorePages('${collectionName}', ${start+1})">..</a>
+        <a class="page-link" href="javascript:void(0)" onclick="createPagination('${collectionName}', ${end+1})">..</a>
       </li>
     `;
   }
@@ -223,11 +223,5 @@ async function loadItems(page, collectionName, button) {
   urlParams.set(qParamsName, qParams[qParamsName]);
   history.pushState({}, null, `?${urlParams.toString()}`);
 
-  button.blur();
-}
-
-/* exported loadMorePages */
-function loadMorePages(collectionName, start, button) {
-  createPagination(collectionName, start);
   button.blur();
 }
