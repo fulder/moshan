@@ -93,13 +93,13 @@ function createPagniation(collectionName, start=1) {
 
   for (; start <= end; start++) {
     let className = 'page-item';
-    if (i === qParams[`${collectionName}_page`]) {
+    if (start === qParams[`${collectionName}_page`]) {
       className = 'page-item active';
     }
 
     html += `
       <li class="${className}">
-        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${start}, '${collectionName}', this)">${i}</a>
+        <a class="page-link" href="javascript:void(0)" onclick="loadItems(${start}, '${collectionName}', this)">${start}</a>
       </li>
     `;
   }
