@@ -220,7 +220,7 @@ async function loadItems(page, collectionName, button) {
   }
 
   const activeEl = document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`);
-  if (activeEl !== null) {   // could be hidden after pagniation is moved
+  if (activeEl !== null) {
     activeEl.classList.remove('active');
   }
 
@@ -229,13 +229,17 @@ async function loadItems(page, collectionName, button) {
   const req = await getCachedWatchHistoryByCollection(collectionName, start=page);
   createItems(req.data, collectionName);
 
-  document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`).classList.add('active');
-
   urlParams.set(qParamsName, qParams[qParamsName]);
   history.pushState({}, null, `?${urlParams.toString()}`);
 
   button.blur();
-  createPagination(collectionName);
+
+  const newActiveElement = document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`);
+  if (newActiveElement === null) {
+    createPagination(collectionName);
+  }  else {
+      newActiveElement.classList.add('active');
+  }  
 }
 
 async function getCachedWatchHistoryByCollection(collectionName, start) {
