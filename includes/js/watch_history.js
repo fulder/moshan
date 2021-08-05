@@ -214,7 +214,7 @@ async function loadItems(page, collectionName, button) {
   }
 
   const activeEl = document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`);
-  if (activeEl !== undefined) {   // could be hidden after pagniation is moved
+  if (activeEl !== null) {   // could be hidden after pagniation is moved
     activeEl.classList.remove('active');
   }
 
