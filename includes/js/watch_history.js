@@ -154,7 +154,7 @@ async function createItems(wathcHistoryItems, collectionName) {
     const res = responses[i].data;
     const apiId = res[`${apiName}_id`];
 
-    const req = getCachedApiItem(apiId);
+    const req = getCachedApiItem(collectionName, apiId);
     apiRequests.push(req);
   }
 
