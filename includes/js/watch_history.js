@@ -89,6 +89,11 @@ function createPagination(collectionName, start=null) {
 
   const end = totalPages[collectionName] - start > 5 ? start + 5: totalPages[collectionName];
 
+  if (totalPages[collectionName] > 5 && end - start < 5) {
+    // move back start some if it's close to end and there are more than 5 pages
+    start = end - 5;
+  }
+
   for (let i = start; i <= end; i++) {
     let className = 'page-item';
     if (i === qParams[`${collectionName}_page`]) {
