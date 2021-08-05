@@ -267,5 +267,5 @@ async function getCachedApiItem(collectionName, id) {
     cache[index] = await api.getItemById({'api_id': id});
   }
 
-  return cachet[index];
+  return cache[index];
 }
