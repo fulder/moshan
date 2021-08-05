@@ -83,7 +83,7 @@ function createPagniation(collectionName, start=1) {
 
   if ( totalPages[collectionName] > 5 && start != 1 ) {
     html += `
-      <li class="${className}">
+      <li class="page-item">
         <a class="page-link" href="javascript:void(0)" onclick="loadMorePages(${watchHistoryItems}, '${collectionName}', ${start-1}, this)">..</a>
       </li>
     `;
@@ -106,7 +106,7 @@ function createPagniation(collectionName, start=1) {
 
   if ( totalPages[collectionName] > start ) {
     html += `
-      <li class="${className}">
+      <li class="page-item">
         <a class="page-link" href="javascript:void(0)" onclick="loadMorePages(${watchHistoryItems}, '${collectionName}', ${start+1})">..</a>
       </li>
     `;
