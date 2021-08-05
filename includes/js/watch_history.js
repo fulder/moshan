@@ -59,6 +59,8 @@ async function createCollections() {
 }
 
 function createPagination(collectionName, start=null) {
+  const maxPages = 2;
+
   if (start === null) {
       start = qParams[`${collectionName}_page`];
   }
@@ -80,7 +82,7 @@ function createPagination(collectionName, start=null) {
     </li>`;
 
 
-  if ( totalPages[collectionName] > 5 && start != 1 ) {
+  if ( totalPages[collectionName] > maxPages && start != 1 ) {
     html += `
       <li class="page-item">
         <a class="page-link" href="javascript:void(0)" onclick="createPagination('${collectionName}', ${start-1})">..</a>
@@ -88,11 +90,11 @@ function createPagination(collectionName, start=null) {
     `;
   }
 
-  const end = totalPages[collectionName] - start > 5 ? start + 5: totalPages[collectionName];
+  const end = totalPages[collectionName] - start > maxPages ? start + maxPages: totalPages[collectionName];
 
-  if (totalPages[collectionName] > 5 && end - start < 5) {
-    // move back start some if it's close to end and there are more than 5 pages
-    start = end - 5;
+  if (totalPages[collectionName] > maxPages && end - start < maxPages) {
+    // move back start some if it's close to end and there are more than maxPages
+    start = end - maxPages;
   }
 
   for (let i = start; i <= end; i++) {
