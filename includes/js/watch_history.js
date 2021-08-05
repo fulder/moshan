@@ -257,7 +257,7 @@ async function getCachedMoshanItemById(collectionName, itemId) {
   return cache[index];
 }
 
-async function getCachetApiItem(collectionName, id) {
+async function getCachedApiItem(collectionName, id) {
   const index = `${collectionName}_api_${id}`;
 
   if (!(index in cache)) {
