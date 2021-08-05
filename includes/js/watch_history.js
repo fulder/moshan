@@ -215,7 +215,10 @@ async function loadItems(page, collectionName, button) {
     return;
   }
 
-  document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]].classList.remove('active');
+  const activeEl = document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]];
+  if (activeEl !== undefined) {   // could be hidden after pagniation is moved 
+    activeEl.classList.remove('active');
+  }
 
   qParams[qParamsName] = page;
 
