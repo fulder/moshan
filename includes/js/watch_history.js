@@ -102,7 +102,7 @@ function createPagination(collectionName, start=null) {
     }
 
     html += `
-      <li class="${className}">
+      <li id="${collectionName}_page_${i}" class="${className}">
         <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, '${collectionName}', this)">${i}</a>
       </li>
     `;
@@ -219,10 +219,17 @@ async function loadItems(page, collectionName, button) {
     return;
   }
 
+  const activeEl = document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`);
+  if (activeEl !== null) {   // could be hidden after pagniation is moved
+    activeEl.classList.remove('active');
+  }
+
   qParams[qParamsName] = page;
 
   const req = await getCachedWatchHistoryByCollection(collectionName, start=page);
   createItems(req.data, collectionName);
+
+  document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`).classList.add('active');
 
   urlParams.set(qParamsName, qParams[qParamsName]);
   history.pushState({}, null, `?${urlParams.toString()}`);
