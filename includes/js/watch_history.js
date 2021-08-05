@@ -57,12 +57,6 @@ async function createCollections() {
   }
 }
 
-/* exported loadMorePages */
-function loadMorePages(collectionName, start, button) {
-  createPagination(collectionName, start);
-  button.blur();
-}
-
 function createPagination(collectionName, start=1) {
   let html = `
     <li class="page-item">
@@ -229,5 +223,11 @@ async function loadItems(page, collectionName, button) {
   urlParams.set(qParamsName, qParams[qParamsName]);
   history.pushState({}, null, `?${urlParams.toString()}`);
 
+  button.blur();
+}
+
+/* exported loadMorePages */
+function loadMorePages(collectionName, start, button) {
+  createPagination(collectionName, start);
   button.blur();
 }
