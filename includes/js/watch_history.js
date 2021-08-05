@@ -57,7 +57,7 @@ async function createCollections() {
   }
 }
 
-function createPagination(collectionName, start=1) {
+function createPagination(collectionName, start=qParams[`${collectionName}_page`]) {
   let html = `
     <li class="page-item">
       <a class="page-link" href="javascript:void(0)" onclick="loadItems(1, '${collectionName}', this)">
