@@ -148,6 +148,7 @@ async function createItems(wathcHistoryItems, collectionName) {
   console.debug('Moshan responses');
   console.debug(responses);
 
+  const apiName = apiNamesMapping[collectionName];
   let apiRequests = [];
   for (let i = 0; i < responses.length; i++) {
     const res = responses[i].data;
