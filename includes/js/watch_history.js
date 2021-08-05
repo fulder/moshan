@@ -199,7 +199,6 @@ async function createItems(wathcHistoryItems, collectionName) {
 /* exported loadPreviousItems */
 function loadPreviousItems (collectionName, button) {
   if (qParams[`${collectionName}_page`] > 1) {
-    createPagination(collectionName);
     loadItems(qParams[`${collectionName}_page`] - 1, collectionName, button);
   }
 }
@@ -207,7 +206,6 @@ function loadPreviousItems (collectionName, button) {
 /* exported loadNextItems */
 function loadNextItems (collectionName, button) {
   if (qParams[`${collectionName}_page`] < totalPages[collectionName]) {
-    createPagination(collectionName);
     loadItems(qParams[`${collectionName}_page`] + 1, collectionName, button);
   }
 }
@@ -236,4 +234,5 @@ async function loadItems(page, collectionName, button) {
   history.pushState({}, null, `?${urlParams.toString()}`);
 
   button.blur();
+  createPagination(collectionName);
 }
