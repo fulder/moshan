@@ -83,7 +83,7 @@ function createPagination(collectionName, start=1) {
     `;
   }
 
-  const end = totalPages[collectionName] - start > 5 ? start - 5: totalPages[collectionName];
+  const end = totalPages[collectionName] - start > 5 ? start + 5: totalPages[collectionName];
 
   for (let i = start; i <= end; i++) {
     let className = 'page-item';
