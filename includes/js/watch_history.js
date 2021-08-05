@@ -5,6 +5,7 @@ const qParams = new QueryParams(urlParams);
 const watchHistoryApi = new WatchHistoryApi();
 
 let totalPages = {};
+let collectionItems = {};
 
 // TODO: move to profile settings
 const apiNamesMapping = {
@@ -41,7 +42,7 @@ async function createCollections() {
     const collectionName = collectionNames[i];
     document.getElementById(`${collectionName}WatchHistory`).innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 
-    const req = watchHistoryApi.getWatchHistoryByCollection(collectionName, start=qParams[`${collectionName}_page`]);
+    const req = await getCachedWatchHistoryByCollection(collectionName, start=qParams[`${collectionName}_page`]);
     watchHistoryRequests.push(req);
   }
 
@@ -225,7 +226,7 @@ async function loadItems(page, collectionName, button) {
 
   qParams[qParamsName] = page;
 
-  const req = await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=page);
+  const req = await getCachedWatchHistoryByCollection(collectionName, start=page);
   createItems(req.data, collectionName);
 
   document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`).classList.add('active');
@@ -235,4 +236,13 @@ async function loadItems(page, collectionName, button) {
 
   button.blur();
   createPagination(collectionName);
+}
+
+async function getCachedWatchHistoryByCollection(collectionName, start) {
+  const index = `${collectionName}_${start}`;
+  if (index in collectionItems) {
+    return collectionItems[index];
+  }
+
+  return await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=start);
 }
