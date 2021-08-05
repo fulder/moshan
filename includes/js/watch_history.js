@@ -52,7 +52,7 @@ async function createCollections() {
       const collectionName = collectionNames[i];
       totalPages[collectionName] = res.total_pages;
 
-      createPagniation(collectionName);
+      createPagination(collectionName);
       createItems(responses[i].data, collectionName);
   }
 }
@@ -63,7 +63,7 @@ function loadMorePages(collectionName, start, button) {
   button.blur();
 }
 
-function createPagniation(collectionName, start=1) {
+function createPagination(collectionName, start=1) {
   let html = `
     <li class="page-item">
       <a class="page-link" href="javascript:void(0)" onclick="loadItems(0, '${collectionName}', this)">
