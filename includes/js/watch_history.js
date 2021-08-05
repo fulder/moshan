@@ -101,7 +101,7 @@ function createPagination(collectionName, start=1) {
   if ( end != totalPages[collectionName] ) {
     html += `
       <li class="page-item">
-        <a class="page-link" href="javascript:void(0)" onclick="createPagination('${collectionName}', ${end+1})">..</a>
+        <a class="page-link" href="javascript:void(0)" onclick="createPagination('${collectionName}', ${start+1})">..</a>
       </li>
     `;
   }
