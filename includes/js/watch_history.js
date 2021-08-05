@@ -251,7 +251,7 @@ async function getCachedMoshanItemById(collectionName, itemId) {
 
   if (!(index in cache)) {
     const moshanApi = getMoshanApiByCollectionName(collectionName);
-    cache[index] = await moshanApi.getItemById({'id': watchHistoryItem.item_id});
+    cache[index] = await moshanApi.getItemById({'id': itemId});
   }
 
   return cache[index];
