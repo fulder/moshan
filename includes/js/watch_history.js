@@ -66,7 +66,7 @@ function loadMorePages(collectionName, start, button) {
 function createPagination(collectionName, start=1) {
   let html = `
     <li class="page-item">
-      <a class="page-link" href="javascript:void(0)" onclick="loadItems(0, '${collectionName}', this)">
+      <a class="page-link" href="javascript:void(0)" onclick="loadItems(1, '${collectionName}', this)">
         <span aria-hidden="true">&laquo;&laquo;</span>
         <span class="sr-only">Next</span>
       </a>
