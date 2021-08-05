@@ -233,9 +233,9 @@ async function loadItems(page, collectionName, button) {
 
 async function getCachedWatchHistoryByCollection(collectionName, start) {
   const index = `${collectionName}_${start}`;
-  if (index in collectionItems) {
-    return collectionItems[index];
+  if (!(index in collectionItems)) {
+    collectionItems[index] = await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=start);
   }
 
-  return await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=start);
+  return collectionItems[index];
 }
