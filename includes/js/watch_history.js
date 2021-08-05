@@ -96,7 +96,7 @@ function createPagination(collectionName, start=null) {
     }
 
     html += `
-      <li class="${className}">
+      <li id="${collectionName}_page_${i}" class="${className}">
         <a class="page-link" href="javascript:void(0)" onclick="loadItems(${i}, '${collectionName}', this)">${i}</a>
       </li>
     `;
@@ -109,7 +109,6 @@ function createPagination(collectionName, start=null) {
       </li>
     `;
   }
-
 
   html += `
     <li class="page-item">
@@ -209,14 +208,13 @@ function loadNextItems (collectionName, button) {
 /* exported loadItems */
 async function loadItems(page, collectionName, button) {
   const qParamsName = `${collectionName}_page`;
-  const divName = `${collectionName}-pages`;
 
   if (qParams[qParamsName] === page) {
     return;
   }
 
-  const activeEl = document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]];
-  if (activeEl !== undefined) {   // could be hidden after pagniation is moved 
+  const activeEl = document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`);
+  if (activeEl !== undefined) {   // could be hidden after pagniation is moved
     activeEl.classList.remove('active');
   }
 
@@ -225,7 +223,7 @@ async function loadItems(page, collectionName, button) {
   const req = await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=page);
   createItems(req.data, collectionName);
 
-  document.getElementById(divName).getElementsByTagName('LI')[qParams[qParamsName]].classList.add('active');
+  document.getElementById(`${collectionName}_page_${qParams[qParamsName]}`).classList.add('active');
 
   urlParams.set(qParamsName, qParams[qParamsName]);
   history.pushState({}, null, `?${urlParams.toString()}`);
