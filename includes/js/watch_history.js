@@ -5,7 +5,7 @@ const qParams = new QueryParams(urlParams);
 const watchHistoryApi = new WatchHistoryApi();
 
 let totalPages = {};
-let collectionItems = {};
+let cache = {};
 
 // TODO: move to profile settings
 const apiNamesMapping = {
@@ -136,13 +136,11 @@ function createPagination(collectionName, start=null) {
 }
 
 async function createItems(wathcHistoryItems, collectionName) {
-  const moshanApi = getMoshanApiByCollectionName(collectionName);
-
   let requests = [];
   for (let i = 0; i < wathcHistoryItems.items.length; i++) {
     const watchHistoryItem = wathcHistoryItems.items[i];
 
-    const req = moshanApi.getItemById({'id': watchHistoryItem.item_id});
+    const req = getCachedMoshanItemById(collectionName, watchHistoryItem.item_id);
     requests.push(req);
   }
 
@@ -150,15 +148,12 @@ async function createItems(wathcHistoryItems, collectionName) {
   console.debug('Moshan responses');
   console.debug(responses);
 
-  const apiName = apiNamesMapping[collectionName];
-  const api = getApiByName(apiName);
-
   let apiRequests = [];
   for (let i = 0; i < responses.length; i++) {
     const res = responses[i].data;
     const apiId = res[`${apiName}_id`];
 
-    const req = api.getItemById({'api_id': apiId});
+    const req = getCachedApiItem(apiId);
     apiRequests.push(req);
   }
 
@@ -239,14 +234,37 @@ async function loadItems(page, collectionName, button) {
     createPagination(collectionName);
   }  else {
       newActiveElement.classList.add('active');
-  }  
+  }
 }
 
 async function getCachedWatchHistoryByCollection(collectionName, start) {
-  const index = `${collectionName}_${start}`;
-  if (!(index in collectionItems)) {
-    collectionItems[index] = await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=start);
+  const index = `${collectionName}_page_${start}`;
+  if (!(index in cache)) {
+    cache[index] = await watchHistoryApi.getWatchHistoryByCollection(collectionName, start=start);
   }
 
-  return collectionItems[index];
+  return cache[index];
+}
+
+async function getCachedMoshanItemById(collectionName, itemId) {
+  const index = `${collectionName}_${itemId}`;
+
+  if (!(index in cache)) {
+    const moshanApi = getMoshanApiByCollectionName(collectionName);
+    cache[index] = await moshanApi.getItemById({'id': watchHistoryItem.item_id});
+  }
+
+  return cache[index];
+}
+
+async function getCachetApiItem(collectionName, id) {
+  const index = `${collectionName}_api_${id}`;
+
+  if (!(index in cache)) {
+    const apiName = apiNamesMapping[collectionName];
+    const api = getApiByName(apiName);
+    cache[index] = await api.getItemById({'api_id': id});
+  }
+
+  return cachet[index];
 }
