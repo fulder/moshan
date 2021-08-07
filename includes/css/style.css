@@ -54,3 +54,7 @@ body {
 .watch-history-pagination {
   height: 40px;
 }
+
+.watch-history-select {
+  width: auto;
+}
