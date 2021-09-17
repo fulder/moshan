@@ -91,13 +91,7 @@ def update_item(username, collection_name, item_id, data,
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if "dates_watched" in data:
-        latest_date = None
-
-        for watch_date in data["dates_watched"]:
-            next_date = dateutil.parser.parse(watch_date)
-            if latest_date is None or next_date > latest_date:
-                latest_date = next_date
-                data["latest_watch_date"] = watch_date
+        data["latest_watch_date"] = max([dateutil.parser.parse(date) for date in data["dates_watched"]])
 
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
