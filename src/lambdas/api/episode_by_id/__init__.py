@@ -110,7 +110,7 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
 
     # If episode watch date is changed check if its larger than current
     # item latest date and update item if that's the case
-    ep_date = max([dateutil.parser.parse(date) for date in body["dates_watched"]])
+    ep_date = max([dateutil.parser.parse(d) for d in body["dates_watched"]])
 
     if (item["latest_watch_date"] == "0" or
             ep_date > dateutil.parser.parse(item["latest_watch_date"])):
