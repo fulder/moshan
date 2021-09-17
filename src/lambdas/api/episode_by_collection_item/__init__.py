@@ -176,7 +176,8 @@ def _post_episode(username, collection_name, item_id, body, token):
             username,
             collection_name,
             item_id,
-            {"latest_watch_date": f"{ep_date}"}
+            {"latest_watch_date": f"{ep_date}"},
+            clean_whitelist=[],
         )
 
     return {

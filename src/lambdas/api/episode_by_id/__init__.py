@@ -118,7 +118,8 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
             username,
             collection_name,
             item_id,
-            {"latest_watch_date": f"{ep_date}"}
+            {"latest_watch_date": f"{ep_date}"},
+            clean_whitelist=[],
         )
 
     return {"statusCode": 204}
