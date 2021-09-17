@@ -1,6 +1,7 @@
 import json
 import os
 from json import JSONDecodeError
+import dateutil.parser
 
 import anime_api
 import api_errors
@@ -10,6 +11,7 @@ import jwt_utils
 import schema
 import episodes_db
 import shows_api
+import watch_history_db
 
 log = logger.get_logger("episode_by_collection_item")
 
@@ -61,7 +63,7 @@ def _get_episode_by_api_id(collection_name, item_id, api_name, api_id,
     try:
         if collection_name == "anime":
             s_ret = anime_api.get_episode_by_api_id(item_id, api_name, api_id,
-                                                  token)
+                                                    token)
         elif collection_name == "show":
             s_ret = shows_api.get_episode_by_api_id(api_name, api_id, token)
     except api_errors.HttpError as e:
@@ -146,7 +148,37 @@ def _post_episode(username, collection_name, item_id, body, token):
 
     episode_id = res["id"]
 
-    episodes_db.add_episode(username, collection_name, item_id, episode_id)
+    episodes_db.add_episode(username, collection_name, item_id, episode_id,
+                            body)
+
+    item = watch_history_db.get_item(username, collection_name, item_id)
+
+    episodes_db.update_episode(
+        username,
+        collection_name,
+        episode_id,
+        body
+    )
+
+    if "dates_watched" not in body:
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"id": episode_id})
+        }
+
+    # If episode watch date is changed check if its larger than current
+    # item latest date and update item if that's the case
+    ep_date = max([dateutil.parser.parse(date) for date in body["dates_watched"]])
+
+    if (item["latest_watch_date"] == "0" or
+        ep_date > dateutil.parser.parse(item["latest_watch_date"])):
+        watch_history_db.update_item(
+            username,
+            collection_name,
+            item_id,
+            {"latest_watch_date": f"{ep_date}"}
+        )
+
     return {
         "statusCode": 200,
         "body": json.dumps({"id": episode_id})
