@@ -50,17 +50,14 @@ def _get_client():
     return client
 
 
-def add_episode(username, collection_name, item_id, episode_id):
-    data = {
-        "item_id": item_id
-    }
+def add_episode(username, collection_name, item_id, episode_id, data):
+    data["item_id"] = item_id
     try:
         get_episode(username, collection_name, episode_id, include_deleted=True)
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_episode(username, collection_name, episode_id, data,
-                   clean_whitelist=["deleted_at"])
+    update_episode(username, collection_name, episode_id, data)
 
 
 def delete_episode(username, collection_name, episode_id):
