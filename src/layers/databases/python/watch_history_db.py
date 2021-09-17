@@ -59,7 +59,7 @@ def add_item(username, collection_name, item_id, data):
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_item(username, collection_name, item_id, data)
+    update_item(username, collection_name, item_id, data, clean_whitelist=["deleted_at"])
 
 
 def delete_item(username, collection_name, item_id):
