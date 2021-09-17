@@ -151,12 +151,16 @@ def _post_collection_item(username, collection_name, body, token):
 
     res = None
     try:
+        api_body = {
+            "api_id": body["api_id"],
+            "api_name": body["api_name"],
+        }
         if collection_name == "anime":
-            res = anime_api.post_anime(body, token)
+            res = anime_api.post_anime(api_body, token)
         elif collection_name == "show":
-            res = shows_api.post_show(body, token)
+            res = shows_api.post_show(api_body, token)
         elif collection_name == "movie":
-            res = movie_api.post_movie(body, token)
+            res = movie_api.post_movie(api_body, token)
     except api_errors.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
