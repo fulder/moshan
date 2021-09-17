@@ -51,17 +51,15 @@ def _get_client():
     return client
 
 
-def add_item(username, collection_name, item_id):
-    data = {
-        "latest_watch_date": "0"
-    }
+def add_item(username, collection_name, item_id, data):
+    if "dates_watched" not in data:
+        data["latest_watch_date"] = "0"
     try:
         get_item(username, collection_name, item_id, include_deleted=True)
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_item(username, collection_name, item_id, data,
-                clean_whitelist=["deleted_at"])
+    update_item(username, collection_name, item_id, data)
 
 
 def delete_item(username, collection_name, item_id):
