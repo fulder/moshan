@@ -130,10 +130,14 @@ def _post_episode(username, collection_name, item_id, body, token):
 
     res = None
     try:
+        api_body = {
+            "api_id": body["api_id"],
+            "api_name": body["api_name"],
+        }
         if collection_name == "anime":
-            res = anime_api.post_episode(item_id, body, token)
+            res = anime_api.post_episode(item_id, api_body, token)
         elif collection_name == "show":
-            res = shows_api.post_episode(item_id, body, token)
+            res = shows_api.post_episode(item_id, api_body, token)
     except api_errors.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
