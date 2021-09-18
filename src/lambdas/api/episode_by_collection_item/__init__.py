@@ -148,6 +148,8 @@ def _post_episode(username, collection_name, item_id, body, token):
 
     episode_id = res["id"]
 
+    del body["api_id"]
+    del body["api_name"]
     episodes_db.add_episode(username, collection_name, item_id, episode_id,
                             body)
 

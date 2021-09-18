@@ -168,6 +168,8 @@ def _post_collection_item(username, collection_name, body, token):
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     item_id = res["id"]
+    del body["api_id"]
+    del body["api_name"]
     watch_history_db.add_item(username, collection_name, item_id, body)
     return {
         "statusCode": 200,
