@@ -57,7 +57,7 @@ def add_episode(username, collection_name, item_id, episode_id, data):
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_episode(username, collection_name, episode_id, data)
+    update_episode(username, collection_name, episode_id, data, clean_whitelist=["deleted_at"])
 
 
 def delete_episode(username, collection_name, episode_id):
