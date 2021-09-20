@@ -18,7 +18,7 @@ def handle(event, context):
     query_params = event.get("queryStringParameters")
     if query_params:
         sort = query_params.get("sort")
-        status_filter = query_params.get("state")
+        status_filter = query_params.get("status")
 
     if sort and sort not in ALLOWED_SORT:
         return {
