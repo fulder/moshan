@@ -89,7 +89,7 @@ class WatchHistory(core.Stack):
                         resources=[self.watch_history_table.table_arn]
                     )
                 ],
-                "timeout": 5
+                "timeout": 30
             },
             "api-watch_history_by_collection": {
                 "layers": ["utils", "databases", "api"],
@@ -115,7 +115,7 @@ class WatchHistory(core.Stack):
                         ]
                     )
                 ],
-                "timeout": 10
+                "timeout": 30
             },
             "api-item_by_collection": {
                 "layers": ["utils", "databases", "api"],
@@ -238,7 +238,8 @@ class WatchHistory(core.Stack):
                     environment=lambda_config["variables"],
                     reserved_concurrent_executions=lambda_config["concurrent_executions"],
                     role=lambda_role,
-                    timeout=Duration.seconds(lambda_config["timeout"])
+                    timeout=Duration.seconds(lambda_config["timeout"]),
+                    memory_size=512,
                 )
 
     def _create_gateway(self):
