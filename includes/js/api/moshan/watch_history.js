@@ -16,8 +16,17 @@ class WatchHistoryApi {
       });
   }
 
-  getWatchHistoryByCollection (collectionName, start=1, limit=12) {
-    return this.apiAxios.get(`/watch-history/collection/${collectionName}?limit=${limit}&start=${start}&sort=latest_watch_date`);
+  getWatchHistory (statusFilter = '') {
+    let url = '/watch-history?sort=latest_watch_date';
+    if (statusFilter !== '') {
+      url += `status=${statusFilter}`;
+    }
+
+    return this.apiAxios.get(url);
+  }
+
+  getWatchHistoryByCollection (collectionName) {
+    return this.apiAxios.get(`/watch-history/collection/${collectionName}?&sort=latest_watch_date`);
   }
 
   removeWatchHistoryItem (qParams) {
