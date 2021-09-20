@@ -130,40 +130,9 @@ def update_item(username, collection_name, item_id, data,
         ExpressionAttributeValues=expression_attribute_values
     )
 
-def get_watch_history(username, collection_name=None, index_name=None,
-                      limit=100, start=1):
-    start_page = 0
-    res = []
 
-    if start <= 0:
-        raise InvalidStartOffset
-
-    total_pages = 0
-    for p in _watch_history_generator(username, limit=limit,
-                                      collection_name=collection_name,
-                                      index_name=index_name):
-        total_pages += 1
-        start_page += 1
-        if start_page == start:
-            res = p
-
-    if start_page != 0 and start > start_page:
-        raise InvalidStartOffset
-
-    log.debug(f"get_watch_history response: {res}")
-
-    if not res:
-        raise NotFoundError(
-            f"Watch history for client with id: {username} and collection: {collection_name} not found")
-
-    return {
-        "items": res,
-        "total_pages": total_pages
-    }
-
-
-def _watch_history_generator(username, limit, collection_name=None,
-                             index_name=None):
+def get_watch_history(username, collection_name=None,
+                      index_name=None, status_filter=None):
     paginator = _get_client().get_paginator('query')
 
     query_kwargs = {
@@ -176,27 +145,36 @@ def _watch_history_generator(username, limit, collection_name=None,
         "FilterExpression": "attribute_not_exists(deleted_at)"
     }
 
-    if index_name:
+    if index_name is not None:
         query_kwargs["IndexName"] = index_name
-    if collection_name:
-        query_kwargs[
-            "FilterExpression"] += " and collection_name = :collection_name"
+    if collection_name is not None:
+        collection_filter = " and collection_name = :collection_name"
+        query_kwargs["FilterExpression"] += collection_filter
         query_kwargs["ExpressionAttributeValues"][":collection_name"] = {
-            "S": collection_name}
+            "S": collection_name
+        }
+    if status_filter is not None:
+        status_filter = " and status = :status"
+        query_kwargs["FilterExpression"] += status_filter
+        query_kwargs["ExpressionAttributeValues"][":status"] = {
+            "S": status_filter
+        }
 
     log.debug(f"Query kwargs: {query_kwargs}")
 
     page_iterator = paginator.paginate(**query_kwargs)
 
-    items = []
+    res = []
     for p in page_iterator:
         for i in p["Items"]:
-            item = json_util.loads(i)
-            items.append(item)
-
-            if len(items) == limit:
-                yield items
-                items = []
-
-    if len(items) > 0:
-        yield items
+            i = json_util.loads(i)
+            try:
+                del i["collection_name"]
+                del i["username"]
+                del i["item_id"]
+                if status_filter is not None:
+                    del i["status"]
+            except KeyError:
+                pass
+            res.append(i)
+    return res
