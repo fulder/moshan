@@ -38,7 +38,7 @@ class TestGet:
         ret = handle(self.event, None)
 
         assert ret == {
-            "body": json.dumps(self.watch_history_ret),
+            "body": json.dumps({"items": self.watch_history_ret}),
             "statusCode": 200
         }
 
@@ -155,62 +155,8 @@ class TestGet:
         ret = handle(event, None)
 
         assert ret == {
-            "body": json.dumps(self.watch_history_ret),
+            "body": json.dumps({"items": self.watch_history_ret}),
             "statusCode": 200
-        }
-
-    @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-    def test_limit_and_start_success(self, mocked_get_watch_history):
-        mocked_get_watch_history.return_value = self.watch_history_ret
-        event = copy.deepcopy(self.event)
-        event["queryStringParameters"] = {
-            "limit": "200",
-            "start": "23"
-        }
-
-        ret = handle(event, None)
-
-        assert ret == {
-            "body": json.dumps(self.watch_history_ret),
-            "statusCode": 200}
-
-    def test_invalid_limit_type(self):
-        event = copy.deepcopy(self.event)
-        event["queryStringParameters"] = {
-            "limit": "ABC",
-        }
-
-        ret = handle(event, None)
-
-        assert ret == {
-            "body": '{"message": "Invalid limit type"}',
-            "statusCode": 400
-        }
-
-    def test_invalid_start_type(self):
-        event = copy.deepcopy(self.event)
-        event["queryStringParameters"] = {
-            "start": "ABC",
-        }
-
-        ret = handle(event, None)
-
-        assert ret == {
-            "body": '{"message": "Invalid start type"}',
-            "statusCode": 400
-        }
-
-    def test_invalid_start_value(self):
-        event = copy.deepcopy(self.event)
-        event["queryStringParameters"] = {
-            "start": "0",
-        }
-
-        ret = handle(event, None)
-
-        assert ret == {
-            "body": '{"message": "Invalid start offset"}',
-            "statusCode": 400
         }
 
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")

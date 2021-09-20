@@ -93,36 +93,15 @@ def _get_watch_history(username, collection_name, query_params):
             "body": json.dumps({"error": err})
         }
 
-    limit = 20
-    start = 1
-    if query_params and "limit" in query_params:
-        limit = query_params.get("limit")
-    if query_params and "start" in query_params:
-        start = query_params.get("start")
-
     try:
-        limit = int(limit)
-    except ValueError:
-        return {"statusCode": 400,
-                "body": json.dumps({"message": "Invalid limit type"})}
-    try:
-        start = int(start)
-    except ValueError:
-        return {"statusCode": 400,
-                "body": json.dumps({"message": "Invalid start type"})}
-
-    if limit > 20:
-        limit = 20
-
-    try:
-        watch_history = watch_history_db.get_watch_history(username,
-                                                           collection_name=collection_name,
-                                                           index_name=sort,
-                                                           limit=limit,
-                                                           start=start)
+        items = watch_history_db.get_watch_history(
+            username,
+            collection_name=collection_name,
+            index_name=sort
+        )
         return {
             "statusCode": 200, "body":
-                json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)
+                json.dumps({"items": items}, cls=decimal_encoder.DecimalEncoder)
         }
     except watch_history_db.NotFoundError:
         return {"statusCode": 200, "body": json.dumps({"items": []})}
