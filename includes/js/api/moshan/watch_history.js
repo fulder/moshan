@@ -19,7 +19,7 @@ class WatchHistoryApi {
   getWatchHistory (statusFilter = '') {
     let url = '/watch-history?sort=latest_watch_date';
     if (statusFilter !== '') {
-      url += `status=${statusFilter}`;
+      url += `&status=${statusFilter}`;
     }
 
     return this.apiAxios.get(url);
