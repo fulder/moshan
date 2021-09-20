@@ -1,4 +1,4 @@
-/* global WatchHistoryApi, accessToken, collectionNames */
+/* global WatchHistoryApi, accessToken */
 //const urlParams = new URLSearchParams(window.location.search);
 
 const watchHistoryApi = new WatchHistoryApi();
