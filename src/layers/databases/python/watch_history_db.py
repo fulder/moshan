@@ -154,8 +154,11 @@ def get_watch_history(username, collection_name=None,
             "S": collection_name
         }
     if status_filter is not None:
-        status_filter = " and status = :status"
+        status_filter = " and #status = :status"
         query_kwargs["FilterExpression"] += status_filter
+        query_kwargs["ExpressionAttributeNames"] = {
+            "#status": "status",
+        }
         query_kwargs["ExpressionAttributeValues"][":status"] = {
             "S": status_filter
         }
