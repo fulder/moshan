@@ -38,6 +38,8 @@ async function createTableRows() {
 
     html = '';
     for (let i=0; i< responses.length; i++) {
+
+
       html += createRow(responses[i], externalIDMap);
     }
     document.getElementById('backlog-table-body').innerHTML = html;
@@ -47,8 +49,11 @@ async function createTableRows() {
 function createRow(moshanItem, externalIDMap) {
   console.debug(`${moshanItem.collection_name}_${moshanItem.id}`);
   watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${moshanItem.id}`];
+
+  const apiName = apiNamesMapping[moshanItem.collection_name];
+  const onClickAction = `window.location='item/index.html?collection=${moshanItem.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}`;
   return `
-  <tr>
+  <tr onclick="${onClickAction}" class=episodeRow>
       <td>${watchHistoryItem.created_at}</td>
       <td>${moshanItem.title}</td>
       <td>${moshanItem.start_date}</td>
