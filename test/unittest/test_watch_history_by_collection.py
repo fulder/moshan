@@ -25,20 +25,23 @@ class TestGet:
             }
         }
     }
-    watch_history_ret = {
-        "items": [
-            {"collection_name": "anime", "item_id": 123}
-        ]
-    }
 
+    @patch("api.watch_history.anime_api.get_anime")
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-    def test_success(self, mocked_get_watch_history):
-        mocked_get_watch_history.return_value = self.watch_history_ret
+    def test_success(self, mocked_get_watch_history, mocked_get_anime):
+        mocked_get_watch_history.return_value = [
+            {
+                "collection_name": "anime",
+                "item_id": 123,
+                "username": "user",
+            }
+        ]
 
         ret = handle(self.event, None)
 
         assert ret == {
-            "body": json.dumps({"items": self.watch_history_ret}),
+            "body": json.dumps(
+                {"items": mocked_get_watch_history.return_value}),
             "statusCode": 200
         }
 
@@ -46,7 +49,11 @@ class TestGet:
     @patch("api.watch_history_by_collection.anime_api.get_anime_by_api_id")
     def test_success_by_api_id_anime(self, mocked_get_anime,
                                      mocked_get_watch_history):
-        w_ret = self.watch_history_ret["items"][0]
+        w_ret = {
+            "collection_name": "anime",
+            "item_id": 123,
+            "username": "user",
+        }
         s_ret = {
             "id": 123
         }
@@ -69,7 +76,11 @@ class TestGet:
     @patch("api.watch_history_by_collection.shows_api.get_show_by_api_id")
     def test_success_by_api_id_shows(self, mocked_get_show,
                                      mocked_get_watch_history):
-        w_ret = self.watch_history_ret["items"][0]
+        w_ret = {
+            "collection_name": "anime",
+            "item_id": 123,
+            "username": "user",
+        }
         s_ret = {
             "id": 123
         }
@@ -93,7 +104,11 @@ class TestGet:
     @patch("api.watch_history_by_collection.movie_api.get_movie_by_api_id")
     def test_success_by_api_id_movie(self, mocked_get_movie,
                                      mocked_get_watch_history):
-        w_ret = self.watch_history_ret["items"][0]
+        w_ret = {
+            "collection_name": "anime",
+            "item_id": 123,
+            "username": "user",
+        }
         s_ret = {
             "id": 123
         }
@@ -144,9 +159,16 @@ class TestGet:
             "body": json.dumps({"error": err})
         }
 
+    @patch("api.watch_history.anime_api.get_anime")
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-    def test_sort_success(self, mocked_get_watch_history):
-        mocked_get_watch_history.return_value = self.watch_history_ret
+    def test_sort_success(self, mocked_get_watch_history, mocked_get_anime):
+        mocked_get_watch_history.return_value = [
+            {
+                "collection_name": "anime",
+                "item_id": 123,
+                "username": "user",
+            }
+        ]
         event = copy.deepcopy(self.event)
         event["queryStringParameters"] = {
             "sort": "latest_watch_date"
@@ -155,7 +177,7 @@ class TestGet:
         ret = handle(event, None)
 
         assert ret == {
-            "body": json.dumps({"items": self.watch_history_ret}),
+            "body": json.dumps({"items":  mocked_get_watch_history.return_value}),
             "statusCode": 200
         }
 
