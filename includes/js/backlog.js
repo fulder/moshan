@@ -22,6 +22,7 @@ async function createTableRows() {
     const items = response.data.items;
 
     const apiRequests = [];
+    const externalIDMap = {};
     for (let i=0; i < items.length; i++) {
       const apiName = apiNamesMapping[items[i].collection_name];
       const apiId = items[i][`${apiName}_id`];
@@ -36,7 +37,7 @@ async function createTableRows() {
 
     html = '';
     for (let i=0; i< responses.length; i++) {
-      html += createRow(responses[i].data);
+      html += createRow(responses[i].data, externalIDMap);
     }
     document.getElementById('backlog-table-body').innerHTML = html;
 }
