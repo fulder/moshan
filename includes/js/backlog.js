@@ -24,14 +24,32 @@ async function createTableRows() {
     const apiRequests = [];
     for (let i=0; i < items.length; i++) {
       const apiName = apiNamesMapping[items[i].collection_name];
+      const apiId = items[i][`${apiName}_id`];
       const api = getApiByName(apiName);
-      apiRequests.push(api.getItemById({ 'api_id': items[i][`${apiName}_id`] }));
+
+      apiRequests.push(api.getItemById({ 'api_id': apiId }));
+
+      externalIDMap[`${items[i].collection_name}_${apiId}`] == items[i];
     }
 
     const responses = await Promise.all(apiRequests);
 
+    html = '';
     for (let i=0; i< responses.length; i++) {
-      //console.log(responses[i].data);
+      html += createRow(responses[i].data);
     }
+    document.getElementById('backlog-table-body').innerHTML = html;
+}
+
+
+function createRow(moshanItem, externalIDMap) {
+  watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${mochanItem.id}`];
+  return `
+  <tr>
+      <td>${watchHistoryItem.created_at}</td>
+      <td>${moshanItem.title}</td>
+      <td>${moshanItem.start_date}</td>
+    </tr>
+    `;
 
 }
