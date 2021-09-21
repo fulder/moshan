@@ -9,6 +9,7 @@ import jwt_utils
 import movie_api
 import schema
 import shows_api
+import utils
 import watch_history_db
 import anime_api
 
@@ -100,27 +101,7 @@ def _get_watch_history(username, collection_name, query_params, token):
             index_name=sort
         )
 
-        new_items = []
-        for i in items:
-            s_ret = None
-            try:
-                if collection_name == "movie":
-                    s_ret = movie_api.get_movie(i["item_id"], token)
-                if collection_name == "show":
-                    s_ret = shows_api.get_show(i["item_id"], token)
-                elif collection_name == "anime":
-                    s_ret = anime_api.get_anime(i["item_id"], token)
-            except api_errors.HttpError as e:
-                err_msg = f"Could not get {collection_name} item: {i['item_id']}"
-                log.error(f"{err_msg}. Error: {str(e)}")
-                return {"statusCode": e.status_code,
-                        "body": json.dumps({"message": err_msg}),
-                        "error": str(e)}
-
-            del i["username"]
-            del i["item_id"]
-            del i["collection_name"]
-            new_items.append({**s_ret, **i})
+        new_items = utils.merge_media_api_info_from_items(items, True, token)
 
         return {
                 "statusCode": 200, "body":

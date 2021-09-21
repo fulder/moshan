@@ -7,6 +7,7 @@ import logger
 import jwt_utils
 import movie_api
 import shows_api
+import utils
 import watch_history_db
 from schema import ALLOWED_SORT
 
@@ -36,33 +37,22 @@ def handle(event, context):
             index_name=sort,
             status_filter=status_filter
         )
-        new_items = []
-        for i in items:
-            s_ret = None
-            try:
-                if i["collection_name"] == "movie":
-                    s_ret = movie_api.get_movie(i["item_id"], auth_header)
-                if i["collection_name"] == "show":
-                    s_ret = shows_api.get_show(i["item_id"], auth_header)
-                elif i["collection_name"] == "anime":
-                    s_ret = anime_api.get_anime(i["item_id"], auth_header)
-            except api_errors.HttpError as e:
-                err_msg = f"Could not get {i['collection_name']} item: {i['item_id']}"
-                log.error(f"{err_msg}. Error: {str(e)}")
-                return {"statusCode": e.status_code,
-                        "body": json.dumps({"message": err_msg}),
-                        "error": str(e)}
 
-            del i["username"]
-            del i["item_id"]
-            if status_filter is not None:
-                del i["status"]
-            new_items.append({**s_ret, **i})
-
+        remove_status = status_filter is not None
+        utils.merge_media_api_info_from_items(items, remove_status, auth_header)
         return {
             "statusCode": 200,
-            "body": json.dumps({"items": new_items}, cls=decimal_encoder.DecimalEncoder)
+            "body": json.dumps({"items": items},
+                               cls=decimal_encoder.DecimalEncoder)
         }
+    except api_errors.HttpError as e:
+        err_msg = f"Could not get item from media API"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code,
+                "body": json.dumps({"message": err_msg}),
+                "error": str(e)}
+
+
     except watch_history_db.NotFoundError:
         return {
             "statusCode": 200,

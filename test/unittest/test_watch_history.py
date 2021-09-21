@@ -18,9 +18,6 @@ def test_handler(mocked_get_watch_history, mocked_get_anime):
             "username": "user",
         }
     ]
-    mocked_get_anime.return_value = {
-        "mal_id": 1,
-    }
 
     event = {
         "headers": {
@@ -29,7 +26,7 @@ def test_handler(mocked_get_watch_history, mocked_get_anime):
     }
 
     ret = handle(event, None)
-    assert ret == {"body": '{"items": [{"mal_id": 1, "collection_name": "anime"}]}', "statusCode": 200}
+    assert ret == {"body": '{"items": [{"collection_name": "anime"}]}', "statusCode": 200}
 
 
 def test_handler_invalid_sort():
