@@ -21,17 +21,17 @@ async function createTableRows() {
     const response = await watchHistoryApi.getWatchHistory('backlog');
     const items = response.data.items;
 
-    const apiReq = [];
+    const apiRequests = [];
     for (let i=0; i < items.length; i++) {
       const apiName = apiNamesMapping[items[i].collection_name];
       const api = getApiByName(apiName);
-      apiReq.push(api.getItemById({ 'api_id': items[i][`${apiName}_id`] }));
+      apiRequests.push(api.getItemById({ 'api_id': items[i][`${apiName}_id`] }));
     }
 
-    const responses = await Promise.all(watchHistoryRequests);
+    const responses = await Promise.all(apiRequests);
 
     for (let i=0; i< responses.length; i++) {
-      console.log(responses[i].data);
+      //console.log(responses[i].data);
     }
 
 }
