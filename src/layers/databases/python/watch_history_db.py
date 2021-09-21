@@ -172,9 +172,10 @@ def get_watch_history(username, collection_name=None,
         for i in p["Items"]:
             i = json_util.loads(i)
             try:
-                del i["collection_name"]
                 del i["username"]
                 del i["item_id"]
+                if collection_name is not None:
+                    del i["collection_name"]
                 if status_filter is not None:
                     del i["status"]
             except KeyError:
