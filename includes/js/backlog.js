@@ -37,7 +37,7 @@ async function createTableRows() {
 
     html = '';
     for (let i=0; i< responses.length; i++) {
-      html += createRow(responses[i].data, externalIDMap);
+      html += createRow(responses[i], externalIDMap);
     }
     document.getElementById('backlog-table-body').innerHTML = html;
 }
