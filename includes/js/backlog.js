@@ -3,6 +3,12 @@
 
 const watchHistoryApi = new WatchHistoryApi();
 
+const apiNamesMapping = {
+  'movie': 'tmdb',
+  'show': 'tvmaze',
+  'anime': 'mal',
+};
+
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
 } else {
@@ -17,8 +23,9 @@ async function createTableRows() {
 
     const apiReq = [];
     for (let i=0; i < items.length; i++) {
-      const api = getApiByName(items[i].api_name);
-      apiReq.push(api.getItemById({ 'api_id': items[i].api_id }));
+      const apiName = apiNamesMapping[items[i].collection_name];
+      const api = getApiByName(apiName);
+      apiReq.push(api.getItemById({ 'api_id': items[i][`${apiName}_id`] }));
     }
 
     const responses = await Promise.all(watchHistoryRequests);
