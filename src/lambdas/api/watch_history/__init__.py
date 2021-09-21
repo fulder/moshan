@@ -1,12 +1,9 @@
 import json
 
-import anime_api
 import api_errors
 import decimal_encoder
 import logger
 import jwt_utils
-import movie_api
-import shows_api
 import utils
 import watch_history_db
 from schema import ALLOWED_SORT
