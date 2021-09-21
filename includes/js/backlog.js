@@ -36,10 +36,24 @@ async function createTableRows() {
 
     const responses = await Promise.all(apiRequests);
 
+    responses.sort(function(x, y) {
+      const xWatchHistoryItem = externalIDMap[`${x.collection_name}_${x.id}`];
+      const yWatchHistoryItem = externalIDMap[`${y.collection_name}_${y.id}`];
+
+      const xDate = new Date(xWatchHistoryItem.created_at);
+      const yDate = new Date(yWatchHistoryItem.created_at);
+
+      if (xDate < yDate) {
+        return -1;
+      }
+      if (xDate > yDate) {
+        return 1;
+      }
+      return 0;
+    });
+
     html = '';
     for (let i=0; i< responses.length; i++) {
-
-
       html += createRow(responses[i], externalIDMap);
     }
     document.getElementById('backlog-table-body').innerHTML = html;
