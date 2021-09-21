@@ -77,7 +77,7 @@ class WatchHistory(core.Stack):
     def _create_lambdas_config(self):
         self.lambdas_config = {
             "api-watch_history": {
-                "layers": ["utils", "databases"],
+                "layers": ["utils", "databases", "api"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
