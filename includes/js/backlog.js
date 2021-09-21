@@ -32,6 +32,7 @@ async function createTableRows() {
 
       externalIDMap[`${items[i].collection_name}_${apiId}`] == items[i];
     }
+    console.debug(externalIDMap);
 
     const responses = await Promise.all(apiRequests);
 
@@ -44,6 +45,7 @@ async function createTableRows() {
 
 
 function createRow(moshanItem, externalIDMap) {
+  consolde.debug(`${moshanItem.collection_name}_${moshanItem.id}`);
   watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${moshanItem.id}`];
   return `
   <tr>
