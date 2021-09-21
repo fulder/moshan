@@ -36,7 +36,7 @@ def handle(event, context):
         )
 
         remove_status = status_filter is not None
-        utils.merge_media_api_info_from_items(items, remove_status, auth_header)
+        items = utils.merge_media_api_info_from_items(items, remove_status, auth_header)
         return {
             "statusCode": 200,
             "body": json.dumps({"items": items},
