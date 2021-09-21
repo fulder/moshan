@@ -44,7 +44,7 @@ async function createTableRows() {
 
 
 function createRow(moshanItem, externalIDMap) {
-  watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${mochanItem.id}`];
+  watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${moshanItem.id}`];
   return `
   <tr>
       <td>${watchHistoryItem.created_at}</td>
