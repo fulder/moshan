@@ -51,7 +51,7 @@ function createRow(moshanItem, externalIDMap) {
   watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${moshanItem.id}`];
 
   const apiName = apiNamesMapping[moshanItem.collection_name];
-  const onClickAction = `window.location='item/index.html?collection=${moshanItem.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}`;
+  const onClickAction = `window.location='item/index.html?collection=${moshanItem.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}''`;
   return `
   <tr onclick="${onClickAction}" class=episodeRow>
       <td>${watchHistoryItem.created_at}</td>
