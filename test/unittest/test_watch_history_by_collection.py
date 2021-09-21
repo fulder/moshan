@@ -3,6 +3,7 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
+import utils
 from api_errors import HttpError
 from api.watch_history_by_collection import handle
 from schema import ALLOWED_SORT
@@ -26,14 +27,15 @@ class TestGet:
         }
     }
 
-    @patch("api.watch_history.anime_api.get_anime")
+    @patch("utils.merge_media_api_info_from_items")
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-    def test_success(self, mocked_get_watch_history, mocked_get_anime):
-        mocked_get_watch_history.return_value = [
+    def test_success(self, mocked_get_watch_history, mocked_get_media_api_info):
+        mocked_get_media_api_info.return_value = [
             {
                 "collection_name": "anime",
                 "item_id": 123,
                 "username": "user",
+                "test_key": "test_value",
             }
         ]
 
@@ -41,7 +43,7 @@ class TestGet:
 
         assert ret == {
             "body": json.dumps(
-                {"items": mocked_get_watch_history.return_value}),
+                {"items": mocked_get_media_api_info.return_value}),
             "statusCode": 200
         }
 
@@ -159,10 +161,10 @@ class TestGet:
             "body": json.dumps({"error": err})
         }
 
-    @patch("api.watch_history.anime_api.get_anime")
+    @patch("utils.merge_media_api_info_from_items")
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-    def test_sort_success(self, mocked_get_watch_history, mocked_get_anime):
-        mocked_get_watch_history.return_value = [
+    def test_sort_success(self, mocked_get_watch_history, mocked_get_media_api_info):
+        mocked_get_media_api_info.return_value = [
             {
                 "collection_name": "anime",
                 "item_id": 123,
@@ -177,7 +179,7 @@ class TestGet:
         ret = handle(event, None)
 
         assert ret == {
-            "body": json.dumps({"items":  mocked_get_watch_history.return_value}),
+            "body": json.dumps({"items":  mocked_get_media_api_info.return_value}),
             "statusCode": 200
         }
 
