@@ -15,8 +15,16 @@ async function createTableRows() {
     const response = await watchHistoryApi.getWatchHistory('backlog');
     const items = response.data.items;
 
+    const apiReq = [];
     for (let i=0; i < items.length; i++) {
-      console.debug(items[i]);
+      api = getApiByName(items[i].api_name);
+      apiReq.push(api.getItemByApiId({ 'api_id': items[i].api_id }));
+    }
+
+    const responses = await Promise.all(watchHistoryRequests);
+
+    for (let i=0; i< responses.length; i++) {
+      console.log(responses[i]);
     }
 
 }
