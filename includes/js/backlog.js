@@ -43,10 +43,10 @@ async function createTableRows() {
       const xDate = new Date(xWatchHistoryItem.created_at);
       const yDate = new Date(yWatchHistoryItem.created_at);
 
-      if (xDate > yDate) {
+      if (xDate < yDate) {
         return -1;
       }
-      if (xDate < yDate) {
+      if (xDate > yDate) {
         return 1;
       }
       return 0;
