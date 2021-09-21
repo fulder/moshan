@@ -69,7 +69,9 @@ function createRow(moshanItem, externalIDMap) {
   return `
   <tr onclick="${onClickAction}" class=episodeRow>
       <td>${watchHistoryItem.created_at}</td>
+      <td>${moshanItem.collection_name}</td>
       <td>${moshanItem.title}</td>
+      <td>${moshanItem.status}</td>
       <td>${moshanItem.start_date}</td>
     </tr>
     `;
