@@ -101,11 +101,11 @@ def _get_watch_history(username, collection_name, query_params, token):
             index_name=sort
         )
 
-        new_items = utils.merge_media_api_info_from_items(items, True, token)
+        items = utils.merge_media_api_info_from_items(items, True, token)
 
         return {
                 "statusCode": 200, "body":
-                    json.dumps({"items": new_items}, cls=decimal_encoder.DecimalEncoder)
+                    json.dumps({"items": items}, cls=decimal_encoder.DecimalEncoder)
             }
     except watch_history_db.NotFoundError:
         return {"statusCode": 200, "body": json.dumps({"items": []})}
