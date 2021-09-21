@@ -1,4 +1,4 @@
-/* global WatchHistoryApi, accessToken */
+/* global WatchHistoryApi, accessToken, getApiByName */
 //const urlParams = new URLSearchParams(window.location.search);
 
 const watchHistoryApi = new WatchHistoryApi();
@@ -17,14 +17,14 @@ async function createTableRows() {
 
     const apiReq = [];
     for (let i=0; i < items.length; i++) {
-      api = getApiByName(items[i].api_name);
-      apiReq.push(api.getItemByApiId({ 'api_id': items[i].api_id }));
+      const api = getApiByName(items[i].api_name);
+      apiReq.push(api.getItemById({ 'api_id': items[i].api_id }));
     }
 
     const responses = await Promise.all(watchHistoryRequests);
 
     for (let i=0; i< responses.length; i++) {
-      console.log(responses[i]);
+      console.log(responses[i].data);
     }
 
 }
