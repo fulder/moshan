@@ -64,10 +64,15 @@ function createRow(moshanItem, externalIDMap) {
   console.debug(`${moshanItem.collection_name}_${moshanItem.id}`);
   watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${moshanItem.id}`];
 
+  let rowClass = 'bg-secondary';
+  if (moshanItem.status === 'Released' || moshanItem.status === 'Airing' || moshanItem.status === 'Ended') {
+      rowClass = 'episodeRow';
+  }
+
   const apiName = apiNamesMapping[moshanItem.collection_name];
   const onClickAction = `window.location='item/index.html?collection=${moshanItem.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}'`;
   return `
-  <tr onclick="${onClickAction}" class=episodeRow>
+  <tr onclick="${onClickAction}" class=${rowClass}>
       <td>${watchHistoryItem.created_at}</td>
       <td>${moshanItem.collection_name}</td>
       <td>${moshanItem.title}</td>
