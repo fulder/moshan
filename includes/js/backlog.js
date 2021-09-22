@@ -68,6 +68,9 @@ function createRow(moshanItem, externalIDMap) {
   if (moshanItem.status === 'Released' || moshanItem.status === 'Airing' || moshanItem.status === 'Ended') {
       rowClass = 'episodeRow';
   }
+  if (new Date(moshanItem.start_date) >= new Date()) {
+      rowClass = 'bg-secondary';
+  }
 
   const apiName = apiNamesMapping[moshanItem.collection_name];
   const onClickAction = `window.location='item/index.html?collection=${moshanItem.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}'`;
