@@ -65,7 +65,7 @@ function createRow(moshanItem, externalIDMap) {
   watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${moshanItem.id}`];
 
   let rowClass = 'bg-secondary';
-  if (moshanItem.status === 'Released' || moshanItem.status === 'Airing' || moshanItem.status === 'Ended') {
+  if (moshanItem.status === 'Released' || moshanItem.status === 'Airing' || moshanItem.status === 'Ended' || moshanItem.status === 'Running') {
       rowClass = 'episodeRow';
   }
   if (new Date(moshanItem.start_date) >= new Date()) {
