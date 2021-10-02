@@ -102,7 +102,11 @@ class WatchHistory(core.Stack):
                             f"{self.watch_history_table.table_arn}/index/rating",
                             f"{self.watch_history_table.table_arn}/index/state",
                         ]
-                    )
+                    ),
+                    PolicyStatement(
+                        actions=["execute-api:Invoke"],
+                        resources=[f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
+                    ),
                 ],
                 "timeout": 30
             },
@@ -113,7 +117,7 @@ class WatchHistory(core.Stack):
                     "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url,
                     "SHOWS_API_URL": self.show_api_url,
-                    "MOVIE_API_URL": self.movie_api_url
+                    "MOVIE_API_URL": self.movie_api_url,
                 },
                 "concurrent_executions": 10,
                 "policies": [
@@ -128,7 +132,12 @@ class WatchHistory(core.Stack):
                             f"{self.watch_history_table.table_arn}/index/rating",
                             f"{self.watch_history_table.table_arn}/index/state",
                         ]
-                    )
+                    ),
+                    PolicyStatement(
+                        actions=["execute-api:Invoke"],
+                        resources=[
+                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
+                    ),
                 ],
                 "timeout": 30
             },
@@ -139,14 +148,19 @@ class WatchHistory(core.Stack):
                     "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url,
                     "SHOWS_API_URL": self.show_api_url,
-                    "MOVIE_API_URL": self.movie_api_url
+                    "MOVIE_API_URL": self.movie_api_url,
                 },
                 "concurrent_executions": 10,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query", "dynamodb:UpdateItem"],
                         resources=[self.watch_history_table.table_arn]
-                    )
+                    ),
+                    PolicyStatement(
+                        actions=["execute-api:Invoke"],
+                        resources=[
+                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
+                    ),
                 ],
                 "timeout": 5
             },
@@ -163,7 +177,12 @@ class WatchHistory(core.Stack):
                     PolicyStatement(
                         actions=["dynamodb:Query", "dynamodb:UpdateItem"],
                         resources=[self.episodes_table.table_arn]
-                    )
+                    ),
+                    PolicyStatement(
+                        actions=["execute-api:Invoke"],
+                        resources=[
+                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
+                    ),
                 ],
                 "timeout": 10
             },
@@ -185,7 +204,12 @@ class WatchHistory(core.Stack):
                     PolicyStatement(
                         actions=["dynamodb:Query", "dynamodb:UpdateItem"],
                         resources=[self.watch_history_table.table_arn]
-                    )
+                    ),
+                    PolicyStatement(
+                        actions=["execute-api:Invoke"],
+                        resources=[
+                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
+                    ),
                 ],
                 "timeout": 10
             },
