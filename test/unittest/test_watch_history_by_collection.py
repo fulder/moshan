@@ -3,8 +3,7 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
-import utils
-from api_errors import HttpError
+from utils import HttpError
 from api.watch_history_by_collection import handle
 from schema import ALLOWED_SORT
 from watch_history_db import NotFoundError
