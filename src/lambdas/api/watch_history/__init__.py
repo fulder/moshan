@@ -4,7 +4,7 @@ import api_errors
 import decimal_encoder
 import logger
 import jwt_utils
-import utils
+import media_request_thread
 import watch_history_db
 from schema import ALLOWED_SORT
 
@@ -36,7 +36,7 @@ def handle(event, context):
         )
 
         remove_status = status_filter is not None
-        items = utils.merge_media_api_info_from_items(items, remove_status, auth_header)
+        items = media_request_thread.merge_media_api_info_from_items(items, remove_status, auth_header)
         return {
             "statusCode": 200,
             "body": json.dumps({"items": items},

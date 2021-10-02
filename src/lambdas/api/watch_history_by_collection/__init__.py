@@ -9,7 +9,7 @@ import jwt_utils
 import movie_api
 import schema
 import shows_api
-import utils
+import media_request_thread
 import watch_history_db
 import anime_api
 
@@ -101,7 +101,7 @@ def _get_watch_history(username, collection_name, query_params, token):
             index_name=sort
         )
 
-        items = utils.merge_media_api_info_from_items(items, True, token)
+        items = media_request_thread.merge_media_api_info_from_items(items, True, token)
 
         return {
                 "statusCode": 200, "body":
