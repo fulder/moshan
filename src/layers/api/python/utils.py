@@ -1,4 +1,8 @@
+import os
 from threading import Lock, Thread
+
+import boto3
+from requests_aws4auth import AWS4Auth
 
 import anime_api
 import movie_api
@@ -23,7 +27,7 @@ class MediaRequestThread(Thread):
         if self.collection_name == "movie":
             s_ret = movie_api.get_movie(self.item_id, self.token)
         if self.collection_name == "show":
-            s_ret = shows_api.get_show(self.item_id, self.token)
+            s_ret = shows_api.get_show(self.item_id)
         elif self.collection_name == "anime":
             s_ret = anime_api.get_anime(self.item_id, self.token)
 
@@ -53,3 +57,16 @@ def merge_media_api_info_from_items(items, remove_status, token):
         t.join()
 
     return merged_items
+
+
+def get_v4_signature_auth():
+    session = boto3.Session()
+    credentials = session.get_credentials()
+    region = os.getenv("AWS_REGION")
+    return AWS4Auth(
+        credentials.access_key,
+        credentials.secret_key,
+        region,
+        "execute-api",
+        session_token=credentials.token
+    )
