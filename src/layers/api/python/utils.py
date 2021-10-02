@@ -23,7 +23,7 @@ class MediaRequestThread(Thread):
         if self.collection_name == "movie":
             s_ret = movie_api.get_movie(self.item_id, self.token)
         if self.collection_name == "show":
-            s_ret = shows_api.get_show(self.item_id, self.token)
+            s_ret = shows_api.get_show(self.item_id)
         elif self.collection_name == "anime":
             s_ret = anime_api.get_anime(self.item_id, self.token)
 
