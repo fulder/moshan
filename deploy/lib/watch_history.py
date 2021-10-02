@@ -84,6 +84,7 @@ class WatchHistory(core.Stack):
                     "ANIME_API_URL": self.anime_api_url,
                     "SHOWS_API_URL": self.show_api_url,
                     "MOVIE_API_URL": self.movie_api_url,
+                    "AWS_REGION": self.region,
                 },
                 "concurrent_executions": 10,
                 "policies": [
@@ -113,7 +114,8 @@ class WatchHistory(core.Stack):
                     "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url,
                     "SHOWS_API_URL": self.show_api_url,
-                    "MOVIE_API_URL": self.movie_api_url
+                    "MOVIE_API_URL": self.movie_api_url,
+                    "AWS_REGION": self.region,
                 },
                 "concurrent_executions": 10,
                 "policies": [
@@ -144,7 +146,8 @@ class WatchHistory(core.Stack):
                     "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url,
                     "SHOWS_API_URL": self.show_api_url,
-                    "MOVIE_API_URL": self.movie_api_url
+                    "MOVIE_API_URL": self.movie_api_url,
+                    "AWS_REGION": self.region,
                 },
                 "concurrent_executions": 10,
                 "policies": [
@@ -167,6 +170,7 @@ class WatchHistory(core.Stack):
                     "LOG_LEVEL": "DEBUG",
                     "ANIME_API_URL": self.anime_api_url,
                     "SHOWS_API_URL": self.show_api_url,
+                    "AWS_REGION": self.region,
                 },
                 "concurrent_executions": 10,
                 "policies": [
@@ -190,6 +194,7 @@ class WatchHistory(core.Stack):
                     "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url,
                     "SHOWS_API_URL": self.show_api_url,
+                    "AWS_REGION": self.region,
                 },
                 "concurrent_executions": 10,
                 "policies": [
