@@ -4,7 +4,7 @@ from json import JSONDecodeError
 import dateutil.parser
 
 import anime_api
-import api_errors
+import utils
 import decimal_encoder
 import logger
 import jwt_utils
@@ -51,7 +51,7 @@ def _get_episode(username, collection_name, item_id, episode_id, token):
             s_ret = anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
             s_ret = shows_api.get_episode(item_id, episode_id)
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode for " \
                   f"item: {item_id} and episode_id: {episode_id}"
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -89,7 +89,7 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
             anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
             shows_api.get_episode(item_id, episode_id)
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode for " \
                   f"item: {item_id} and episode_id: {episode_id}"
         log.error(f"{err_msg}. Error: {str(e)}")
