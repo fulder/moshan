@@ -2,7 +2,7 @@ import os
 import requests
 
 import api_errors
-from utils import get_v4_signature_auth
+from v4_auth import get_v4_signature_auth
 
 SHOWS_API_URL = os.getenv("SHOWS_API_URL")
 

@@ -3,8 +3,6 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
-import pytest
-
 from api.episode_by_collection_item import handle
 from api_errors import HttpError
 from episodes_db import NotFoundError
