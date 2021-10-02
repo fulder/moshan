@@ -61,7 +61,7 @@ def _get_by_api_id(collection_name, api_name, api_id, username, token):
         if collection_name == "anime":
             s_ret = anime_api.get_anime_by_api_id(api_name, api_id, token)
         elif collection_name == "show":
-            s_ret = shows_api.get_show_by_api_id(api_name, api_id, token)
+            s_ret = shows_api.get_show_by_api_id(api_name, api_id)
         elif collection_name == "movie":
             s_ret = movie_api.get_movie_by_api_id(api_name, api_id, token)
     except api_errors.HttpError as e:
@@ -137,7 +137,7 @@ def _post_collection_item(username, collection_name, body, token):
         if collection_name == "anime":
             res = anime_api.post_anime(body, token)
         elif collection_name == "show":
-            res = shows_api.post_show(body, token)
+            res = shows_api.post_show(body)
         elif collection_name == "movie":
             res = movie_api.post_movie(body, token)
     except api_errors.HttpError as e:
