@@ -46,7 +46,7 @@ def _get_item(username, collection_name, item_id, token):
         if collection_name == "anime":
             s_ret = anime_api.get_anime(item_id, token)
         elif collection_name == "show":
-            s_ret = shows_api.get_show(item_id, token)
+            s_ret = shows_api.get_show(item_id)
         elif collection_name == "movie":
             s_ret = movie_api.get_movie(item_id, token)
     except api_errors.HttpError as e:
@@ -87,7 +87,7 @@ def _put_item(username, collection_name, item_id, body, token):
         if collection_name == "anime":
             anime_api.get_anime(item_id, token)
         elif collection_name == "show":
-            shows_api.get_show(item_id, token)
+            shows_api.get_show(item_id)
         elif collection_name == "movie":
             movie_api.get_movie(item_id, token)
     except api_errors.HttpError as e:

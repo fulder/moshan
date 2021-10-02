@@ -63,7 +63,7 @@ def _get_episode_by_api_id(collection_name, item_id, api_name, api_id,
             s_ret = anime_api.get_episode_by_api_id(item_id, api_name, api_id,
                                                   token)
         elif collection_name == "show":
-            s_ret = shows_api.get_episode_by_api_id(api_name, api_id, token)
+            s_ret = shows_api.get_episode_by_api_id(api_name, api_id)
     except api_errors.HttpError as e:
         err_msg = f"Could not get {collection_name} episode"
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -133,7 +133,7 @@ def _post_episode(username, collection_name, item_id, body, token):
         if collection_name == "anime":
             res = anime_api.post_episode(item_id, body, token)
         elif collection_name == "show":
-            res = shows_api.post_episode(item_id, body, token)
+            res = shows_api.post_episode(item_id, body)
     except api_errors.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
