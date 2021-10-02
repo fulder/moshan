@@ -40,7 +40,7 @@ def mocked_show_api():
     import shows_api
 
     shows_api.SHOW_API_URL = "https://mocked"
-    shows_api.get_v4_signature_auth = MagicMock()
+    shows_api.utils.get_v4_signature_auth = MagicMock()
 
     return shows_api
 

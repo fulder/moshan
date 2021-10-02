@@ -3,10 +3,8 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
-import pytest
-
 from api.episode_by_collection_item import handle
-from api_errors import HttpError
+from utils import HttpError
 from episodes_db import NotFoundError
 
 TEST_JWT = "eyJraWQiOiIxMjMxMjMxMjM9IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6IlRFU1RfQ0xJRU5UX0lEIn0.ud_dRdguJwmKv4XO-c4JD-dKGffSvXsxuAxZq9uWV-g"
