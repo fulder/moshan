@@ -173,3 +173,15 @@ def get_watch_history(username, collection_name=None,
             i = json_util.loads(i)
             res.append(i)
     return res
+
+
+def get_items_by_id(item_id):
+    res = _get_table().query(
+        IndexName="item_id",
+        KeyConditionExpression=Key("item_id").eq(item_id),
+    )
+
+    if not res["Items"]:
+        raise NotFoundError(f"Item with id: {item_id} not found.")
+
+    return res["Items"]
