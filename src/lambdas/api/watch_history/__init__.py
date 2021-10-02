@@ -1,10 +1,9 @@
 import json
 
-import api_errors
+import utils
 import decimal_encoder
 import logger
 import jwt_utils
-import media_request_thread
 import watch_history_db
 from schema import ALLOWED_SORT
 
@@ -36,13 +35,13 @@ def handle(event, context):
         )
 
         remove_status = status_filter is not None
-        items = media_request_thread.merge_media_api_info_from_items(items, remove_status, auth_header)
+        items = utils.merge_media_api_info_from_items(items, remove_status, auth_header)
         return {
             "statusCode": 200,
             "body": json.dumps({"items": items},
                                cls=decimal_encoder.DecimalEncoder)
         }
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get item from media API"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code,

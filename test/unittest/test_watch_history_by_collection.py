@@ -3,7 +3,7 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
-from api_errors import HttpError
+from utils import HttpError
 from api.watch_history_by_collection import handle
 from schema import ALLOWED_SORT
 from watch_history_db import NotFoundError
@@ -26,7 +26,7 @@ class TestGet:
         }
     }
 
-    @patch("media_request_thread.merge_media_api_info_from_items")
+    @patch("utils.merge_media_api_info_from_items")
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
     def test_success(self, mocked_get_watch_history, mocked_get_media_api_info):
         mocked_get_media_api_info.return_value = [
@@ -160,7 +160,7 @@ class TestGet:
             "body": json.dumps({"error": err})
         }
 
-    @patch("media_request_thread.merge_media_api_info_from_items")
+    @patch("utils.merge_media_api_info_from_items")
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
     def test_sort_success(self, mocked_get_watch_history, mocked_get_media_api_info):
         mocked_get_media_api_info.return_value = [
