@@ -185,3 +185,9 @@ def get_items_by_id(item_id):
         raise NotFoundError(f"Item with id: {item_id} not found.")
 
     return res["Items"]
+
+
+def put_item(item):
+    _get_table().put_item(
+        Item=item,
+    )
