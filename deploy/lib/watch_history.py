@@ -60,6 +60,10 @@ class WatchHistory(core.Stack):
             sort_key=Attribute(name="state", type=AttributeType.STRING),
             index_name="state"
         )
+        self.watch_history_table.add_global_secondary_index(
+            partition_key=Attribute(name="item_id", type=AttributeType.STRING),
+            index_name="item_id"
+        )
 
         self.episodes_table = Table(
             self,
