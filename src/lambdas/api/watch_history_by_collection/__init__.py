@@ -3,13 +3,12 @@ import os
 from json import JSONDecodeError
 
 import decimal_encoder
-import api_errors
+import utils
 import logger
 import jwt_utils
 import movie_api
 import schema
 import shows_api
-import utils
 import watch_history_db
 import anime_api
 
@@ -64,7 +63,7 @@ def _get_by_api_id(collection_name, api_name, api_id, username, token):
             s_ret = shows_api.get_show_by_api_id(api_name, api_id)
         elif collection_name == "movie":
             s_ret = movie_api.get_movie_by_api_id(api_name, api_id, token)
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code,
@@ -140,7 +139,7 @@ def _post_collection_item(username, collection_name, body, token):
             res = shows_api.post_show(body)
         elif collection_name == "movie":
             res = movie_api.post_movie(body, token)
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code,

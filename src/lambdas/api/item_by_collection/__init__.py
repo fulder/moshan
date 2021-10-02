@@ -3,7 +3,7 @@ import os
 from json import JSONDecodeError
 
 import anime_api
-import api_errors
+import utils
 import decimal_encoder
 import logger
 import jwt_utils
@@ -49,7 +49,7 @@ def _get_item(username, collection_name, item_id, token):
             s_ret = shows_api.get_show(item_id)
         elif collection_name == "movie":
             s_ret = movie_api.get_movie(item_id, token)
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} item with id: {item_id}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {
@@ -90,7 +90,7 @@ def _put_item(username, collection_name, item_id, body, token):
             shows_api.get_show(item_id)
         elif collection_name == "movie":
             movie_api.get_movie(item_id, token)
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {
