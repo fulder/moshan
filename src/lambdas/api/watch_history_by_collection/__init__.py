@@ -26,6 +26,7 @@ def handle(event, context):
     collection_name = event["pathParameters"].get("collection_name")
 
     method = event["requestContext"]["http"]["method"]
+    query_params = event.get("queryStringParameters")
 
     if collection_name not in schema.COLLECTION_NAMES:
         err = f"Invalid collection name, " \
@@ -83,8 +84,10 @@ def _get_by_api_id(collection_name, api_name, api_id, username, token):
 
 def _get_watch_history(username, collection_name, query_params, token):
     sort = None
+    show_api = None
     if query_params:
         sort = query_params.get("sort")
+        show_api = query_params.get("show_api")
 
     if sort and sort not in schema.ALLOWED_SORT:
         err = f"Invalid sort specified. Allowed values: {schema.ALLOWED_SORT}"
@@ -100,7 +103,12 @@ def _get_watch_history(username, collection_name, query_params, token):
             index_name=sort
         )
 
-        items = utils.merge_media_api_info_from_items(items, True, token)
+        items = utils.merge_media_api_info_from_items(
+            items,
+            True,
+            token,
+            show_api=show_api,
+        )
 
         return {
                 "statusCode": 200, "body":

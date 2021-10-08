@@ -34,13 +34,14 @@ def get_v4_signature_auth():
 
 class MediaRequestThread(Thread):
 
-    def __init__(self, item, token, remove_status):
+    def __init__(self, item, token, remove_status, show_api=None):
         Thread.__init__(self)
         self.item = item
         self.collection_name = item["collection_name"]
         self.item_id = item["item_id"]
         self.token = token
         self.remove_status = remove_status
+        self.show_api = show_api
 
     def run(self):
         import anime_api
@@ -51,7 +52,7 @@ class MediaRequestThread(Thread):
         if self.collection_name == "movie":
             s_ret = movie_api.get_movie(self.item_id, self.token)
         if self.collection_name == "show":
-            s_ret = shows_api.get_show(self.item_id)
+            s_ret = shows_api.get_show(self.item_id, self.show_api)
         elif self.collection_name == "anime":
             s_ret = anime_api.get_anime(self.item_id, self.token)
 
@@ -67,13 +68,13 @@ class MediaRequestThread(Thread):
         items_lock.release()
 
 
-def merge_media_api_info_from_items(items, remove_status, token):
+def merge_media_api_info_from_items(items, remove_status, token, show_api=None):
     global merged_items
     merged_items = []
 
     threads = []
     for i in items:
-        t = MediaRequestThread(i, token, remove_status)
+        t = MediaRequestThread(i, token, remove_status, show_api=show_api)
         t.start()
         threads.append(t)
 
