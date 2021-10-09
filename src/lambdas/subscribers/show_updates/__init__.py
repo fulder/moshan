@@ -14,6 +14,8 @@ def handler(event, context):
 
     items = watch_history_db.get_items_by_id(show["item_id"])
     for item in items:
+        print(f"Updating item: {item}")
+
         if "ep_progress" not in item["ep_progress"]:
             item["ep_progress"] = 0
             item["watched_eps"] = 0
