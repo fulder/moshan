@@ -9,7 +9,7 @@ def handler(event, context):
 
     show = shows_api.get_episode_by_api_id(
         message["api_name"],
-        message["api_id"]
+        message["api_id"],
     )
 
     items = watch_history_db.get_items_by_id(show["item_id"])
