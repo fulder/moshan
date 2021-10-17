@@ -51,10 +51,8 @@ def _get_client():
     return client
 
 
-def add_item(username, collection_name, item_id):
-    data = {
-        "latest_watch_date": "0"
-    }
+def add_item(username, collection_name, item_id, data):
+    data["latest_watch_date"] = "0"
     try:
         get_item(username, collection_name, item_id, include_deleted=True)
     except NotFoundError:
