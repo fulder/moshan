@@ -154,7 +154,19 @@ def _post_collection_item(username, collection_name, body, token):
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     item_id = res["id"]
-    watch_history_db.add_item(username, collection_name, item_id)
+
+    item_data = {}
+    if "ep_count" in res:
+        item_data = {
+            "ep_count": res.get("ep_count"),
+            "special_count": res.get("special_count"),
+            "ep_progress": 0,
+            "special_progress": 0,
+            "watched_eps": 0,
+            "watched_special": 0,
+        }
+
+    watch_history_db.add_item(username, collection_name, item_id, item_data)
     return {
         "statusCode": 200,
         "body": json.dumps({"id": item_id})
