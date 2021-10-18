@@ -64,6 +64,15 @@ class WatchHistory(core.Stack):
             partition_key=Attribute(name="item_id", type=AttributeType.STRING),
             index_name="item_id"
         )
+        self.watch_history_table.add_global_secondary_index(
+            partition_key=Attribute(name="ep_progress", type=AttributeType.STRING),
+            index_name="ep_progress"
+        )
+        self.watch_history_table.add_global_secondary_index(
+            partition_key=Attribute(name="special_progress",
+                                    type=AttributeType.STRING),
+            index_name="special_progress"
+        )
 
         self.episodes_table = Table(
             self,
