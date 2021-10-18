@@ -51,7 +51,10 @@ def _get_client():
     return client
 
 
-def add_item(username, collection_name, item_id, data):
+def add_item(username, collection_name, item_id, data=None):
+    if data is None:
+        data = {}
+
     data["latest_watch_date"] = "0"
     try:
         get_item(username, collection_name, item_id, include_deleted=True)
