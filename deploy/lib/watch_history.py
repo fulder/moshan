@@ -13,6 +13,9 @@ from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import PolicyStatement, Role, ServicePrincipal, \
     ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Runtime, Function, Code
+from aws_cdk.aws_lambda_event_sources import SnsEventSource
+from aws_cdk.aws_sns import Topic
+from aws_cdk.aws_sqs import Queue
 from aws_cdk.core import Duration
 
 from .utils import clean_pycache
@@ -243,7 +246,8 @@ class WatchHistory(core.Stack):
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query"],
-                        resources=[f"{self.watch_history_table.table_arn}/index/item_id"]
+                        resources=[
+                            f"{self.watch_history_table.table_arn}/index/item_id"]
                     ),
                     PolicyStatement(
                         actions=["dynamodb:PutItem"],
@@ -330,6 +334,18 @@ class WatchHistory(core.Stack):
                     timeout=Duration.seconds(lambda_config["timeout"]),
                     memory_size=512,
                 )
+
+        topic = Topic.from_topic_arn(
+            self,
+            "shows-topic",
+            f"arn:aws:sns:{self.region}:{self.account}:shows-updates"
+        )
+        self.lambdas["subscribers-show_updates"].add_event_source(
+            SnsEventSource(
+                topic,
+                dead_letter_queue=Queue(self, "show_updates_dlq"),
+            )
+        )
 
     def _create_gateway(self):
         cert = Certificate(
