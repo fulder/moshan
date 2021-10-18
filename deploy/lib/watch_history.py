@@ -4,11 +4,14 @@ import subprocess
 
 from aws_cdk import core
 from aws_cdk.aws_apigateway import DomainName, SecurityPolicy
-from aws_cdk.aws_apigatewayv2 import HttpApi, CfnAuthorizer, HttpIntegration, HttpIntegrationType, HttpMethod, \
-    PayloadFormatVersion, CfnRoute, CfnStage, HttpApiMapping, CorsPreflightOptions
+from aws_cdk.aws_apigatewayv2 import HttpApi, CfnAuthorizer, HttpIntegration, \
+    HttpIntegrationType, HttpMethod, \
+    PayloadFormatVersion, CfnRoute, CfnStage, HttpApiMapping, \
+    CorsPreflightOptions
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
-from aws_cdk.aws_iam import PolicyStatement, Role, ServicePrincipal, ManagedPolicy
+from aws_cdk.aws_iam import PolicyStatement, Role, ServicePrincipal, \
+    ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Runtime, Function, Code
 from aws_cdk.core import Duration
 
@@ -21,7 +24,9 @@ BUILD_FOLDER = os.path.join(CURRENT_DIR, "..", "..", "build")
 
 
 class WatchHistory(core.Stack):
-    def __init__(self, app: core.App, id: str, anime_api_url: str, show_api_url: str, movie_api_url: str, domain_name: str, **kwargs) -> None:
+    def __init__(self, app: core.App, id: str, anime_api_url: str,
+                 show_api_url: str, movie_api_url: str, domain_name: str,
+                 **kwargs) -> None:
         super().__init__(app, id, **kwargs)
         self.anime_api_url = anime_api_url
         self.show_api_url = show_api_url
@@ -53,7 +58,8 @@ class WatchHistory(core.Stack):
             index_name="rating"
         )
         self.watch_history_table.add_local_secondary_index(
-            sort_key=Attribute(name="latest_watch_date", type=AttributeType.STRING),
+            sort_key=Attribute(name="latest_watch_date",
+                               type=AttributeType.STRING),
             index_name="latest_watch_date"
         )
         self.watch_history_table.add_local_secondary_index(
@@ -65,7 +71,8 @@ class WatchHistory(core.Stack):
             index_name="item_id"
         )
         self.watch_history_table.add_global_secondary_index(
-            partition_key=Attribute(name="ep_progress", type=AttributeType.STRING),
+            partition_key=Attribute(name="ep_progress",
+                                    type=AttributeType.STRING),
             index_name="ep_progress"
         )
         self.watch_history_table.add_global_secondary_index(
@@ -83,7 +90,8 @@ class WatchHistory(core.Stack):
             billing_mode=BillingMode.PAY_PER_REQUEST,
         )
         self.episodes_table.add_local_secondary_index(
-            sort_key=Attribute(name="latest_watch_date", type=AttributeType.STRING),
+            sort_key=Attribute(name="latest_watch_date",
+                               type=AttributeType.STRING),
             index_name="latest_watch_date"
         )
 
@@ -114,7 +122,8 @@ class WatchHistory(core.Stack):
                     ),
                     PolicyStatement(
                         actions=["execute-api:Invoke"],
-                        resources=[f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
+                        resources=[
+                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
                     ),
                 ],
                 "timeout": 30
@@ -222,6 +231,32 @@ class WatchHistory(core.Stack):
                 ],
                 "timeout": 10
             },
+            "subscribers-show_updates": {
+                "layers": ["utils", "databases", "api"],
+                "variables": {
+                    "DATABASE_NAME": self.watch_history_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                    "ANIME_API_URL": self.anime_api_url,
+                    "SHOWS_API_URL": self.show_api_url,
+                },
+                "concurrent_executions": 100,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query"],
+                        resources=[f"{self.watch_history_table.table_arn}/index/item_id"]
+                    ),
+                    PolicyStatement(
+                        actions=["dynamodb:PutItem"],
+                        resources=[self.watch_history_table.table_arn],
+                    ),
+                    PolicyStatement(
+                        actions=["execute-api:Invoke"],
+                        resources=[
+                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
+                    ),
+                ],
+                "timeout": 60
+            },
         }
 
     def _create_layers(self):
@@ -237,9 +272,13 @@ class WatchHistory(core.Stack):
             requirements_path = os.path.join(build_folder, "requirements.txt")
 
             if os.path.isfile(requirements_path):
-                packages_folder = os.path.join(build_folder, "python", "lib", "python3.8", "site-packages")
-                print(f"Installing layer requirements to target: {os.path.abspath(packages_folder)}")
-                subprocess.check_output(["pip", "install", "-r", requirements_path, "-t", packages_folder])
+                packages_folder = os.path.join(build_folder, "python", "lib",
+                                               "python3.8", "site-packages")
+                print(
+                    f"Installing layer requirements to target: {os.path.abspath(packages_folder)}")
+                subprocess.check_output(
+                    ["pip", "install", "-r", requirements_path, "-t",
+                     packages_folder])
                 clean_pycache()
 
             self.layers[layer] = LayerVersion(
@@ -273,7 +312,8 @@ class WatchHistory(core.Stack):
                 for policy in lambda_config["policies"]:
                     lambda_role.add_to_policy(policy)
                 lambda_role.add_managed_policy(
-                    ManagedPolicy.from_aws_managed_policy_name("service-role/AWSLambdaBasicExecutionRole"))
+                    ManagedPolicy.from_aws_managed_policy_name(
+                        "service-role/AWSLambdaBasicExecutionRole"))
 
                 self.lambdas[name] = Function(
                     self,
@@ -284,7 +324,8 @@ class WatchHistory(core.Stack):
                     layers=layers,
                     function_name=name,
                     environment=lambda_config["variables"],
-                    reserved_concurrent_executions=lambda_config["concurrent_executions"],
+                    reserved_concurrent_executions=lambda_config[
+                        "concurrent_executions"],
                     role=lambda_role,
                     timeout=Duration.seconds(lambda_config["timeout"]),
                     memory_size=512,
@@ -310,7 +351,8 @@ class WatchHistory(core.Stack):
             "watch-history",
             create_default_stage=False,
             cors_preflight=CorsPreflightOptions(
-                allow_methods=[HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE],
+                allow_methods=[HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT,
+                               HttpMethod.DELETE],
                 allow_origins=["https://moshan.tv", "https://beta.moshan.tv"],
                 allow_headers=["authorization", "content-type"]
             )
