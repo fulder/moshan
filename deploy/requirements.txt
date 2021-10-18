@@ -22,7 +22,7 @@ aws-cdk.aws-apigateway==1.128.0 \
     # via
     #   -r deploy/requirements.in
     #   aws-cdk.aws-lambda-event-sources
-aws-cdk.aws-apigatewayv2==1.128.0 \
+aws_cdk.aws_apigatewayv2==1.128.0 \
     --hash=sha256:5d020e069f1f944044a7c9b70f2cb02ac3d4e1bc97c815ebe81b8e325517e4db \
     --hash=sha256:7e870d8c54e9fd2ea657a963ebb72462d6005d526ea408ec1b8a1a6552108d1a
     # via -r deploy/requirements.in
@@ -197,7 +197,7 @@ aws_cdk.aws_lambda==1.128.0 \
     #   aws-cdk.aws-secretsmanager
     #   aws-cdk.aws-sns-subscriptions
     #   aws-cdk.custom-resources
-aws-cdk.aws-lambda-event-sources==1.128.0 \
+aws_cdk.aws_lambda_event_sources==1.128.0 \
     --hash=sha256:5334f0da415fce6880881e80e063f25b6ef24e226eadb278dec5489ceccb1c17 \
     --hash=sha256:9bb4e2d3349d529fc0c18fb0444aba49048adbbf91fa0722a2cadddba184792e
     # via -r deploy/requirements.in
