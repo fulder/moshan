@@ -12,7 +12,7 @@ def handle(event, context):
         message["api_id"],
     )
 
-    items = watch_history_db.get_items_by_id(show["item_id"])
+    items = watch_history_db.get_items_by_id(show["id"])
     for item in items:
         print(f"Updating item: {item}")
 
