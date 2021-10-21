@@ -4,7 +4,7 @@ import shows_api
 import watch_history_db
 
 
-def handler(event, context):
+def handle(event, context):
     message = json.loads(event["Records"][0]["Sns"]["Message"])
 
     show = shows_api.get_episode_by_api_id(
