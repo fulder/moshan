@@ -442,10 +442,10 @@ class WatchHistory(core.Stack):
 
         HttpStage(
             self,
-            "live",
+            "prod",
             http_api=http_api,
             auto_deploy=True,
-            stage_name="live",
+            stage_name="prod",
             domain_mapping=DomainMappingOptions(
                 domain_name=domain_name,
             )
