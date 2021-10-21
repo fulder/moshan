@@ -6,9 +6,13 @@ import utils
 SHOWS_API_URL = os.getenv("SHOWS_API_URL")
 
 
-def get_show(show_id):
+def get_show(show_id, api_name=None):
+    url = f"{SHOWS_API_URL}/shows/{show_id}"
+    if api_name is not None:
+        url += f"?api_name={api_name}"
+
     res = requests.get(
-        f"{SHOWS_API_URL}/shows/{show_id}", auth=utils.get_v4_signature_auth()
+        url, auth=utils.get_v4_signature_auth()
     )
     if res.status_code != 200:
         raise utils.HttpError("Invalid response in get_show", res.status_code)

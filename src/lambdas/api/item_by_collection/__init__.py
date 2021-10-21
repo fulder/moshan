@@ -27,26 +27,31 @@ def handle(event, context):
     method = event["requestContext"]["http"]["method"]
     collection_name = event["pathParameters"].get("collection_name")
     item_id = event["pathParameters"].get("item_id")
+    query_params = event.get("queryStringParameters")
+
+    show_api = None
+    if query_params is not None:
+        show_api = query_params.get("show_api")
 
     if collection_name not in schema.COLLECTION_NAMES:
         return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
 
     if method == "GET":
-        return _get_item(username, collection_name, item_id, auth_header)
+        return _get_item(username, collection_name, item_id, auth_header, show_api)
     elif method == "PUT":
         body = event.get("body")
-        return _put_item(username, collection_name, item_id, body, auth_header)
+        return _put_item(username, collection_name, item_id, body, auth_header, show_api)
     elif method == "DELETE":
         return _delete_item(username, collection_name, item_id)
 
 
-def _get_item(username, collection_name, item_id, token):
+def _get_item(username, collection_name, item_id, token, show_api):
     s_ret = None
     try:
         if collection_name == "anime":
             s_ret = anime_api.get_anime(item_id, token)
         elif collection_name == "show":
-            s_ret = shows_api.get_show(item_id)
+            s_ret = shows_api.get_show(item_id, show_api)
         elif collection_name == "movie":
             s_ret = movie_api.get_movie(item_id, token)
     except utils.HttpError as e:
@@ -69,7 +74,7 @@ def _get_item(username, collection_name, item_id, token):
         return {"statusCode": 404}
 
 
-def _put_item(username, collection_name, item_id, body, token):
+def _put_item(username, collection_name, item_id, body, token, show_api):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -87,7 +92,7 @@ def _put_item(username, collection_name, item_id, body, token):
         if collection_name == "anime":
             anime_api.get_anime(item_id, token)
         elif collection_name == "show":
-            shows_api.get_show(item_id)
+            shows_api.get_show(item_id, show_api)
         elif collection_name == "movie":
             movie_api.get_movie(item_id, token)
     except utils.HttpError as e:

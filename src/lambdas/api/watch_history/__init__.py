@@ -16,10 +16,12 @@ def handle(event, context):
 
     sort = None
     status_filter = None
+    show_api = None
     query_params = event.get("queryStringParameters")
     if query_params:
         sort = query_params.get("sort")
         status_filter = query_params.get("status")
+        show_api = query_params.get("show_api")
 
     if sort and sort not in ALLOWED_SORT:
         return {
@@ -35,7 +37,12 @@ def handle(event, context):
         )
 
         remove_status = status_filter is not None
-        items = utils.merge_media_api_info_from_items(items, remove_status, auth_header)
+        items = utils.merge_media_api_info_from_items(
+            items,
+            remove_status,
+            auth_header,
+            show_api=show_api,
+        )
         return {
             "statusCode": 200,
             "body": json.dumps({"items": items},
