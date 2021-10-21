@@ -27,7 +27,7 @@ def handle(event, context):
         item["ep_progress"] = str(round(ep_progress * 100, 2))
 
         item["special_count"] = show["special_count"]
-        special_progress = item["special_eps"] / item["special_count"]
+        special_progress = item["watched_special"] / item["special_count"]
         item["special_progress"] = str(round(special_progress * 100, 2))
 
         watch_history_db.put_item(item)
