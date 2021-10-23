@@ -3,7 +3,7 @@ import os
 from json import JSONDecodeError
 
 import decimal_encoder
-import api_errors
+import utils
 import logger
 import jwt_utils
 import movie_api
@@ -26,6 +26,7 @@ def handle(event, context):
     collection_name = event["pathParameters"].get("collection_name")
 
     method = event["requestContext"]["http"]["method"]
+    query_params = event.get("queryStringParameters")
 
     if collection_name not in schema.COLLECTION_NAMES:
         err = f"Invalid collection name, " \
@@ -37,21 +38,21 @@ def handle(event, context):
 
     if method == "GET":
         query_params = event.get("queryStringParameters", {})
-        return _get(username, collection_name, auth_header, query_params)
+        return _get(username, collection_name, auth_header, query_params, auth_header)
     elif method == "POST":
         body = event.get("body")
         return _post_collection_item(username, collection_name, body,
                                      auth_header)
 
 
-def _get(username, collection_name, auth_header, query_params):
+def _get(username, collection_name, auth_header, query_params, token):
     if "api_name" in query_params and "api_id" in query_params:
         api_name = query_params["api_name"]
         api_id = query_params["api_id"]
         return _get_by_api_id(collection_name, api_name, api_id, username,
                               auth_header)
     else:
-        return _get_watch_history(username, collection_name, query_params)
+        return _get_watch_history(username, collection_name, query_params, token)
 
 
 def _get_by_api_id(collection_name, api_name, api_id, username, token):
@@ -60,10 +61,10 @@ def _get_by_api_id(collection_name, api_name, api_id, username, token):
         if collection_name == "anime":
             s_ret = anime_api.get_anime_by_api_id(api_name, api_id, token)
         elif collection_name == "show":
-            s_ret = shows_api.get_show_by_api_id(api_name, api_id, token)
+            s_ret = shows_api.get_show_by_api_id(api_name, api_id)
         elif collection_name == "movie":
             s_ret = movie_api.get_movie_by_api_id(api_name, api_id, token)
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code,
@@ -81,10 +82,12 @@ def _get_by_api_id(collection_name, api_name, api_id, username, token):
         }
 
 
-def _get_watch_history(username, collection_name, query_params):
+def _get_watch_history(username, collection_name, query_params, token):
     sort = None
+    show_api = None
     if query_params:
         sort = query_params.get("sort")
+        show_api = query_params.get("show_api")
 
     if sort and sort not in schema.ALLOWED_SORT:
         err = f"Invalid sort specified. Allowed values: {schema.ALLOWED_SORT}"
@@ -93,37 +96,24 @@ def _get_watch_history(username, collection_name, query_params):
             "body": json.dumps({"error": err})
         }
 
-    limit = 20
-    start = 1
-    if query_params and "limit" in query_params:
-        limit = query_params.get("limit")
-    if query_params and "start" in query_params:
-        start = query_params.get("start")
-
     try:
-        limit = int(limit)
-    except ValueError:
-        return {"statusCode": 400,
-                "body": json.dumps({"message": "Invalid limit type"})}
-    try:
-        start = int(start)
-    except ValueError:
-        return {"statusCode": 400,
-                "body": json.dumps({"message": "Invalid start type"})}
+        items = watch_history_db.get_watch_history(
+            username,
+            collection_name=collection_name,
+            index_name=sort
+        )
 
-    if limit > 20:
-        limit = 20
+        items = utils.merge_media_api_info_from_items(
+            items,
+            True,
+            token,
+            show_api=show_api,
+        )
 
-    try:
-        watch_history = watch_history_db.get_watch_history(username,
-                                                           collection_name=collection_name,
-                                                           index_name=sort,
-                                                           limit=limit,
-                                                           start=start)
         return {
-            "statusCode": 200, "body":
-                json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)
-        }
+                "statusCode": 200, "body":
+                    json.dumps({"items": items}, cls=decimal_encoder.DecimalEncoder)
+            }
     except watch_history_db.NotFoundError:
         return {"statusCode": 200, "body": json.dumps({"items": []})}
     except watch_history_db.InvalidStartOffset:
@@ -158,10 +148,10 @@ def _post_collection_item(username, collection_name, body, token):
         if collection_name == "anime":
             res = anime_api.post_anime(api_body, token)
         elif collection_name == "show":
-            res = shows_api.post_show(api_body, token)
+            res = shows_api.post_show(api_body)
         elif collection_name == "movie":
             res = movie_api.post_movie(api_body, token)
-    except api_errors.HttpError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
         return {"statusCode": e.status_code,
@@ -170,7 +160,16 @@ def _post_collection_item(username, collection_name, body, token):
     item_id = res["id"]
     del body["api_id"]
     del body["api_name"]
-    watch_history_db.add_item(username, collection_name, item_id, body)
+
+    if "ep_count" in res:
+        body["ep_count"] = res.get("ep_count")
+        body["special_count"] = res.get("special_count")
+        body["ep_progress"] = 0
+        body["special_progress"] = 0
+        body["watched_eps"] = 0
+        body["watched_special"] = 0
+
+    watch_history_db.add_item(username, collection_name, item_id, item_data)
     return {
         "statusCode": 200,
         "body": json.dumps({"id": item_id})
