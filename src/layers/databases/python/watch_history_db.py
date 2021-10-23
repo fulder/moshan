@@ -129,12 +129,16 @@ def update_item(username, collection_name, item_id, data,
     )
 
 
-def change_watched_eps(username, collection_name, item_id, change):
+def change_watched_eps(username, collection_name, item_id, change, special=False):
+    field_name = "ep"
+    if special:
+        field_name = "special"
+
     item = get_item(username, collection_name, item_id)
-    if item["ep_count"] == 0:
+    if item[f"{field_name}_count"] == 0:
         ep_progress = 0
     else:
-        ep_progress = (item["watched_eps"] + (change)) / item["ep_count"]
+        ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[f"{field_name}_count"]
     ep_progress = str(round(ep_progress * 100, 2))
 
     _get_table().update_item(
@@ -144,8 +148,8 @@ def change_watched_eps(username, collection_name, item_id, change):
         },
         UpdateExpression="SET #w=#w+:i, #p=:p",
         ExpressionAttributeNames={
-            "#w": "watched_eps",
-            "#e": "ep_progress",
+            "#w": f"watched_{field_name}s",
+            "#e": f"{field_name}_progress",
         },
         ExpressionAttributeValues={
             ":p": ep_progress,
