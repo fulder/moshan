@@ -374,3 +374,26 @@ def test_change_watched_eps_removal(mocked_watch_history_db):
         'Key': {'item_id': '123123', 'username': 'TEST_USERNAME'},
         'UpdateExpression': 'SET #w=#w+:i, #p=:p'
     }
+
+
+def test_change_watched_specials(mocked_watch_history_db):
+    mock_func = MockFunc()
+    mocked_watch_history_db.table.update_item = mock_func.f
+    mocked_watch_history_db.table.query.return_value = {
+        "Items": [
+            {
+                "special_count": 20,
+                "watched_specials": 2,
+            }
+        ]
+    }
+
+    mocked_watch_history_db.change_watched_eps(TEST_USERNAME, "MOVIE", "123123",
+                                               1, special=True)
+
+    assert mock_func.update_values == {
+        'ExpressionAttributeNames': {'#e': 'special_progress', '#w': 'watched_specials'},
+        'ExpressionAttributeValues': {':i': 1, ':p': '15.0'},
+        'Key': {'item_id': '123123', 'username': 'TEST_USERNAME'},
+        'UpdateExpression': 'SET #w=#w+:i, #p=:p'
+    }
