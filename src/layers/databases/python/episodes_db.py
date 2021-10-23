@@ -50,7 +50,10 @@ def _get_client():
     return client
 
 
-def add_episode(username, collection_name, item_id, episode_id, data):
+def add_episode(username, collection_name, item_id, episode_id, data=None):
+    if data is None:
+        data = {}
+
     data["item_id"] = item_id
     try:
         get_episode(username, collection_name, episode_id, include_deleted=True)

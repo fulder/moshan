@@ -169,7 +169,7 @@ def _post_collection_item(username, collection_name, body, token):
         body["watched_eps"] = 0
         body["watched_special"] = 0
 
-    watch_history_db.add_item(username, collection_name, item_id, item_data)
+    watch_history_db.add_item(username, collection_name, item_id, body)
     return {
         "statusCode": 200,
         "body": json.dumps({"id": item_id})

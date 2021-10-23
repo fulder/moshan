@@ -193,7 +193,8 @@ def test_update_item_dates_watched(mocked_watch_history_db):
     mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123",
                                         {"dates_watched": [
                                             "2020-12-20T15:30:09.909Z",
-                                            "2021-12-20T15:30:09.909Z"]})
+                                            "2021-12-20T15:30:09.909Z"
+                                        ]})
 
     assert mock_func.update_values == {
         'ExpressionAttributeNames': {

@@ -195,15 +195,21 @@ class TestPost:
             "collection_name": "anime",
             "item_id": "123"
         },
-        "body": '{ "api_id": "456", "api_name": "mal" }'
+        "body": '{ "api_id": "456", "api_name": "mal", "dates_watched": ["2020-01-01 10:00:00"] }'
     }
 
     @patch("api.episode_by_collection_item.episodes_db.add_episode")
     @patch("api.episode_by_collection_item.anime_api.post_episode")
-    def test_success_anime(self, mocked_post_episode, mocked_post):
+    @patch("api.episode_by_collection_item.watch_history_db.get_item")
+    @patch("api.episode_by_collection_item.watch_history_db.update_item")
+    @patch("api.episode_by_collection_item.episodes_db.update_episode")
+    def test_success_anime(self, mocked_update_episode, mocked_update_item, mocked_get_item, mocked_post_episode, mocked_post):
         mocked_post.return_value = True
         mocked_post_episode.return_value = {
             "id": "123"
+        }
+        mocked_get_item.return_value = {
+            "latest_watch_date": "2030-01-01 10:00:00"
         }
 
         ret = handle(self.event, None)
@@ -214,11 +220,18 @@ class TestPost:
 
     @patch("api.episode_by_collection_item.episodes_db.add_episode")
     @patch("api.episode_by_collection_item.shows_api.post_episode")
-    def test_success_show(self, mocked_post_episode, mocked_post):
+    @patch("api.episode_by_collection_item.watch_history_db.get_item")
+    @patch("api.episode_by_collection_item.watch_history_db.update_item")
+    @patch("api.episode_by_collection_item.episodes_db.update_episode")
+    def test_success_show(self, mocked_update_episode, mocked_update_item, mocked_get_item, mocked_post_episode, mocked_post):
         mocked_post.return_value = True
         mocked_post_episode.return_value = {
             "id": "123"
         }
+        mocked_get_item.return_value = {
+            "latest_watch_date": "2030-01-01 10:00:00"
+        }
+
         event = copy.deepcopy(self.event)
         event["pathParameters"]["collection_name"] = "show"
 
