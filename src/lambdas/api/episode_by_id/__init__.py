@@ -96,28 +96,30 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
         return {"statusCode": e.status_code,
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
-    item = watch_history_db.get_item(username, collection_name, item_id)
-
-    latest_watch_date = episodes_db.update_episode(
+    episodes_db.update_episode(
         username,
         collection_name,
         episode_id,
         body
     )
-    if latest_watch_date is None:
+
+    if "dates_watched" not in body:
         return {"statusCode": 204}
 
     # If episode watch date is changed check if its larger than current
     # item latest date and update item if that's the case
-    ep_date = dateutil.parser.parse(latest_watch_date)
+    ep_date = max([dateutil.parser.parse(d) for d in body["dates_watched"]])
 
+    item = watch_history_db.get_item(username, collection_name, item_id)
     if (item["latest_watch_date"] == "0" or
             ep_date > dateutil.parser.parse(item["latest_watch_date"])):
+        ep_date = ep_date.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
         watch_history_db.update_item(
             username,
             collection_name,
             item_id,
-            {"latest_watch_date": latest_watch_date}
+            {"latest_watch_date": f"{ep_date}"},
+            clean_whitelist=[],
         )
 
     return {"statusCode": 204}

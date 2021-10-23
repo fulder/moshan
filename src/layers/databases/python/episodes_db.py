@@ -50,17 +50,17 @@ def _get_client():
     return client
 
 
-def add_episode(username, collection_name, item_id, episode_id):
-    data = {
-        "item_id": item_id
-    }
+def add_episode(username, collection_name, item_id, episode_id, data=None):
+    if data is None:
+        data = {}
+
+    data["item_id"] = item_id
     try:
         get_episode(username, collection_name, episode_id, include_deleted=True)
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_episode(username, collection_name, episode_id, data,
-                   clean_whitelist=["deleted_at"])
+    update_episode(username, collection_name, episode_id, data, clean_whitelist=["deleted_at"])
 
 
 def delete_episode(username, collection_name, episode_id):
@@ -93,13 +93,7 @@ def update_episode(username, collection_name, episode_id, data,
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if "dates_watched" in data:
-        latest_date = None
-
-        for watch_date in data["dates_watched"]:
-            next_date = dateutil.parser.parse(watch_date)
-            if latest_date is None or next_date > latest_date:
-                latest_date = next_date
-                data["latest_watch_date"] = watch_date
+        data["latest_watch_date"] = max(data["dates_watched"])
 
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
@@ -129,10 +123,6 @@ def update_episode(username, collection_name, episode_id, data,
         ExpressionAttributeNames=expression_attribute_names,
         ExpressionAttributeValues=expression_attribute_values
     )
-
-    if "latest_watch_date" in data:
-        return data["latest_watch_date"]
-    return None
 
 
 def get_episodes(username, collection_name, item_id, limit=100, start=1):

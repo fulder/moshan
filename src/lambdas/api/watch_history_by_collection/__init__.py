@@ -141,12 +141,16 @@ def _post_collection_item(username, collection_name, body, token):
 
     res = None
     try:
+        api_body = {
+            "api_id": body["api_id"],
+            "api_name": body["api_name"],
+        }
         if collection_name == "anime":
-            res = anime_api.post_anime(body, token)
+            res = anime_api.post_anime(api_body, token)
         elif collection_name == "show":
-            res = shows_api.post_show(body)
+            res = shows_api.post_show(api_body)
         elif collection_name == "movie":
-            res = movie_api.post_movie(body, token)
+            res = movie_api.post_movie(api_body, token)
     except utils.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -154,19 +158,18 @@ def _post_collection_item(username, collection_name, body, token):
                 "body": json.dumps({"message": err_msg}), "error": str(e)}
 
     item_id = res["id"]
+    del body["api_id"]
+    del body["api_name"]
 
-    item_data = {}
     if "ep_count" in res:
-        item_data = {
-            "ep_count": res.get("ep_count"),
-            "special_count": res.get("special_count"),
-            "ep_progress": 0,
-            "special_progress": 0,
-            "watched_eps": 0,
-            "watched_special": 0,
-        }
+        body["ep_count"] = res.get("ep_count")
+        body["special_count"] = res.get("special_count")
+        body["ep_progress"] = 0
+        body["special_progress"] = 0
+        body["watched_eps"] = 0
+        body["watched_special"] = 0
 
-    watch_history_db.add_item(username, collection_name, item_id, item_data)
+    watch_history_db.add_item(username, collection_name, item_id, body)
     return {
         "statusCode": 200,
         "body": json.dumps({"id": item_id})
