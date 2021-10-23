@@ -62,7 +62,8 @@ def add_item(username, collection_name, item_id, data=None):
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_item(username, collection_name, item_id, data, clean_whitelist=["deleted_at"])
+    update_item(username, collection_name, item_id, data,
+                clean_whitelist=["deleted_at"])
 
 
 def delete_item(username, collection_name, item_id):
@@ -125,6 +126,31 @@ def update_item(username, collection_name, item_id, data,
         UpdateExpression=update_expression,
         ExpressionAttributeNames=expression_attribute_names,
         ExpressionAttributeValues=expression_attribute_values
+    )
+
+
+def change_watched_eps(username, collection_name, item_id, change):
+    item = get_item(username, collection_name, item_id)
+    if item["ep_count"] == 0:
+        ep_progress = 0
+    else:
+        ep_progress = (item["watched_eps"] + (change)) / item["ep_count"]
+    ep_progress = str(round(ep_progress * 100, 2))
+
+    _get_table().update_item(
+        Key={
+            "username": username,
+            "item_id": item_id,
+        },
+        UpdateExpression="SET #w=#w+:i, #p=:p",
+        ExpressionAttributeNames={
+            "#w": "watched_eps",
+            "#e": "ep_progress",
+        },
+        ExpressionAttributeValues={
+            ":p": ep_progress,
+            ":i": change,
+        }
     )
 
 
