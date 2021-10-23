@@ -2,7 +2,7 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-import api_errors
+import utils
 
 
 @patch("movie_api.requests.get")
@@ -23,7 +23,7 @@ def test_get_movie_invalid_code(mocked_get, mocked_movie_api):
     m.status_code = 404
     mocked_get.return_value = m
 
-    with pytest.raises(api_errors.HttpError):
+    with pytest.raises(utils.HttpError):
         mocked_movie_api.get_movie("123", "TEST_TOKEN")
 
 
@@ -45,7 +45,7 @@ def test_get_movie_by_api_id_invalid_code(mocked_get, mocked_movie_api):
     m.status_code = 404
     mocked_get.return_value = m
 
-    with pytest.raises(api_errors.HttpError):
+    with pytest.raises(utils.HttpError):
         mocked_movie_api.get_movie_by_api_id("tmdb", "123", "TEST_TOKEN")
 
 
@@ -67,5 +67,5 @@ def test_post_movie_invalid_code(mocked_post, mocked_movie_api):
     m.status_code = 404
     mocked_post.return_value = m
 
-    with pytest.raises(api_errors.HttpError):
+    with pytest.raises(utils.HttpError):
         mocked_movie_api.post_movie({}, "TEST_TOKEN")

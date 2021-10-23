@@ -1,13 +1,13 @@
 import json
 
+import utils
 import decimal_encoder
 import logger
 import jwt_utils
 import watch_history_db
+from schema import ALLOWED_SORT
 
 log = logger.get_logger("watch_history")
-
-ALLOWED_SORT = ["rating", "dates_watched", "state"]
 
 
 def handle(event, context):
@@ -15,9 +15,13 @@ def handle(event, context):
     username = jwt_utils.get_username(auth_header)
 
     sort = None
+    status_filter = None
+    show_api = None
     query_params = event.get("queryStringParameters")
     if query_params:
         sort = query_params.get("sort")
+        status_filter = query_params.get("status")
+        show_api = query_params.get("show_api")
 
     if sort and sort not in ALLOWED_SORT:
         return {
@@ -25,28 +29,37 @@ def handle(event, context):
             "body": json.dumps({"error": f"Invalid sort specified. Allowed values: {ALLOWED_SORT}"})
         }
 
-    limit = 100
-    start = 1
-
-    query_params = event.get("queryStringParameters")
-    if query_params and "limit" in query_params:
-        limit = query_params.get("limit")
-    if query_params and "start" in query_params:
-        start = query_params.get("start")
-
     try:
-        limit = int(limit)
-    except ValueError:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid limit type"})}
-    try:
-        start = int(start)
-    except ValueError:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid start type"})}
+        items = watch_history_db.get_watch_history(
+            username,
+            index_name=sort,
+            status_filter=status_filter
+        )
 
-    try:
-        watch_history = watch_history_db.get_watch_history(username, index_name=sort, limit=limit, start=start)
-        return {"statusCode": 200, "body": json.dumps(watch_history, cls=decimal_encoder.DecimalEncoder)}
+        remove_status = status_filter is not None
+        items = utils.merge_media_api_info_from_items(
+            items,
+            remove_status,
+            auth_header,
+            show_api=show_api,
+        )
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"items": items},
+                               cls=decimal_encoder.DecimalEncoder)
+        }
+    except utils.HttpError as e:
+        err_msg = f"Could not get item from media API"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code,
+                "body": json.dumps({"message": err_msg}),
+                "error": str(e)}
+
+
     except watch_history_db.NotFoundError:
-        return {"statusCode": 200, "body": json.dumps({"items": []})}
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"items": []})
+        }
 
 

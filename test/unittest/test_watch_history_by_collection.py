@@ -3,7 +3,7 @@ import json
 from decimal import Decimal
 from unittest.mock import patch
 
-from api_errors import HttpError
+from utils import HttpError
 from api.watch_history_by_collection import handle
 from schema import ALLOWED_SORT
 from watch_history_db import NotFoundError
@@ -25,20 +25,24 @@ class TestGet:
             }
         }
     }
-    watch_history_ret = {
-        "items": [
-            {"collection_name": "anime", "item_id": 123}
-        ]
-    }
 
+    @patch("utils.merge_media_api_info_from_items")
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-    def test_success(self, mocked_get_watch_history):
-        mocked_get_watch_history.return_value = self.watch_history_ret
+    def test_success(self, mocked_get_watch_history, mocked_get_media_api_info):
+        mocked_get_media_api_info.return_value = [
+            {
+                "collection_name": "anime",
+                "item_id": 123,
+                "username": "user",
+                "test_key": "test_value",
+            }
+        ]
 
         ret = handle(self.event, None)
 
         assert ret == {
-            "body": json.dumps(self.watch_history_ret),
+            "body": json.dumps(
+                {"items": mocked_get_media_api_info.return_value}),
             "statusCode": 200
         }
 
@@ -46,7 +50,11 @@ class TestGet:
     @patch("api.watch_history_by_collection.anime_api.get_anime_by_api_id")
     def test_success_by_api_id_anime(self, mocked_get_anime,
                                      mocked_get_watch_history):
-        w_ret = self.watch_history_ret["items"][0]
+        w_ret = {
+            "collection_name": "anime",
+            "item_id": 123,
+            "username": "user",
+        }
         s_ret = {
             "id": 123
         }
@@ -69,7 +77,11 @@ class TestGet:
     @patch("api.watch_history_by_collection.shows_api.get_show_by_api_id")
     def test_success_by_api_id_shows(self, mocked_get_show,
                                      mocked_get_watch_history):
-        w_ret = self.watch_history_ret["items"][0]
+        w_ret = {
+            "collection_name": "anime",
+            "item_id": 123,
+            "username": "user",
+        }
         s_ret = {
             "id": 123
         }
@@ -93,7 +105,11 @@ class TestGet:
     @patch("api.watch_history_by_collection.movie_api.get_movie_by_api_id")
     def test_success_by_api_id_movie(self, mocked_get_movie,
                                      mocked_get_watch_history):
-        w_ret = self.watch_history_ret["items"][0]
+        w_ret = {
+            "collection_name": "anime",
+            "item_id": 123,
+            "username": "user",
+        }
         s_ret = {
             "id": 123
         }
@@ -144,9 +160,16 @@ class TestGet:
             "body": json.dumps({"error": err})
         }
 
+    @patch("utils.merge_media_api_info_from_items")
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-    def test_sort_success(self, mocked_get_watch_history):
-        mocked_get_watch_history.return_value = self.watch_history_ret
+    def test_sort_success(self, mocked_get_watch_history, mocked_get_media_api_info):
+        mocked_get_media_api_info.return_value = [
+            {
+                "collection_name": "anime",
+                "item_id": 123,
+                "username": "user",
+            }
+        ]
         event = copy.deepcopy(self.event)
         event["queryStringParameters"] = {
             "sort": "latest_watch_date"
@@ -155,62 +178,8 @@ class TestGet:
         ret = handle(event, None)
 
         assert ret == {
-            "body": json.dumps(self.watch_history_ret),
+            "body": json.dumps({"items":  mocked_get_media_api_info.return_value}),
             "statusCode": 200
-        }
-
-    @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
-    def test_limit_and_start_success(self, mocked_get_watch_history):
-        mocked_get_watch_history.return_value = self.watch_history_ret
-        event = copy.deepcopy(self.event)
-        event["queryStringParameters"] = {
-            "limit": "200",
-            "start": "23"
-        }
-
-        ret = handle(event, None)
-
-        assert ret == {
-            "body": json.dumps(self.watch_history_ret),
-            "statusCode": 200}
-
-    def test_invalid_limit_type(self):
-        event = copy.deepcopy(self.event)
-        event["queryStringParameters"] = {
-            "limit": "ABC",
-        }
-
-        ret = handle(event, None)
-
-        assert ret == {
-            "body": '{"message": "Invalid limit type"}',
-            "statusCode": 400
-        }
-
-    def test_invalid_start_type(self):
-        event = copy.deepcopy(self.event)
-        event["queryStringParameters"] = {
-            "start": "ABC",
-        }
-
-        ret = handle(event, None)
-
-        assert ret == {
-            "body": '{"message": "Invalid start type"}',
-            "statusCode": 400
-        }
-
-    def test_invalid_start_value(self):
-        event = copy.deepcopy(self.event)
-        event["queryStringParameters"] = {
-            "start": "0",
-        }
-
-        ret = handle(event, None)
-
-        assert ret == {
-            "body": '{"message": "Invalid start offset"}',
-            "statusCode": 400
         }
 
     @patch("api.watch_history_by_collection.watch_history_db.get_watch_history")
