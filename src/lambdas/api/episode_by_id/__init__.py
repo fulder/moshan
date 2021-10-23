@@ -113,6 +113,7 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
     item = watch_history_db.get_item(username, collection_name, item_id)
     if (item["latest_watch_date"] == "0" or
             ep_date > dateutil.parser.parse(item["latest_watch_date"])):
+        ep_date = ep_date.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
         watch_history_db.update_item(
             username,
             collection_name,

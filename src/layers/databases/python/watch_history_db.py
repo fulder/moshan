@@ -95,7 +95,8 @@ def update_item(username, collection_name, item_id, data,
 
     if "dates_watched" in data:
         m_d = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
-        data["latest_watch_date"] = f"{m_d}"
+        m_d = m_d.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        data["latest_watch_date"] = m_d.replace("000Z", "Z")
 
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
