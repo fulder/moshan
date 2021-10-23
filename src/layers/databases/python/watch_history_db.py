@@ -55,14 +55,14 @@ def add_item(username, collection_name, item_id, data=None):
     if data is None:
         data = {}
 
-    data["latest_watch_date"] = "0"
+    if "dates_watched" not in data:
+        data["latest_watch_date"] = "0"
     try:
         get_item(username, collection_name, item_id, include_deleted=True)
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_item(username, collection_name, item_id, data,
-                clean_whitelist=["deleted_at"])
+    update_item(username, collection_name, item_id, data, clean_whitelist=["deleted_at"])
 
 
 def delete_item(username, collection_name, item_id):
@@ -94,13 +94,9 @@ def update_item(username, collection_name, item_id, data,
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if "dates_watched" in data:
-        latest_date = None
-
-        for watch_date in data["dates_watched"]:
-            next_date = dateutil.parser.parse(watch_date)
-            if latest_date is None or next_date > latest_date:
-                latest_date = next_date
-                data["latest_watch_date"] = watch_date
+        m_d = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
+        m_d = m_d.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        data["latest_watch_date"] = m_d.replace("000Z", "Z")
 
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
