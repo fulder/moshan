@@ -160,6 +160,14 @@ def _post_episode(username, collection_name, item_id, body, token):
         body
     )
 
+    watch_history_db.change_watched_eps(
+        username,
+        collection_name,
+        item_id,
+        1,
+        special=res["is_special"]
+    )
+
     if "dates_watched" not in body:
         return {
             "statusCode": 200,
