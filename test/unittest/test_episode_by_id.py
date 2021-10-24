@@ -99,7 +99,9 @@ class TestDelete:
     }
 
     @patch("api.episode_by_id.episodes_db.delete_episode")
-    def test_success(self, mocked_delete):
+    @patch("api.episode_by_id.anime_api.get_episode")
+    @patch("api.episode_by_id.watch_history_db.change_watched_eps")
+    def test_success(self, mocked_change_watched_eps, mocked_anime_api, mocked_delete):
         mocked_delete.return_value = True
 
         ret = handle(self.event, None)
