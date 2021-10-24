@@ -203,10 +203,12 @@ class TestPost:
     @patch("api.episode_by_collection_item.watch_history_db.get_item")
     @patch("api.episode_by_collection_item.watch_history_db.update_item")
     @patch("api.episode_by_collection_item.episodes_db.update_episode")
-    def test_success_anime(self, mocked_update_episode, mocked_update_item, mocked_get_item, mocked_post_episode, mocked_post):
+    @patch("api.episode_by_collection_item.watch_history_db.change_watched_eps")
+    def test_success_anime(self, mocked_change_watched_eps, mocked_update_episode, mocked_update_item, mocked_get_item, mocked_post_episode, mocked_post):
         mocked_post.return_value = True
         mocked_post_episode.return_value = {
-            "id": "123"
+            "id": "123",
+            "is_special": False,
         }
         mocked_get_item.return_value = {
             "latest_watch_date": "2030-01-01 10:00:00"
@@ -223,10 +225,12 @@ class TestPost:
     @patch("api.episode_by_collection_item.watch_history_db.get_item")
     @patch("api.episode_by_collection_item.watch_history_db.update_item")
     @patch("api.episode_by_collection_item.episodes_db.update_episode")
-    def test_success_show(self, mocked_update_episode, mocked_update_item, mocked_get_item, mocked_post_episode, mocked_post):
+    @patch("api.episode_by_collection_item.watch_history_db.change_watched_eps")
+    def test_success_show(self, mocked_change_watched_eps, mocked_update_episode, mocked_update_item, mocked_get_item, mocked_post_episode, mocked_post):
         mocked_post.return_value = True
         mocked_post_episode.return_value = {
-            "id": "123"
+            "id": "123",
+            "is_special": False,
         }
         mocked_get_item.return_value = {
             "latest_watch_date": "2030-01-01 10:00:00"
