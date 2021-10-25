@@ -153,13 +153,6 @@ def _post_episode(username, collection_name, item_id, body, token):
     episodes_db.add_episode(username, collection_name, item_id, episode_id,
                             body)
 
-    episodes_db.update_episode(
-        username,
-        collection_name,
-        episode_id,
-        body
-    )
-
     watch_history_db.change_watched_eps(
         username,
         collection_name,
