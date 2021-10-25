@@ -16,10 +16,9 @@ def handle(event, context):
     for item in items:
         print(f"Updating item: {item}")
 
-        if "ep_progress" not in item:
-            item["ep_progress"] = 0
+        if "watched_eps" not in item:
             item["watched_eps"] = 0
-            item["special_progress"] = 0
+        if "watched_specials" not in item:
             item["watched_specials"] = 0
 
         item["ep_count"] = show["ep_count"]
