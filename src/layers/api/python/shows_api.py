@@ -45,9 +45,13 @@ def post_show(body):
     return res.json()
 
 
-def get_episode(item_id, episode_id):
+def get_episode(item_id, episode_id, api_name=None):
+    url = f"{SHOWS_API_URL}/shows/{item_id}/episodes/{episode_id}"
+    if api_name is not None:
+        url += f"?api_name={api_name}"
+
     res = requests.get(
-        f"{SHOWS_API_URL}/shows/{item_id}/episodes/{episode_id}",
+        url,
         auth=utils.get_v4_signature_auth(),
     )
     if res.status_code != 200:
