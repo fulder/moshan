@@ -204,6 +204,10 @@ class WatchHistory(core.Stack):
                         resources=[
                             f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
                     ),
+                    PolicyStatement(
+                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
+                        resources=[self.watch_history_table.table_arn]
+                    ),
                 ],
                 "timeout": 10
             },
