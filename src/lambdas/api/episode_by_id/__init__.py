@@ -29,29 +29,31 @@ def handle(event, context):
     collection_name = event["pathParameters"].get("collection_name")
     episode_id = event["pathParameters"].get("episode_id")
     item_id = event["pathParameters"].get("item_id")
+    query_params = event.get("queryStringParameters")
 
     if collection_name not in schema.COLLECTION_NAMES:
         return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
 
     if method == "GET":
         return _get_episode(username, collection_name, item_id,
-                            episode_id, auth_header)
+                            episode_id, auth_header, query_params)
     elif method == "PUT":
         body = event.get("body")
         return _put_episode(username, collection_name, item_id, episode_id,
-                            body, auth_header)
+                            body, auth_header, query_params)
     elif method == "DELETE":
         return _delete_episode(username, collection_name, item_id, episode_id,
-                               auth_header)
+                               auth_header, query_params)
 
 
-def _get_episode(username, collection_name, item_id, episode_id, token):
+def _get_episode(username, collection_name, item_id, episode_id, token, query_params):
+    api_name = query_params.get("api_name")
     s_ret = None
     try:
         if collection_name == "anime":
             s_ret = anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
-            s_ret = shows_api.get_episode(item_id, episode_id)
+            s_ret = shows_api.get_episode(item_id, episode_id, api_name=api_name)
     except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode for " \
                   f"item: {item_id} and episode_id: {episode_id}"
@@ -71,7 +73,8 @@ def _get_episode(username, collection_name, item_id, episode_id, token):
         return {"statusCode": 404}
 
 
-def _put_episode(username, collection_name, item_id, episode_id, body, token):
+def _put_episode(username, collection_name, item_id, episode_id, body, token, query_params):
+    api_name = query_params.get("api_name")
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -89,7 +92,7 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
         if collection_name == "anime":
             anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
-            shows_api.get_episode(item_id, episode_id)
+            shows_api.get_episode(item_id, episode_id, api_name=api_name)
     except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode for " \
                   f"item: {item_id} and episode_id: {episode_id}"
@@ -126,13 +129,14 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
     return {"statusCode": 204}
 
 
-def _delete_episode(username, collection_name, item_id, episode_id, token):
+def _delete_episode(username, collection_name, item_id, episode_id, token, query_params):
+    api_name = query_params.get("api_name")
     res = None
     try:
         if collection_name == "anime":
             res = anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
-            res = shows_api.get_episode(item_id, episode_id)
+            res = shows_api.get_episode(item_id, episode_id, api_name=api_name)
     except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode for " \
                   f"item: {item_id} and episode_id: {episode_id}"
