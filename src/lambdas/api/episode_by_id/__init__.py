@@ -31,23 +31,26 @@ def handle(event, context):
     item_id = event["pathParameters"].get("item_id")
     query_params = event.get("queryStringParameters")
 
+    api_name = None
+    if query_params is not None:
+        api_name = query_params.get("api_name")
+
     if collection_name not in schema.COLLECTION_NAMES:
         return {"statusCode": 400, "body": json.dumps({"message": f"Invalid collection name, allowed values: {schema.COLLECTION_NAMES}"})}
 
     if method == "GET":
         return _get_episode(username, collection_name, item_id,
-                            episode_id, auth_header, query_params)
+                            episode_id, auth_header, api_name)
     elif method == "PUT":
         body = event.get("body")
         return _put_episode(username, collection_name, item_id, episode_id,
-                            body, auth_header, query_params)
+                            body, auth_header, api_name)
     elif method == "DELETE":
         return _delete_episode(username, collection_name, item_id, episode_id,
-                               auth_header, query_params)
+                               auth_header, api_name)
 
 
-def _get_episode(username, collection_name, item_id, episode_id, token, query_params):
-    api_name = query_params.get("api_name")
+def _get_episode(username, collection_name, item_id, episode_id, token, api_name):
     s_ret = None
     try:
         if collection_name == "anime":
@@ -73,8 +76,7 @@ def _get_episode(username, collection_name, item_id, episode_id, token, query_pa
         return {"statusCode": 404}
 
 
-def _put_episode(username, collection_name, item_id, episode_id, body, token, query_params):
-    api_name = query_params.get("api_name")
+def _put_episode(username, collection_name, item_id, episode_id, body, token, api_name):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -129,8 +131,7 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token, qu
     return {"statusCode": 204}
 
 
-def _delete_episode(username, collection_name, item_id, episode_id, token, query_params):
-    api_name = query_params.get("api_name")
+def _delete_episode(username, collection_name, item_id, episode_id, token, api_name):
     res = None
     try:
         if collection_name == "anime":
