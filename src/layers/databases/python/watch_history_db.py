@@ -149,7 +149,7 @@ def change_watched_eps(username, collection_name, item_id, change, special=False
         UpdateExpression="SET #w=#w+:i, #p=:p",
         ExpressionAttributeNames={
             "#w": f"watched_{field_name}s",
-            "#e": f"{field_name}_progress",
+            "#p": f"{field_name}_progress",
         },
         ExpressionAttributeValues={
             ":p": ep_progress,
