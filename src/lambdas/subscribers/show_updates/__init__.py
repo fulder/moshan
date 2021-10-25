@@ -16,11 +16,10 @@ def handle(event, context):
     for item in items:
         print(f"Updating item: {item}")
 
-        if "ep_progress" not in item:
-            item["ep_progress"] = 0
+        if "watched_eps" not in item:
             item["watched_eps"] = 0
-            item["special_progress"] = 0
-            item["watched_special"] = 0
+        if "watched_specials" not in item:
+            item["watched_specials"] = 0
 
         item["ep_count"] = show["ep_count"]
         if item["ep_count"] == 0:
@@ -33,7 +32,7 @@ def handle(event, context):
         if item["special_count"] == 0:
             special_progress = 0
         else:
-            special_progress = item["watched_special"] / item["special_count"]
+            special_progress = item["watched_specials"] / item["special_count"]
         item["special_progress"] = str(round(special_progress * 100, 2))
 
         watch_history_db.put_item(item)

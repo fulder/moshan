@@ -39,9 +39,10 @@ def handle(event, context):
     elif method == "PUT":
         body = event.get("body")
         return _put_episode(username, collection_name, item_id, episode_id,
-                              body, auth_header)
+                            body, auth_header)
     elif method == "DELETE":
-        return _delete_episode(username, collection_name, episode_id)
+        return _delete_episode(username, collection_name, item_id, episode_id,
+                               auth_header)
 
 
 def _get_episode(username, collection_name, item_id, episode_id, token):
@@ -125,6 +126,27 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token):
     return {"statusCode": 204}
 
 
-def _delete_episode(username, collection_name, episode_id):
+def _delete_episode(username, collection_name, item_id, episode_id, token):
+    res = None
+    try:
+        if collection_name == "anime":
+            res = anime_api.get_episode(item_id, episode_id, token)
+        elif collection_name == "show":
+            res = shows_api.get_episode(item_id, episode_id)
+    except utils.HttpError as e:
+        err_msg = f"Could not get {collection_name} episode for " \
+                  f"item: {item_id} and episode_id: {episode_id}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        return {"statusCode": e.status_code,
+                "body": json.dumps({"message": err_msg}), "error": str(e)}
+
     episodes_db.delete_episode(username, collection_name, episode_id)
+
+    watch_history_db.change_watched_eps(
+        username,
+        collection_name,
+        item_id,
+        -1,
+        special=res["is_special"]
+    )
     return {"statusCode": 204}
