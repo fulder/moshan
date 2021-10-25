@@ -22,7 +22,8 @@ class TestGet:
             "collection_name": "anime",
             "item_id": "123",
             "episode_id": "345"
-        }
+        },
+        "queryStringParameters": {},
     }
 
     @patch("api.episode_by_id.episodes_db.get_episode")
@@ -95,7 +96,8 @@ class TestDelete:
             "collection_name": "anime",
             "item_id": "123",
             "episode_id": "345"
-        }
+        },
+        "queryStringParameters": {},
     }
 
     @patch("api.episode_by_id.episodes_db.delete_episode")
@@ -123,7 +125,8 @@ class TestPut:
             "item_id": "123",
             "episode_id": "345"
         },
-        "body": '{"rating": 3, "overview": "My overview", "review": "My review"}'
+        "body": '{"rating": 3, "overview": "My overview", "review": "My review"}',
+        "queryStringParameters": {},
     }
 
     @patch("api.episode_by_id.episodes_db.update_episode")
