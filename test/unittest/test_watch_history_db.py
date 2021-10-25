@@ -40,7 +40,7 @@ def test_get_watch_history(mocked_watch_history_db):
         "KeyConditionExpression": "username = :username",
         "ExpressionAttributeValues": {":username": {"S": "TEST_USERNAME"}},
         "ScanIndexForward": False,
-        'FilterExpression': 'attribute_not_exists(deleted_at)',
+        "FilterExpression": "attribute_not_exists(deleted_at)",
     }
     assert res == mock_func.exp_res
 
@@ -78,8 +78,8 @@ def test_get_watch_history_by_collection_and_index(mocked_watch_history_db):
     m.paginate = mock_func.f
 
     res = mocked_watch_history_db.get_watch_history(TEST_USERNAME,
-                                              collection_name="ANIME",
-                                              index_name="test_index")
+                                                    collection_name="ANIME",
+                                                    index_name="test_index")
 
     assert mock_func.update_values == {
         "ExpressionAttributeValues": {
@@ -103,24 +103,24 @@ def test_add_item(mocked_watch_history_db):
     mocked_watch_history_db.add_item(TEST_USERNAME, "MOVIE", "123123")
 
     assert mock_func.update_values == {
-        'ExpressionAttributeNames': {
-            '#collection_name': 'collection_name',
-            '#created_at': 'created_at',
-            '#deleted_at': 'deleted_at',
-            '#latest_watch_date': 'latest_watch_date',
-            '#updated_at': 'updated_at',
+        "ExpressionAttributeNames": {
+            "#collection_name": "collection_name",
+            "#created_at": "created_at",
+            "#deleted_at": "deleted_at",
+            "#latest_watch_date": "latest_watch_date",
+            "#updated_at": "updated_at",
         },
-        'ExpressionAttributeValues': {
-            ':collection_name': 'MOVIE',
+        "ExpressionAttributeValues": {
+            ":collection_name": "MOVIE",
             ":created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            ':latest_watch_date': '0',
+            ":latest_watch_date": "0",
             ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
-        'Key': {
-            'username': TEST_USERNAME,
-            'item_id': '123123'},
-        'UpdateExpression': 'SET #latest_watch_date=:latest_watch_date,#created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at '
-                            'REMOVE #deleted_at'
+        "Key": {
+            "username": TEST_USERNAME,
+            "item_id": "123123"},
+        "UpdateExpression": "SET #latest_watch_date=:latest_watch_date,#created_at=:created_at,#collection_name=:collection_name,#updated_at=:updated_at "
+                            "REMOVE #deleted_at"
     }
 
 
@@ -328,3 +328,72 @@ def test_get_item_not_found(mocked_watch_history_db):
 
     with pytest.raises(mocked_watch_history_db.NotFoundError):
         mocked_watch_history_db.get_item(TEST_USERNAME, "MOVIE", "123123")
+
+
+def test_change_watched_eps(mocked_watch_history_db):
+    mock_func = MockFunc()
+    mocked_watch_history_db.table.update_item = mock_func.f
+    mocked_watch_history_db.table.query.return_value = {
+        "Items": [
+            {
+                "ep_count": 10,
+                "watched_eps": 1,
+            }
+        ]
+    }
+
+    mocked_watch_history_db.change_watched_eps(TEST_USERNAME, "MOVIE", "123123",
+                                               1)
+
+    assert mock_func.update_values == {
+        'ExpressionAttributeNames': {'#e': 'ep_progress', '#w': 'watched_eps'},
+        'ExpressionAttributeValues': {':i': 1, ':p': '20.0'},
+        'Key': {'item_id': '123123', 'username': 'TEST_USERNAME'},
+        'UpdateExpression': 'SET #w=#w+:i, #p=:p'
+    }
+
+
+def test_change_watched_eps_removal(mocked_watch_history_db):
+    mock_func = MockFunc()
+    mocked_watch_history_db.table.update_item = mock_func.f
+    mocked_watch_history_db.table.query.return_value = {
+        "Items": [
+            {
+                "ep_count": 10,
+                "watched_eps": 1,
+            }
+        ]
+    }
+
+    mocked_watch_history_db.change_watched_eps(TEST_USERNAME, "MOVIE", "123123",
+                                               -1)
+
+    assert mock_func.update_values == {
+        'ExpressionAttributeNames': {'#e': 'ep_progress', '#w': 'watched_eps'},
+        'ExpressionAttributeValues': {':i': -1, ':p': '0.0'},
+        'Key': {'item_id': '123123', 'username': 'TEST_USERNAME'},
+        'UpdateExpression': 'SET #w=#w+:i, #p=:p'
+    }
+
+
+def test_change_watched_specials(mocked_watch_history_db):
+    mock_func = MockFunc()
+    mocked_watch_history_db.table.update_item = mock_func.f
+    mocked_watch_history_db.table.query.return_value = {
+        "Items": [
+            {
+                "special_count": 20,
+                "watched_specials": 2,
+            }
+        ]
+    }
+
+    mocked_watch_history_db.change_watched_eps(TEST_USERNAME, "MOVIE", "123123",
+                                               1, special=True)
+
+    assert mock_func.update_values == {
+        'ExpressionAttributeNames': {'#e': 'special_progress', '#w': 'watched_specials'},
+        'ExpressionAttributeValues': {':i': 1, ':p': '15.0'},
+        'Key': {'item_id': '123123', 'username': 'TEST_USERNAME'},
+        'UpdateExpression': 'SET #w=#w+:i, #p=:p'
+    }
