@@ -78,7 +78,7 @@ class WatchHistoryApi {
   }
 
   removeWatchHistoryEpisode (qParams) {
-    return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}`);
+    return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}?api_name=${qParams.api_name}`);
   }
 
   getWatchHistoryEpisode (qParams) {
