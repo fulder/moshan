@@ -187,6 +187,7 @@ class WatchHistory(core.Stack):
             "api-episode_by_collection_item": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
+                    "DATABASE_NAME": self.watch_history_table.table_name,
                     "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "DEBUG",
                     "ANIME_API_URL": self.anime_api_url,
