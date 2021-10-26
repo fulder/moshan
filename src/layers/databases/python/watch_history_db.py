@@ -139,7 +139,7 @@ def change_watched_eps(username, collection_name, item_id, change, special=False
         ep_progress = 0
     else:
         ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[f"{field_name}_count"]
-    ep_progress = str(round(ep_progress * 100, 2))
+    ep_progress = round(ep_progress * 100, 2)
 
     _get_table().update_item(
         Key={
