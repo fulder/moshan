@@ -27,7 +27,7 @@ async function createUnwatchedItems() {
   const watchHistoryRequests = [];
   for (let i = 0; i < collectionNames.length; i++) {
     const collectionName = collectionNames[i];
-    document.getElementById(`unwatched${collectionName.title()}`).innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+    document.getElementById(`unwatched-${collectionName}`).innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 
     const req = await watchHistoryApi.getWatchHistoryByCollection(collectionName, 'ep_progress');
     watchHistoryRequests.push(req);
@@ -71,5 +71,5 @@ async function createItems(wathcHistoryItems, collectionName) {
     document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
   }
 
-  document.getElementById(`${collectionName}WatchHistory`).innerHTML = resultHTML;
+  document.getElementById(`unwatched-${collectionName}`).innerHTML = resultHTML;
 }
