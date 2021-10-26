@@ -25,8 +25,8 @@ class WatchHistoryApi {
     return this.apiAxios.get(url);
   }
 
-  getWatchHistoryByCollection (collectionName) {
-    return this.apiAxios.get(`/watch-history/collection/${collectionName}?&sort=latest_watch_date`);
+  getWatchHistoryByCollection (collectionName, sort) {
+    return this.apiAxios.get(`/watch-history/collection/${collectionName}?&sort=${sort}`);
   }
 
   removeWatchHistoryItem (qParams) {
