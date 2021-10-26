@@ -26,7 +26,7 @@ def handle(event, context):
     collection_name = event["pathParameters"].get("collection_name")
 
     method = event["requestContext"]["http"]["method"]
-    query_params = event.get("queryStringParameters")
+    query_params = event.get("queryStringParameters", {})
 
     if collection_name not in schema.COLLECTION_NAMES:
         err = f"Invalid collection name, " \
@@ -37,7 +37,6 @@ def handle(event, context):
         }
 
     if method == "GET":
-        query_params = event.get("queryStringParameters", {})
         return _get(username, collection_name, auth_header, query_params, auth_header)
     elif method == "POST":
         body = event.get("body")
@@ -161,13 +160,22 @@ def _post_collection_item(username, collection_name, body, token):
     del body["api_id"]
     del body["api_name"]
 
-    if "ep_count" in res:
-        body["ep_count"] = res.get("ep_count")
-        body["special_count"] = res.get("special_count")
-        body["ep_progress"] = 0
-        body["special_progress"] = 0
-        body["watched_eps"] = 0
-        body["watched_special"] = 0
+    try:
+        current_item = watch_history_db.get_item(
+            username,
+            collection_name,
+            item_id,
+            include_deleted=True
+        )
+    except watch_history_db.NotFoundError:
+        current_item = {}
+
+    body["ep_count"] = res.get("ep_count", 0)
+    body["special_count"] = res.get("special_count", 0)
+    body["ep_progress"] = current_item.get("ep_progress", 0)
+    body["special_progress"] = current_item.get("special_progress", 0)
+    body["watched_eps"] = current_item.get("watched_eps", 0)
+    body["watched_special"] = current_item.get("watched_special", 0)
 
     watch_history_db.add_item(username, collection_name, item_id, body)
     return {

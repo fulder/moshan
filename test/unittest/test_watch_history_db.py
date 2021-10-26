@@ -347,7 +347,7 @@ def test_change_watched_eps(mocked_watch_history_db):
 
     assert mock_func.update_values == {
         'ExpressionAttributeNames': {'#p': 'ep_progress', '#w': 'watched_eps'},
-        'ExpressionAttributeValues': {':i': 1, ':p': '20.0'},
+        'ExpressionAttributeValues': {':i': 1, ':p': 20.0},
         'Key': {'item_id': '123123', 'username': 'TEST_USERNAME'},
         'UpdateExpression': 'SET #w=#w+:i, #p=:p'
     }
@@ -370,7 +370,7 @@ def test_change_watched_eps_removal(mocked_watch_history_db):
 
     assert mock_func.update_values == {
         'ExpressionAttributeNames': {'#p': 'ep_progress', '#w': 'watched_eps'},
-        'ExpressionAttributeValues': {':i': -1, ':p': '0.0'},
+        'ExpressionAttributeValues': {':i': -1, ':p': 0.0},
         'Key': {'item_id': '123123', 'username': 'TEST_USERNAME'},
         'UpdateExpression': 'SET #w=#w+:i, #p=:p'
     }
@@ -393,7 +393,7 @@ def test_change_watched_specials(mocked_watch_history_db):
 
     assert mock_func.update_values == {
         'ExpressionAttributeNames': {'#p': 'special_progress', '#w': 'watched_specials'},
-        'ExpressionAttributeValues': {':i': 1, ':p': '15.0'},
+        'ExpressionAttributeValues': {':i': 1, ':p': 15.0},
         'Key': {'item_id': '123123', 'username': 'TEST_USERNAME'},
         'UpdateExpression': 'SET #w=#w+:i, #p=:p'
     }
