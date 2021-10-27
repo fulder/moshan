@@ -46,8 +46,9 @@ async function createItems(wathcHistoryItems, collectionName) {
   let res = true;
   let itemCreated = false;
 
-  const api = getApiByName( apiNamesMapping[collectionName]);
+  const api = getApiByName(apiNamesMapping[collectionName]);
 
+  console.debug(`Length: ${wathcHistoryItems.length}`);
   for (let i = 0; i < wathcHistoryItems.length; i++) {
     const moshanItem = api.getMoshanItem(wathcHistoryItems[i]);
     console.debug(moshanItem);
