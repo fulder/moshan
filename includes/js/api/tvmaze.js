@@ -39,8 +39,13 @@ class TvMazeApi {
       poster = show.image.medium;
     }
 
+    let id = show.id;
+    if (show.tvmaze_id !== undefined) {
+      id = show.tvmaze_id;
+    }
+
     return new MoshanItem(
-      show.tvmaze_id,
+      id,
       poster,
       show.name,
       show.premiered,
