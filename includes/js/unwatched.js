@@ -53,7 +53,7 @@ async function createItems(wathcHistoryItems, collectionName) {
   console.debug(`Length: ${wathcHistoryItems.length}`);
 
   for (let i = 0; i < wathcHistoryItems.length; i++) {
-    const moshanItem = api.getMoshanItem(wathcHistoryItems[i]);
+    const moshanItem = api.getMoshanItem(wathcHistoryItems[i][`${apiName}_data`]);
     console.debug(moshanItem);
     const itemHTML = `
         <div id="poster-show-${moshanItem.id}" class="col-4 col-md-2 poster">
