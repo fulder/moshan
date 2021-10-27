@@ -50,6 +50,7 @@ async function createItems(wathcHistoryItems, collectionName) {
 
   for (let i = 0; i < wathcHistoryItems.length; i++) {
     const moshanItem = api.getMoshanItem(wathcHistoryItems[i]);
+    console.debug(moshanItem);
     const itemHTML = `
         <div id="poster-show-${moshanItem.id}" class="col-4 col-md-2 poster">
           <a href="/item?collection=${collectionName}&api_name=${apiName}&api_id=${moshanItem.id}">
