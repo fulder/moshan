@@ -60,11 +60,11 @@ async function createItems(wathcHistoryItems, collectionName) {
         <div id="poster-show-${apiItem.id}" class="col-4 col-md-2 poster">
           <a href="/item?collection=${collectionName}&api_name=${apiName}&api_id=${apiItem.id}">
             <img class="img-fluid" src="${apiItem.poster}" />
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: ${moshanItem.ep_progress}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${moshanItem.ep_progress}%</div>
+            </div>
             <p class="text-truncate small">${apiItem.title}</p>
           </a>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: ${moshanItem.ep_progress}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${moshanItem.ep_progress}%</div>
-          </div>
       </div>
     `;
 
