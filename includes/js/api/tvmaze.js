@@ -39,7 +39,9 @@ class TvMazeApi {
       poster = show.image.medium;
     }
 
-    id = show.id;
+    if (show.id !== undefined) {
+      id = show.id;
+    }
     if (show.tvmaze_id !== undefined) {
       id = show.tvmaze_id;
     }
