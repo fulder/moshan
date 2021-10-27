@@ -53,13 +53,17 @@ async function createItems(wathcHistoryItems, collectionName) {
   console.debug(`Length: ${wathcHistoryItems.length}`);
 
   for (let i = 0; i < wathcHistoryItems.length; i++) {
-    const moshanItem = api.getMoshanItem(wathcHistoryItems[i][`${apiName}_data`]);
+    const moshanItem = wathcHistoryItems[i];
+    const apiItem = api.getMoshanItem(wathcHistoryItems[i][`${apiName}_data`]);
     console.debug(moshanItem);
     const itemHTML = `
-        <div id="poster-show-${moshanItem.id}" class="col-4 col-md-2 poster">
-          <a href="/item?collection=${collectionName}&api_name=${apiName}&api_id=${moshanItem.id}">
-            <img class="img-fluid" src="${moshanItem.poster}" />
-            <p class="text-truncate small">${moshanItem.title}</p>
+        <div id="poster-show-${apiItem.id}" class="col-4 col-md-2 poster">
+          <a href="/item?collection=${collectionName}&api_name=${apiName}&api_id=${apiItem.id}">
+            <img class="img-fluid" src="${apiItem.poster}" />
+            <p class="text-truncate small">${apiItem.title}</p>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: ${moshanItem.ep_progress}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${moshanItem.ep_progress}%</div>
+            </div>
           </a>
       </div>
     `;
