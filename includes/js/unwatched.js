@@ -47,7 +47,8 @@ async function createItems(wathcHistoryItems, collectionName) {
   let res = true;
   let itemCreated = false;
 
-  const api = getApiByName(apiNamesMapping[collectionName]);
+  const apiName = apiNamesMapping[collectionName];
+  const api = getApiByName(apiName);
 
   console.debug(`Length: ${wathcHistoryItems.length}`);
 
