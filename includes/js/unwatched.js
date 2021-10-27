@@ -29,7 +29,7 @@ async function createUnwatchedItems() {
     const collectionName = collectionNames[i];
     document.getElementById(`unwatched-${collectionName}`).innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
 
-    const req = await watchHistoryApi.getWatchHistoryByCollection(collectionName, 'ep_progress');
+    const req = watchHistoryApi.getWatchHistoryByCollection(collectionName, 'ep_progress');
     watchHistoryRequests.push(req);
   }
 
