@@ -190,7 +190,13 @@ def get_watch_history(username, collection_name=None,
             "S": status_filter
         }
     if index_name in ["ep_progress", "special_progress"]:
-        query_kwargs["KeyConditionExpression"] = f"username = :username AND {index_name} LT 100"
+        query_kwargs["KeyConditionExpression"] += " AND #index_name < :progress"
+        query_kwargs["ExpressionAttributeNames"] = {
+            "#index_name": index_name,
+        }
+        query_kwargs["ExpressionAttributeValues"][":progress"] = {
+            "N": "100"
+        }
 
     log.debug(f"Query kwargs: {query_kwargs}")
 
