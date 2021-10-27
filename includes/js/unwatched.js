@@ -38,7 +38,7 @@ async function createUnwatchedItems() {
   for (let i = 0; i < collectionNames.length; i++) {
       const collectionName = collectionNames[i];
       console.log(responses[i]);
-      createItems(responses[i].data, collectionName);
+      createItems(responses[i].data.items, collectionName);
   }
 }
 
