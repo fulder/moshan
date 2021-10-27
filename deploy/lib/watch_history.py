@@ -120,6 +120,8 @@ class WatchHistory(core.Stack):
                             f"{self.watch_history_table.table_arn}/index/latest_watch_date",
                             f"{self.watch_history_table.table_arn}/index/rating",
                             f"{self.watch_history_table.table_arn}/index/state",
+                            f"{self.watch_history_table.table_arn}/index/ep_progress",
+                            f"{self.watch_history_table.table_arn}/index/special_progress",
                         ]
                     ),
                     PolicyStatement(
@@ -151,6 +153,8 @@ class WatchHistory(core.Stack):
                             f"{self.watch_history_table.table_arn}/index/latest_watch_date",
                             f"{self.watch_history_table.table_arn}/index/rating",
                             f"{self.watch_history_table.table_arn}/index/state",
+                            f"{self.watch_history_table.table_arn}/index/ep_progress",
+                            f"{self.watch_history_table.table_arn}/index/special_progress",
                         ]
                     ),
                     PolicyStatement(
