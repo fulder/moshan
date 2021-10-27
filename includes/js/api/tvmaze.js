@@ -39,10 +39,7 @@ class TvMazeApi {
       poster = show.image.medium;
     }
 
-    consolde.debug(show);
-    if (show.id !== undefined) {
-      id = show.id;
-    }
+    let id = show.id;
     if (show.tvmaze_id !== undefined) {
       id = show.tvmaze_id;
     }
