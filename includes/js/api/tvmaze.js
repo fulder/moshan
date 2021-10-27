@@ -40,7 +40,7 @@ class TvMazeApi {
     }
 
     return new MoshanItem(
-      show.id,
+      show.tvmaze_id,
       poster,
       show.name,
       show.premiered,
