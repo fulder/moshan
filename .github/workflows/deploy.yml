@@ -11,6 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/setup-python@v2
+
+      - run: |
+          pip install -r src/lambdas/api/watch_histories/requirements.txt --target src/lambdas/api/watch_histories/
+
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2.0.2
         with:
