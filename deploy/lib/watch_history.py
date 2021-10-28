@@ -362,6 +362,9 @@ class WatchHistory(core.Stack):
                 if f != "__init__.py":
                     continue
 
+                if "watch_histories/" in root:
+                    continue
+
                 parent_folder = os.path.basename(os.path.dirname(root))
                 lambda_folder = os.path.basename(root)
                 name = f"{parent_folder}-{lambda_folder}"
