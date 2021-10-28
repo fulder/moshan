@@ -111,6 +111,27 @@ class WatchHistory(core.Stack):
 
     def _create_lambdas_config(self):
         self.lambdas_config = {
+            "api-watch_histories": {
+                "layers": ["utils", "databases", "api"],
+                "variables": {
+                    "DATABASE_NAME": self.watch_history_table.table_name,
+                    "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                    "ANIME_API_URL": self.anime_api_url,
+                    "MOVIE_API_URL": self.movie_api_url,
+                },
+                "concurrent_executions": 100,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query"],
+                        resources=[
+                            self.watch_history_table.table_arn,
+                            f"{self.watch_history_table.table_arn}/index/*",
+                        ]
+                    ),
+                ],
+                "timeout": 60
+            },
             "api-watch_history": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
@@ -253,6 +274,28 @@ class WatchHistory(core.Stack):
                     ),
                 ],
                 "timeout": 10
+            },
+            "cron-update_eps": {
+                "layers": ["utils", "databases", "api"],
+                "variables": {
+                    "DATABASE_NAME": self.watch_history_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                    "UPDATES_TOPIC_ARN": self.show_updates_topic.topic_arn,
+                },
+                "concurrent_executions": 1,
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query"],
+                        resources=[
+                            f"{self.watch_history_table.table_arn}/index/item_id"],
+                    ),
+                    PolicyStatement(
+                        actions=["sns:Publish"],
+                        resources=[self.show_updates_topic.topic_arn],
+                    )
+                ],
+                "timeout": 60,
+                "memory": 1024
             },
             "subscribers-show_updates": {
                 "layers": ["utils", "databases", "api"],
@@ -407,6 +450,11 @@ class WatchHistory(core.Stack):
         )
 
         routes = {
+            "watch_histories": {
+                "method": ["GET"],
+                "route": "/{proxy+}",
+                "target_lambda": self.lambdas["api-watch_histories"]
+            },
             "watch_history": {
                 "method": ["GET"],
                 "route": "/watch-history",
