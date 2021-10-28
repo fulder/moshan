@@ -36,11 +36,18 @@ class WatchHistory(core.Stack):
         self.domain_name = domain_name
         self.layers = {}
         self.lambdas = {}
+        self._create_topics()
         self._create_tables()
         self._create_lambdas_config()
         self._create_layers()
         self._create_lambdas()
         self._create_gateway()
+
+    def _create_topics(self):
+        self.show_updates_topic = Topic(
+            self,
+            "shows_updates",
+        )
 
     def _create_tables(self):
         self.watch_history_table = Table(
