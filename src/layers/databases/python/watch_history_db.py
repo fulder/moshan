@@ -89,6 +89,19 @@ def get_item(username, collection_name, item_id, include_deleted=False):
     return res["Items"][0]
 
 
+def get_item_by_api_id(username, api_info):
+    res = _get_table().query(
+        IndexName="api_info",
+        KeyConditionExpression=Key("username").eq(username) &
+                               Key("api_info").eq(api_info),
+    )
+
+    if not res["Items"]:
+        raise NotFoundError(f"Item with api_info: {api_info} not found")
+
+    return res["Items"][0]
+
+
 def update_item(username, collection_name, item_id, data,
                 clean_whitelist=OPTIONAL_FIELDS):
     data["collection_name"] = collection_name
@@ -129,7 +142,8 @@ def update_item(username, collection_name, item_id, data,
     )
 
 
-def change_watched_eps(username, collection_name, item_id, change, special=False):
+def change_watched_eps(username, collection_name, item_id, change,
+                       special=False):
     field_name = "ep"
     if special:
         field_name = "special"
