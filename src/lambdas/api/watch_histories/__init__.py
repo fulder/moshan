@@ -1,3 +1,5 @@
+from starlette.middleware.cors import CORSMiddleware
+
 from fastapi import FastAPI, Request
 from mangum import Mangum
 
@@ -6,6 +8,19 @@ import jwt_utils
 from models import Item
 
 app = FastAPI()
+
+origins = [
+    "https://moshan.tv",
+    "https://beta.moshan.tv",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["authorization", "content-type"],
+)
 
 
 @app.get("/watch-histories/item")

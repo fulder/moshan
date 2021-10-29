@@ -454,7 +454,7 @@ class WatchHistory(core.Stack):
 
         routes = {
             "watch_histories": {
-                "method": ["GET", "POST", "DELETE"],
+                "method": ["ANY"],
                 "route": "/{proxy+}",
                 "target_lambda": self.lambdas["api-watch_histories"]
             },
