@@ -25,6 +25,6 @@ def get_item(username, api_name, api_id):
     try:
         w_ret = watch_history_db.get_item_by_api_id(username, f"{api_name}_{api_id}")
         ret = {**w_ret, api_name: {**api_ret}}
-        return {json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
+        return json.dumps(ret, cls=decimal_encoder.DecimalEncoder)
     except watch_history_db.NotFoundError:
         raise HTTPException(status_code=404)
