@@ -8,8 +8,8 @@ app = FastAPI()
 
 
 @app.get("/watch-histories/item")
-def item(api_name: str, api_id: str):
-    return api.get_item(api_name, api_id)
+def item(request: Request, api_name: str, api_id: str):
+    return api.get_item(request.state.username, api_name, api_id)
 
 
 @app.middleware("http")
