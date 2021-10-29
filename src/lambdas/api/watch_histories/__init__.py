@@ -41,4 +41,4 @@ def parse_token(request: Request, call_next):
     return call_next(request)
 
 
-handle = Mangum(app, api_gateway_base_path="/prod/")
+handle = Mangum(app, api_gateway_base_path="/prod")
