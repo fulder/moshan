@@ -9,4 +9,4 @@ def item(api_name: str, api_id: str):
     return {"message": f"Got {api_name}_{api_id}"}
 
 
-handler = Mangum(app)
+handle = Mangum(app, api_gateway_base_path="/prod/")
