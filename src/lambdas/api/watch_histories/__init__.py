@@ -3,13 +3,19 @@ from mangum import Mangum
 
 import api
 import jwt_utils
+from models import AddItem
 
 app = FastAPI()
 
 
 @app.get("/watch-histories/item")
-def item(request: Request, api_name: str, api_id: str):
+def get_item(request: Request, api_name: str, api_id: str):
     return api.get_item(request.state.username, api_name, api_id)
+
+
+@app.post("/watch-histories/item")
+def add_item(request: Request, item: AddItem):
+    return api.add_item(request.state.username, item.api_name, item.api_id)
 
 
 @app.middleware("http")

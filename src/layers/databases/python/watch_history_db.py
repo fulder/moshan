@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 from datetime import datetime
 
 import boto3
@@ -51,6 +52,34 @@ def _get_client():
     return client
 
 
+def add_item_v2(username, api_name, api_id):
+    api_info = f"{api_name}_{api_id}"
+    data = {
+        "api_info": api_info,
+    }
+
+    if "dates_watched" not in data:
+        data["latest_watch_date"] = "0"
+    try:
+        get_item_by_api_id(
+            username,
+            api_info,
+            include_deleted=True,
+        )
+    except NotFoundError:
+        data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    item_id = _get_show_item_id(api_name, api_id)
+    update_item(username, None, item_id, data,
+                clean_whitelist=["deleted_at"])
+
+
+def _get_show_item_id(api_name, api_id):
+    show_namespace = uuid.UUID("6045673a-9dd2-451c-aa58-d94a217b993a")
+    api_uuid = uuid.uuid5(show_namespace, api_name)
+    return str(uuid.uuid5(api_uuid, api_id))
+
+
 def add_item(username, collection_name, item_id, data=None):
     if data is None:
         data = {}
@@ -89,11 +118,16 @@ def get_item(username, collection_name, item_id, include_deleted=False):
     return res["Items"][0]
 
 
-def get_item_by_api_id(username, api_info):
+def get_item_by_api_id(username, api_info, include_deleted=False):
+    filter_exp = None
+    if not include_deleted:
+        filter_exp = Attr("deleted_at").not_exists()
+
     res = _get_table().query(
         IndexName="api_info",
         KeyConditionExpression=Key("username").eq(username) &
                                Key("api_info").eq(api_info),
+        FilterExpression=filter_exp,
     )
 
     if not res["Items"]:
@@ -152,7 +186,8 @@ def change_watched_eps(username, collection_name, item_id, change,
     if item[f"{field_name}_count"] == 0:
         ep_progress = 0
     else:
-        ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[f"{field_name}_count"]
+        ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[
+            f"{field_name}_count"]
     ep_progress = round(ep_progress * 100, 2)
 
     _get_table().update_item(
