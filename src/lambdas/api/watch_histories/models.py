@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import auto
-from typing import Optional
+from typing import Optional, List
 
 from fastapi_utils.enums import StrEnum
 
@@ -27,5 +27,5 @@ class Item(BaseModel):
     rating: Optional[int]
     overview: Optional[str]
     review: Optional[str]
-    dates_watched: Optional[list[datetime]]
+    dates_watched: Optional[List[datetime]]
     status: Optional[Status]
