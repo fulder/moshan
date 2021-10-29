@@ -17,7 +17,7 @@ def parse_token(request: Request, call_next):
     auth_header = request.headers.get("authorization")
     jwt_str = auth_header.split("Bearer ")[1]
     request.state.username = jwt_utils.get_username(jwt_str)
-    return call_next
+    return call_next(request)
 
 
 handle = Mangum(app, api_gateway_base_path="/prod/")
