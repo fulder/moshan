@@ -43,7 +43,9 @@ pydantic==1.8.2 \
     --hash=sha256:e710876437bc07bd414ff453ac8ec63d219e7690128d925c6e82889d674bb505 \
     --hash=sha256:ea5cb40a3b23b3265f6325727ddfc45141b08ed665458be8c6285e7b85bd73a1 \
     --hash=sha256:fec866a0b59f372b7e776f2d7308511784dace622e0992a0b59ea3ccee0ae833
-    # via fastapi
+    # via
+    #   -r src/lambdas/api/watch_histories/requirements.in
+    #   fastapi
 sniffio==1.2.0 \
     --hash=sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663 \
     --hash=sha256:c4666eecec1d3f50960c6bdf61ab7bc350648da6c126e3cf6898d8cd4ddcd3de
