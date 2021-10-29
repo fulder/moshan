@@ -22,14 +22,13 @@ def get_item(username, api_name, api_id):
 
 
 def add_item(username, api_name, api_id):
-    api_ret = _get_api_res(api_name, api_id)
+    _get_api_res(api_name, api_id)
 
     watch_history_db.add_item_v2(
         username,
         api_name,
         api_id,
     )
-    return api_ret
 
 
 def _get_api_res(api_name, api_id):
