@@ -55,16 +55,15 @@ def _get_client():
 def add_item_v2(username, api_name, api_id, data=None):
     if data is None:
         data = {}
-
-    api_info = f"{api_name}_{api_id}"
-    data["api_info"] = api_info
+    data["api_info"] = f"{api_name}_{api_id}"
 
     if "dates_watched" not in data:
         data["latest_watch_date"] = "0"
     try:
         get_item_by_api_id(
             username,
-            api_info,
+            api_name,
+            api_id,
             include_deleted=True,
         )
     except NotFoundError:
@@ -127,7 +126,8 @@ def get_item(username, collection_name, item_id, include_deleted=False):
     return res["Items"][0]
 
 
-def get_item_by_api_id(username, api_info, include_deleted=False):
+def get_item_by_api_id(username, api_name, api_id, include_deleted=False):
+    api_info = f"{api_name}_{api_id}"
     filter_exp = None
     if not include_deleted:
         filter_exp = Attr("deleted_at").not_exists()
