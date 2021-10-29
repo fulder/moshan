@@ -14,8 +14,9 @@ def item(request: Request, api_name: str, api_id: str):
 
 @app.middleware("http")
 def parse_token(request: Request, call_next):
-    username = jwt_utils.get_username(request.headers.get("authorization"))
-    request.state.username = username
+    auth_header = request.headers.get("authorization")
+    jwt_str = auth_header.split("Bearer ")[1]
+    request.state.username = jwt_utils.get_username(jwt_str)
     return call_next
 
 
