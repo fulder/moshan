@@ -52,11 +52,12 @@ def _get_client():
     return client
 
 
-def add_item_v2(username, api_name, api_id):
+def add_item_v2(username, api_name, api_id, data=None):
+    if data is None:
+        data = {}
+
     api_info = f"{api_name}_{api_id}"
-    data = {
-        "api_info": api_info,
-    }
+    data["api_info"] = api_info
 
     if "dates_watched" not in data:
         data["latest_watch_date"] = "0"

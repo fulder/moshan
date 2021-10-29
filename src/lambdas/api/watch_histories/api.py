@@ -21,13 +21,14 @@ def get_item(username, api_name, api_id):
         raise HTTPException(status_code=404)
 
 
-def add_item(username, api_name, api_id):
+def add_item(username, api_name, api_id, data):
     _get_api_res(api_name, api_id)
 
     watch_history_db.add_item_v2(
         username,
         api_name,
         api_id,
+        data
     )
 
 
