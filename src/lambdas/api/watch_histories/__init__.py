@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from mangum import Mangum
 
-from . import api
+import api
 import jwt_utils
 
 app = FastAPI()
