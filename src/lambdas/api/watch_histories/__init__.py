@@ -3,7 +3,7 @@ from mangum import Mangum
 
 import api
 import jwt_utils
-from models import AddItem
+from models import Item
 
 app = FastAPI()
 
@@ -14,8 +14,9 @@ def get_item(request: Request, api_name: str, api_id: str):
 
 
 @app.post("/watch-histories/item", status_code=204)
-def add_item(request: Request, item: AddItem):
-    return api.add_item(request.state.username, item.api_name, item.api_id)
+def add_item(request: Request, item: Item):
+    d = item.dict(exclude={"api_name", "api_id"})
+    return api.add_item(request.state.username, item.api_name, item.api_id, d)
 
 
 @app.middleware("http")
