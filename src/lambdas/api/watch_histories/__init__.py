@@ -19,7 +19,7 @@ def delete_item(request: Request, api_name: str, api_id: str):
 
 
 @app.put("/watch-histories/item/{api_name}/{api_id}", status_code=204)
-def add_item(request: Request, api_name: str, api_id: str, item: Item):
+def update_item(request: Request, api_name: str, api_id: str, item: Item):
     return routes.update_item(
         request.state.username,
         api_name,
