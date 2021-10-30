@@ -109,7 +109,7 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token, ap
         body
     )
 
-    if "dates_watched" not in body:
+    if body.get("dates_watched") is None:
         return {"statusCode": 204}
 
     # If episode watch date is changed check if its larger than current
