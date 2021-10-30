@@ -66,5 +66,11 @@ def add_item(username, api_name, api_id, data):
         data
     )
 
-def delete_item(username, api_name, api_id, data):
-    pass
+
+def delete_item(username, api_name, api_id):
+    collection_name, item_id = watch_history_db.get_collection_and_item_id(
+        api_name,
+        api_id,
+    )
+    watch_history_db.delete_item(username, collection_name, item_id)
+    return {"statusCode": 204}
