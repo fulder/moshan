@@ -46,6 +46,9 @@ class WatchHistoryApi {
   }
 
   getWatchHistoryItemByApiId (qParams) {
+    if (qParams.collection == 'show') {
+          return this.apiAxios.get(`/watch-histories/item?api_name=${qParams.api_name}&api_id=${qParams.id}`);
+    }
     return this.apiAxios.get(`/watch-history/collection/${qParams.collection}?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
   }
 
