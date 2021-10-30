@@ -87,7 +87,6 @@ def _get_collection_and_item_id(api_name, api_id):
         return "show", str(uuid.uuid5(api_uuid, api_id))
 
 
-
 def add_item(username, collection_name, item_id, data=None):
     if data is None:
         data = {}
@@ -128,16 +127,16 @@ def get_item(username, collection_name, item_id, include_deleted=False):
 
 def get_item_by_api_id(username, api_name, api_id, include_deleted=False):
     api_info = f"{api_name}_{api_id}"
-    filter_exp = None
-    if not include_deleted:
-        filter_exp = Attr("deleted_at").not_exists()
 
-    res = _get_table().query(
-        IndexName="api_info",
-        KeyConditionExpression=Key("username").eq(username) &
-                               Key("api_info").eq(api_info),
-        FilterExpression=filter_exp,
-    )
+    kwargs = {
+        "IndexName": "api_info",
+        "KeyConditionExpression": Key("username").eq(username) &
+                                  Key("api_info").eq(api_info)
+    }
+    if not include_deleted:
+        kwargs["FilterExpression"] = Attr("deleted_at").not_exists()
+
+    res = _get_table().query(**kwargs)
 
     if not res["Items"]:
         raise NotFoundError(f"Item with api_info: {api_info} not found")
