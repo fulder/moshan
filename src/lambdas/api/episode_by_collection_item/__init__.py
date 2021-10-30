@@ -161,7 +161,7 @@ def _post_episode(username, collection_name, item_id, body, token):
         special=res["is_special"]
     )
 
-    if "dates_watched" not in body:
+    if body.get("dates_watched") is None:
         return {
             "statusCode": 200,
             "body": json.dumps({"id": episode_id})
