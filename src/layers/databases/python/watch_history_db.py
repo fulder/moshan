@@ -149,7 +149,7 @@ def update_item(username, collection_name, item_id, data,
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if data.get("dates_watched") is None:
+    if data.get("dates_watched") is not None:
         m_d = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
         m_d = m_d.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         data["latest_watch_date"] = m_d.replace("000Z", "Z")
