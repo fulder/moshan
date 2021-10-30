@@ -65,3 +65,6 @@ def add_item(username, api_name, api_id, data):
         api_id,
         data
     )
+
+def delete_item(username, api_name, api_id, data):
+    pass
