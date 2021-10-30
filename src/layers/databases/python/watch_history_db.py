@@ -70,7 +70,7 @@ def add_item_v2(username, api_name, api_id, data=None):
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # create legacy item properties
-    collection_name, item_id = _get_collection_and_item_id(api_name, api_id)
+    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
     update_item(
         username,
         collection_name,
