@@ -3,7 +3,7 @@ from mangum import Mangum
 
 import routes
 import jwt_utils
-from models import Item
+from models import Item, PostItem
 
 app = FastAPI()
 
@@ -18,8 +18,18 @@ def delete_item(request: Request, api_name: str, api_id: str):
     return routes.delete_item(request.state.username, api_name, api_id)
 
 
+@app.put("/watch-histories/item/{api_name}/{api_id}", status_code=204)
+def add_item(request: Request, api_name: str, api_id: str, item: Item):
+    return routes.update_item(
+        request.state.username,
+        api_name,
+        api_id,
+        item.dict(),
+    )
+
+
 @app.post("/watch-histories/item", status_code=204)
-def add_item(request: Request, item: Item):
+def add_item(request: Request, item: PostItem):
     d = item.dict(exclude={"api_name", "api_id"})
     return routes.add_item(
         request.state.username,
