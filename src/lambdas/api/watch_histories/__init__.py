@@ -13,7 +13,7 @@ def get_item(request: Request, api_name: str, api_id: str):
     return routes.get_item(request.state.username, api_name, api_id)
 
 
-@app.delete("/watch-histories/item/{api_name}/{api_id}")
+@app.delete("/watch-histories/item/{api_name}/{api_id}", status_code=204)
 def delete_item(request: Request, api_name: str, api_id: str):
     return routes.delete_item(request.state.username, api_name, api_id)
 

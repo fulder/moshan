@@ -11,7 +11,7 @@ log = logger.get_logger(__name__)
 def get_item(username, api_name, api_id):
     try:
         if api_name == "tvmaze":
-            api_ret = tvmaze_api.get_show(api_id)
+            tvmaze_api.get_show(api_id)
         else:
             raise HTTPException(status_code=501)
     except tvmaze.HTTPError as e:
@@ -25,7 +25,7 @@ def get_item(username, api_name, api_id):
             api_name,
             api_id,
         )
-        return {**w_ret, api_name: {**api_ret}}
+        return w_ret
     except watch_history_db.NotFoundError:
         raise HTTPException(status_code=404)
 
@@ -73,4 +73,3 @@ def delete_item(username, api_name, api_id):
         api_id,
     )
     watch_history_db.delete_item(username, collection_name, item_id)
-    return {"statusCode": 204}
