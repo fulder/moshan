@@ -30,6 +30,9 @@ class WatchHistoryApi {
   }
 
   removeWatchHistoryItem (qParams) {
+    if (qParams.collection == 'show') {
+          return this.apiAxios.delete(`/watch-histories/item/${qParams.api_name}/${qParams.api_id}`);
+    }
     return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}`);
   }
 
