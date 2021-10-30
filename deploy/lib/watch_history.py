@@ -129,6 +129,10 @@ class WatchHistory(core.Stack):
                             f"{self.watch_history_table.table_arn}/index/*",
                         ]
                     ),
+                    PolicyStatement(
+                        actions=["dynamodb:UpdateItem"],
+                        resources=[self.watch_history_table.table_arn],
+                    ),
                 ],
                 "timeout": 60
             },
