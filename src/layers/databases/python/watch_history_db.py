@@ -80,7 +80,7 @@ def add_item_v2(username, api_name, api_id, data=None):
     )
 
 
-def _get_collection_and_item_id(api_name, api_id):
+def get_collection_and_item_id(api_name, api_id):
     if api_name == "tvmaze":
         show_namespace = uuid.UUID("6045673a-9dd2-451c-aa58-d94a217b993a")
         api_uuid = uuid.uuid5(show_namespace, api_name)
