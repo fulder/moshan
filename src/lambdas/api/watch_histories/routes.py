@@ -67,6 +67,25 @@ def add_item(username, api_name, api_id, data):
     )
 
 
+def update_item(username, api_name, api_id, data):
+    all_none = True
+    for v in data.values():
+        if v is not None:
+            all_none = False
+    if all_none:
+        raise HTTPException(
+            status_code=400,
+            detail="Please specify at least one of the optional fields"
+        )
+
+    watch_history_db.add_item_v2(
+        username,
+        api_name,
+        api_id,
+        data
+    )
+
+
 def delete_item(username, api_name, api_id):
     collection_name, item_id = watch_history_db.get_collection_and_item_id(
         api_name,

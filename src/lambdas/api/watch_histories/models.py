@@ -22,10 +22,13 @@ class Status(StrEnum):
 
 
 class Item(BaseModel):
-    api_id: str
-    api_name: ApiName
     rating: Optional[int]
     overview: Optional[str]
     review: Optional[str]
     dates_watched: Optional[List[datetime]]
     status: Optional[Status]
+
+
+class PostItem(Item):
+    api_id: str
+    api_name: ApiName
