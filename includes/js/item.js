@@ -63,7 +63,11 @@ async function getItemByApiId() {
     }
   }
 
-  const moshanItem = await api.getItemById(qParams);
+  if (watchHistoryItemRes[qParams.api_name] !== undefined) {
+      moshanItem = api.getMoshanItem(watchHistoryItemRes[qParams.api_name]);
+  } else {
+      moshanItem = await api.getItemById(qParams);
+  }
 
   createItem(moshanItem, watchHistoryItem);
 
