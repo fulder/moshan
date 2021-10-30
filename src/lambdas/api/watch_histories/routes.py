@@ -31,9 +31,10 @@ def get_item(username, api_name, api_id):
 
 
 def add_item(username, api_name, api_id, data):
+    ep_count_res = None
     try:
         if api_name == "tvmaze":
-            res = tvmaze_api.get_show_episodes_count(api_id)
+            ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
         else:
             raise HTTPException(status_code=501)
     except tvmaze.HTTPError as e:
@@ -52,12 +53,13 @@ def add_item(username, api_name, api_id, data):
     except watch_history_db.NotFoundError:
         current_item = {}
 
-    data["ep_count"] = res.get("ep_count", 0)
-    data["special_count"] = res.get("special_count", 0)
-    data["ep_progress"] = current_item.get("ep_progress", 0)
-    data["special_progress"] = current_item.get("special_progress", 0)
-    data["watched_eps"] = current_item.get("watched_eps", 0)
-    data["watched_special"] = current_item.get("watched_special", 0)
+    if ep_count_res is not None:
+        data["ep_count"] = ep_count_res.get("ep_count", 0)
+        data["special_count"] = ep_count_res.get("special_count", 0)
+        data["ep_progress"] = current_item.get("ep_progress", 0)
+        data["special_progress"] = current_item.get("special_progress", 0)
+        data["watched_eps"] = current_item.get("watched_eps", 0)
+        data["watched_special"] = current_item.get("watched_special", 0)
 
     watch_history_db.add_item_v2(
         username,
