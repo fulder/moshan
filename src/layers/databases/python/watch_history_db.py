@@ -154,10 +154,19 @@ def update_item(username, collection_name, item_id, data,
         m_d = m_d.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         data["latest_watch_date"] = m_d.replace("000Z", "Z")
 
-    items = ','.join(f'#{k}=:{k}' for k in data)
-    update_expression = f"SET {items}"
-    expression_attribute_names = {f'#{k}': k for k in data}
-    expression_attribute_values = {f':{k}': v for k, v in data.items()}
+    update_expression = "SET "
+    expression_attribute_names = {}
+    expression_attribute_values = {}
+    for k, v in data.items():
+        if v is None:
+            continue
+
+        update_expression += f"#{k}=:{k},"
+        expression_attribute_names[f"#{k}"] = k
+        expression_attribute_values[f":{k}"] = v
+
+    # remove last comma
+    update_expression = update_expression[:-1]
 
     remove_names = []
     for o in OPTIONAL_FIELDS:
