@@ -37,12 +37,16 @@ class WatchHistoryApi {
   }
 
   addWatchHistoryItem (qParams) {
-    const data = {
+    let data = {
       api_id: qParams.api_id,
       api_name: qParams.api_name,
     };
     if (qParams.collection == 'show') {
-          return this.apiAxios.post('/watch-histories/item', data);
+      let data = {
+        api_item_id: qParams.api_id,
+        api_name: qParams.api_name,
+      };
+      return this.apiAxios.post('/watch-histories/item', data);
     }
     return this.apiAxios.post(`/watch-history/collection/${qParams.collection}`, data);
   }
