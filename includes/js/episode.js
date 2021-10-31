@@ -17,7 +17,7 @@ function QueryParams(urlParams) {
   this.api_name = urlParams.get('api_name');
   this.id = urlParams.get('id');
   this.item_api_id = urlParams.get('item_api_id');
-  this.api_id = urlParams.get('item_api_id');
+  this.api_id = urlParams.get('api_id');
   this.episode_id = urlParams.get('episode_id');
   this.episode_api_id = urlParams.get('episode_api_id');
 }
