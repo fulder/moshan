@@ -39,12 +39,12 @@ class PostEpisode(ReviewData):
 
 
 def review_data_to_dict(data: ReviewData):
-    d = data.dict(exclude={"api_name", "item_api_id", "episode_api_id"})
-    dates = d.get("dates_watched")
+    data = data.dict(exclude={"api_name", "item_api_id", "episode_api_id"})
+    dates = data.get("dates_watched")
     if dates:
         parsed_dates = []
         for d in dates:
             new_d = d.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
             parsed_dates.append(new_d)
-        d["dates_watched"] = parsed_dates
-    return d
+        data["dates_watched"] = parsed_dates
+    return data
