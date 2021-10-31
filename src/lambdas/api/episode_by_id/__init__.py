@@ -56,7 +56,8 @@ def _get_episode(username, collection_name, item_id, episode_id, token, api_name
         if collection_name == "anime":
             s_ret = anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
-            s_ret = shows_api.get_episode(item_id, episode_id, api_name=api_name)
+            raise utils.HttpError("", 501)
+            # s_ret = shows_api.get_episode(item_id, episode_id, api_name=api_name)
     except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode for " \
                   f"item: {item_id} and episode_id: {episode_id}"
@@ -94,7 +95,8 @@ def _put_episode(username, collection_name, item_id, episode_id, body, token, ap
         if collection_name == "anime":
             anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
-            shows_api.get_episode(item_id, episode_id, api_name=api_name)
+            raise utils.HttpError("", 501)
+            # shows_api.get_episode(item_id, episode_id, api_name=api_name)
     except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode for " \
                   f"item: {item_id} and episode_id: {episode_id}"
@@ -137,7 +139,8 @@ def _delete_episode(username, collection_name, item_id, episode_id, token, api_n
         if collection_name == "anime":
             res = anime_api.get_episode(item_id, episode_id, token)
         elif collection_name == "show":
-            res = shows_api.get_episode(item_id, episode_id, api_name=api_name)
+            raise utils.HttpError("", 501)
+            # res = shows_api.get_episode(item_id, episode_id, api_name=api_name)
     except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode for " \
                   f"item: {item_id} and episode_id: {episode_id}"
