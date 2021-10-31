@@ -83,7 +83,7 @@ class WatchHistoryApi {
 
   addWatchHistoryEpisode (qParams) {
     let data = {
-      api_id: qParams.api_id,
+      api_id: qParams.item_api_id,
       api_name: qParams.api_name,
     };
     if (qParams.collection == 'show') {
