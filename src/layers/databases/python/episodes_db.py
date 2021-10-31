@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 from datetime import datetime
 
 import boto3
@@ -8,6 +9,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from dynamodb_json import json_util
 
 import logger
+import watch_history_db
 
 DATABASE_NAME = os.getenv("EPISODES_DATABASE_NAME")
 OPTIONAL_FIELDS = [
@@ -114,13 +116,22 @@ def update_episode(username, collection_name, episode_id, data,
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if "dates_watched" in data:
+    if data.get("dates_watched") is not None:
         data["latest_watch_date"] = max(data["dates_watched"])
 
-    items = ','.join(f'#{k}=:{k}' for k in data)
-    update_expression = f"SET {items}"
-    expression_attribute_names = {f'#{k}': k for k in data}
-    expression_attribute_values = {f':{k}': v for k, v in data.items()}
+    update_expression = "SET "
+    expression_attribute_names = {}
+    expression_attribute_values = {}
+    for k, v in data.items():
+        if v is None:
+            continue
+
+        update_expression += f"#{k}=:{k},"
+        expression_attribute_names[f"#{k}"] = k
+        expression_attribute_values[f":{k}"] = v
+
+    # remove last comma
+    update_expression = update_expression[:-1]
 
     remove_names = []
     for o in OPTIONAL_FIELDS:
@@ -130,7 +141,7 @@ def update_episode(username, collection_name, episode_id, data,
     if len(remove_names) > 0:
         update_expression += f" REMOVE {','.join(remove_names)}"
 
-    log.debug("Running update_item")
+    log.debug("Running update_episode")
     log.debug(f"Update expression: {update_expression}")
     log.debug(f"Expression attribute names: {expression_attribute_names}")
     log.debug(f"Expression attribute values: {expression_attribute_values}")
@@ -174,3 +185,42 @@ def get_episodes(username, api_name, item_api_id):
             i = json_util.loads(i)
             res.append(i)
     return res
+
+
+def add_episode_v2(username, api_name, item_api_id, episode_api_id, data=None):
+    if data is None:
+        data = {}
+    data["api_info"] = f"{api_name}_{item_api_id}_{episode_api_id}"
+
+    if data.get("dates_watched") is None:
+        data["latest_watch_date"] = "0"
+    try:
+        get_episode_by_api_id(
+            username,
+            api_name,
+            item_api_id,
+            episode_api_id,
+            include_deleted=True,
+        )
+    except NotFoundError:
+        data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # create legacy episode properties
+    collection_name, item_id = watch_history_db.get_collection_and_item_id(
+        api_name,
+        item_api_id,
+    )
+    episode_id = get_episode_uuid(item_id, episode_api_id)
+    # ---------------
+
+    update_episode(
+        username,
+        collection_name,
+        episode_id,
+        data,
+        clean_whitelist=["deleted_at"],
+    )
+
+
+def get_episode_uuid(show_uuid, api_id):
+    return str(uuid.uuid5(uuid.UUID(show_uuid), str(api_id)))

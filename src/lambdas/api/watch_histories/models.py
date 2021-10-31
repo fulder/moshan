@@ -32,3 +32,7 @@ class Item(BaseModel):
 class PostItem(Item):
     item_api_id: str
     api_name: ApiName
+
+
+class PostEpisode(Item):
+    episode_api_id: str

@@ -3,7 +3,7 @@ from mangum import Mangum
 
 import routes
 import jwt_utils
-from models import Item, PostItem
+from models import Item, PostItem, PostEpisode
 
 app = FastAPI()
 
@@ -45,6 +45,18 @@ def get_episodes(request: Request, api_name: str, item_api_id: str):
         request.state.username,
         api_name,
         item_api_id,
+    )
+
+
+@app.post("/watch-histories/item/{api_name}/{item_api_id}/episodes")
+def add_episode(request: Request, api_name, item_api_id, episode: PostEpisode):
+    d = episode.dict(exclude={"episode_api_id"})
+    return routes.add_episode(
+        request.state.username,
+        api_name,
+        item_api_id,
+        episode.episode_api_id,
+        d
     )
 
 
