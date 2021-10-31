@@ -21,7 +21,7 @@ class Status(StrEnum):
     backlog = auto()
 
 
-class Item(BaseModel):
+class ReviewData(BaseModel):
     rating: Optional[int]
     overview: Optional[str]
     review: Optional[str]
@@ -29,10 +29,10 @@ class Item(BaseModel):
     status: Optional[Status]
 
 
-class PostItem(Item):
+class PostItem(ReviewData):
     item_api_id: str
     api_name: ApiName
 
 
-class PostEpisode(Item):
+class PostEpisode(ReviewData):
     episode_api_id: str

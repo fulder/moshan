@@ -3,7 +3,7 @@ from mangum import Mangum
 
 import routes
 import jwt_utils
-from models import Item, PostItem, PostEpisode
+from models import PostItem, PostEpisode, ReviewData
 
 app = FastAPI()
 
@@ -19,12 +19,13 @@ def delete_item(request: Request, api_name: str, item_api_id: str):
 
 
 @app.put("/watch-histories/item/{api_name}/{item_api_id}", status_code=204)
-def update_item(request: Request, api_name: str, item_api_id: str, item: Item):
+def update_item(request: Request, api_name: str, item_api_id: str,
+                data: ReviewData):
     return routes.update_item(
         request.state.username,
         api_name,
         item_api_id,
-        item.dict(),
+        data.dict(),
     )
 
 
@@ -77,14 +78,13 @@ def get_episode(request: Request, api_name: str, item_api_id: str,
     "/watch-histories/item/{api_name}/{item_api_id}/episodes/{episode_api_id}",
     status_code=204)
 def update_episode(request: Request, api_name: str, item_api_id: str,
-                   episode_api_id: str, episode: PostEpisode):
-    d = episode.dict(exclude={"episode_api_id"})
+                   episode_api_id: str, data: ReviewData):
     return routes.update_episode(
         request.state.username,
         api_name,
         item_api_id,
         episode_api_id,
-        d,
+        data.dict(),
     )
 
 
