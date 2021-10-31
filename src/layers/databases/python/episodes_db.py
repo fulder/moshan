@@ -128,7 +128,7 @@ def update_episode(username, collection_name, episode_id, data,
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if data.get("dates_watched") is not None:
+    if data.get("dates_watched"):
         data["latest_watch_date"] = max(data["dates_watched"])
 
     update_expression = "SET "
