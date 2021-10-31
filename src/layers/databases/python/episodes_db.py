@@ -170,6 +170,23 @@ def update_episode(username, collection_name, episode_id, data,
     )
 
 
+def update_episode_v2(username, api_name, item_api_id, episode_api_id, data):
+    # create legacy episode properties
+    collection_name, item_id = watch_history_db.get_collection_and_item_id(
+        api_name,
+        item_api_id,
+    )
+    episode_id = get_episode_uuid(item_id, episode_api_id)
+    # ---------------
+
+    update_episode(
+        username,
+        collection_name,
+        episode_id,
+        data,
+    )
+
+
 def get_episodes(username, api_name, item_api_id):
     item_api_info = f"{api_name}_{item_api_id}"
 

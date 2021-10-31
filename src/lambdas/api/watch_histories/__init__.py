@@ -73,11 +73,26 @@ def get_episode(request: Request, api_name: str, item_api_id: str,
     )
 
 
+@app.put(
+    "/watch-histories/item/{api_name}/{item_api_id}/episodes/{episode_api_id}",
+    status_code=204)
+def update_episode(request: Request, api_name: str, item_api_id: str,
+                   episode_api_id: str, episode: PostEpisode):
+    d = episode.dict(exclude={"episode_api_id"})
+    return routes.update_episode(
+        request.state.username,
+        api_name,
+        item_api_id,
+        episode_api_id,
+        d,
+    )
+
+
 @app.delete(
     "/watch-histories/item/{api_name}/{item_api_id}/episodes/{episode_api_id}",
     status_code=204)
 def delete_episode(request: Request, api_name: str, item_api_id: str,
-                  episode_api_id: str):
+                   episode_api_id: str):
     routes.delete_episode(
         request.state.username,
         api_name,

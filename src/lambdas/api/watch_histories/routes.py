@@ -157,6 +157,36 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
     if data.get("dates_watched") is None:
         return
 
+    _update_latest_watch_date(item, data, username, api_name, item_api_id)
+
+
+def update_episode(username, api_name, item_api_id, episode_api_id, data):
+    try:
+        item = watch_history_db.get_item_by_api_id(
+            username,
+            api_name,
+            item_api_id,
+        )
+    except watch_history_db.NotFoundError:
+        err_msg = f"Item with api_id: {item_api_id} not found. " \
+                  f"Please add it to the watch-history before posting episode"
+        raise HTTPException(status_code=404, detail=err_msg)
+
+    episodes_db.update_episode_v2(
+        username,
+        api_name,
+        item_api_id,
+        episode_api_id,
+        data
+    )
+
+    if data.get("dates_watched") is None:
+        return
+
+    _update_latest_watch_date(item, data, username, api_name, item_api_id)
+
+
+def _update_latest_watch_date(item, data, username, api_name, item_api_id):
     # If episode watch date is changed check if its larger than current
     # item latest date and update item if that's the case
     ep_date = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
@@ -200,5 +230,3 @@ def delete_episode(username, api_name, item_api_id, episode_api_id):
         -1,
         special=is_special
     )
-
-
