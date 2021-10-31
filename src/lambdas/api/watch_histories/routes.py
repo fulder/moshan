@@ -1,3 +1,4 @@
+import episodes_db
 from fastapi import HTTPException
 
 import logger
@@ -9,15 +10,15 @@ log = logger.get_logger(__name__)
 
 
 def get_item(username, api_name, api_id):
-    try:
-        if api_name == "tvmaze":
-            tvmaze_api.get_show(api_id)
-        else:
-            raise HTTPException(status_code=501)
-    except tvmaze.HTTPError as e:
-        err_msg = f"Could not get item from {api_name} api with id: {api_id}"
-        log.error(f"{err_msg}. Error: {str(e)}")
-        raise HTTPException(status_code=e.code)
+    # try:
+    #     if api_name == "tvmaze":
+    #         tvmaze_api.get_show(api_id)
+    #     else:
+    #         raise HTTPException(status_code=501)
+    # except tvmaze.HTTPError as e:
+    #     err_msg = f"Could not get item from {api_name} api with id: {api_id}"
+    #     log.error(f"{err_msg}. Error: {str(e)}")
+    #     raise HTTPException(status_code=e.code)
 
     try:
         w_ret = watch_history_db.get_item_by_api_id(
@@ -31,7 +32,6 @@ def get_item(username, api_name, api_id):
 
 
 def add_item(username, api_name, api_id, data):
-    ep_count_res = None
     try:
         if api_name == "tvmaze":
             ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
@@ -98,3 +98,22 @@ def delete_item(username, api_name, api_id):
         api_id,
     )
     watch_history_db.delete_item(username, collection_name, item_id)
+
+
+# def get_episodes(username, api_name, api_id):
+#     episodes = episodes_db.get_episodes(
+#         username,
+#         collection_name,
+#         item_id
+#     )
+
+def get_episode(username, api_name, api_id):
+    try:
+        w_ret = episodes_db.get_episode_by_api_id(
+            username,
+            api_name,
+            api_id
+        )
+        return w_ret
+    except episodes_db.NotFoundError:
+        raise HTTPException(status_code=404)

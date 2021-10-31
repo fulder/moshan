@@ -60,7 +60,8 @@ def add_episode(username, collection_name, item_id, episode_id, data=None):
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_episode(username, collection_name, episode_id, data, clean_whitelist=["deleted_at"])
+    update_episode(username, collection_name, episode_id, data,
+                   clean_whitelist=["deleted_at"])
 
 
 def delete_episode(username, collection_name, episode_id):
@@ -83,6 +84,26 @@ def get_episode(username, collection_name, episode_id, include_deleted=False):
     if not res["Items"]:
         raise NotFoundError(
             f"Episode with id: {episode_id} not found. Collection name: {collection_name}")
+
+    return res["Items"][0]
+
+
+def get_episode_by_api_id(username, api_name, api_id, include_deleted=False):
+    api_info = f"{api_name}_{api_id}"
+
+    kwargs = {
+        "IndexName": "api_info",
+        "KeyConditionExpression": Key("username").eq(username) &
+                                  Key("api_info").eq(api_info)
+    }
+    if not include_deleted:
+        kwargs["FilterExpression"] = Attr("deleted_at").not_exists()
+
+    res = _get_table().query(**kwargs)
+
+    if not res["Items"]:
+        raise NotFoundError(
+            f"Episode with api id: {api_id} not found. Api name: {api_name}")
 
     return res["Items"][0]
 
@@ -125,14 +146,7 @@ def update_episode(username, collection_name, episode_id, data,
     )
 
 
-def get_episodes(username, collection_name, item_id, limit=100, start=1):
-    start_page = 0
-    res = []
-
-    if start <= 0:
-        raise InvalidStartOffset
-
-    total_pages = 0
+def get_episodes(username, api_name, api_id):
     for p in _episodes_generator(username, collection_name, item_id,
                                  limit=limit):
         total_pages += 1

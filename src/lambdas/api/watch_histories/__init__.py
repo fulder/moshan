@@ -39,6 +39,15 @@ def add_item(request: Request, item: PostItem):
     )
 
 
+@app.get("/watch-histories/episodes/{api_name}/{api_id}")
+def get_episode(request: Request, api_name: str, api_id: str):
+    return routes.get_episode(
+        request.state.username,
+        api_name,
+        api_id,
+    )
+
+
 @app.middleware("http")
 def parse_token(request: Request, call_next):
     auth_header = request.headers.get("authorization")
