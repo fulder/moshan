@@ -10,7 +10,7 @@ def handle(event, context):
 
     for tvmaze_id in tvmaze_updates:
         try:
-            watch_history_db.get_items_by_id(tvmaze_id)
+            watch_history_db.get_items_by_api_id("tvmaze", tvmaze_id)
         except HTTPError:
             # Show not present in db, exclude it from updates
             continue
