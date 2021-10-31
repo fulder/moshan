@@ -80,7 +80,7 @@ class WatchHistoryApi {
       data.rating = rating;
     }
     if (qParams.collection == 'show') {
-          return this.apiAxios.put(`/watch-histories/item/${qParams.api_name}/${qParams.api_id}`);
+          return this.apiAxios.put(`/watch-histories/item/${qParams.api_name}/${qParams.api_id}`, data);
     }
     return this.apiAxios.put(`/watch-history/collection/${qParams.collection}/${qParams.id}`, data);
   }
