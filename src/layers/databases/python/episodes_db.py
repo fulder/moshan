@@ -146,53 +146,30 @@ def update_episode(username, collection_name, episode_id, data,
     )
 
 
-def get_episodes(username, api_name, api_id):
-    for p in _episodes_generator(username, collection_name, item_id,
-                                 limit=limit):
-        total_pages += 1
-        start_page += 1
-        if start_page == start:
-            res = p
+def get_episodes(username, api_name, item_api_id):
+    item_api_info = f"{api_name}_{item_api_id}"
 
-    if start > start_page:
-        raise InvalidStartOffset
-
-    log.debug(f"get_episodes response: {res}")
-
-    if not res:
-        raise NotFoundError(
-            f"episodes for client with username: {username} and collection: {collection_name} not found")
-
-    return {
-        "episodes": res,
-        "total_pages": total_pages
-    }
-
-
-def _episodes_generator(username, collection_name, item_id, limit):
     paginator = _get_client().get_paginator('query')
 
     query_kwargs = {
         "TableName": DATABASE_NAME,
+        "IndexName": "item_api_info",
         "KeyConditionExpression": "username = :username",
         "ExpressionAttributeValues": {
             ":username": {"S": username},
-            ":item_id": {"S": item_id},
-            ":collection_name": {"S": collection_name},
+            ":item_api_info": {"S": item_api_info},
         },
-        "Limit": limit,
         "ScanIndexForward": False,
-        "FilterExpression": "attribute_not_exists(deleted_at) and item_id = :item_id and collection_name = :collection_name",
+        "FilterExpression": "attribute_not_exists(deleted_at) and item_api_info = :item_api_info",
     }
 
     log.debug(f"Query kwargs: {query_kwargs}")
 
     page_iterator = paginator.paginate(**query_kwargs)
 
+    res = []
     for p in page_iterator:
-        items = {}
         for i in p["Items"]:
-            item = json_util.loads(i)
-            episode_id = item.pop("id")
-            items[episode_id] = item
-        yield items
+            i = json_util.loads(i)
+            res.append(i)
+    return res
