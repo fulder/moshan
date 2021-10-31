@@ -116,6 +116,9 @@ class WatchHistoryApi {
   updateWatchHistoryEpisode (qParams, watchDates = []) {
     const data = {};
     data.dates_watched = watchDates;
+    if (qParams.collection == 'show') {
+          return this.apiAxios.put(`/watch-histories/item/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
+    }
     return this.apiAxios.put(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}`, data);
   }
 }
