@@ -31,7 +31,7 @@ class WatchHistoryApi {
 
   removeWatchHistoryItem (qParams) {
     if (qParams.collection == 'show') {
-          return this.apiAxios.delete(`/watch-histories/item/${qParams.api_name}/${qParams.api_id}`);
+          return this.apiAxios.delete(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
     }
     return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}`);
   }
@@ -46,7 +46,7 @@ class WatchHistoryApi {
         item_api_id: qParams.api_id,
         api_name: qParams.api_name,
       };
-      return this.apiAxios.post('/watch-histories/item', data);
+      return this.apiAxios.post('/watch-histories/items', data);
     }
     return this.apiAxios.post(`/watch-history/collection/${qParams.collection}`, data);
   }
@@ -57,7 +57,7 @@ class WatchHistoryApi {
 
   getWatchHistoryItemByApiId (qParams) {
     if (qParams.collection == 'show') {
-          return this.apiAxios.get(`/watch-histories/item/${qParams.api_name}/${qParams.api_id}`);
+          return this.apiAxios.get(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
     }
     return this.apiAxios.get(`/watch-history/collection/${qParams.collection}?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
   }
@@ -80,7 +80,7 @@ class WatchHistoryApi {
       data.rating = rating;
     }
     if (qParams.collection == 'show') {
-          return this.apiAxios.put(`/watch-histories/item/${qParams.api_name}/${qParams.api_id}`, data);
+          return this.apiAxios.put(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`, data);
     }
     return this.apiAxios.put(`/watch-history/collection/${qParams.collection}/${qParams.id}`, data);
   }
@@ -94,14 +94,14 @@ class WatchHistoryApi {
           data = {
             episode_api_id: qParams.episode_api_id,
           };
-          return this.apiAxios.post(`/watch-histories/item/${qParams.api_name}/${qParams.item_api_id}/episodes`, data);
+          return this.apiAxios.post(`/watch-histories/items/${qParams.api_name}/${qParams.item_api_id}/episodes`, data);
     }
     return this.apiAxios.post(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode`, data);
   }
 
   removeWatchHistoryEpisode (qParams) {
     if (qParams.collection == 'show') {
-          return this.apiAxios.delete(`/watch-histories/item/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
+          return this.apiAxios.delete(`/watch-histories/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
     }
     return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}?api_name=${qParams.api_name}`);
   }
@@ -112,7 +112,7 @@ class WatchHistoryApi {
 
   getWatchHistoryEpisodeByApiId (qParams) {
     if (qParams.collection == 'show') {
-          return this.apiAxios.get(`/watch-histories/item/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
+          return this.apiAxios.get(`/watch-histories/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
     }
     return this.apiAxios.get(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
   }
@@ -121,7 +121,7 @@ class WatchHistoryApi {
     const data = {};
     data.dates_watched = watchDates;
     if (qParams.collection == 'show') {
-          return this.apiAxios.put(`/watch-histories/item/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
+          return this.apiAxios.put(`/watch-histories/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
     }
     return this.apiAxios.put(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode/${qParams.episode_id}`, data);
   }
