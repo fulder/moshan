@@ -10,7 +10,6 @@ import logger
 import jwt_utils
 import schema
 import episodes_db
-import shows_api
 import watch_history_db
 
 log = logger.get_logger("episode_by_collection_item")
