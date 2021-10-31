@@ -1,5 +1,6 @@
 import episodes_db
 from fastapi import HTTPException
+import dateutil.parser
 
 import logger
 import tvmaze
@@ -119,3 +120,66 @@ def get_episode(username, api_name, item_api_id, episode_api_id):
         return w_ret
     except episodes_db.NotFoundError:
         raise HTTPException(status_code=404)
+
+
+def add_episode(username, api_name, item_api_id, episode_api_id, data):
+    try:
+        if api_name == "tvmaze":
+            api_res = tvmaze_api.get_episode(episode_api_id)
+            is_special = api_res["type"] != "regular"
+        else:
+            raise HTTPException(status_code=501)
+    except tvmaze.HTTPError as e:
+        err_msg = f"Could not get show episode in add_episode func" \
+                  f" from {api_name} api with id: {episode_api_id}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        raise HTTPException(status_code=e.code)
+
+    try:
+        item = watch_history_db.get_item_by_api_id(
+            username,
+            api_name,
+            item_api_id,
+        )
+    except watch_history_db.NotFoundError:
+        err_msg = f"Item with api_id: {item_api_id} not found. " \
+                  f"Please add it to the watch-history before posting episode"
+        raise HTTPException(status_code=404, detail=err_msg)
+
+    episodes_db.add_episode_v2(
+        username,
+        api_name,
+        item_api_id,
+        episode_api_id,
+        data
+    )
+
+    collection_name, item_id = watch_history_db.get_collection_and_item_id(
+        api_name,
+        item_api_id,
+    )
+    watch_history_db.change_watched_eps(
+        username,
+        collection_name,
+        item_id,
+        1,
+        special=is_special
+    )
+
+    if data.get("dates_watched") is None:
+        return
+
+    # If episode watch date is changed check if its larger than current
+    # item latest date and update item if that's the case
+    ep_date = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
+
+    if (item["latest_watch_date"] == "0" or
+        ep_date > dateutil.parser.parse(item["latest_watch_date"])):
+        ep_date = ep_date.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
+        watch_history_db.update_item(
+            username,
+            collection_name,
+            item_id,
+            {"latest_watch_date": f"{ep_date}"},
+            clean_whitelist=[],
+        )
