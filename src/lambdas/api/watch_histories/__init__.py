@@ -39,6 +39,15 @@ def add_item(request: Request, item: PostItem):
     )
 
 
+@app.get("/watch-histories/item/{api_name}/{api_id}/episodes")
+def get_episodes(request: Request, api_name: str, api_id: str):
+    return routes.get_episodes(
+        request.state.username,
+        api_name,
+        api_id,
+    )
+
+
 @app.get("/watch-histories/episodes/{api_name}/{api_id}")
 def get_episode(request: Request, api_name: str, api_id: str):
     return routes.get_episode(
