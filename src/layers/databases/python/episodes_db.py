@@ -153,14 +153,14 @@ def get_episodes(username, api_name, item_api_id):
 
     query_kwargs = {
         "TableName": DATABASE_NAME,
-        "IndexName": "item_api_info",
+        "IndexName": "api_info",
         "KeyConditionExpression": "username = :username",
         "ExpressionAttributeValues": {
             ":username": {"S": username},
-            ":item_api_info": {"S": item_api_info},
+            ":api_info": {"S": item_api_info},
         },
         "ScanIndexForward": False,
-        "FilterExpression": "attribute_not_exists(deleted_at) and item_api_info = :item_api_info",
+        "FilterExpression": "attribute_not_exists(deleted_at) and begins_with(api_info, :api_info)",
     }
 
     log.debug(f"Query kwargs: {query_kwargs}")
