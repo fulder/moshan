@@ -2,6 +2,8 @@ from datetime import datetime
 from enum import auto
 from typing import Optional, List
 
+from fastapi.encoders import jsonable_encoder
+
 from fastapi_utils.enums import StrEnum
 
 from pydantic import BaseModel
