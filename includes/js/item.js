@@ -275,7 +275,7 @@ function createEpisodesList (moshanEpisodes) {
 
     if (moshanEpisode.aired && qParams.api_name !== 'mal') {
       rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${episodeApiName}&api_id=${episodeApiId}'`;
+      onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${episodeApiName}&item_api_id=${qParams.id}&episode_api_id=${episodeApiId}'`;
     } else if (moshanEpisode.aired && qParams.api_name === 'mal') {
       rowClass = 'episodeRow';
       onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${episodeApiName}&api_id=${episodeApiId}&episode_id=${moshanEpisode.id}'`;
