@@ -30,7 +30,7 @@ class TvMazeApi {
   }
 
   getEpisode(qParams) {
-    return this.apiAxios.get(`/episodes/${qParams.api_id}`);
+    return this.apiAxios.get(`/episodes/${qParams.episode_api_id}`);
   }
 
   getMoshanItem(show) {
