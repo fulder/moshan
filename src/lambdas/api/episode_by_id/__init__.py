@@ -11,7 +11,6 @@ import jwt_utils
 import schema
 import episodes_db
 import watch_history_db
-import shows_api
 
 log = logger.get_logger("episodes_by_id")
 

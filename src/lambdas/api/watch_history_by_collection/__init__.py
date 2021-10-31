@@ -8,7 +8,6 @@ import logger
 import jwt_utils
 import movie_api
 import schema
-import shows_api
 import watch_history_db
 import anime_api
 
