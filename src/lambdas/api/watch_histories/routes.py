@@ -81,24 +81,16 @@ def update_item(username, api_name, api_id, data):
             detail="Please specify at least one of the optional fields"
         )
 
-    collection_name, item_id = watch_history_db.get_collection_and_item_id(
+    watch_history_db.update_item_v2(
+        username,
         api_name,
         api_id,
-    )
-    watch_history_db.update_item(
-        username,
-        collection_name,
-        item_id,
         data
     )
 
 
 def delete_item(username, api_name, api_id):
-    collection_name, item_id = watch_history_db.get_collection_and_item_id(
-        api_name,
-        api_id,
-    )
-    watch_history_db.delete_item(username, collection_name, item_id)
+    watch_history_db.delete_item_v2(username, api_name, api_id)
 
 
 def get_episodes(username, api_name, api_id):
@@ -154,14 +146,10 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
         data
     )
 
-    collection_name, item_id = watch_history_db.get_collection_and_item_id(
+    watch_history_db.change_watched_eps_v2(
+        username,
         api_name,
         item_api_id,
-    )
-    watch_history_db.change_watched_eps(
-        username,
-        collection_name,
-        item_id,
         1,
         special=is_special
     )
@@ -176,10 +164,41 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
     if (item["latest_watch_date"] == "0" or
         ep_date > dateutil.parser.parse(item["latest_watch_date"])):
         ep_date = ep_date.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
-        watch_history_db.update_item(
+        watch_history_db.update_item_v2(
             username,
-            collection_name,
-            item_id,
+            api_name,
+            item_api_id,
             {"latest_watch_date": f"{ep_date}"},
             clean_whitelist=[],
         )
+
+
+def delete_episode(username, api_name, item_api_id, episode_api_id):
+    try:
+        if api_name == "tvmaze":
+            api_res = tvmaze_api.get_episode(episode_api_id)
+            is_special = api_res["type"] != "regular"
+        else:
+            raise HTTPException(status_code=501)
+    except tvmaze.HTTPError as e:
+        err_msg = f"Could not get show episode in add_episode func" \
+                  f" from {api_name} api with id: {episode_api_id}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        raise HTTPException(status_code=e.code)
+
+    episodes_db.delete_episode_v2(
+        username,
+        api_name,
+        item_api_id,
+        episode_api_id,
+    )
+
+    watch_history_db.change_watched_eps_v2(
+        username,
+        api_name,
+        item_api_id,
+        -1,
+        special=is_special
+    )
+
+

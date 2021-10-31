@@ -31,7 +31,7 @@ def update_item(request: Request, api_name: str, item_api_id: str, item: Item):
 @app.post("/watch-histories/item", status_code=204)
 def add_item(request: Request, item: PostItem):
     d = item.dict(exclude={"api_name", "item_api_id"})
-    return routes.add_item(
+    routes.add_item(
         request.state.username,
         item.api_name,
         item.item_api_id,
@@ -48,10 +48,11 @@ def get_episodes(request: Request, api_name: str, item_api_id: str):
     )
 
 
-@app.post("/watch-histories/item/{api_name}/{item_api_id}/episodes")
+@app.post("/watch-histories/item/{api_name}/{item_api_id}/episodes",
+          status_code=204)
 def add_episode(request: Request, api_name, item_api_id, episode: PostEpisode):
     d = episode.dict(exclude={"episode_api_id"})
-    return routes.add_episode(
+    routes.add_episode(
         request.state.username,
         api_name,
         item_api_id,
@@ -65,6 +66,19 @@ def add_episode(request: Request, api_name, item_api_id, episode: PostEpisode):
 def get_episode(request: Request, api_name: str, item_api_id: str,
                 episode_api_id: str):
     return routes.get_episode(
+        request.state.username,
+        api_name,
+        item_api_id,
+        episode_api_id,
+    )
+
+
+@app.delete(
+    "/watch-histories/item/{api_name}/{item_api_id}/episodes/{episode_api_id}",
+    status_code=204)
+def delete_episode(request: Request, api_name: str, item_api_id: str,
+                  episode_api_id: str):
+    routes.delete_episode(
         request.state.username,
         api_name,
         item_api_id,
