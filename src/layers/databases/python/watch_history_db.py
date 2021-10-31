@@ -80,6 +80,18 @@ def add_item_v2(username, api_name, api_id, data=None):
     )
 
 
+def update_item_v2(username, api_name, api_id, data,
+                   clean_whitelist=OPTIONAL_FIELDS):
+    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
+    update_item(
+        username,
+        collection_name,
+        item_id,
+        data,
+        clean_whitelist=clean_whitelist,
+    )
+
+
 def get_collection_and_item_id(api_name, api_id):
     if api_name == "tvmaze":
         show_namespace = uuid.UUID("6045673a-9dd2-451c-aa58-d94a217b993a")
@@ -105,6 +117,15 @@ def add_item(username, collection_name, item_id, data=None):
 def delete_item(username, collection_name, item_id):
     data = {"deleted_at": int(time.time())}
     update_item(username, collection_name, item_id, data, clean_whitelist=[])
+
+
+def delete_item_v2(username, api_name, api_id):
+    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
+    delete_item(
+        username,
+        collection_name,
+        item_id,
+    )
 
 
 def get_item(username, collection_name, item_id, include_deleted=False):
@@ -200,7 +221,7 @@ def change_watched_eps(username, collection_name, item_id, change,
         field_name = "special"
 
     item = get_item(username, collection_name, item_id)
-    if item[f"{field_name}_count"] == 0:
+    if f"{field_name}_count" not in item or item[f"{field_name}_count"] == 0:
         ep_progress = 0
     else:
         ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[
@@ -221,6 +242,17 @@ def change_watched_eps(username, collection_name, item_id, change,
             ":p": ep_progress,
             ":i": change,
         }
+    )
+
+
+def change_watched_eps_v2(username, api_name, api_id, change, special=False):
+    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
+    change_watched_eps(
+        username,
+        collection_name,
+        item_id,
+        change,
+        special=special
     )
 
 

@@ -72,6 +72,18 @@ def delete_episode(username, collection_name, episode_id):
                    clean_whitelist=[])
 
 
+def delete_episode_v2(username, api_name, item_api_id, episode_api_id):
+    # create legacy episode properties
+    collection_name, item_id = watch_history_db.get_collection_and_item_id(
+        api_name,
+        item_api_id,
+    )
+    episode_id = get_episode_uuid(item_id, episode_api_id)
+    # ---------------
+
+    delete_episode(username, collection_name, episode_id)
+
+
 def get_episode(username, collection_name, episode_id, include_deleted=False):
     filter_exp = Attr("collection_name").eq(collection_name)
     if not include_deleted:
