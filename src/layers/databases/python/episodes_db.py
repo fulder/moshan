@@ -221,7 +221,7 @@ def add_episode_v2(username, api_name, item_api_id, episode_api_id, data=None):
         data = {}
     data["api_info"] = f"{api_name}_{item_api_id}_{episode_api_id}"
 
-    if data.get("dates_watched") is None:
+    if data.get("dates_watched"):
         data["latest_watch_date"] = "0"
     try:
         get_episode_by_api_id(
