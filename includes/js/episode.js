@@ -16,8 +16,10 @@ function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
   this.api_name = urlParams.get('api_name');
   this.id = urlParams.get('id');
-  this.api_id = urlParams.get('api_id');
+  this.item_api_id = urlParams.get('item_api_id');
+  this.api_id = urlParams.get('item_api_id');
   this.episode_id = urlParams.get('episode_id');
+  this.episode_api_id = urlParams.get('episode_api_id');
 }
 
 async function getEpisode() {
