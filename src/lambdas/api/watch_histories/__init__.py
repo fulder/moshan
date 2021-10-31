@@ -1,3 +1,5 @@
+from fastapi.encoders import jsonable_encoder
+
 from fastapi import FastAPI, Request
 from mangum import Mangum
 
@@ -25,7 +27,7 @@ def update_item(request: Request, api_name: str, item_api_id: str,
         request.state.username,
         api_name,
         item_api_id,
-        data.dict(),
+        jsonable_encoder(data),
     )
 
 
@@ -36,7 +38,7 @@ def add_item(request: Request, item: PostItem):
         request.state.username,
         item.api_name,
         item.item_api_id,
-        d,
+        jsonable_encoder(d),
     )
 
 
@@ -58,7 +60,7 @@ def add_episode(request: Request, api_name, item_api_id, episode: PostEpisode):
         api_name,
         item_api_id,
         episode.episode_api_id,
-        d
+        jsonable_encoder(d),
     )
 
 
@@ -84,7 +86,7 @@ def update_episode(request: Request, api_name: str, item_api_id: str,
         api_name,
         item_api_id,
         episode_api_id,
-        data.dict(),
+        jsonable_encoder(data),
     )
 
 
