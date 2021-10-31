@@ -154,7 +154,7 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
         special=is_special
     )
 
-    if data.get("dates_watched"):
+    if not data.get("dates_watched"):
         return
 
     _update_latest_watch_date(item, data, username, api_name, item_api_id)
@@ -191,7 +191,7 @@ def update_episode(username, api_name, item_api_id, episode_api_id, data):
         data
     )
 
-    if data.get("dates_watched"):
+    if not data.get("dates_watched"):
         return
 
     _update_latest_watch_date(item, data, username, api_name, item_api_id)
