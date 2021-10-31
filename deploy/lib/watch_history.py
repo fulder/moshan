@@ -113,6 +113,10 @@ class WatchHistory(core.Stack):
             sort_key=Attribute(name="api_info", type=AttributeType.STRING),
             index_name="api_info"
         )
+        self.episodes_table.add_global_secondary_index(
+            partition_key=Attribute(name="api_info", type=AttributeType.STRING),
+            index_name="all_api_info"
+        )
 
     def _create_lambdas_config(self):
         self.lambdas_config = {

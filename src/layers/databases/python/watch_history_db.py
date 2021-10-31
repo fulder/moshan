@@ -165,6 +165,19 @@ def get_item_by_api_id(username, api_name, api_id, include_deleted=False):
     return res["Items"][0]
 
 
+def get_items_by_api_id(api_name, api_id):
+    api_info = f"{api_name}_{api_id}"
+    res = _get_table().query(
+        IndexName="all_api_info",
+        KeyConditionExpression=Key("api_info").eq(api_info),
+    )
+
+    if not res["Items"]:
+        raise NotFoundError(f"Item with api_info: {api_info} not found.")
+
+    return res["Items"]
+
+
 def update_item(username, collection_name, item_id, data,
                 clean_whitelist=OPTIONAL_FIELDS):
     data["collection_name"] = collection_name
