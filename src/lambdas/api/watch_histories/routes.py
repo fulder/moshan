@@ -162,6 +162,17 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
 
 def update_episode(username, api_name, item_api_id, episode_api_id, data):
     try:
+        if api_name == "tvmaze":
+            tvmaze_api.get_episode(episode_api_id)
+        else:
+            raise HTTPException(status_code=501)
+    except tvmaze.HTTPError as e:
+        err_msg = f"Could not get show episode in add_episode func" \
+                  f" from {api_name} api with id: {episode_api_id}"
+        log.error(f"{err_msg}. Error: {str(e)}")
+        raise HTTPException(status_code=e.code)
+
+    try:
         item = watch_history_db.get_item_by_api_id(
             username,
             api_name,
