@@ -30,5 +30,5 @@ class Item(BaseModel):
 
 
 class PostItem(Item):
-    api_id: str
+    item_api_id: str
     api_name: ApiName

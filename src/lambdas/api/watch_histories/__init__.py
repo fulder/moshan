@@ -8,43 +8,43 @@ from models import Item, PostItem
 app = FastAPI()
 
 
-@app.get("/watch-histories/item/{api_name}/{api_id}")
-def get_item(request: Request, api_name: str, api_id: str):
-    return routes.get_item(request.state.username, api_name, api_id)
+@app.get("/watch-histories/item/{api_name}/{item_api_id}")
+def get_item(request: Request, api_name: str, item_api_id: str):
+    return routes.get_item(request.state.username, api_name, item_api_id)
 
 
-@app.delete("/watch-histories/item/{api_name}/{api_id}", status_code=204)
-def delete_item(request: Request, api_name: str, api_id: str):
-    return routes.delete_item(request.state.username, api_name, api_id)
+@app.delete("/watch-histories/item/{api_name}/{item_api_id}", status_code=204)
+def delete_item(request: Request, api_name: str, item_api_id: str):
+    return routes.delete_item(request.state.username, api_name, item_api_id)
 
 
-@app.put("/watch-histories/item/{api_name}/{api_id}", status_code=204)
-def update_item(request: Request, api_name: str, api_id: str, item: Item):
+@app.put("/watch-histories/item/{api_name}/{item_api_id}", status_code=204)
+def update_item(request: Request, api_name: str, item_api_id: str, item: Item):
     return routes.update_item(
         request.state.username,
         api_name,
-        api_id,
+        item_api_id,
         item.dict(),
     )
 
 
 @app.post("/watch-histories/item", status_code=204)
 def add_item(request: Request, item: PostItem):
-    d = item.dict(exclude={"api_name", "api_id"})
+    d = item.dict(exclude={"api_name", "item_api_id"})
     return routes.add_item(
         request.state.username,
         item.api_name,
-        item.api_id,
+        item.item_api_id,
         d,
     )
 
 
-@app.get("/watch-histories/item/{api_name}/{api_id}/episodes")
-def get_episodes(request: Request, api_name: str, api_id: str):
+@app.get("/watch-histories/item/{api_name}/{item_api_id}/episodes")
+def get_episodes(request: Request, api_name: str, item_api_id: str):
     return routes.get_episodes(
         request.state.username,
         api_name,
-        api_id,
+        item_api_id,
     )
 
 
