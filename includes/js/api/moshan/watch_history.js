@@ -90,7 +90,7 @@ class WatchHistoryApi {
           data = {
             episode_api_id: qParams.episode_api_id,
           };
-          return this.apiAxios.post(`/watch-histories/item/${qParams.api_name}/${qParams.item_api_id}/episodes/`, data);
+          return this.apiAxios.post(`/watch-histories/item/${qParams.api_name}/${qParams.item_api_id}/episodes`, data);
     }
     return this.apiAxios.post(`/watch-history/collection/${qParams.collection}/${qParams.id}/episode`, data);
   }
