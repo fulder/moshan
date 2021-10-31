@@ -88,8 +88,9 @@ def get_episode(username, collection_name, episode_id, include_deleted=False):
     return res["Items"][0]
 
 
-def get_episode_by_api_id(username, api_name, api_id, include_deleted=False):
-    api_info = f"{api_name}_{api_id}"
+def get_episode_by_api_id(username, api_name, api_id, episode_api_id,
+                          include_deleted=False):
+    api_info = f"{api_name}_{api_id}_{episode_api_id}"
 
     kwargs = {
         "IndexName": "api_info",

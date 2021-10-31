@@ -48,12 +48,15 @@ def get_episodes(request: Request, api_name: str, api_id: str):
     )
 
 
-@app.get("/watch-histories/episodes/{api_name}/{api_id}")
-def get_episode(request: Request, api_name: str, api_id: str):
+@app.get(
+    "/watch-histories/item/{api_name}/{item_api_id}/episodes/{episode_api_id}")
+def get_episode(request: Request, api_name: str, item_api_id: str,
+                episode_api_id: str):
     return routes.get_episode(
         request.state.username,
         api_name,
-        api_id,
+        item_api_id,
+        episode_api_id,
     )
 
 

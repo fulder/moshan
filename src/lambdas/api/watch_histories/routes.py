@@ -108,12 +108,13 @@ def get_episodes(username, api_name, api_id):
     )
 
 
-def get_episode(username, api_name, api_id):
+def get_episode(username, api_name, item_api_id, episode_api_id):
     try:
         w_ret = episodes_db.get_episode_by_api_id(
             username,
             api_name,
-            api_id
+            item_api_id,
+            episode_api_id,
         )
         return w_ret
     except episodes_db.NotFoundError:
