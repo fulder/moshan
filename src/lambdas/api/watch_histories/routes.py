@@ -192,13 +192,6 @@ def update_episode(username, api_name, item_api_id, episode_api_id, data):
     )
 
     if not data.get("dates_watched"):
-        watch_history_db.update_item_v2(
-            username,
-            api_name,
-            item_api_id,
-            {"latest_watch_date": "0"},
-            clean_whitelist=[],
-        )
         return
 
     _update_latest_watch_date(item, data, username, api_name, item_api_id)
