@@ -137,11 +137,16 @@ class WatchHistory(core.Stack):
                         resources=[
                             self.watch_history_table.table_arn,
                             f"{self.watch_history_table.table_arn}/index/*",
+                            self.episodes_table.table_arn,
+                            f"{self.episodes_table.table_arn}/index/*",
                         ]
                     ),
                     PolicyStatement(
                         actions=["dynamodb:UpdateItem"],
-                        resources=[self.watch_history_table.table_arn],
+                        resources=[
+                            self.watch_history_table.table_arn,
+                            self.episodes_table.table_arn
+                        ],
                     ),
                 ],
                 "timeout": 60

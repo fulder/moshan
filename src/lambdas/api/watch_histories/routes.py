@@ -101,11 +101,12 @@ def delete_item(username, api_name, api_id):
 
 
 def get_episodes(username, api_name, api_id):
-    episodes = episodes_db.get_episodes(
+    return episodes_db.get_episodes(
         username,
-        collection_name,
-        item_id
+        api_name,
+        api_id,
     )
+
 
 def get_episode(username, api_name, api_id):
     try:
