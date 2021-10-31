@@ -1,11 +1,9 @@
-from fastapi.encoders import jsonable_encoder
-
 from fastapi import FastAPI, Request
 from mangum import Mangum
 
 import routes
 import jwt_utils
-from models import PostItem, PostEpisode, ReviewData
+from models import PostItem, PostEpisode, ReviewData, review_data_to_dict
 
 app = FastAPI()
 
@@ -27,18 +25,17 @@ def update_item(request: Request, api_name: str, item_api_id: str,
         request.state.username,
         api_name,
         item_api_id,
-        jsonable_encoder(data),
+        review_data_to_dict(data),
     )
 
 
 @app.post("/watch-histories/item", status_code=204)
 def add_item(request: Request, item: PostItem):
-    d = item.dict(exclude={"api_name", "item_api_id"})
     routes.add_item(
         request.state.username,
         item.api_name,
         item.item_api_id,
-        jsonable_encoder(d),
+        review_data_to_dict(item),
     )
 
 
@@ -54,13 +51,12 @@ def get_episodes(request: Request, api_name: str, item_api_id: str):
 @app.post("/watch-histories/item/{api_name}/{item_api_id}/episodes",
           status_code=204)
 def add_episode(request: Request, api_name, item_api_id, episode: PostEpisode):
-    d = episode.dict(exclude={"episode_api_id"})
     routes.add_episode(
         request.state.username,
         api_name,
         item_api_id,
         episode.episode_api_id,
-        jsonable_encoder(d),
+        review_data_to_dict(episode),
     )
 
 
@@ -86,7 +82,7 @@ def update_episode(request: Request, api_name: str, item_api_id: str,
         api_name,
         item_api_id,
         episode_api_id,
-        jsonable_encoder(data),
+        review_data_to_dict(data),
     )
 
 

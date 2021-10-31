@@ -2,8 +2,6 @@ from datetime import datetime
 from enum import auto
 from typing import Optional, List
 
-from fastapi.encoders import jsonable_encoder
-
 from fastapi_utils.enums import StrEnum
 
 from pydantic import BaseModel
@@ -38,3 +36,15 @@ class PostItem(ReviewData):
 
 class PostEpisode(ReviewData):
     episode_api_id: str
+
+
+def review_data_to_dict(data: ReviewData):
+    d = data.dict(exclude={"api_name", "item_api_id", "episode_api_id"})
+    dates = d.get("dates_watched")
+    if dates:
+        parsed_dates = []
+        for d in dates:
+            new_d = d.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
+            parsed_dates.append(new_d)
+        d["dates_watched"] = parsed_dates
+    return d
