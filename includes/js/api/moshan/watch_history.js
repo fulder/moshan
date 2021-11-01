@@ -30,7 +30,7 @@ class WatchHistoryApi {
   }
 
   removeWatchHistoryItem (qParams) {
-    if (qParams.collection == 'show') {
+    if (qParams.collection !== 'anime') {
           return this.apiAxios.delete(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
     }
     return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}`);
@@ -41,7 +41,7 @@ class WatchHistoryApi {
       api_id: qParams.api_id,
       api_name: qParams.api_name,
     };
-    if (qParams.collection == 'show') {
+    if (qParams.collection !== 'anime') {
       let data = {
         item_api_id: qParams.api_id,
         api_name: qParams.api_name,
@@ -56,7 +56,7 @@ class WatchHistoryApi {
   }
 
   getWatchHistoryItemByApiId (qParams) {
-    if (qParams.collection == 'show') {
+    if (qParams.collection !== 'anime') {
           return this.apiAxios.get(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
     }
     return this.apiAxios.get(`/watch-history/collection/${qParams.collection}?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
@@ -79,7 +79,7 @@ class WatchHistoryApi {
     if (rating !== '') {
       data.rating = rating;
     }
-    if (qParams.collection == 'show') {
+    if (qParams.collection !== 'anime') {
           return this.apiAxios.put(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`, data);
     }
     return this.apiAxios.put(`/watch-history/collection/${qParams.collection}/${qParams.id}`, data);
