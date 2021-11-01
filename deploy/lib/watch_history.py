@@ -128,6 +128,7 @@ class WatchHistory(core.Stack):
                     "LOG_LEVEL": "INFO",
                     "ANIME_API_URL": self.anime_api_url,
                     "MOVIE_API_URL": self.movie_api_url,
+                    "TMDB_TOKEN": os.getenv("TMDB_TOKEN"),
                 },
                 "concurrent_executions": 100,
                 "policies": [
