@@ -10,7 +10,6 @@ import logger
 import jwt_utils
 import schema
 import episodes_db
-import shows_api
 import watch_history_db
 
 log = logger.get_logger("episode_by_collection_item")
@@ -65,7 +64,8 @@ def _get_episode_by_api_id(collection_name, item_id, api_name, api_id,
             s_ret = anime_api.get_episode_by_api_id(item_id, api_name, api_id,
                                                     token)
         elif collection_name == "show":
-            s_ret = shows_api.get_episode_by_api_id(api_name, api_id)
+            raise utils.HttpError("", 501)
+            # s_ret = shows_api.get_episode_by_api_id(api_name, api_id)
     except utils.HttpError as e:
         err_msg = f"Could not get {collection_name} episode"
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -139,7 +139,8 @@ def _post_episode(username, collection_name, item_id, body, token):
         if collection_name == "anime":
             res = anime_api.post_episode(item_id, api_body, token)
         elif collection_name == "show":
-            res = shows_api.post_episode(item_id, api_body)
+            raise utils.HttpError("", 501)
+            # res = shows_api.post_episode(item_id, api_body)
     except utils.HttpError as e:
         err_msg = f"Could not post {collection_name}"
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -161,7 +162,7 @@ def _post_episode(username, collection_name, item_id, body, token):
         special=res["is_special"]
     )
 
-    if "dates_watched" not in body:
+    if body.get("dates_watched") is None:
         return {
             "statusCode": 200,
             "body": json.dumps({"id": episode_id})

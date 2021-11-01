@@ -258,6 +258,38 @@ def test_update_item_dates_watched_one_date(mocked_watch_history_db):
     }
 
 
+def test_update_item_none_data(mocked_watch_history_db):
+    mock_func = MockFunc()
+    mocked_watch_history_db.table.update_item = mock_func.f
+
+    mocked_watch_history_db.update_item(TEST_USERNAME, "MOVIE", "123",
+                                        {"review": "review_text", "ignore": None})
+
+    assert mock_func.update_values == {
+        'ExpressionAttributeNames': {
+            '#collection_name': 'collection_name',
+            '#dates_watched': 'dates_watched',
+            '#deleted_at': 'deleted_at',
+            '#overview': 'overview',
+            '#rating': 'rating',
+            '#review': 'review',
+            '#status': 'status',
+            '#updated_at': 'updated_at'
+        },
+        'ExpressionAttributeValues': {
+            ':collection_name': 'MOVIE',
+            ":updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            ":review": "review_text"
+        },
+        'Key': {
+            'username': TEST_USERNAME,
+            'item_id': '123'},
+        'UpdateExpression': 'SET #review=:review,#collection_name=:collection_name,'
+                            '#updated_at=:updated_at '
+                            'REMOVE #deleted_at,#overview,#status,#rating,#dates_watched'
+    }
+
+
 def test_delete_item(mocked_watch_history_db):
     mock_func = MockFunc()
     mocked_watch_history_db.table.update_item = mock_func.f

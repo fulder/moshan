@@ -1,7 +1,10 @@
 import os
 from unittest.mock import MagicMock
 
+import jwt
 import pytest
+from starlette.testclient import TestClient
+from api.watch_histories import app
 
 os.environ["LOG_LEVEL"] = "DEBUG"
 
@@ -36,19 +39,28 @@ def mocked_episodes_db():
 
 
 @pytest.fixture(scope='function')
-def mocked_show_api():
-    import shows_api
-
-    shows_api.SHOW_API_URL = "https://mocked"
-    shows_api.utils.get_v4_signature_auth = MagicMock()
-
-    return shows_api
-
-
-@pytest.fixture(scope='function')
 def mocked_movie_api():
     import movie_api
 
     movie_api.MOVIE_API_URL = "https://mocked"
 
     return movie_api
+
+
+@pytest.fixture(scope='session')
+def client():
+    return TestClient(app)
+
+
+@pytest.fixture(scope='session')
+def username():
+    return "TEST_USER"
+
+
+@pytest.fixture(scope='session')
+def token(username):
+    return jwt.encode(
+        {"username": username},
+        "secret",
+        algorithm="HS256"
+    ).decode("utf-8")

@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 from datetime import datetime
 
 import boto3
@@ -51,6 +52,53 @@ def _get_client():
     return client
 
 
+def add_item_v2(username, api_name, api_id, data=None):
+    if data is None:
+        data = {}
+    data["api_info"] = f"{api_name}_{api_id}"
+
+    if data.get("dates_watched"):
+        data["latest_watch_date"] = "0"
+    try:
+        get_item_by_api_id(
+            username,
+            api_name,
+            api_id,
+            include_deleted=True,
+        )
+    except NotFoundError:
+        data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # create legacy item properties
+    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
+    update_item(
+        username,
+        collection_name,
+        item_id,
+        data,
+        clean_whitelist=["deleted_at"],
+    )
+
+
+def update_item_v2(username, api_name, api_id, data,
+                   clean_whitelist=OPTIONAL_FIELDS):
+    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
+    update_item(
+        username,
+        collection_name,
+        item_id,
+        data,
+        clean_whitelist=clean_whitelist,
+    )
+
+
+def get_collection_and_item_id(api_name, api_id):
+    if api_name == "tvmaze":
+        show_namespace = uuid.UUID("6045673a-9dd2-451c-aa58-d94a217b993a")
+        api_uuid = uuid.uuid5(show_namespace, api_name)
+        return "show", str(uuid.uuid5(api_uuid, api_id))
+
+
 def add_item(username, collection_name, item_id, data=None):
     if data is None:
         data = {}
@@ -71,6 +119,15 @@ def delete_item(username, collection_name, item_id):
     update_item(username, collection_name, item_id, data, clean_whitelist=[])
 
 
+def delete_item_v2(username, api_name, api_id):
+    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
+    delete_item(
+        username,
+        collection_name,
+        item_id,
+    )
+
+
 def get_item(username, collection_name, item_id, include_deleted=False):
     filter_exp = Attr("collection_name").eq(collection_name)
     if not include_deleted:
@@ -89,20 +146,61 @@ def get_item(username, collection_name, item_id, include_deleted=False):
     return res["Items"][0]
 
 
+def get_item_by_api_id(username, api_name, api_id, include_deleted=False):
+    api_info = f"{api_name}_{api_id}"
+
+    kwargs = {
+        "IndexName": "api_info",
+        "KeyConditionExpression": Key("username").eq(username) &
+                                  Key("api_info").eq(api_info)
+    }
+    if not include_deleted:
+        kwargs["FilterExpression"] = Attr("deleted_at").not_exists()
+
+    res = _get_table().query(**kwargs)
+
+    if not res["Items"]:
+        raise NotFoundError(f"Item with api_info: {api_info} not found")
+
+    return res["Items"][0]
+
+
+def get_items_by_api_id(api_name, api_id):
+    api_info = f"{api_name}_{api_id}"
+    res = _get_table().query(
+        IndexName="all_api_info",
+        KeyConditionExpression=Key("api_info").eq(api_info),
+    )
+
+    if not res["Items"]:
+        raise NotFoundError(f"Item with api_info: {api_info} not found.")
+
+    return res["Items"]
+
+
 def update_item(username, collection_name, item_id, data,
                 clean_whitelist=OPTIONAL_FIELDS):
     data["collection_name"] = collection_name
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if "dates_watched" in data:
+    if data.get("dates_watched"):
         m_d = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
         m_d = m_d.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         data["latest_watch_date"] = m_d.replace("000Z", "Z")
 
-    items = ','.join(f'#{k}=:{k}' for k in data)
-    update_expression = f"SET {items}"
-    expression_attribute_names = {f'#{k}': k for k in data}
-    expression_attribute_values = {f':{k}': v for k, v in data.items()}
+    update_expression = "SET "
+    expression_attribute_names = {}
+    expression_attribute_values = {}
+    for k, v in data.items():
+        if v is None:
+            continue
+
+        update_expression += f"#{k}=:{k},"
+        expression_attribute_names[f"#{k}"] = k
+        expression_attribute_values[f":{k}"] = v
+
+    # remove last comma
+    update_expression = update_expression[:-1]
 
     remove_names = []
     for o in OPTIONAL_FIELDS:
@@ -129,16 +227,18 @@ def update_item(username, collection_name, item_id, data,
     )
 
 
-def change_watched_eps(username, collection_name, item_id, change, special=False):
+def change_watched_eps(username, collection_name, item_id, change,
+                       special=False):
     field_name = "ep"
     if special:
         field_name = "special"
 
     item = get_item(username, collection_name, item_id)
-    if item[f"{field_name}_count"] == 0:
+    if f"{field_name}_count" not in item or item[f"{field_name}_count"] == 0:
         ep_progress = 0
     else:
-        ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[f"{field_name}_count"]
+        ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[
+            f"{field_name}_count"]
     ep_progress = round(ep_progress * 100, 2)
 
     _get_table().update_item(
@@ -155,6 +255,17 @@ def change_watched_eps(username, collection_name, item_id, change, special=False
             ":p": ep_progress,
             ":i": change,
         }
+    )
+
+
+def change_watched_eps_v2(username, api_name, api_id, change, special=False):
+    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
+    change_watched_eps(
+        username,
+        collection_name,
+        item_id,
+        change,
+        special=special
     )
 
 

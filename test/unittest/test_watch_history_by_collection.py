@@ -74,34 +74,6 @@ class TestGet:
         }
 
     @patch("api.watch_history_by_collection.watch_history_db.get_item")
-    @patch("api.watch_history_by_collection.shows_api.get_show_by_api_id")
-    def test_success_by_api_id_shows(self, mocked_get_show,
-                                     mocked_get_watch_history):
-        w_ret = {
-            "collection_name": "anime",
-            "item_id": 123,
-            "username": "user",
-        }
-        s_ret = {
-            "id": 123
-        }
-        mocked_get_show.return_value = s_ret
-        mocked_get_watch_history.return_value = w_ret
-        event = copy.deepcopy(self.event)
-        event["pathParameters"]["collection_name"] = "show"
-        event["queryStringParameters"] = {
-            "api_id": 123,
-            "api_name": "tvdb"
-        }
-
-        ret = handle(event, None)
-        exp_data = {**w_ret, **s_ret}
-        assert ret == {
-            "body": json.dumps(exp_data),
-            "statusCode": 200
-        }
-
-    @patch("api.watch_history_by_collection.watch_history_db.get_item")
     @patch("api.watch_history_by_collection.movie_api.get_movie_by_api_id")
     def test_success_by_api_id_movie(self, mocked_get_movie,
                                      mocked_get_watch_history):
@@ -269,24 +241,6 @@ class TestPost:
         }
 
     @patch("api.watch_history_by_collection.watch_history_db.add_item")
-    @patch("api.watch_history_by_collection.shows_api.post_show")
-    @patch("api.watch_history_by_collection.watch_history_db.get_item")
-    def test_show_success(self, mocked_get_item, mocked_post_show, mocked_post):
-        mocked_post_show.return_value = {
-            "id": "123"
-        }
-        mocked_post.return_value = True
-        event = copy.deepcopy(self.event)
-        event["pathParameters"]["collection_name"] = "show"
-        event["body"] = '{ "api_id": "123", "api_name": "tvmaze" }'
-
-        ret = handle(event, None)
-        assert ret == {
-            "body": '{"id": "123"}',
-            "statusCode": 200
-        }
-
-    @patch("api.watch_history_by_collection.watch_history_db.add_item")
     @patch("api.watch_history_by_collection.movie_api.post_movie")
     @patch("api.watch_history_by_collection.watch_history_db.get_item")
     def test_movie_success(self, mocked_get_item, mocked_post_movie, mocked_post):
@@ -351,24 +305,6 @@ class TestPost:
                 "error": "Additional properties are not allowed "
                          "('invalid' was unexpected)"
                 }
-        assert ret == {
-            "body": json.dumps(body),
-            "statusCode": 400
-        }
-
-    @patch("api.watch_history_by_collection.watch_history_db.add_item")
-    @patch("api.watch_history_by_collection.shows_api.get_show")
-    def test_missing_id(self, mocked_get_show, mocked_post):
-        mocked_get_show.return_value = True
-        mocked_post.return_value = True
-        event = copy.deepcopy(self.event)
-        event["body"] = '{"api_name": "mal"}'
-
-        ret = handle(event, None)
-        body = {
-            "message": "Invalid post schema",
-            "error": "'api_id' is a required property"
-        }
         assert ret == {
             "body": json.dumps(body),
             "statusCode": 400
