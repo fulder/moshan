@@ -40,21 +40,6 @@ class TestGet:
         }
 
     @patch("api.item_by_collection.watch_history_db.get_item")
-    @patch("api.item_by_collection.shows_api.get_show")
-    def test_success_show(self, mocked_show_get, mocked_get):
-        mocked_show_get.return_value = {"tvdb_id": 564}
-        mocked_get.return_value = {"collection_name": "show", "item_id": 123}
-        event = copy.deepcopy(self.event)
-        event["pathParameters"]["collection_name"] = "show"
-
-        ret = handle(event, None)
-        assert ret == {
-            "body": '{"collection_name": "show", '
-                    '"item_id": 123, "tvdb_id": 564}',
-            "statusCode": 200
-        }
-
-    @patch("api.item_by_collection.watch_history_db.get_item")
     @patch("api.item_by_collection.movie_api.get_movie")
     def test_success_movie(self, mocked_movie_get, mocked_get):
         mocked_movie_get.return_value = {"tmdb_id": 564}
@@ -145,13 +130,12 @@ class TestPut:
 
     @pytest.mark.parametrize(
         "collection_name",
-        ["anime", "show", "movie"]
+        ["anime", "movie"]
     )
     @patch("api.item_by_collection.anime_api.get_anime")
-    @patch("api.item_by_collection.shows_api.get_show")
     @patch("api.item_by_collection.movie_api.get_movie")
     @patch("api.item_by_collection.watch_history_db.update_item")
-    def test_success(self, a, s, m, mocked_post, collection_name):
+    def test_success(self, a, m, mocked_post, collection_name):
         mocked_post.return_value = True
         event = copy.deepcopy(self.event)
         event["pathParameters"]["collection_name"] = collection_name
