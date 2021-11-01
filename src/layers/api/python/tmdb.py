@@ -25,7 +25,7 @@ class TmdbApi:
         self.base_url = "https://api.themoviedb.org/3"
         self.headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer ${TMDB_TOKEN}"
+            "Authorization": f"Bearer {TMDB_TOKEN}"
         }
 
         log.debug("Tmdb base_url: {}".format(self.base_url))
