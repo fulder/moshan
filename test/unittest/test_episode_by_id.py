@@ -38,19 +38,6 @@ class TestGet:
                        'statusCode': 200}
 
     @patch("api.episode_by_id.episodes_db.get_episode")
-    @patch("api.episode_by_id.shows_api.get_episode")
-    def test_success_show(self, mocked_shows_ep, mocked_get):
-        mocked_shows_ep.return_value = {"tvmaze_id": 345}
-        mocked_get.return_value = {"collection_name": "show", "item_id": 123}
-        event = copy.deepcopy(self.event)
-        event["pathParameters"]["collection_name"] = "show"
-
-        ret = handle(event, None)
-        assert ret == {'body': '{"collection_name": "show", '
-                               '"item_id": 123, "tvmaze_id": 345}',
-                       'statusCode': 200}
-
-    @patch("api.episode_by_id.episodes_db.get_episode")
     @patch("api.episode_by_id.anime_api.get_episode")
     def test_anime_http_error(self, mocked_anime_ep, mocked_get):
         mocked_anime_ep.side_effect = HttpError("test-error", 503)
@@ -141,38 +128,6 @@ class TestPut:
         mocked_update_episode.return_value = "2020-01-01"
 
         ret = handle(self.event, None)
-        assert ret == {'statusCode': 204}
-
-    @patch("api.episode_by_id.episodes_db.update_episode")
-    @patch("api.episode_by_collection_item.shows_api.get_episode")
-    @patch("api.episode_by_id.watch_history_db.get_item")
-    def test_success_show(self, mocked_get_item, mocked_get_episode,
-                          mocked_update_episode):
-        mocked_get_item.return_value = {
-            "latest_watch_date": "2021-01-01"
-        }
-        mocked_update_episode.return_value = "2020-01-01"
-
-        event = copy.deepcopy(self.event)
-        event["pathParameters"]["collection_name"] = "show"
-
-        ret = handle(event, None)
-        assert ret == {'statusCode': 204}
-
-    @patch("api.episode_by_id.episodes_db.update_episode")
-    @patch("api.episode_by_collection_item.shows_api.get_episode")
-    @patch("api.episode_by_id.watch_history_db.get_item")
-    def test_missing_last_watch_date(self, mocked_get_item, mocked_get_episode,
-                                     mocked_update_episode):
-        mocked_get_item.return_value = {
-            "latest_watch_date": "2021-01-01"
-        }
-        mocked_update_episode.return_value = None
-
-        event = copy.deepcopy(self.event)
-        event["pathParameters"]["collection_name"] = "show"
-
-        ret = handle(event, None)
         assert ret == {'statusCode': 204}
 
     @patch("api.episode_by_id.episodes_db.update_episode")
