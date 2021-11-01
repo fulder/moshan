@@ -36,16 +36,6 @@ def mocked_episodes_db():
 
 
 @pytest.fixture(scope='function')
-def mocked_show_api():
-    import shows_api
-
-    shows_api.SHOW_API_URL = "https://mocked"
-    shows_api.utils.get_v4_signature_auth = MagicMock()
-
-    return shows_api
-
-
-@pytest.fixture(scope='function')
 def mocked_movie_api():
     import movie_api
 
