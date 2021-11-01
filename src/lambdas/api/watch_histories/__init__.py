@@ -15,13 +15,13 @@ def get_item(request: Request, api_name: str, item_api_id: str):
 
 @app.delete("/watch-histories/items/{api_name}/{item_api_id}", status_code=204)
 def delete_item(request: Request, api_name: str, item_api_id: str):
-    return routes.delete_item(request.state.username, api_name, item_api_id)
+    routes.delete_item(request.state.username, api_name, item_api_id)
 
 
 @app.put("/watch-histories/items/{api_name}/{item_api_id}", status_code=204)
 def update_item(request: Request, api_name: str, item_api_id: str,
                 data: ReviewData):
-    return routes.update_item(
+    routes.update_item(
         request.state.username,
         api_name,
         item_api_id,
@@ -77,7 +77,7 @@ def get_episode(request: Request, api_name: str, item_api_id: str,
     status_code=204)
 def update_episode(request: Request, api_name: str, item_api_id: str,
                    episode_api_id: str, data: ReviewData):
-    return routes.update_episode(
+    routes.update_episode(
         request.state.username,
         api_name,
         item_api_id,
