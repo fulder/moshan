@@ -67,7 +67,7 @@ async function getItemByApiId() {
 
   if (watchHistoryItem !== null && moshanItem.has_episodes) {
     const episodesRes = await api.getEpisodes(qParams);
-    const moshanEpisodes = api.getMoshanEpisodes(episodesRes.data);
+    const moshanEpisodes = api.getMoshanEpisodes(episodesRes);
     createEpisodesList(moshanEpisodes);
   }
 }
