@@ -59,7 +59,7 @@ class MalApi {
       res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${page}`);
       eps.concat(res.data.episodes);
     }
-    return eps;
+    return this.getMoshanEpisodes(eps);
   }
 
   async getEpisode(qParams) {
