@@ -344,7 +344,7 @@ class WatchHistory(core.Stack):
 
         self.lambdas["subscribers-item_updates"].add_event_source(
             SnsEventSource(
-                self.item_updates_topic.topic_arn,
+                self.item_updates_topic,
                 dead_letter_queue=Queue(self, "item_updates_dlq"),
             )
         )
