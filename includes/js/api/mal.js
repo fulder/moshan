@@ -26,7 +26,7 @@ class MalApi {
   getMoshanItem(anime) {
     console.debug(anime);
     let status = 'Airing';
-    if ('to' in anime.aired) {
+    if ('to' in anime.aired && anime.aired.to !== null) {
       status = 'Finished';
     }
 
