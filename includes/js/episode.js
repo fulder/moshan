@@ -76,10 +76,8 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
     document.getElementById('next_episode').classList.remove('d-none');
   }
 
-  if (episodeAdded && moshanEpisode.aired) {
+  if (episodeAdded) {
     document.getElementById('remove_button').classList.remove('d-none');
-  } else if(!moshanEpisode.aired) {
-    document.getElementById('add_button_not_aired').classList.remove('d-none');
   } else {
     document.getElementById('add_button').classList.remove('d-none');
   }
