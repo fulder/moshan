@@ -8,7 +8,7 @@ class JikanApi:
     def __init__(self):
         self.base_url = "https://api.jikan.moe/v3/"
 
-    def get_anime(self, anime_id):
+    def get_item(self, anime_id):
         res = requests.get(
             f"{self.base_url}/anime/{anime_id}",
         )

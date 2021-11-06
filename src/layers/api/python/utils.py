@@ -4,14 +4,18 @@ import boto3
 from requests_aws4auth import AWS4Auth
 from threading import Lock, Thread
 
+import jikan
 import tmdb
 import tvmaze
 
 items_lock = Lock()
 merged_items = []
 
-tvmaze_api = tvmaze.TvMazeApi()
-tmdb_api = tmdb.TmdbApi()
+api_map = {
+    "tvmaze": tvmaze.TvMazeApi(),
+    "tmdb": tmdb.TmdbApi(),
+    "mal": jikan.JikanApi(),
+}
 
 
 class Error(Exception):
@@ -20,9 +24,9 @@ class Error(Exception):
 
 class HttpError(Error):
 
-    def __init__(self, message, status_code):
-        super(HttpError, self).__init__(message)
-        self.status_code = status_code
+    def __init__(self, code):
+        Error.__init__(self, f"Unexpected status code: {code}")
+        self.code = code
 
 
 def get_v4_signature_auth():
@@ -50,28 +54,20 @@ class MediaRequestThread(Thread):
         self.show_api = show_api
 
     def run(self):
-        import anime_api
+        s = self.item["api_info"].split("_")
+        api_name = s[0]
+        api_id = s[1]
 
-        s_ret = None
-        if self.collection_name == "movie":
-            tmdb_id = self.item["api_info"].split("_")[1]
-            s_ret = {
-                "tmdb":tmdb_api.get_movie(tmdb_id)
-            }
-        if self.collection_name == "show":
-            tvmaze_id = self.item["api_info"].split("_")[1]
-            s_ret = {
-                "tvmaze": tvmaze_api.get_show(tvmaze_id)
-            }
-        elif self.collection_name == "anime":
-            s_ret = anime_api.get_anime(self.item_id, self.token)
+        api_ret = {
+            api_name: api_map[api_name].get_item(api_id)
+        }
 
         del self.item["username"]
         del self.item["item_id"]
         if self.remove_status:
             del self.item["status"]
 
-        self.item = {**s_ret, **self.item}
+        self.item = {**api_ret, **self.item}
 
         items_lock.acquire()
         merged_items.append(self.item)
