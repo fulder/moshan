@@ -41,7 +41,7 @@ class MalApi {
       anime.mal_id,
       poster,
       anime.title,
-      anime.aired.from,
+      new Date(anime.aired.from).toISOString().split('T')[0],
       status,
       anime.synopsis,
       hasEpisodes,
@@ -79,7 +79,7 @@ class MalApi {
       episode.episode_id,
       episode.episode_id,
       episode.title,
-      episode.aired,
+      new Date(episode.aired).toISOString().split('T')[0],
       episode.episode_id - 1,
       episode.episode_id + 1
     );
