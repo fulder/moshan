@@ -30,25 +30,15 @@ class WatchHistoryApi {
   }
 
   removeWatchHistoryItem (qParams) {
-    if (qParams.collection !== 'anime') {
-          return this.apiAxios.delete(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
-    }
-    return this.apiAxios.delete(`/watch-history/collection/${qParams.collection}/${qParams.id}`);
+    return this.apiAxios.delete(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
   }
 
   addWatchHistoryItem (qParams) {
     let data = {
-      api_id: qParams.api_id,
+      item_api_id: qParams.api_id,
       api_name: qParams.api_name,
     };
-    if (qParams.collection !== 'anime') {
-      let data = {
-        item_api_id: qParams.api_id,
-        api_name: qParams.api_name,
-      };
-      return this.apiAxios.post('/watch-histories/items', data);
-    }
-    return this.apiAxios.post(`/watch-history/collection/${qParams.collection}`, data);
+    return this.apiAxios.post('/watch-histories/items', data);
   }
 
   getWatchHistoryItem (qParams) {
@@ -56,10 +46,7 @@ class WatchHistoryApi {
   }
 
   getWatchHistoryItemByApiId (qParams) {
-    if (qParams.collection !== 'anime') {
-          return this.apiAxios.get(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
-    }
-    return this.apiAxios.get(`/watch-history/collection/${qParams.collection}?api_name=${qParams.api_name}&api_id=${qParams.api_id}`);
+    return this.apiAxios.get(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
   }
 
   updateWatchHistoryItem (qParams, overview, review, status = '', rating = '', watchDates = []) {
@@ -79,10 +66,7 @@ class WatchHistoryApi {
     if (rating !== '') {
       data.rating = rating;
     }
-    if (qParams.collection !== 'anime') {
-          return this.apiAxios.put(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`, data);
-    }
-    return this.apiAxios.put(`/watch-history/collection/${qParams.collection}/${qParams.id}`, data);
+    return this.apiAxios.put(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`, data);
   }
 
   addWatchHistoryEpisode (qParams) {
