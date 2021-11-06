@@ -342,14 +342,9 @@ class WatchHistory(core.Stack):
                     memory_size=512,
                 )
 
-        topic = Topic.from_topic_arn(
-            self,
-            "item-topic",
-            f"arn:aws:sns:{self.region}:{self.account}:item-updates"
-        )
         self.lambdas["subscribers-item_updates"].add_event_source(
             SnsEventSource(
-                topic,
+                self.item_updates_topic.topic_arn,
                 dead_letter_queue=Queue(self, "item_updates_dlq"),
             )
         )
