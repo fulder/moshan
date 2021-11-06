@@ -48,4 +48,35 @@ class MalApi {
       'anime'
     );
   }
+
+  async getEpisodes(qParams) {
+    const page = 1;
+    let res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes`);
+    let eps = res.data.episodes;
+
+    while (page < res.data.episodes_last_page) {
+      page++;
+      res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${page}`);
+      eps.concat(res.data.episodes);
+    }
+    return eps;
+  }
+
+  getMoshanEpisodes(episodes) {
+    return new MoshanEpisodes(
+        episodes.reverse(),
+        1
+    );
+  }
+
+  getMoshanEpisode(episode) {
+    return new MoshanEpisode(
+      episode.episode_id,
+      episode.episode_id,
+      episode.title,
+      episode.aired,
+      episode.episode_id - 1,
+      episode.episode_id + 1
+    );
+  }
 }
