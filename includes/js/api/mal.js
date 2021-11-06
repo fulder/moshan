@@ -50,7 +50,7 @@ class MalApi {
   }
 
   async getEpisodes(qParams) {
-    const page = 1;
+    let page = 1;
     let res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes`);
     let eps = res.data.episodes;
 
