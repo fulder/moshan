@@ -17,11 +17,28 @@ class JikanApi:
             raise utils.HttpError(res.status_code)
         return res.json()
 
-    def get_episode(self, anime_id, episode_id):
+    def get_episodes(self, anime_id, page=1):
         res = requests.get(
-            f"{self.base_url}/anime/{anime_id}/episodes/{episode_id}",
+            f"{self.base_url}/anime/{anime_id}/episodes/{page}",
         )
 
         if res.status_code != 200:
             raise utils.HttpError(res.status_code)
         return res.json()
+
+    def get_episode_count(self, anime_id):
+        page = 1
+        ret = self.get_episodes(anime_id, page)
+        last_page = ret["episodes_last_page"]
+        ep_count = 0
+
+        while page != last_page:
+            page += 1
+            ret = self.get_episodes(anime_id, page)
+            ep_count += len(ret["episodes"])
+
+        return {
+            "ep_count": ep_count,
+        }
+
+

@@ -7,13 +7,6 @@ ANIME_API_URL = os.getenv("ANIME_API_URL")
 
 
 
-def post_anime(body, token):
-    res = requests.post(f"{ANIME_API_URL}/anime", headers={"Authorization": token}, json=body)
-    if res.status_code != 202:
-        raise utils.HttpError("Invalid response in anime post", res.status_code)
-
-    return res.json()
-
 
 def get_episode(anime_id, episode_id, token):
     res = requests.get(f"{ANIME_API_URL}/anime/{anime_id}/episodes/{episode_id}", headers={"Authorization": token})
