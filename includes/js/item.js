@@ -1,15 +1,11 @@
-/* global WatchHistoryApi, getMoshanApiByCollectionName, getApiByName */
+/* global WatchHistoryApi, getApiByName */
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
 document.getElementById('headTitle').innerHTML = `Moshan - ${qParams.collection}`;
 
 const watchHistoryApi = new WatchHistoryApi();
-const moshanApi = getMoshanApiByCollectionName(qParams.collection);
 const api = getApiByName(qParams.api_name);
-// quickfix for anime episodes, use moshan api until
-// e.g. MAL api implements episode routes
-const episodeApi = qParams.collection == 'anime' ? moshanApi: api;
 
 let totalPages = 0;
 let calendarInstances = {};
@@ -70,8 +66,8 @@ async function getItemByApiId() {
   createItem(moshanItem, watchHistoryItem);
 
   if (watchHistoryItem !== null && moshanItem.has_episodes) {
-    const episodesRes = await episodeApi.getEpisodes(qParams);
-    const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
+    const episodesRes = await api.getEpisodes(qParams);
+    const moshanEpisodes = api.getMoshanEpisodes(episodesRes.data);
     createEpisodesList(moshanEpisodes);
   }
 }
@@ -261,25 +257,15 @@ function createEpisodesList (moshanEpisodes) {
   let tableHTML = '';
 
   moshanEpisodes.episodes.forEach(function (episode) {
-    moshanEpisode = episodeApi.getMoshanEpisode(episode);
+    moshanEpisode = api.getMoshanEpisode(episode);
 
     let rowClass = 'bg-secondary';
     let onClickAction = '';
 
-    let episodeApiName = qParams.api_name;
     let episodeApiId = moshanEpisode.id;
-    if (qParams.api_name === 'mal') {
-      episodeApiName = 'anidb';
-      episodeApiId = episode.anidb_id;
-    }
 
-    if (moshanEpisode.aired && qParams.api_name !== 'mal') {
-      rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}'`;
-    } else if (moshanEpisode.aired && qParams.api_name === 'mal') {
-      rowClass = 'episodeRow';
-      onClickAction = `window.location='/episode?collection=${qParams.collection}&id=${qParams.id}&api_name=${episodeApiName}&api_id=${episodeApiId}&episode_id=${moshanEpisode.id}'`;
-    }
+    rowClass = 'episodeRow';
+    onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}'`;
 
     tableHTML += `
             <tr onclick="${onClickAction}" class=${rowClass}>
@@ -332,8 +318,8 @@ async function loadEpisodes (page, button) {
 
   qParams.episode_page = page;
 
-  const episodesRes = await episodeApi.getEpisodes(qParams);
-  const moshanEpisodes = episodeApi.getMoshanEpisodes(episodesRes.data);
+  const episodesRes = await api.getEpisodes(qParams);
+  const moshanEpisodes = api.getMoshanEpisodes(episodesRes.data);
   createEpisodesList(moshanEpisodes);
 
   document.getElementById('episodesPages').getElementsByTagName('LI')[qParams.episode_page].classList.add('active');
