@@ -240,33 +240,6 @@ class WatchHistory(core.Stack):
                 ],
                 "timeout": 5
             },
-            "api-episode_by_collection_item": {
-                "layers": ["utils", "databases", "api"],
-                "variables": {
-                    "DATABASE_NAME": self.watch_history_table.table_name,
-                    "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
-                    "LOG_LEVEL": "DEBUG",
-                    "ANIME_API_URL": self.anime_api_url,
-                    "SHOWS_API_URL": self.show_api_url,
-                },
-                "concurrent_executions": 10,
-                "policies": [
-                    PolicyStatement(
-                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
-                        resources=[self.episodes_table.table_arn]
-                    ),
-                    PolicyStatement(
-                        actions=["execute-api:Invoke"],
-                        resources=[
-                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
-                    ),
-                    PolicyStatement(
-                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
-                        resources=[self.watch_history_table.table_arn]
-                    ),
-                ],
-                "timeout": 10
-            },
             "cron-show_updates": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
@@ -465,11 +438,6 @@ class WatchHistory(core.Stack):
                 "route": "/watch-history/collection/{collection_name}/{item_id}",
                 "target_lambda": self.lambdas["api-item_by_collection"]
             },
-            "episode_by_collection_item": {
-                "method": ["GET", "POST"],
-                "route": "/watch-history/collection/{collection_name}/{item_id}/episode",
-                "target_lambda": self.lambdas["api-episode_by_collection_item"]
-            }
         }
 
         for r in routes:
