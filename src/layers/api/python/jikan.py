@@ -27,10 +27,10 @@ class JikanApi:
         return res.json()
 
     def get_episode(self, anime_id, episode_id):
-        for eps in self._episodes_generator(anime_id):
-            for ep in eps:
-                if ep["episode_id"] == episode_id:
-                    return ep
+        page = int(episode_id / 100) + 1
+        for ep in self.get_episodes(anime_id, page)["episodes"]:
+            if ep["episode_id"] == episode_id:
+                return ep
 
     def get_episodes(self, anime_id, page=1):
         res = requests.get(
