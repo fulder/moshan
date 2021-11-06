@@ -24,12 +24,8 @@ function QueryParams(urlParams) {
 async function getEpisode() {
   let watchHistoryEpisode = null;
   try {
-    let watchHistoryRes = null;
-    if (qParams.item_api_id !== null) {
-        watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisodeByApiId(qParams);
-    } else if (qParams.episode_id !== null) {
-        watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisode(qParams);
-    }
+    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisodeByApiId(qParams);
+
 
     watchHistoryEpisode = watchHistoryRes.data;
     if (qParams.api_info === null) {
