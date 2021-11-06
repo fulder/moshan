@@ -50,17 +50,11 @@ class MalApi {
   }
 
   async getEpisodes(qParams) {
-    let page = 1;
-    let res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes`);
-    let eps = res.data.episodes;
+    const resFirst = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/1`);
+    const realPage = resFirst.data.episodes_last_page - qParams.episode_page - 1;
 
-    while (page < res.data.episodes_last_page) {
-      page++;
-      res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${page}`);
-      console.debug(res.data.episodes);
-      eps = eps.concat(res.data.episodes);
-    }
-    return this.getMoshanEpisodes(eps);
+    let res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${realPage}`);
+    return this.getMoshanEpisodes(res.data.episodes);
   }
 
   async getEpisode(qParams) {
@@ -73,10 +67,10 @@ class MalApi {
     }
   }
 
-  getMoshanEpisodes(episodes) {
+  getMoshanEpisodes(data) {
     return new MoshanEpisodes(
-        episodes.reverse(),
-        1
+        data.episodes.reverse(),
+        data.episodes_last_page
     );
   }
 
