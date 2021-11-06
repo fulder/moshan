@@ -69,8 +69,8 @@ class MalApi {
     const page = parseInt(qParams.episode_api_id/100) + 1;
     const episodes = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${page}`);
 
-    for (let i=0; i < episodes.length; i++) {
-      const ep = episodes[i];
+    for (let i=0; i < episodes.data.episodes.length; i++) {
+      const ep = episodes.data.episodes[i];
       if (ep.episode_id == qParams.episode_api_id) {
         return this.getMoshanEpisode(ep);
       }
