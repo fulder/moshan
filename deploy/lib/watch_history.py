@@ -217,29 +217,6 @@ class WatchHistory(core.Stack):
                 ],
                 "timeout": 30
             },
-            "api-item_by_collection": {
-                "layers": ["utils", "databases", "api"],
-                "variables": {
-                    "DATABASE_NAME": self.watch_history_table.table_name,
-                    "LOG_LEVEL": "INFO",
-                    "ANIME_API_URL": self.anime_api_url,
-                    "SHOWS_API_URL": self.show_api_url,
-                    "MOVIE_API_URL": self.movie_api_url,
-                },
-                "concurrent_executions": 10,
-                "policies": [
-                    PolicyStatement(
-                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
-                        resources=[self.watch_history_table.table_arn]
-                    ),
-                    PolicyStatement(
-                        actions=["execute-api:Invoke"],
-                        resources=[
-                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
-                    ),
-                ],
-                "timeout": 5
-            },
             "cron-show_updates": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
@@ -432,11 +409,6 @@ class WatchHistory(core.Stack):
                 "method": ["GET", "POST"],
                 "route": "/watch-history/collection/{collection_name}",
                 "target_lambda": self.lambdas["api-watch_history_by_collection"]
-            },
-            "item_by_collection": {
-                "method": ["GET", "PUT", "DELETE"],
-                "route": "/watch-history/collection/{collection_name}/{item_id}",
-                "target_lambda": self.lambdas["api-item_by_collection"]
             },
         }
 
