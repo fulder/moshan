@@ -37,11 +37,18 @@ class MalApi {
       poster = anime.image_url;
     }
 
+    let date = '';
+    if (episode.aired === null) {
+      date = 'N/A';
+    } else {
+      date = new Date(anime.aired.from).toISOString().split('T')[0];
+    }
+
     return new MoshanItem(
       anime.mal_id,
       poster,
       anime.title,
-      new Date(anime.aired.from).toISOString().split('T')[0],
+      date,
       status,
       anime.synopsis,
       hasEpisodes,
@@ -75,11 +82,18 @@ class MalApi {
   }
 
   getMoshanEpisode(episode) {
+    let date = '';
+    if (episode.aired === null) {
+      date = 'N/A';
+    } else {
+      date = new Date(episode.aired).toISOString().split('T')[0];
+    }
+
     return new MoshanEpisode(
       episode.episode_id,
       episode.episode_id,
       episode.title,
-      new Date(episode.aired).toISOString().split('T')[0],
+      date,
       episode.episode_id - 1,
       episode.episode_id + 1
     );
