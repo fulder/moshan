@@ -26,22 +26,22 @@ class MalApi {
   getMoshanItem(anime) {
     console.debug(anime);
     let status = 'Airing';
-    if ('end_date' in anime && anime.end_date !== null) {
+    if ('to' in anime.aired) {
       status = 'Finished';
     }
 
-    const hasEpisodes = 'num_episodes' in anime && anime.num_episodes != 1;
+    const hasEpisodes = anime.type == 'TV';
 
     let poster = '/includes/img/image_not_available.png';
-    if (anime.main_picture !== undefined && anime.main_picture.medium !== undefined) {
-      poster = anime.main_picture.medium;
+    if (anime.image_url !== undefined) {
+      poster = anime.image_url;
     }
 
     return new MoshanItem(
-      anime.id,
+      anime.mal_id,
       poster,
       anime.title,
-      anime.start_date,
+      anime.aired.from,
       status,
       anime.synopsis,
       hasEpisodes,
