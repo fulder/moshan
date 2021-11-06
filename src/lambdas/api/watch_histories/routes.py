@@ -238,7 +238,7 @@ def delete_episode(username, api_name, item_api_id, episode_api_id):
         else:
             raise HTTPException(status_code=501)
     except utils.HttpError as e:
-        err_msg = f"Could not get episode in add_episode func" \
+        err_msg = f"Could not get episode in delete_episode func" \
                   f" from {api_name} api with id: {episode_api_id}"
         log.error(f"{err_msg}. Error: {str(e)}")
         raise HTTPException(status_code=e.code)

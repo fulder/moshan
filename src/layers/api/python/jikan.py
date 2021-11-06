@@ -6,7 +6,7 @@ import utils
 class JikanApi:
 
     def __init__(self):
-        self.base_url = "https://api.jikan.moe/v3/"
+        self.base_url = "https://api.jikan.moe/v3"
 
     def get_item(self, anime_id):
         res = requests.get(
