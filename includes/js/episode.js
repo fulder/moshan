@@ -25,8 +25,6 @@ async function getEpisode() {
   let watchHistoryEpisode = null;
   try {
     const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisodeByApiId(qParams);
-
-
     watchHistoryEpisode = watchHistoryRes.data;
     if (qParams.api_info === null) {
       qParams.api_id = watchHistoryEpisode[`${qParams.api_name}_id`];
