@@ -10,7 +10,7 @@ from pydantic import BaseModel
 class ApiName(StrEnum):
     tmdb = auto()
     tvmaze = auto()
-    anidb = auto()
+    mal = auto()
 
 
 class Status(StrEnum):
