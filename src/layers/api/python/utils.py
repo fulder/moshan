@@ -1,17 +1,7 @@
 from threading import Lock, Thread
 
-import jikan
-import tmdb
-import tvmaze
-
 items_lock = Lock()
 merged_items = []
-
-api_map = {
-    "tvmaze": tvmaze.TvMazeApi(),
-    "tmdb": tmdb.TmdbApi(),
-    "mal": jikan.JikanApi(),
-}
 
 
 class Error(Exception):
@@ -37,6 +27,16 @@ class MediaRequestThread(Thread):
         self.show_api = show_api
 
     def run(self):
+        import jikan
+        import tmdb
+        import tvmaze
+
+        api_map = {
+            "tvmaze": tvmaze.TvMazeApi(),
+            "tmdb": tmdb.TmdbApi(),
+            "mal": jikan.JikanApi(),
+        }
+
         s = self.item["api_info"].split("_")
         api_name = s[0]
         api_id = s[1]
