@@ -127,9 +127,12 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
         if api_name == "tvmaze":
             api_res = tvmaze_api.get_episode(episode_api_id)
             is_special = api_res["type"] != "regular"
+        elif api_name == "mal":
+            api_res = jikan_api.get_episode(item_api_id, episode_api_id)
+            is_special = False  # mal items are special not episodes
         else:
             raise HTTPException(status_code=501)
-    except tvmaze.HTTPError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get show episode in add_episode func" \
                   f" from {api_name} api with id: {episode_api_id}"
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -172,10 +175,12 @@ def update_episode(username, api_name, item_api_id, episode_api_id, data):
     try:
         if api_name == "tvmaze":
             tvmaze_api.get_episode(episode_api_id)
+        elif api_name == "mal":
+            jikan_api.get_episode(item_api_id, episode_api_id)
         else:
             raise HTTPException(status_code=501)
-    except tvmaze.HTTPError as e:
-        err_msg = f"Could not get show episode in add_episode func" \
+    except utils.HttpError as e:
+        err_msg = f"Could not get episode in add_episode func" \
                   f" from {api_name} api with id: {episode_api_id}"
         log.error(f"{err_msg}. Error: {str(e)}")
         raise HTTPException(status_code=e.code)
@@ -227,9 +232,12 @@ def delete_episode(username, api_name, item_api_id, episode_api_id):
         if api_name == "tvmaze":
             api_res = tvmaze_api.get_episode(episode_api_id)
             is_special = api_res["type"] != "regular"
+        elif api_name == "mal":
+            api_res = jikan_api.get_episode(item_api_id, episode_api_id)
+            is_special = False  # mal items are special not episodes
         else:
             raise HTTPException(status_code=501)
-    except tvmaze.HTTPError as e:
+    except utils.HttpError as e:
         err_msg = f"Could not get show episode in add_episode func" \
                   f" from {api_name} api with id: {episode_api_id}"
         log.error(f"{err_msg}. Error: {str(e)}")
