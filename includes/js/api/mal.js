@@ -62,6 +62,16 @@ class MalApi {
     return eps;
   }
 
+  async getEpisode(qParams) {
+    episodes = await this.getEpisodes(qParams);
+    for (let i=0; i < episodes.length; i++) {
+      const ep = episodes[i];
+      if (ep.episode_id == qParams.episode_api_id) {
+        return this.getMoshanEpisode(ep);
+      }
+    }
+  }
+
   getMoshanEpisodes(episodes) {
     return new MoshanEpisodes(
         episodes.reverse(),
