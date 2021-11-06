@@ -17,6 +17,15 @@ class JikanApi:
             raise utils.HttpError(res.status_code)
         return res.json()
 
+    def get_schedule(self, day_of_week):
+        res = requests.get(
+            f"{self.base_url}/schedule/{day_of_week}",
+        )
+
+        if res.status_code != 200:
+            raise utils.HttpError(res.status_code)
+        return res.json()
+
     def get_episode(self, anime_id, episode_id):
         for eps in self._episodes_generator(anime_id):
             for ep in eps:
@@ -49,4 +58,3 @@ class JikanApi:
         for i in range(1, last_page+1):
             ret = self.get_episodes(anime_id, i)
             yield ret["episodes"]
-
