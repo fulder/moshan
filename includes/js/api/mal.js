@@ -38,7 +38,7 @@ class MalApi {
     }
 
     let date = '';
-    if (episode.aired === null) {
+    if (anime.aired.from === null) {
       date = 'N/A';
     } else {
       date = new Date(anime.aired.from).toISOString().split('T')[0];
