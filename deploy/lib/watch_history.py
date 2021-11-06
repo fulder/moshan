@@ -44,9 +44,9 @@ class WatchHistory(core.Stack):
         self._create_gateway()
 
     def _create_topics(self):
-        self.show_updates_topic = Topic(
+        self.item_updates_topic = Topic(
             self,
-            "shows_updates",
+            "item_updates",
         )
 
     def _create_tables(self):
@@ -218,12 +218,12 @@ class WatchHistory(core.Stack):
                 ],
                 "timeout": 30
             },
-            "cron-show_updates": {
+            "cron-item_updates": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
-                    "UPDATES_TOPIC_ARN": self.show_updates_topic.topic_arn,
+                    "UPDATES_TOPIC_ARN": self.item_updates_topic.topic_arn,
                 },
                 "concurrent_executions": 1,
                 "policies": [
@@ -234,19 +234,17 @@ class WatchHistory(core.Stack):
                     ),
                     PolicyStatement(
                         actions=["sns:Publish"],
-                        resources=[self.show_updates_topic.topic_arn],
+                        resources=[self.item_updates_topic.topic_arn],
                     )
                 ],
                 "timeout": 60,
                 "memory": 1024
             },
-            "subscribers-show_updates": {
+            "subscribers-item_updates": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
-                    "ANIME_API_URL": self.anime_api_url,
-                    "SHOWS_API_URL": self.show_api_url,
                 },
                 "concurrent_executions": 100,
                 "policies": [
@@ -346,13 +344,13 @@ class WatchHistory(core.Stack):
 
         topic = Topic.from_topic_arn(
             self,
-            "shows-topic",
-            f"arn:aws:sns:{self.region}:{self.account}:shows-updates"
+            "item-topic",
+            f"arn:aws:sns:{self.region}:{self.account}:item-updates"
         )
-        self.lambdas["subscribers-show_updates"].add_event_source(
+        self.lambdas["subscribers-item_updates"].add_event_source(
             SnsEventSource(
                 topic,
-                dead_letter_queue=Queue(self, "show_updates_dlq"),
+                dead_letter_queue=Queue(self, "item_updates_dlq"),
             )
         )
 
