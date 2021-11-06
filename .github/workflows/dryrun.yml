@@ -27,6 +27,7 @@ jobs:
           AWS_DEFAULT_REGION: eu-west-1
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PIP_NO_CACHE_DIR: off
+          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
 
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2.0.2
@@ -42,3 +43,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: eu-west-1
           PIP_NO_CACHE_DIR: off
+          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
