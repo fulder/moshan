@@ -317,8 +317,7 @@ async function loadEpisodes (page, button) {
 
   qParams.episode_page = page;
 
-  const episodesRes = await api.getEpisodes(qParams);
-  const moshanEpisodes = api.getMoshanEpisodes(episodesRes.data);
+  const moshanEpisodes = await api.getEpisodes(qParams);
   createEpisodesList(moshanEpisodes);
 
   document.getElementById('episodesPages').getElementsByTagName('LI')[qParams.episode_page].classList.add('active');
