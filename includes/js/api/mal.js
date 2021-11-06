@@ -3,32 +3,23 @@
 class MalApi {
   constructor () {
     this.apiAxios = axios.create({
-      baseURL: 'https://api.anime.moshan.tv/mal_proxy',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Mal-Client-Id': '6f7663be0ec1555fe4dcb612763954c2',
-      },
-    });
-
-    this.apiAxios.interceptors.request.use(axiosTokenInterceptor, function (error) {
-      console.log(error);
-      return Promise.reject(error);
+      baseURL: 'https://api.jikan.moe/v3/',
     });
   }
 
   async search(qParams) {
-    const res = await this.apiAxios.get(`/anime?q=${qParams.search}`);
+    const res = await this.apiAxios.get(`/search/anime?q=${qParams.search}`);
 
     const moshanItems = new MoshanItems('anime');
-    for (let i=0; i<res.data.data.length; i++) {
-      const moshanItem = this.getMoshanItem(res.data.data[i].node);
+    for (let i=0; i<res.data.results.length; i++) {
+      const moshanItem = this.getMoshanItem(res.data.results[i]);
       moshanItems.items.push(moshanItem);
     }
     return moshanItems;
   }
 
   async getItemById(qParams) {
-    const res = await this.apiAxios.get(`/anime/${qParams.api_id}?fields=start_date,num_episodes,synopsis`);
+    const res = await this.apiAxios.get(`/anime/${qParams.api_id}`);
     return this.getMoshanItem(res.data);
   }
 
