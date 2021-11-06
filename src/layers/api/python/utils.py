@@ -4,12 +4,14 @@ import boto3
 from requests_aws4auth import AWS4Auth
 from threading import Lock, Thread
 
+import tmdb
 import tvmaze
 
 items_lock = Lock()
 merged_items = []
 
 tvmaze_api = tvmaze.TvMazeApi()
+tmdb_api = tmdb.TmdbApi()
 
 
 class Error(Exception):
@@ -49,11 +51,13 @@ class MediaRequestThread(Thread):
 
     def run(self):
         import anime_api
-        import movie_api
 
         s_ret = None
         if self.collection_name == "movie":
-            s_ret = movie_api.get_movie(self.item_id, self.token)
+            tmdb_id = self.item["api_info"].split("_")[1]
+            s_ret = {
+                "tmdb":tmdb_api.get_movie(tmdb_id)
+            }
         if self.collection_name == "show":
             tvmaze_id = self.item["api_info"].split("_")[1]
             s_ret = {

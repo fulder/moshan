@@ -1,4 +1,5 @@
 import episodes_db
+import tmdb
 from fastapi import HTTPException
 import dateutil.parser
 
@@ -6,6 +7,7 @@ import logger
 import tvmaze
 import watch_history_db
 
+tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
 log = logger.get_logger(__name__)
 
@@ -33,11 +35,12 @@ def get_item(username, api_name, api_id):
 
 
 def add_item(username, api_name, api_id, data):
+    ep_count_res = None
     try:
-        if api_name == "tvmaze":
+        if api_name == "tmdb":
+            tmdb_api.get_movie(api_id)
+        elif api_name == "tvmaze":
             ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
-        else:
-            raise HTTPException(status_code=501)
     except tvmaze.HTTPError as e:
         err_msg = f"Could not get show episodes in add_item func" \
                   f" from {api_name} api with id: {api_id}"

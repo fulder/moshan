@@ -29,3 +29,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: eu-west-1
           PIP_NO_CACHE_DIR: off
+          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
