@@ -1,11 +1,10 @@
-/* global flatpickr, getMoshanApiByCollectionName, getApiByName */
+/* global flatpickr, getApiByName */
 /* global WatchHistoryApi */
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
 const watchHistoryApi = new WatchHistoryApi();
-// quickfix until e.g. MAL epi implements episodes endpoints
-const episodeApi = qParams.collection == 'anime' ? getMoshanApiByCollectionName(qParams.collection) : getApiByName(qParams.api_name);
+const api = getApiByName(qParams.api_name);
 
 let datesWatched;
 let calendarInstance;
@@ -43,9 +42,7 @@ async function getEpisode() {
     }
   }
 
-  const apiEpisodeRes = await episodeApi.getEpisode(qParams);
-  const moshanEpisode = episodeApi.getMoshanEpisode(apiEpisodeRes.data);
-
+  const moshanEpisode = await api.getEpisode(qParams);
   createEpisodePage(moshanEpisode, watchHistoryEpisode);
 }
 
