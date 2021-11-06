@@ -35,44 +35,12 @@ def handle(event, context):
         }
 
     if method == "GET":
-        return _get(username, collection_name, auth_header, query_params, auth_header)
+        return _get_watch_history(username, collection_name,
+                                  query_params, auth_header)
     elif method == "POST":
         body = event.get("body")
         return _post_collection_item(username, collection_name, body,
                                      auth_header)
-
-
-def _get(username, collection_name, auth_header, query_params, token):
-    if "api_name" in query_params and "api_id" in query_params:
-        api_name = query_params["api_name"]
-        api_id = query_params["api_id"]
-        return _get_by_api_id(collection_name, api_name, api_id, username,
-                              auth_header)
-    else:
-        return _get_watch_history(username, collection_name, query_params, token)
-
-
-def _get_by_api_id(collection_name, api_name, api_id, username, token):
-    s_ret = None
-    try:
-        if collection_name == "anime":
-            s_ret = anime_api.get_anime_by_api_id(api_name, api_id, token)
-    except utils.HttpError as e:
-        err_msg = f"Could not get {collection_name}"
-        log.error(f"{err_msg}. Error: {str(e)}")
-        return {"statusCode": e.status_code,
-                "body": json.dumps({"message": err_msg}), "error": str(e)}
-
-    try:
-        w_ret = watch_history_db.get_item(username, collection_name,
-                                          s_ret["id"])
-        ret = {**w_ret, **s_ret}
-        return {"statusCode": 200,
-                "body": json.dumps(ret, cls=decimal_encoder.DecimalEncoder)}
-    except watch_history_db.NotFoundError:
-        return {
-            "statusCode": 404
-        }
 
 
 def _get_watch_history(username, collection_name, query_params, token):
@@ -104,9 +72,9 @@ def _get_watch_history(username, collection_name, query_params, token):
         )
 
         return {
-                "statusCode": 200, "body":
-                    json.dumps({"items": items}, cls=decimal_encoder.DecimalEncoder)
-            }
+            "statusCode": 200, "body":
+                json.dumps({"items": items}, cls=decimal_encoder.DecimalEncoder)
+        }
     except watch_history_db.NotFoundError:
         return {"statusCode": 200, "body": json.dumps({"items": []})}
     except watch_history_db.InvalidStartOffset:
