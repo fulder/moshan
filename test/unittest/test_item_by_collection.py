@@ -40,21 +40,6 @@ class TestGet:
         }
 
     @patch("api.item_by_collection.watch_history_db.get_item")
-    @patch("api.item_by_collection.movie_api.get_movie")
-    def test_success_movie(self, mocked_movie_get, mocked_get):
-        mocked_movie_get.return_value = {"tmdb_id": 564}
-        mocked_get.return_value = {"collection_name": "movie", "item_id": 123}
-        event = copy.deepcopy(self.event)
-        event["pathParameters"]["collection_name"] = "movie"
-
-        ret = handle(event, None)
-        assert ret == {
-            "body": '{"collection_name": "movie", '
-                    '"item_id": 123, "tmdb_id": 564}',
-            "statusCode": 200
-        }
-
-    @patch("api.item_by_collection.watch_history_db.get_item")
     @patch("api.item_by_collection.anime_api.get_anime")
     def test_anime_http_error(self, mocked_anime_get, mocked_get):
         mocked_anime_get.side_effect = HttpError("test-error", 409)
@@ -130,12 +115,11 @@ class TestPut:
 
     @pytest.mark.parametrize(
         "collection_name",
-        ["anime", "movie"]
+        ["anime"]
     )
     @patch("api.item_by_collection.anime_api.get_anime")
-    @patch("api.item_by_collection.movie_api.get_movie")
     @patch("api.item_by_collection.watch_history_db.update_item")
-    def test_success(self, a, m, mocked_post, collection_name):
+    def test_success(self, m, mocked_post, collection_name):
         mocked_post.return_value = True
         event = copy.deepcopy(self.event)
         event["pathParameters"]["collection_name"] = collection_name

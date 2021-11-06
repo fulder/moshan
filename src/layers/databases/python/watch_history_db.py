@@ -93,6 +93,11 @@ def update_item_v2(username, api_name, api_id, data,
 
 
 def get_collection_and_item_id(api_name, api_id):
+    if api_name == "tmdb":
+        movie_namespace = uuid.UUID("9c5bbb4a-5fef-4d16-917b-537421aabfa6")
+        api_uuid = uuid.uuid5(movie_namespace, api_name)
+        return "movie", str(uuid.uuid5(api_uuid, api_id))
+
     if api_name == "tvmaze":
         show_namespace = uuid.UUID("6045673a-9dd2-451c-aa58-d94a217b993a")
         api_uuid = uuid.uuid5(show_namespace, api_name)
