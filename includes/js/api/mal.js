@@ -57,6 +57,7 @@ class MalApi {
     while (page < res.data.episodes_last_page) {
       page++;
       res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${page}`);
+      console.debug(res.data.episodes);
       eps = eps.concat(res.data.episodes);
     }
     return this.getMoshanEpisodes(eps);
