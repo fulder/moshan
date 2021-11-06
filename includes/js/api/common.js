@@ -51,18 +51,6 @@ function MoshanEpisode(id, number, title, air_date, previous_id, next_id) {
   this.next_id = next_id;
 }
 
-/* exported getMoshanApiByCollectionName */
-function getMoshanApiByCollectionName(collection) {
-  switch(collection) {
-    case 'show':
-      return new ShowsApi();
-    case 'anime':
-      return new AnimeApi();
-    case 'movie':
-      return new MovieApi();
-  }
-}
-
 /* exported getApiByName */
 function getApiByName(name) {
   switch(name) {
