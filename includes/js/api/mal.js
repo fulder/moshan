@@ -89,7 +89,6 @@ class MalApi {
   getMoshanEpisode(episode) {
     let date = 'N/A';
     if (episode.aired !== null) {
-      console.debug(episode.aired);
       date = new Date(episode.aired).toISOString().split('T')[0];
     }
 
