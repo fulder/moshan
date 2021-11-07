@@ -69,6 +69,7 @@ class MalApi {
         {
         episode_id: res.data.episodes[res.data.episodes.length - 1] + 1,
         title: 'N/A',
+        aired: null,
         }
       );
     }
