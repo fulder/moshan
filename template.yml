@@ -29,12 +29,13 @@ Resources:
     Properties:
       Auth:
         Authorizers:
-          CognitoAuthorizer:
-            IdentitySource: $request.header.Authorization
+          cognito:
+            IdentitySource: "$request.header.Authorization"
             JwtConfiguration:
               issuer: https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_sJ3Y4kSv6   # TODO move cognito creation to this repo and use Ref here
-              audience: 68v5rahd0sdvrmf7fgbq2o1a9u
-        DefaultAuthorizer: CognitoAuthorizer
+              audience:
+                - 68v5rahd0sdvrmf7fgbq2o1a9u
+        DefaultAuthorizer: cognito
       CorsConfiguration:
         AllowHeaders:
           - "authorization"
@@ -112,17 +113,14 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/lambdas/api/watch_histories
-#      Environment: Environment
       Events:
-        ApiEvent:
+        ProxyEvent:
           Type: HttpApi
           Properties:
             ApiId: !Ref Gateway
-            Auth:
-              Authorizer: CognitoAuthorizer
             Method: ANY
-            Path: /{proxy+}
-      Handler: handler
+            Path: "/{proxy+}"
+      Handler: __init__.handler
       Layers:
         - !Ref ApiLayer
         - !Ref DatabasesLayer
