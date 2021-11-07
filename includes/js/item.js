@@ -73,6 +73,7 @@ async function getItemByApiId() {
         episode_id: lastEpId + 1,
         title: 'N/A',
         aired: null,
+        extra_ep: true,
         }
       );
     }
@@ -275,6 +276,9 @@ function createEpisodesList (moshanEpisodes) {
 
     rowClass = 'episodeRow';
     onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}'`;
+    if (episode.extra_ep) {
+      onClickAction += '&extra_ep=true';
+    }
 
     tableHTML += `
             <tr onclick="${onClickAction}" class=${rowClass}>
