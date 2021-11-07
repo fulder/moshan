@@ -102,7 +102,7 @@ def delete_episode(request: Request, api_name: str, item_api_id: str,
 @app.middleware("http")
 def parse_token(request: Request, call_next):
     auth_header = request.headers.get("authorization")
-    decoded = jwt.decode(auth_header, verify=False)
+    decoded = jwt.decode(auth_header, options={"verify_signature": False})
     request.state.username = decoded["username"]
     return call_next(request)
 
