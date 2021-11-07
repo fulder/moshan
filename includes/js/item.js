@@ -68,9 +68,10 @@ async function getItemByApiId() {
     const moshanEpisodes = await api.getEpisodes(qParams);
 
     if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
+      const lastEpId = moshanEpisodes.episodes[moshanEpisodes.episodes.length - 1].episode_id;
       moshanEpisodes.episodes.push(
         {
-        episode_id: moshanEpisodes.episodes[moshanEpisodes.episodes.length - 1] + 1,
+        episode_id: lastEpId + 1,
         title: 'N/A',
         aired: null,
         }
