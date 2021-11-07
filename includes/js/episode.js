@@ -19,6 +19,7 @@ function QueryParams(urlParams) {
   this.api_id = urlParams.get('api_id');
   this.episode_id = urlParams.get('episode_id');
   this.episode_api_id = urlParams.get('episode_api_id');
+  this.extra_ep = urlParams.get('extra_ep');
 }
 
 async function getEpisode() {
@@ -43,6 +44,16 @@ async function getEpisode() {
 function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
   console.debug(moshanEpisode);
   console.debug(watchHistoryEpisode);
+
+  if (qParams.extra_ep === 'true') {
+    moshanEpisode = {
+      title: 'N/A',
+      number: qParams.episode_api_id,
+      air_date: 'N/A',
+      status: 'Not Existing',
+      previous_id: qParams.episode_api_id - 1,
+    };
+  }
 
   const episodeAdded = watchHistoryEpisode !== null;
 
