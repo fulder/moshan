@@ -23,6 +23,8 @@ Resources:
       LocalSecondaryIndexes:
         - IndexName: latest_watch_date
           KeySchema:
+            - AttributeName: username
+              KeyType: HASH
             - AttributeName: latest_watch_date
               KeyType: RANGE
           Projection:
