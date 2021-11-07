@@ -31,6 +31,8 @@ class JikanApi:
         for ep in self.get_episodes(anime_id, page)["episodes"]:
             if ep["episode_id"] == episode_id:
                 return ep
+            elif int(ep["episode_id"]) + 1 == int(episode_id):
+                return True
 
     def get_episodes(self, anime_id, page=1):
         res = requests.get(
