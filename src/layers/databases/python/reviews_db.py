@@ -155,7 +155,36 @@ def get_items(t, api_name, api_id):
     return res["Items"]
 
 
-def update_item(username, api_name, api_id, data, clean_whitelist=OPTIONAL_FIELDS):
+def get_episodes(username, api_name, item_api_id):
+    api_info = f"e_{api_name}_{item_api_id}_"
+
+    paginator = _get_client().get_paginator('query')
+
+    query_kwargs = {
+        "TableName": REVIEWS_DATABASE_NAME,
+        "KeyConditionExpression": "username = :username AND begins_with(api_info, :api_info)",
+        "ExpressionAttributeValues": {
+            ":username": {"S": username},
+            ":api_info": {"S": api_info},
+        },
+        "ScanIndexForward": False,
+        "FilterExpression": "attribute_not_exists(deleted_at)",
+    }
+
+    log.debug(f"Query kwargs: {query_kwargs}")
+
+    page_iterator = paginator.paginate(**query_kwargs)
+
+    res = []
+    for p in page_iterator:
+        for i in p["Items"]:
+            i = json_util.loads(i)
+            res.append(i)
+    return res
+
+
+def update_item(username, api_name, api_id, data,
+                clean_whitelist=OPTIONAL_FIELDS):
     _update_review(
         username,
         f"i_{api_name}_{api_id}",
