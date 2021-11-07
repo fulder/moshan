@@ -11,6 +11,8 @@ Resources:
           AttributeType: S
         - AttributeName: api_info
           AttributeType: S
+        - AttributeName: latest_watch_date
+          AttributeType: S
       KeySchema:
         - AttributeName: username
           KeyType: HASH
