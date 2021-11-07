@@ -203,7 +203,7 @@ def _update_latest_watch_date(item, data, username, api_name, item_api_id):
     # item latest date and update item if that's the case
     ep_date = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
 
-    if (item["latest_watch_date"] == "0" or
+    if ("latest_watch_date" not in item or item["latest_watch_date"] == "0" or
         ep_date > dateutil.parser.parse(item["latest_watch_date"])):
         ep_date = ep_date.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
         reviews_db.update_item(
