@@ -16,3 +16,7 @@ generate-hashes:
 	pip-compile --generate-hashes src/layers/utils/requirements.in --output-file src/layers/utils/requirements.txt --allow-unsafe
 	pip-compile --generate-hashes deploy/requirements.in --output-file deploy/requirements.txt --allow-unsafe
 	pip-compile --generate-hashes src/lambdas/api/watch_histories/requirements.in --output-file src/lambdas/api/watch_histories/requirements.txt
+
+.PHONY: deploy-db
+deploy-db:
+	sam deploy --template-file template_db.yml --stack-name moshan-table

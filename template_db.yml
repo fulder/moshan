@@ -5,7 +5,9 @@ Resources:
 
   ReviewsTable:
     Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
     Properties:
+      TableName: reviews
       AttributeDefinitions:
         - AttributeName: username
           AttributeType: S
@@ -20,6 +22,13 @@ Resources:
           KeyType: RANGE
       BillingMode:
         PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: api_info
+          KeySchema:
+            - AttributeName: api_info
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
       LocalSecondaryIndexes:
         - IndexName: latest_watch_date
           KeySchema:
@@ -27,5 +36,37 @@ Resources:
               KeyType: HASH
             - AttributeName: latest_watch_date
               KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ep_progress
+          KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+              - AttributeName: ep_progress
+                KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: special_progress
+          KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+              - AttributeName: special_progress
+                KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: rating
+          KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+              - AttributeName: rating
+                KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: state
+          KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+              - AttributeName: state
+                KeyType: RANGE
           Projection:
             ProjectionType: ALL
