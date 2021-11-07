@@ -98,7 +98,8 @@ class MalApi {
       episode.title,
       date,
       episode.episode_id - 1,
-      episode.episode_id + 1
+      episode.episode_id + 1,
+      'extra_ep' in episode
     );
   }
 }
