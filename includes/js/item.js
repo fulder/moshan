@@ -59,12 +59,11 @@ async function getItemByApiId() {
     }
   }
 
-
   moshanItem = await api.getItemById(qParams);
 
   createItem(moshanItem, watchHistoryItem);
 
-  if (watchHistoryItem !== null && moshanItem.has_episodes) {
+  if (moshanItem.has_episodes) {
     const moshanEpisodes = await api.getEpisodes(qParams);
 
     if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
