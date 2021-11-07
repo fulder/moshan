@@ -82,7 +82,7 @@ def _add_review(username, api_info, data=None):
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    update_item(
+    _update_review(
         username,
         api_info,
         data,
@@ -134,7 +134,7 @@ def _get_review(username, api_info, include_deleted=False):
     if not include_deleted:
         kwargs["FilterExpression"] = Attr("deleted_at").not_exists()
 
-    res = _get_table().get_item(**kwargs)
+    res = _get_table().query(**kwargs)
 
     if not res["Items"]:
         raise NotFoundError(f"Item with api_info: {api_info} not found. ")
