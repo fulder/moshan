@@ -66,6 +66,8 @@ async function getItemByApiId() {
   if (moshanItem.has_episodes) {
     const moshanEpisodes = await api.getEpisodes(qParams);
 
+    console.debug(qParams.api_name == 'mal');
+    console.debug(moshanItem.status === 'Airing');
     if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
       const lastEpId = moshanEpisodes.episodes[moshanEpisodes.episodes.length - 1].episode_id;
       moshanEpisodes.episodes.push(
