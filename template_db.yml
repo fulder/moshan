@@ -20,7 +20,7 @@ Resources:
         - AttributeName: special_progress
           AttributeType: N
         - AttributeName: rating
-          AttributeType: S
+          AttributeType: N
         - AttributeName: state
           AttributeType: S
       KeySchema:
