@@ -275,9 +275,11 @@ function createEpisodesList (moshanEpisodes) {
     let episodeApiId = moshanEpisode.id;
 
     rowClass = 'episodeRow';
-    onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}'`;
+    onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
     if (episode.extra_ep) {
-      onClickAction += '&extra_ep=true';
+      onClickAction += '&extra_ep=true\'';
+    } else {
+      onClickAction += '\'';
     }
 
     tableHTML += `
