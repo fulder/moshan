@@ -128,7 +128,7 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
             api_res = tvmaze_api.get_episode(episode_api_id)
             is_special = api_res["type"] != "regular"
         elif api_name == "mal":
-            api_res = jikan_api.get_episode(item_api_id, episode_api_id)
+            jikan_api.get_episode(item_api_id, episode_api_id)
             is_special = False  # mal items are special not episodes
         else:
             raise HTTPException(status_code=501)
