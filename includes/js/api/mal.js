@@ -32,7 +32,6 @@ class MalApi {
       status = 'Finished';
     }
 
-
     const hasEpisodes = anime.type == 'TV';
 
     let poster = '/includes/img/image_not_available.png';
@@ -64,6 +63,16 @@ class MalApi {
     const realPage = resFirst.data.episodes_last_page - qParams.episode_page + 1;
 
     let res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${realPage}`);
+    if (realPage == resFirst.data.episodes_last_page) {
+
+      res.data.episodes.push(
+        {
+        episode_id: res.data.episodes[res.data.episodes.length - 1] + 1,
+        title: 'N/A',
+        }
+      );
+    }
+
     return this.getMoshanEpisodes(res.data);
   }
 
@@ -88,10 +97,8 @@ class MalApi {
   }
 
   getMoshanEpisode(episode) {
-    let date = '';
-    if (episode.aired === null) {
-      date = 'N/A';
-    } else {
+    let date = 'N/A';
+    if (episode.aired !== null) {
       date = new Date(episode.aired).toISOString().split('T')[0];
     }
 
