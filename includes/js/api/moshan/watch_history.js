@@ -66,7 +66,7 @@ class WatchHistoryApi {
   }
 
   addWatchHistoryEpisode (qParams) {
-    data = {
+    const data = {
       episode_api_id: qParams.episode_api_id,
     };
     return this.apiAxios.post(`/watch-histories/items/${qParams.api_name}/${qParams.item_api_id}/episodes`, data);
