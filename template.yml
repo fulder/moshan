@@ -23,3 +23,5 @@ Resources:
           KeySchema:
             - AttributeName: latest_watch_date
               KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
