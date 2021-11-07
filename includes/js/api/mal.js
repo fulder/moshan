@@ -63,17 +63,6 @@ class MalApi {
     const realPage = resFirst.data.episodes_last_page - qParams.episode_page + 1;
 
     let res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${realPage}`);
-    if (realPage == resFirst.data.episodes_last_page) {
-
-      res.data.episodes.push(
-        {
-        episode_id: res.data.episodes[res.data.episodes.length - 1] + 1,
-        title: 'N/A',
-        aired: null,
-        }
-      );
-    }
-
     return this.getMoshanEpisodes(res.data);
   }
 
