@@ -15,6 +15,14 @@ Resources:
           AttributeType: S
         - AttributeName: latest_watch_date
           AttributeType: S
+        - AttributeName: ep_progress
+          AttributeType: N
+        - AttributeName: special_progress
+          AttributeType: N
+        - AttributeName: rating
+          AttributeType: S
+        - AttributeName: state
+          AttributeType: S
       KeySchema:
         - AttributeName: username
           KeyType: HASH
@@ -40,33 +48,33 @@ Resources:
             ProjectionType: ALL
         - IndexName: ep_progress
           KeySchema:
-              - AttributeName: username
-                KeyType: HASH
-              - AttributeName: ep_progress
-                KeyType: RANGE
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: ep_progress
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
         - IndexName: special_progress
           KeySchema:
-              - AttributeName: username
-                KeyType: HASH
-              - AttributeName: special_progress
-                KeyType: RANGE
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: special_progress
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
         - IndexName: rating
           KeySchema:
-              - AttributeName: username
-                KeyType: HASH
-              - AttributeName: rating
-                KeyType: RANGE
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: rating
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
         - IndexName: state
           KeySchema:
-              - AttributeName: username
-                KeyType: HASH
-              - AttributeName: state
-                KeyType: RANGE
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: state
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
