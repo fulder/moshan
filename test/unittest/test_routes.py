@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 import episodes_db
 import tvmaze
+import utils
 import watch_history_db
 
 TEST_SHOW_ID = "123123"
@@ -55,7 +56,7 @@ def test_post_item(m_add_item, m_get_item, mocked_ep_count, token, client):
 
 @patch.object(tvmaze.TvMazeApi, "get_show_episodes_count")
 def test_post_item_tvmaze_error(m_ep_count, token, client):
-    m_ep_count.side_effect = tvmaze.HTTPError(503)
+    m_ep_count.side_effect = utils.HttpError(503)
 
     response = client.post(
         "/watch-histories/items",
