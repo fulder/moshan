@@ -137,13 +137,16 @@ class WatchHistory(core.Stack):
                             f"{self.watch_history_table.table_arn}/index/*",
                             self.episodes_table.table_arn,
                             f"{self.episodes_table.table_arn}/index/*",
+                            f"arn:aws:dynamodb:{self.region}:{self.account}:table/reviews",
+                            f"arn:aws:dynamodb:{self.region}:{self.account}:table/reviews/index/*",
                         ]
                     ),
                     PolicyStatement(
                         actions=["dynamodb:UpdateItem"],
                         resources=[
                             self.watch_history_table.table_arn,
-                            self.episodes_table.table_arn
+                            self.episodes_table.table_arn,
+                            f"arn:aws:dynamodb:{self.region}:{self.account}:table/reviews",
                         ],
                     ),
                 ],
@@ -391,16 +394,16 @@ class WatchHistory(core.Stack):
                 "route": "/{proxy+}",
                 "target_lambda": self.lambdas["api-watch_histories"]
             },
-            "watch_history": {
-                "method": ["GET"],
-                "route": "/watch-history",
-                "target_lambda": self.lambdas["api-watch_history"]
-            },
-            "watch_history_by_collection": {
-                "method": ["GET", "POST"],
-                "route": "/watch-history/collection/{collection_name}",
-                "target_lambda": self.lambdas["api-watch_history_by_collection"]
-            },
+            # "watch_history": {
+            #     "method": ["GET"],
+            #     "route": "/watch-history",
+            #     "target_lambda": self.lambdas["api-watch_history"]
+            # },
+            # "watch_history_by_collection": {
+            #     "method": ["GET", "POST"],
+            #     "route": "/watch-history/collection/{collection_name}",
+            #     "target_lambda": self.lambdas["api-watch_history_by_collection"]
+            # },
         }
 
         for r in routes:
