@@ -3,7 +3,6 @@ from fastapi import FastAPI, Request
 from mangum import Mangum
 
 import routes
-import jwt_utils
 from models import PostItem, PostEpisode, ReviewData, review_data_to_dict
 
 app = FastAPI()
