@@ -142,8 +142,8 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
-def get_items(t, api_name, api_id):
-    api_info = f"{t}_{api_name}_{api_id}"
+def get_items(api_name, api_id):
+    api_info = f"i_{api_name}_{api_id}"
     res = _get_table().query(
         IndexName="api_info",
         KeyConditionExpression=Key("api_info").eq(api_info),

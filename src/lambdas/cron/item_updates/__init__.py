@@ -3,8 +3,7 @@ from datetime import datetime
 import jikan
 import tvmaze
 import updates
-import utils
-import watch_history_db
+import reviews_db
 
 tvmaze_api = tvmaze.TvMazeApi()
 jikan_api = jikan.JikanApi()
@@ -21,8 +20,8 @@ def _check_tvmaze_updates():
 
     for tvmaze_id in tvmaze_updates:
         try:
-            watch_history_db.get_items_by_api_id("tvmaze", tvmaze_id)
-        except watch_history_db.NotFoundError:
+            reviews_db.get_item("tvmaze", tvmaze_id)
+        except reviews_db.NotFoundError:
             # Show not present in db, exclude it from updates
             continue
 
@@ -37,8 +36,8 @@ def _check_mal_updates():
     for a in airing:
         mal_id = a["mal_id"]
         try:
-            watch_history_db.get_items_by_api_id("mal", mal_id)
-        except watch_history_db.NotFoundError:
+            reviews_db.get_item("mal", mal_id)
+        except reviews_db.NotFoundError:
             continue
 
         updates.publish_show_update("mal", mal_id)

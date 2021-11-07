@@ -133,10 +133,6 @@ class WatchHistory(core.Stack):
                     PolicyStatement(
                         actions=["dynamodb:Query"],
                         resources=[
-                            self.watch_history_table.table_arn,
-                            f"{self.watch_history_table.table_arn}/index/*",
-                            self.episodes_table.table_arn,
-                            f"{self.episodes_table.table_arn}/index/*",
                             f"arn:aws:dynamodb:{self.region}:{self.account}:table/reviews",
                             f"arn:aws:dynamodb:{self.region}:{self.account}:table/reviews/index/*",
                         ]
@@ -144,8 +140,6 @@ class WatchHistory(core.Stack):
                     PolicyStatement(
                         actions=["dynamodb:UpdateItem"],
                         resources=[
-                            self.watch_history_table.table_arn,
-                            self.episodes_table.table_arn,
                             f"arn:aws:dynamodb:{self.region}:{self.account}:table/reviews",
                         ],
                     ),
