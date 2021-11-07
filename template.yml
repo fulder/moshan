@@ -9,18 +9,18 @@ Parameters:
     Type: String
 
 Resources:
-  ItemUpdatesTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      Subscription:
-        - Subscription
+#  ItemUpdatesTopic:
+#    Type: AWS::SNS::Topic
+#    Properties:
+#      Subscription:
+#        - Subscription
 
   Certificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: !Ref DomainName
+      DomainName: !Sub "api.${DomainName}"
       DomainValidationOptions:
-        - DomainName: !Ref DomainName
+        - DomainName: !Sub "api.${DomainName}"
           HostedZoneId: !Ref HostedZoneId
       ValidationMethod: DNS
 
@@ -29,11 +29,12 @@ Resources:
     Properties:
       Auth:
         Authorizers:
-          AuthorizationScopes: List
-          IdentitySource: $request.header.Authorization
-          JwtConfiguration:
-            issuer: https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_sJ3Y4kSv6
-            audience: 68v5rahd0sdvrmf7fgbq2o1a9u
+          CognitoAuthorizer:
+            IdentitySource: $request.header.Authorization
+            JwtConfiguration:
+              issuer: https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_sJ3Y4kSv6   # TODO move cognito creation to this repo and use Ref here
+              audience: 68v5rahd0sdvrmf7fgbq2o1a9u
+        DefaultAuthorizer: CognitoAuthorizer
       CorsConfiguration:
         AllowHeaders:
           - "authorization"
@@ -44,12 +45,12 @@ Resources:
           - "PUT"
           - "DELETE"
         AllowOrigins:
-          - !Ref DomainName
+          - !Sub "https://${DomainName}"
       DisableExecuteApiEndpoint: true
-    Domain:
-      CertificateArn: !Ref Certificate
-      DomainName: !Ref DomainName
-      EndpointConfiguration: REGIONAL
-      Route53:
-        HostedZoneName: !Ref DomainName
-      SecurityPolicy: TLS_1_2
+      Domain:
+        CertificateArn: !Ref Certificate
+        DomainName: !Sub "api.${DomainName}"
+        EndpointConfiguration: REGIONAL
+        Route53:
+          HostedZoneId: !Ref HostedZoneId
+        SecurityPolicy: TLS_1_2
