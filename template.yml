@@ -62,6 +62,8 @@ Resources:
       ContentUri: src/layers/api
       CompatibleRuntimes:
         - python3.9
+    Metadata:
+      BuildMethod: python3.9
 
   DatabasesLayer:
     Type: AWS::Serverless::LayerVersion
@@ -70,6 +72,8 @@ Resources:
       ContentUri: src/layers/databases
       CompatibleRuntimes:
         - python3.9
+    Metadata:
+      BuildMethod: python3.9
 
   UtilsLayer:
     Type: AWS::Serverless::LayerVersion
@@ -78,6 +82,8 @@ Resources:
       ContentUri: src/layers/utils
       CompatibleRuntimes:
         - python3.9
+    Metadata:
+      BuildMethod: python3.9
 
   FunctionRole:
     Type: AWS::IAM::Role
@@ -112,7 +118,8 @@ Resources:
           Type: HttpApi
           Properties:
             ApiId: !Ref Gateway
-  #          Auth: HttpApiFunctionAuth
+            Auth:
+              Authorizer: CognitoAuthorizer
             Method: ANY
             Path: /{proxy+}
       Handler: handler
