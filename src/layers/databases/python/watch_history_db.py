@@ -103,6 +103,11 @@ def get_collection_and_item_id(api_name, api_id):
         api_uuid = uuid.uuid5(show_namespace, api_name)
         return "show", str(uuid.uuid5(api_uuid, api_id))
 
+    if api_name == "mal":
+        anime_namespace = uuid.UUID("e27bf9e0-e54a-4260-bcdc-7baad9a3c36b")
+        api_uuid = uuid.uuid5(anime_namespace, api_name)
+        return "anime", str(uuid.uuid5(api_uuid, api_id))
+
 
 def add_item(username, collection_name, item_id, data=None):
     if data is None:
