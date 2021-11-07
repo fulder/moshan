@@ -44,9 +44,9 @@ class WatchHistory(core.Stack):
         self._create_gateway()
 
     def _create_topics(self):
-        self.show_updates_topic = Topic(
+        self.item_updates_topic = Topic(
             self,
-            "shows_updates",
+            "item_updates",
         )
 
     def _create_tables(self):
@@ -86,7 +86,8 @@ class WatchHistory(core.Stack):
         )
         self.watch_history_table.add_global_secondary_index(
             partition_key=Attribute(name="username", type=AttributeType.STRING),
-            sort_key=Attribute(name="special_progress", type=AttributeType.NUMBER),
+            sort_key=Attribute(name="special_progress",
+                               type=AttributeType.NUMBER),
             index_name="special_progress"
         )
         self.watch_history_table.add_global_secondary_index(
@@ -217,89 +218,12 @@ class WatchHistory(core.Stack):
                 ],
                 "timeout": 30
             },
-            "api-item_by_collection": {
+            "cron-item_updates": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
-                    "ANIME_API_URL": self.anime_api_url,
-                    "SHOWS_API_URL": self.show_api_url,
-                    "MOVIE_API_URL": self.movie_api_url,
-                },
-                "concurrent_executions": 10,
-                "policies": [
-                    PolicyStatement(
-                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
-                        resources=[self.watch_history_table.table_arn]
-                    ),
-                    PolicyStatement(
-                        actions=["execute-api:Invoke"],
-                        resources=[
-                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
-                    ),
-                ],
-                "timeout": 5
-            },
-            "api-episode_by_collection_item": {
-                "layers": ["utils", "databases", "api"],
-                "variables": {
-                    "DATABASE_NAME": self.watch_history_table.table_name,
-                    "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
-                    "LOG_LEVEL": "DEBUG",
-                    "ANIME_API_URL": self.anime_api_url,
-                    "SHOWS_API_URL": self.show_api_url,
-                },
-                "concurrent_executions": 10,
-                "policies": [
-                    PolicyStatement(
-                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
-                        resources=[self.episodes_table.table_arn]
-                    ),
-                    PolicyStatement(
-                        actions=["execute-api:Invoke"],
-                        resources=[
-                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
-                    ),
-                    PolicyStatement(
-                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
-                        resources=[self.watch_history_table.table_arn]
-                    ),
-                ],
-                "timeout": 10
-            },
-            "api-episode_by_id": {
-                "layers": ["utils", "databases", "api"],
-                "variables": {
-                    "DATABASE_NAME": self.watch_history_table.table_name,
-                    "EPISODES_DATABASE_NAME": self.episodes_table.table_name,
-                    "LOG_LEVEL": "INFO",
-                    "ANIME_API_URL": self.anime_api_url,
-                    "SHOWS_API_URL": self.show_api_url,
-                },
-                "concurrent_executions": 10,
-                "policies": [
-                    PolicyStatement(
-                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
-                        resources=[self.episodes_table.table_arn]
-                    ),
-                    PolicyStatement(
-                        actions=["dynamodb:Query", "dynamodb:UpdateItem"],
-                        resources=[self.watch_history_table.table_arn]
-                    ),
-                    PolicyStatement(
-                        actions=["execute-api:Invoke"],
-                        resources=[
-                            f"arn:aws:execute-api:eu-west-1:{self.account}:*"]
-                    ),
-                ],
-                "timeout": 10
-            },
-            "cron-show_updates": {
-                "layers": ["utils", "databases", "api"],
-                "variables": {
-                    "DATABASE_NAME": self.watch_history_table.table_name,
-                    "LOG_LEVEL": "INFO",
-                    "UPDATES_TOPIC_ARN": self.show_updates_topic.topic_arn,
+                    "UPDATES_TOPIC_ARN": self.item_updates_topic.topic_arn,
                 },
                 "concurrent_executions": 1,
                 "policies": [
@@ -310,19 +234,17 @@ class WatchHistory(core.Stack):
                     ),
                     PolicyStatement(
                         actions=["sns:Publish"],
-                        resources=[self.show_updates_topic.topic_arn],
+                        resources=[self.item_updates_topic.topic_arn],
                     )
                 ],
                 "timeout": 60,
                 "memory": 1024
             },
-            "subscribers-show_updates": {
+            "subscribers-item_updates": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
                     "DATABASE_NAME": self.watch_history_table.table_name,
                     "LOG_LEVEL": "INFO",
-                    "ANIME_API_URL": self.anime_api_url,
-                    "SHOWS_API_URL": self.show_api_url,
                 },
                 "concurrent_executions": 100,
                 "policies": [
@@ -420,15 +342,10 @@ class WatchHistory(core.Stack):
                     memory_size=512,
                 )
 
-        topic = Topic.from_topic_arn(
-            self,
-            "shows-topic",
-            f"arn:aws:sns:{self.region}:{self.account}:shows-updates"
-        )
-        self.lambdas["subscribers-show_updates"].add_event_source(
+        self.lambdas["subscribers-item_updates"].add_event_source(
             SnsEventSource(
-                topic,
-                dead_letter_queue=Queue(self, "show_updates_dlq"),
+                self.item_updates_topic,
+                dead_letter_queue=Queue(self, "item_updates_dlq"),
             )
         )
 
@@ -487,21 +404,6 @@ class WatchHistory(core.Stack):
                 "route": "/watch-history/collection/{collection_name}",
                 "target_lambda": self.lambdas["api-watch_history_by_collection"]
             },
-            "item_by_collection": {
-                "method": ["GET", "PUT", "DELETE"],
-                "route": "/watch-history/collection/{collection_name}/{item_id}",
-                "target_lambda": self.lambdas["api-item_by_collection"]
-            },
-            "episode_by_id": {
-                "method": ["GET", "PUT", "DELETE"],
-                "route": "/watch-history/collection/{collection_name}/{item_id}/episode/{episode_id}",
-                "target_lambda": self.lambdas["api-episode_by_id"]
-            },
-            "episode_by_collection_item": {
-                "method": ["GET", "POST"],
-                "route": "/watch-history/collection/{collection_name}/{item_id}/episode",
-                "target_lambda": self.lambdas["api-episode_by_collection_item"]
-            }
         }
 
         for r in routes:
