@@ -40,7 +40,7 @@ function MoshanEpisodes(episodes, total_pages) {
 }
 
 /* exported MoshanEpisode */
-function MoshanEpisode(id, number, title, air_date, previous_id, next_id) {
+function MoshanEpisode(id, number, title, air_date, previous_id, next_id, extra_ep=false) {
   this.id = id;
   this.number = number;
   this.title = title;
@@ -49,6 +49,7 @@ function MoshanEpisode(id, number, title, air_date, previous_id, next_id) {
   this.status = this.aired ? 'Aired' : 'Not Aired';
   this.previous_id = previous_id;
   this.next_id = next_id;
+  this.extra_ep = extra_ep;
 }
 
 /* exported getApiByName */
