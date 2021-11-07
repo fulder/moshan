@@ -1,6 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Parameters:
+  DomainName:
+    Type: String
+
 Resources:
 
   ReviewsTable:
@@ -78,3 +82,8 @@ Resources:
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
+
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
