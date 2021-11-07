@@ -54,3 +54,73 @@ Resources:
         Route53:
           HostedZoneId: !Ref HostedZoneId
         SecurityPolicy: TLS_1_2
+
+  ApiLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: api
+      ContentUri: src/layers/api
+      CompatibleRuntimes:
+        - python3.9
+
+  DatabasesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: databases
+      ContentUri: src/layers/databases
+      CompatibleRuntimes:
+        - python3.9
+
+  UtilsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: utils
+      ContentUri: src/layers/utils
+      CompatibleRuntimes:
+        - python3.9
+
+  FunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: database
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Query
+                  - dynamodb:UpdateItem
+                Resource:
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews/index/*"
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/lambdas/api/watch_histories
+#      Environment: Environment
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+  #          Auth: HttpApiFunctionAuth
+            Method: ANY
+            Path: /{proxy+}
+      Handler: handler
+      Layers:
+        - !Ref ApiLayer
+        - !Ref DatabasesLayer
+        - !Ref UtilsLayer
+      MemorySize: 1024
+      Role: !GetAtt FunctionRole.Arn
+      Runtime: python3.9
+      Timeout: 10
