@@ -44,8 +44,7 @@ Resources:
           - "PUT"
           - "DELETE"
         AllowOrigins:
-          - "https://moshan.tv"
-          - "https://beta.moshan.tv"
+          - !Ref DomainName
       DisableExecuteApiEndpoint: true
     Domain:
       CertificateArn: !Ref Certificate
