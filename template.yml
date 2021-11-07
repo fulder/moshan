@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  DomainName:
+    Type: String
+
+  HostedZoneId:
+    Type: String
+
+Resources:
+  ItemUpdatesTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Subscription
+
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          HostedZoneId: !Ref HostedZoneId
+      ValidationMethod: DNS
+
+  Gateway:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Auth:
+        Authorizers:
+          AuthorizationScopes: List
+          IdentitySource: $request.header.Authorization
+          JwtConfiguration:
+            issuer: https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_sJ3Y4kSv6
+            audience: 68v5rahd0sdvrmf7fgbq2o1a9u
+      CorsConfiguration:
+        AllowHeaders:
+          - "authorization"
+          - "content-type"
+        AllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+        AllowOrigins:
+          - "https://moshan.tv"
+          - "https://beta.moshan.tv"
+      DisableExecuteApiEndpoint: true
+    Domain:
+      CertificateArn: !Ref Certificate
+      DomainName: !Ref DomainName
+      EndpointConfiguration: REGIONAL
+      Route53:
+        HostedZoneName: !Ref DomainName
+      SecurityPolicy: TLS_1_2
