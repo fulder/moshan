@@ -49,7 +49,7 @@ Resources:
           - "PUT"
           - "DELETE"
         AllowOrigins:
-          - !Sub "https://${DomainName}"
+          - !Sub "https://ui.${DomainName}"
       DisableExecuteApiEndpoint: true
       Domain:
         CertificateArn: !Ref Certificate
@@ -131,9 +131,27 @@ Resources:
       Runtime: python3.9
       Timeout: 10
       Events:
-        ProxyEvent:
+        GetMethod:
           Type: HttpApi
           Properties:
             ApiId: !Ref Gateway
-            Method: ANY
+            Method: GET
+            Path: "/{proxy+}"
+        PostMethod:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Method: POST
+            Path: "/{proxy+}"
+        DeleteMethod:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Method: DELETE
+            Path: "/{proxy+}"
+        PutMethod:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Method: PUT
             Path: "/{proxy+}"
