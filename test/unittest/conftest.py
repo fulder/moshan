@@ -1,5 +1,4 @@
 import os
-from unittest.mock import MagicMock
 
 import jwt
 import pytest
@@ -25,4 +24,4 @@ def token(username):
         {"username": username},
         "secret",
         algorithm="HS256"
-    ).decode("utf-8")
+    )
