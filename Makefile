@@ -1,7 +1,7 @@
 .PHONY: test
 test:
 	pip install -U -r test/unittest/requirements.txt
-	PYTHONPATH=./src/layers/utils/python:./src/lambdas/:./src/layers/databases/python:./src/layers/api/python:./src/lambdas/api/watch_histories \
+	PYTHONPATH=./src/layers/utils/:./src/lambdas/:./src/layers/databases:./src/layers/api:./src/lambdas/api/watch_histories \
 		pytest test/unittest --cov-report html --cov=src -vv
 
 .PHONY: apitest
