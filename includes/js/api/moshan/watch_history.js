@@ -16,18 +16,18 @@ class WatchHistoryApi {
       });
   }
 
-  getWatchHistory (statusFilter = '') {
-    let url = '/watch-history?sort=latest_watch_date';
-    if (statusFilter !== '') {
-      url += `&status=${statusFilter}`;
-    }
-
-    return this.apiAxios.get(url);
-  }
-
-  getWatchHistoryByCollection (collectionName, sort, showApi) {
-    return this.apiAxios.get(`/watch-history/collection/${collectionName}?sort=${sort}&show_api=${showApi}`);
-  }
+  // getWatchHistory (statusFilter = '') {
+  //   let url = '/watch-history?sort=latest_watch_date';
+  //   if (statusFilter !== '') {
+  //     url += `&status=${statusFilter}`;
+  //   }
+  //
+  //   return this.apiAxios.get(url);
+  // }
+  //
+  // getWatchHistoryByCollection (collectionName, sort, showApi) {
+  //   return this.apiAxios.get(`/watch-history/collection/${collectionName}?sort=${sort}&show_api=${showApi}`);
+  // }
 
   removeWatchHistoryItem (qParams) {
     return this.apiAxios.delete(`/watch-histories/items/${qParams.api_name}/${qParams.api_id}`);
