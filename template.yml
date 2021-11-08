@@ -8,6 +8,9 @@ Parameters:
   HostedZoneId:
     Type: String
 
+  TmdbToken:
+    Type: String
+
 Resources:
 #  ItemUpdatesTopic:
 #    Type: AWS::SNS::Topic
@@ -113,14 +116,12 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/lambdas/api/watch_histories
-      Events:
-        ProxyEvent:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref Gateway
-            Method: ANY
-            Path: "/{proxy+}"
       Handler: __init__.handler
+      Environment:
+        Variables:
+          REVIEWS_DATABASE_NAME: reviews
+          LOG_LEVEL: INFO
+          TMDB_TOKEN: !Ref TmdbToken
       Layers:
         - !Ref ApiLayer
         - !Ref DatabasesLayer
@@ -129,3 +130,10 @@ Resources:
       Role: !GetAtt FunctionRole.Arn
       Runtime: python3.9
       Timeout: 10
+      Events:
+        ProxyEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Method: ANY
+            Path: "/{proxy+}"
