@@ -97,6 +97,7 @@ Resources:
             Action:
               - dynamodb:Query
               - dynamodb:UpdateItem
+              - dynamodb:PutItem
             Resource:
               - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
               - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews/index/*"
