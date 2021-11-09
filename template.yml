@@ -11,6 +11,10 @@ Parameters:
   TmdbToken:
     Type: String
 
+  PythonVers:
+    Type: String
+    Default: python3.9
+
 Resources:
 #  ItemUpdatesTopic:
 #    Type: AWS::SNS::Topic
@@ -65,9 +69,9 @@ Resources:
       LayerName: api
       ContentUri: src/layers/api
       CompatibleRuntimes:
-        - python3.9
+        - !Ref PythonVers
     Metadata:
-      BuildMethod: python3.9
+      BuildMethod: !Ref PythonVers
 
   DatabasesLayer:
     Type: AWS::Serverless::LayerVersion
@@ -75,9 +79,9 @@ Resources:
       LayerName: databases
       ContentUri: src/layers/databases
       CompatibleRuntimes:
-        - python3.9
+        - !Ref PythonVers
     Metadata:
-      BuildMethod: python3.9
+      BuildMethod: !Ref PythonVers
 
   UtilsLayer:
     Type: AWS::Serverless::LayerVersion
@@ -85,9 +89,9 @@ Resources:
       LayerName: utils
       ContentUri: src/layers/utils
       CompatibleRuntimes:
-        - python3.9
+        - !Ref PythonVers
     Metadata:
-      BuildMethod: python3.9
+      BuildMethod: !Ref PythonVers
 
   FunctionRole:
     Type: AWS::IAM::Role
@@ -128,7 +132,7 @@ Resources:
         - !Ref UtilsLayer
       MemorySize: 1024
       Role: !GetAtt FunctionRole.Arn
-      Runtime: python3.9
+      Runtime: !Ref PythonVers
       Timeout: 10
       Events:
         GetMethod:
