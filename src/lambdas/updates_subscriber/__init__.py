@@ -8,7 +8,7 @@ tvmaze_api = tvmaze.TvMazeApi()
 jikan_api = jikan.JikanApi()
 
 
-def handle(event, context):
+def handler(event, context):
     message = json.loads(event["Records"][0]["Sns"]["Message"])
 
     items = reviews_db.get_items(
