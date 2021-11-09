@@ -38,11 +38,12 @@ def handler(event, context):
             ep_progress = item["watched_eps"] / item["ep_count"]
         item["ep_progress"] = round(ep_progress * 100, 2)
 
-        item["special_count"] = api_item["special_count"]
-        if item["special_count"] == 0:
-            special_progress = 0
-        else:
-            special_progress = item["watched_specials"] / item["special_count"]
-        item["special_progress"] = round(special_progress * 100, 2)
+        if "special_count" in api_item:
+            item["special_count"] = api_item["special_count"]
+            if item["special_count"] == 0:
+                special_progress = 0
+            else:
+                special_progress = item["watched_specials"] / item["special_count"]
+            item["special_progress"] = round(special_progress * 100, 2)
 
         reviews_db.put_item(item)
