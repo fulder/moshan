@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - '*'
+      - one-db
 
 jobs:
   deploy:
@@ -12,21 +13,27 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: actions/setup-python@v2
-
-      - run: |
-          pip install -r src/lambdas/api/watch_histories/requirements.txt --target src/lambdas/api/watch_histories/
-
-      - name: cdk deploy
-        uses: youyo/aws-cdk-github-actions@v2.0.2
         with:
-          cdk_stack: watch-history
-          cdk_version: 1.128.0
-          cdk_subcommand: deploy
-          debug_log: true
-          working_dir: deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-1
-          PIP_NO_CACHE_DIR: off
-          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
+          python-version: "3.9"
+
+      - uses: aws-actions/setup-sam@v1
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: ${{ secrets.DEPLOY_ROLE_ARN }}
+          role-session-name: GitHubDeploySession
+
+      - name: build
+        run: sam build --use-container
+
+      - name: deploy
+        run: |
+          sam deploy --parameter-overrides
+            DomainName=${{ secrets.DOMAIN_NAME }}
+            HostedZoneId=${{ secrets.HOSTED_ZONE_ID }}
+            TmdbToken=${{ secrets.TMDB_TOKEN }}
+
+
+
