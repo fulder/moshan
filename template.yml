@@ -16,8 +16,8 @@ Parameters:
     Default: python3.9
 
 Resources:
-#  ItemUpdatesTopic:
-#    Type: AWS::SNS::Topic
+  ItemUpdatesTopic:
+    Type: AWS::SNS::Topic
 #    Properties:
 #      Subscription:
 #        - Subscription
@@ -93,7 +93,7 @@ Resources:
     Metadata:
       BuildMethod: !Ref PythonVers
 
-  FunctionRole:
+  ApiFunctionRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -159,3 +159,58 @@ Resources:
             ApiId: !Ref Gateway
             Method: PUT
             Path: "/{proxy+}"
+
+  ItemUpdaterFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: database
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Query
+                  - dynamodb:UpdateItem
+                Resource:
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews/index/*"
+        - PolicyName: sns
+          PolicyDocument:
+            Statement:
+                - Effect: Allow
+                  Action:
+                    - sns:Publish
+                  Resource:
+                    - !Ref ItemUpdatesTopic
+
+  ItemsUpdaterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/lambdas/updates_publisher
+      Handler: __init__.handler
+      Environment:
+        Variables:
+          REVIEWS_DATABASE_NAME: reviews
+          LOG_LEVEL: INFO
+          UPDATES_TOPIC_ARN: !Ref ItemUpdatesTopic
+      Layers:
+        - !Ref ApiLayer
+        - !Ref DatabasesLayer
+        - !Ref UtilsLayer
+      MemorySize: 1024
+      Role: !GetAtt FunctionRole.Arn
+      Runtime: !Ref PythonVers
+      Timeout: 60
+      Events:
+        InvocationLevel:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)

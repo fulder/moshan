@@ -9,7 +9,7 @@ tvmaze_api = tvmaze.TvMazeApi()
 jikan_api = jikan.JikanApi()
 
 
-def handle(event, context):
+def handler(event, context):
     _check_tvmaze_updates()
 
     _check_mal_updates()
