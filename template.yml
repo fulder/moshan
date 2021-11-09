@@ -212,13 +212,12 @@ Resources:
   UpdatesSubFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src/lambdas/updates_publisher
+      CodeUri: ./src/lambdas/updates_subscriber
       Handler: __init__.handler
       Environment:
         Variables:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
-          UPDATES_TOPIC_ARN: !Ref ItemUpdatesTopic
       Layers:
         - !Ref ApiLayer
         - !Ref DatabasesLayer
