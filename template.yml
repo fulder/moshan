@@ -16,12 +16,6 @@ Parameters:
     Default: python3.9
 
 Resources:
-  ItemUpdatesTopic:
-    Type: AWS::SNS::Topic
-#    Properties:
-#      Subscription:
-#        - Subscription
-
   Certificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
@@ -167,6 +161,9 @@ Resources:
             Method: PUT
             Path: "/{proxy+}"
 
+  ItemUpdatesTopic:
+    Type: AWS::SNS::Topic
+
   UpdatesPubFunctionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -212,7 +209,7 @@ Resources:
           Properties:
             Schedule: rate(1 day)
 
-  UpdatesSubFunctionFunction:
+  UpdatesSubFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/lambdas/updates_publisher
@@ -227,7 +224,6 @@ Resources:
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
       MemorySize: 1024
-      Role: !GetAtt UpdatesSubFunctionRole.Arn
       Runtime: !Ref PythonVers
       Timeout: 60
       Events:
