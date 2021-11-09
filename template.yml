@@ -131,7 +131,7 @@ Resources:
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
       MemorySize: 1024
-      Role: !GetAtt FunctionRole.Arn
+      Role: !GetAtt ApiFunctionRole.Arn
       Runtime: !Ref PythonVers
       Timeout: 10
       Events:
@@ -206,7 +206,7 @@ Resources:
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
       MemorySize: 1024
-      Role: !GetAtt FunctionRole.Arn
+      Role: !GetAtt ItemUpdaterFunctionRole.Arn
       Runtime: !Ref PythonVers
       Timeout: 60
       Events:
