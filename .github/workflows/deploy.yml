@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - '*'
-    branches:
-      - one-db
 
 jobs:
   deploy:
