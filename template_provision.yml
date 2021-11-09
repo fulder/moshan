@@ -5,6 +5,9 @@ Parameters:
   DomainName:
     Type: String
 
+  GitHubRepoPath:
+    Type: String
+
 Resources:
 
   ReviewsTable:
@@ -87,3 +90,27 @@ Resources:
     Type: AWS::Route53::HostedZone
     Properties:
       Name: !Ref DomainName
+
+  GithubOidc:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        - a031c46782e6e6c662c2c87c76da9aa62ccabd8e
+
+  GitHubRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated:
+                - !Ref GithubOidc
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubRepoPath}:*
+
