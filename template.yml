@@ -180,11 +180,11 @@ Resources:
         - PolicyName: sns
           PolicyDocument:
             Statement:
-                - Effect: Allow
-                  Action:
-                    - sns:Publish
-                  Resource:
-                    - !Ref ItemUpdatesTopic
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource:
+                  - !Ref ItemUpdatesTopic
 
   UpdatesPubFunction:
     Type: AWS::Serverless::Function
@@ -210,6 +210,18 @@ Resources:
           Properties:
             Schedule: rate(1 day)
 
+  UpdatesSubFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
   UpdatesSubFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -224,6 +236,7 @@ Resources:
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
       MemorySize: 1024
+      Role: !GetAtt UpdatesSubFunctionRole.Arn
       Runtime: !Ref PythonVers
       Timeout: 60
       Events:
