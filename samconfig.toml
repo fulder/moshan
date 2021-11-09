@@ -5,4 +5,5 @@ stack_name = "moshan"
 s3_bucket = "moshan-sam-bucket"
 region = "eu-west-1"
 confirm_changeset = false
+fail_on_empty_changeset=false
 capabilities = "CAPABILITY_IAM"
