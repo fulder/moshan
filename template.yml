@@ -93,6 +93,24 @@ Resources:
     Metadata:
       BuildMethod: !Ref PythonVers
 
+  DatabasePolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: review_database
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+            Resource:
+              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
+              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews/index/*"
+      Roles:
+        - !Ref ApiFunctionRole
+        - !Ref UpdatesPubFunctionRole
+        - !Ref UpdatesSubFunctionRole
+
   ApiFunctionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -104,17 +122,6 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Policies:
-        - PolicyName: database
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - dynamodb:Query
-                  - dynamodb:UpdateItem
-                Resource:
-                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
-                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews/index/*"
 
   ApiFunction:
     Type: AWS::Serverless::Function
@@ -160,7 +167,7 @@ Resources:
             Method: PUT
             Path: "/{proxy+}"
 
-  ItemUpdaterFunctionRole:
+  UpdatesPubFunctionRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -172,16 +179,6 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: database
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - dynamodb:Query
-                  - dynamodb:UpdateItem
-                Resource:
-                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
-                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews/index/*"
         - PolicyName: sns
           PolicyDocument:
             Statement:
@@ -191,7 +188,7 @@ Resources:
                   Resource:
                     - !Ref ItemUpdatesTopic
 
-  ItemsUpdaterFunction:
+  UpdatesPubFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/lambdas/updates_publisher
@@ -206,7 +203,7 @@ Resources:
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
       MemorySize: 1024
-      Role: !GetAtt ItemUpdaterFunctionRole.Arn
+      Role: !GetAtt UpdatesPubFunctionRole.Arn
       Runtime: !Ref PythonVers
       Timeout: 60
       Events:
@@ -214,3 +211,27 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(1 day)
+
+  UpdatesSubFunctionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/lambdas/updates_publisher
+      Handler: __init__.handler
+      Environment:
+        Variables:
+          REVIEWS_DATABASE_NAME: reviews
+          LOG_LEVEL: INFO
+          UPDATES_TOPIC_ARN: !Ref ItemUpdatesTopic
+      Layers:
+        - !Ref ApiLayer
+        - !Ref DatabasesLayer
+        - !Ref UtilsLayer
+      MemorySize: 1024
+      Role: !GetAtt UpdatesSubFunctionRole.Arn
+      Runtime: !Ref PythonVers
+      Timeout: 60
+      Events:
+        UpdatesSNS:
+          Type: SNS
+          Properties:
+            Topic: !Ref ItemUpdatesTopic
