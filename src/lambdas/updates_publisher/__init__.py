@@ -20,7 +20,7 @@ def _check_tvmaze_updates():
 
     for tvmaze_id in tvmaze_updates:
         try:
-            reviews_db.get_item("tvmaze", tvmaze_id)
+            reviews_db.get_items("tvmaze", tvmaze_id)
         except reviews_db.NotFoundError:
             # Show not present in db, exclude it from updates
             continue
@@ -36,7 +36,7 @@ def _check_mal_updates():
     for a in airing:
         mal_id = a["mal_id"]
         try:
-            reviews_db.get_item("mal", mal_id)
+            reviews_db.get_items("mal", mal_id)
         except reviews_db.NotFoundError:
             continue
 
