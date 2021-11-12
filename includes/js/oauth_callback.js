@@ -16,7 +16,7 @@ if (code === null) {
     grant_type: 'authorization_code',
     redirect_uri: 'https://' + window.location.hostname + '/callback.html',
     code: code,
-    client_id: '68v5rahd0sdvrmf7fgbq2o1a9u',
+    client_id: clientId,
     code_verifier: codeVerifier,
   }).toString();
   const options = {
