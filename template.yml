@@ -28,8 +28,6 @@ Resources:
   CognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      AliasAttributes:
-        - preferred_username
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: false
       AutoVerifiedAttributes:
