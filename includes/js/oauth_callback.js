@@ -24,7 +24,7 @@ if (code === null) {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   };
-  axios.post(`https://auth.${domainName}/oauth2/token`, postData, options)
+  axios.post(`https://${cognitoDomainName}/oauth2/token`, postData, options)
     .then(function (response) {
       const data = response.data;
       localStorage.setItem('moshan_access_token', data.access_token);
