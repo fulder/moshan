@@ -86,10 +86,10 @@ Resources:
           Projection:
             ProjectionType: ALL
 
-  HostedZone:
-    Type: AWS::Route53::HostedZone
-    Properties:
-      Name: !Ref DomainName
+#  HostedZone:
+#    Type: AWS::Route53::HostedZone
+#    Properties:
+#      Name: !Ref DomainName
 
   GithubOidc:
     Type: AWS::IAM::OIDCProvider
