@@ -4,10 +4,10 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   DomainName:
     Type: String
-    Default: ThirdPartyZone
 
   HostedZoneId:
     Type: String
+    Default: ThirdPartyZone
 
   TmdbToken:
     Type: String
