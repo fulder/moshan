@@ -42,6 +42,22 @@ Resources:
       UsernameAttributes:
         - email
 
+  CognitoClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthFlowsUserPoolClient: Boolean
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+      CallbackURLs:
+        - !Sub "https://${DomainName}/callback.html"
+      ExplicitAuthFlows:
+        - ALLOW_REFRESH_TOKEN_AUTH
+      GenerateSecret: Boolean
+      UserPoolId: !Ref CognitoUserPool
 
   Gateway:
     Type: AWS::Serverless::HttpApi
