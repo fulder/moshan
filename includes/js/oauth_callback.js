@@ -24,6 +24,7 @@ if (code === null) {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   };
+
   axios.post(`https://${cognitoDomainName}/oauth2/token`, postData, options)
     .then(function (response) {
       const data = response.data;
