@@ -1,7 +1,7 @@
 /* global accessToken, parsedToken */
 
 /* exported getDomainName */
-const cognitoDomainName = 'https://moshan-fulder-dev.auth.eu-west-1.amazoncognito.com';
+const cognitoDomainName = 'moshan-fulder-dev.auth.eu-west-1.amazoncognito.com';
 const clientId = '1ra91kse5btmpmt3tmran2441a';
 
 
