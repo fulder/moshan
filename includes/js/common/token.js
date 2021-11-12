@@ -38,7 +38,7 @@ async function refreshToken () {
   };
 
   try {
-    const response = await axios.post('https://auth.moshan.tv/oauth2/token', requestData, options);
+    const response = await axios.post(`https://auth.${domainName}/oauth2/token`, requestData, options);
 
     const data = response.data;
     localStorage.setItem('moshan_access_token', data.access_token);

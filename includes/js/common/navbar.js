@@ -1,5 +1,10 @@
 /* global accessToken, parsedToken */
 
+/* exported getDomainName */
+const domainName = 'moshan.fulder.dev';
+const clientId = '1ra91kse5btmpmt3tmran2441a';
+
+
 if (accessToken === null) {
   document.getElementById('loginButton').classList.remove('d-none');
   document.getElementById('profileDropdown').classList.add('d-none');
@@ -15,7 +20,7 @@ if (accessToken === null) {
 function logout () {
   localStorage.removeItem('moshan_access_token');
   localStorage.removeItem('moshan_refresh_token');
-  window.location.href = 'https://auth.moshan.tv/logout?logout_uri=https://' + window.location.hostname + '/index.html&client_id=68v5rahd0sdvrmf7fgbq2o1a9u';
+  window.location.href = `https://auth.${domainName}/logout?logout_uri=https://${window.location.hostname}/index.html&client_id=${clientId}`;
 }
 
 /* exported authorize */
@@ -28,7 +33,7 @@ async function authorize () {
   localStorage.setItem('pkce_code_verifier', codeVerifier);
   localStorage.setItem('pkce_state', state);
 
-  const authorizeUrl = new URL('https://auth.moshan.tv/authorize');
+  const authorizeUrl = new URL(`https://auth.${domainName}/authorize`);
 
   authorizeUrl.searchParams.append('code_challenge', codeChallenge);
   authorizeUrl.searchParams.append('client_id', '68v5rahd0sdvrmf7fgbq2o1a9u');
