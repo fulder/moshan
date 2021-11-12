@@ -16,6 +16,9 @@ Parameters:
     Type: String
     Default: python3.9
 
+  CognitoDomainPrefix:
+    Type: String
+
 
 Resources:
   Certificate:
@@ -65,7 +68,7 @@ Resources:
   CognitoDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain: !Sub "auth.${DomainName}"
+      Domain: !Ref CognitoDomainPrefix
       UserPoolId: !Ref CognitoUserPool
 
   Gateway:
