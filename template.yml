@@ -167,7 +167,7 @@ Resources:
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src/lambdas/api/watch_histories
+      CodeUri: ./src/lambdas/api
       Handler: __init__.handler
       Environment:
         Variables:

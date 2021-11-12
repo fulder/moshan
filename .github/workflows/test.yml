@@ -28,7 +28,7 @@ jobs:
         pip install -r src/layers/databases/requirements.txt
         pip install -r src/layers/api/requirements.txt
         pip install -r src/layers/utils/requirements.txt
-        pip install -r src/lambdas/api/watch_histories/requirements.txt
+        pip install -r src/lambdas/api/requirements.txt
 
     - name: Lint with flake8
       run: |
