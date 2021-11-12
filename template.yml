@@ -47,7 +47,6 @@ Resources:
     Properties:
       AllowedOAuthFlows:
         - code
-      AllowedOAuthFlowsUserPoolClient: Boolean
       AllowedOAuthScopes:
         - email
         - openid
@@ -56,7 +55,6 @@ Resources:
         - !Sub "https://${DomainName}/callback.html"
       ExplicitAuthFlows:
         - ALLOW_REFRESH_TOKEN_AUTH
-      GenerateSecret: Boolean
       UserPoolId: !Ref CognitoUserPool
 
   Gateway:
