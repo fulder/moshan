@@ -4,6 +4,7 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   DomainName:
     Type: String
+    Default: ThirdPartyZone
 
   HostedZoneId:
     Type: String
@@ -20,9 +21,18 @@ Resources:
     Type: AWS::CertificateManager::Certificate
     Properties:
       DomainName: !Sub "api.${DomainName}"
-      DomainValidationOptions:
-        - DomainName: !Sub "api.${DomainName}"
-          HostedZoneId: !Ref HostedZoneId
+#      DomainValidationOptions:
+#        - DomainName: !Sub "api.${DomainName}"
+#          HostedZoneId: !Ref HostedZoneId
+      ValidationMethod: DNS
+
+  CognitoCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub "auth.${DomainName}"
+#      DomainValidationOptions:
+#        - DomainName: !Sub "auth.${DomainName}"
+#          HostedZoneId: !Ref HostedZoneId
       ValidationMethod: DNS
 
   CognitoUserPool:
@@ -58,6 +68,14 @@ Resources:
         - ALLOW_REFRESH_TOKEN_AUTH
       LogoutURLs:
         - !Sub "https://${DomainName}/index.html"
+      UserPoolId: !Ref CognitoUserPool
+
+  CognitoDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      CustomDomainConfig:
+        CertificateArn: !Ref CognitoCertificate
+      Domain: !Sub "auth.${DomainName}"
       UserPoolId: !Ref CognitoUserPool
 
   Gateway:
