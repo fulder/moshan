@@ -8,7 +8,7 @@ from models import PostItem, PostEpisode, ReviewData, review_data_to_dict, Sort
 app = FastAPI()
 
 
-@app.get("/watch-histories/items/")
+@app.get("/watch-histories/items")
 def get_items(request: Request, sort: Sort):
     return routes.get_items(request.state.username, sort.value)
 
