@@ -29,7 +29,6 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       AliasAttributes:
-        - email
         - preferred_username
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: false
