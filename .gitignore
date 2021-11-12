@@ -4,8 +4,7 @@
 .coverage
 htmlcov/
 
-build/
-cdk.out/
+.aws-sam/
 
 scripts/1001_list
 
