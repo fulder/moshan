@@ -38,6 +38,10 @@ class PostEpisode(ReviewData):
     episode_api_id: str
 
 
+class Sort(StrEnum):
+    created_at = auto()
+
+
 def review_data_to_dict(data: ReviewData):
     data = data.dict(exclude={"api_name", "item_api_id", "episode_api_id"})
     dates = data.get("dates_watched")

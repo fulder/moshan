@@ -3,9 +3,14 @@ from fastapi import FastAPI, Request
 from mangum import Mangum
 
 import routes
-from models import PostItem, PostEpisode, ReviewData, review_data_to_dict
+from models import PostItem, PostEpisode, ReviewData, review_data_to_dict, Sort
 
 app = FastAPI()
+
+
+@app.get("/watch-histories/items/")
+def get_items(request: Request, sort: Sort):
+    return routes.get_items(request.state.username, sort.value)
 
 
 @app.get("/watch-histories/items/{api_name}/{item_api_id}")
