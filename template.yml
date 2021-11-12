@@ -16,9 +16,6 @@ Parameters:
     Type: String
     Default: python3.9
 
-  CognitoCertArn:
-    Type: String
-
 
 Resources:
   Certificate:
@@ -68,8 +65,6 @@ Resources:
   CognitoDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      CustomDomainConfig:
-        CertificateArn: !Ref CognitoCertArn
       Domain: !Sub "auth.${DomainName}"
       UserPoolId: !Ref CognitoUserPool
 
