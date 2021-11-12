@@ -3,7 +3,7 @@ import os
 import jwt
 import pytest
 from starlette.testclient import TestClient
-from api.watch_histories import app
+from api import app
 
 os.environ["LOG_LEVEL"] = "DEBUG"
 
