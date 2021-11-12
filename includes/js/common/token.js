@@ -28,7 +28,7 @@ async function checkToken () {
 async function refreshToken () {
   const requestData = new URLSearchParams({
     grant_type: 'refresh_token',
-    client_id: '68v5rahd0sdvrmf7fgbq2o1a9u',
+    client_id: clientId,
     refresh_token: localStorage.getItem('moshan_refresh_token'),
   }).toString();
   const options = {
