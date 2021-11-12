@@ -30,6 +30,8 @@ Resources:
           AttributeType: N
         - AttributeName: state
           AttributeType: S
+        - AttributeName: created_at
+          AttributeType: S
       KeySchema:
         - AttributeName: username
           KeyType: HASH
@@ -42,6 +44,14 @@ Resources:
           KeySchema:
             - AttributeName: api_info
               KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: created_at
+          KeySchema:
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: created_at
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
       LocalSecondaryIndexes:
@@ -86,10 +96,10 @@ Resources:
           Projection:
             ProjectionType: ALL
 
-#  HostedZone:
-#    Type: AWS::Route53::HostedZone
-#    Properties:
-#      Name: !Ref DomainName
+  #  HostedZone:
+  #    Type: AWS::Route53::HostedZone
+  #    Properties:
+  #      Name: !Ref DomainName
 
   GithubOidc:
     Type: AWS::IAM::OIDCProvider
