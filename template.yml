@@ -66,9 +66,9 @@ Resources:
           cognito:
             IdentitySource: "$request.header.Authorization"
             JwtConfiguration:
-              issuer: https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_sJ3Y4kSv6   # TODO move cognito creation to this repo and use Ref here
+              issuer: !Sub "https://cognito-idp.eu-west-1.amazonaws.com/${CognitoUserPool}"
               audience:
-                - 68v5rahd0sdvrmf7fgbq2o1a9u
+                - !Ref CognitoClient
         DefaultAuthorizer: cognito
       CorsConfiguration:
         AllowHeaders:
