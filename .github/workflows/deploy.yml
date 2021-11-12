@@ -25,7 +25,7 @@ jobs:
           role-session-name: GitHubDeploySession
 
       - name: build
-        run: sam build --use-container
+        run: sam build --use-container --build-image public.ecr.aws/sam/build-python3.9
 
       - name: deploy
         run: |
