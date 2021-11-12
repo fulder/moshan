@@ -93,7 +93,7 @@ Resources:
           - "PUT"
           - "DELETE"
         AllowOrigins:
-          - !Sub "https://ui.${DomainName}"
+          - !Sub "https://${DomainName}"
       DisableExecuteApiEndpoint: true
       Domain:
         CertificateArn: !Ref Certificate
