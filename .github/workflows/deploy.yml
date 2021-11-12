@@ -31,7 +31,7 @@ jobs:
         run: |
           sam deploy --parameter-overrides
             DomainName="moshan.fulder.dev"
-            CognitoDomainPrefix="moshan-fulder.dev"
+            CognitoDomainPrefix="moshan-fulder-dev"
             TmdbToken=${{ secrets.TMDB_TOKEN }}
 
 
