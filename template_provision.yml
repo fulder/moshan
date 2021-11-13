@@ -30,7 +30,7 @@ Resources:
           AttributeType: N
         - AttributeName: state
           AttributeType: S
-        - AttributeName: created_at
+        - AttributeName: backlog_date
           AttributeType: S
       KeySchema:
         - AttributeName: username
@@ -46,11 +46,11 @@ Resources:
               KeyType: HASH
           Projection:
             ProjectionType: ALL
-        - IndexName: created_at
+        - IndexName: backlog_date
           KeySchema:
             - AttributeName: username
               KeyType: HASH
-            - AttributeName: created_at
+            - AttributeName: backlog_date
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
