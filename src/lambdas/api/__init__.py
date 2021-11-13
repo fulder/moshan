@@ -1,3 +1,5 @@
+from typing import Optional
+
 import jwt
 from fastapi import FastAPI, Request
 from mangum import Mangum
@@ -9,8 +11,8 @@ app = FastAPI()
 
 
 @app.get("/watch-histories/items")
-def get_items(request: Request, sort: Sort):
-    return routes.get_items(request.state.username, sort.value)
+def get_items(request: Request, sort: Optional[Sort]):
+    return routes.get_items(request.state.username, sort)
 
 
 @app.get("/watch-histories/items/{api_name}/{item_api_id}")

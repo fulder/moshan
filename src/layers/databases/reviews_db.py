@@ -147,6 +147,25 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
+def get_all_items(username, sort=None):
+    kwargs = {
+        "KeyConditionExpression": Key("username").eq(username),
+        "ScanIndexForward": False,
+    }
+    if sort is not None:
+        kwargs["IndexName"] = sort
+
+    res = _get_table().query(**kwargs)
+
+    ret = res.get("Items", [])
+
+    last_ev = res.get("LastEvaluatedKey")
+    if last_ev == "":
+        ret["end_cursor"] = last_ev
+
+    return ret
+
+
 def get_items(api_name, api_id):
     api_info = f"i_{api_name}_{api_id}"
     res = _get_table().query(
@@ -285,11 +304,13 @@ def change_watched_eps(username, api_name, api_id, change,
     api_info = f"i_{api_name}_{api_id}"
 
     item = _get_review(username, api_info)
-    if f"{field_name}_count" not in item or item[f"{field_name}_count"] == 0:
+    if f"{field_name}_count" not in item or item[
+        f"{field_name}_count"] == 0:
         ep_progress = 0
     else:
-        ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[
-            f"{field_name}_count"]
+        count_v = item[f"{field_name}_count"]
+        watched_v = item[f"watched_{field_name}s"]
+        ep_progress = (watched_v + (change)) / count_v
     ep_progress = round(ep_progress * 100, 2)
 
     _get_table().update_item(
@@ -336,7 +357,8 @@ def get_user_items(username, index_name=None, status_filter=None):
             "S": status_filter
         }
     if index_name in ["ep_progress", "special_progress"]:
-        query_kwargs["KeyConditionExpression"] += " AND #index_name < :progress"
+        key_exp = " AND #index_name < :progress"
+        query_kwargs["KeyConditionExpression"] += key_exp
         query_kwargs["ExpressionAttributeNames"] = {
             "#index_name": index_name,
         }
