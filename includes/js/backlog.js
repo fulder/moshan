@@ -18,7 +18,7 @@ if (accessToken === null) {
 createTableRows();
 
 async function createTableRows() {
-    const response = await watchHistoryApi.getWatchHistory('backlog');
+    const response = await watchHistoryApi.getWatchHistory('backlog_date');
     const items = response.data.items;
 
     const apiRequests = [];
