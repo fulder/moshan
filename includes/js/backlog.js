@@ -1,4 +1,4 @@
-/* global WatchHistoryApi, accessToken, getApiByName */
+/* global WatchHistoryApi, accessToken */
 //const urlParams = new URLSearchParams(window.location.search);
 
 const watchHistoryApi = new WatchHistoryApi();
@@ -41,7 +41,7 @@ async function createTableRows() {
 function createRow(watchHistoryItem) {
   // moshanItem = moshanItems[`${watchHistoryItem.api_name}_${watchHistoryItem.api_id}`];
 
-  let rowClass = 'bg-secondary';
+  let rowClass = 'episodeRow';
   // let rowClass = 'bg-secondary';
   // if (moshanItem.status === 'Released' || moshanItem.status === 'Airing' || moshanItem.status === 'Ended' || moshanItem.status === 'Running') {
   //     rowClass = 'episodeRow';
