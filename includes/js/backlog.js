@@ -22,47 +22,30 @@ async function createTableRows() {
     const items = response.data.items;
 
     const apiRequests = [];
-    const externalIDMap = {};
     for (let i=0; i < items.length; i++) {
-      const apiName = apiNamesMapping[items[i].collection_name];
-      const apiId = items[i][`${apiName}_id`];
+      const apiName = items[i]['api_name'];
+      const apiId = items[i]['api_id'];
       const api = getApiByName(apiName);
 
       apiRequests.push(api.getItemById({ 'api_id': apiId }));
-
-      externalIDMap[`${items[i].collection_name}_${apiId}`] = items[i];
     }
-    // console.debug(externalIDMap);
 
     const responses = await Promise.all(apiRequests);
-
-    responses.sort(function(x, y) {
-      const xWatchHistoryItem = externalIDMap[`${x.collection_name}_${x.id}`];
-      const yWatchHistoryItem = externalIDMap[`${y.collection_name}_${y.id}`];
-
-      const xDate = new Date(xWatchHistoryItem.created_at);
-      const yDate = new Date(yWatchHistoryItem.created_at);
-
-      if (xDate < yDate) {
-        return -1;
-      }
-      if (xDate > yDate) {
-        return 1;
-      }
-      return 0;
-    });
+    const moshanItems = {};
+    for (let i=0; i< responses.length; i++) {
+      moshanItems[`${responses[i].api_name}_${responses[i].id}`] = responses[i];
+    }
 
     html = '';
-    for (let i=0; i< responses.length; i++) {
-      html += createRow(responses[i], externalIDMap);
+    for (let i=0; i< items.length; i++) {
+      html += createRow(items[i], moshanItems);
     }
     document.getElementById('backlog-table-body').innerHTML = html;
 }
 
 
-function createRow(moshanItem, externalIDMap) {
-  //console.debug(`${moshanItem.collection_name}_${moshanItem.id}`);
-  watchHistoryItem = externalIDMap[`${moshanItem.collection_name}_${moshanItem.id}`];
+function createRow(watchHistoryItem, moshanItems) {
+  moshanItem = moshanItems[`${watchHistoryItem.api_name}_${watchHistoryItem.api_id}`];
 
   let rowClass = 'bg-secondary';
   if (moshanItem.status === 'Released' || moshanItem.status === 'Airing' || moshanItem.status === 'Ended' || moshanItem.status === 'Running') {

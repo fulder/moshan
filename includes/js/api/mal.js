@@ -54,7 +54,7 @@ class MalApi {
       status,
       anime.synopsis,
       hasEpisodes,
-      'anime'
+      'mal'
     );
   }
 
