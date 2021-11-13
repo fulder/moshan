@@ -44,7 +44,7 @@ class Sort(StrEnum):
 
 class Item(BaseModel):
     created_at: str
-    update_at: str
+    update_at: Optional[str]
     deleted_at: Optional[str]
     status: Optional[Status]
     backlog_date: Optional[str]
