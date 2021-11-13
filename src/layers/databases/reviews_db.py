@@ -147,13 +147,15 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
-def get_all_items(username, sort=None):
+def get_all_items(username, sort=None, cursor=None):
     kwargs = {
         "KeyConditionExpression": Key("username").eq(username),
         "ScanIndexForward": False,
     }
     if sort is not None:
         kwargs["IndexName"] = sort
+    if cursor is not None:
+        kwargs["ExclusiveStartKey"] = cursor
 
     res = _get_table().query(**kwargs)
 

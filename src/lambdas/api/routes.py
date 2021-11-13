@@ -14,10 +14,11 @@ jikan_api = jikan.JikanApi()
 log = logger.get_logger(__name__)
 
 
-def get_items(username, sort=None):
+def get_items(username, sort=None, cursor=None):
     return reviews_db.get_all_items(
         username,
-        sort
+        sort,
+        cursor,
     )
 
 
