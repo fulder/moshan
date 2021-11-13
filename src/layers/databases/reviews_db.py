@@ -169,7 +169,8 @@ def get_all_items(username, sort=None, cursor=None):
 
     last_ev = res.get("LastEvaluatedKey")
     if last_ev != "":
-        ret["end_cursor"] = last_ev
+        log.debug(f"LastEvaluatedKey={last_ev}")
+        ret["end_cursor"] = last_ev["api_info"]
 
     return ret
 
