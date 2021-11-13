@@ -18,7 +18,7 @@ class WatchHistoryApi {
 
   getWatchHistory (sort = '', cursor = '') {
     let url = '/watch-histories/items';
-    if (sort !== '' && cursor !== '') {
+    if (sort !== '' || cursor !== '') {
       url += '?';
     }
 
