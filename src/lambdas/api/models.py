@@ -51,4 +51,5 @@ def review_data_to_dict(data: ReviewData):
             new_d = d.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
             parsed_dates.append(new_d)
         data["dates_watched"] = parsed_dates
+
     return data
