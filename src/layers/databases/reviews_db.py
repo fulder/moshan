@@ -233,33 +233,43 @@ def _update_review(username, api_info, data, clean_whitelist):
         set_names.append(f"#{k}=:{k}")
         expression_attribute_names[f"#{k}"] = k
         expression_attribute_values[f":{k}"] = v
-    if len(set_names) > 0:
-        update_expression += f"SET {','.join(set_names)}"
 
-    if data.get("status") != "backlog":
-        clean_whitelist.append("backlog_date")
-    else:
-        update_expression += ",backlog_date=created_at"
+    log.debug(f"Data: {data}")
+    log.debug(f"Clean whitelist: {clean_whitelist}")
 
     remove_names = []
     for o in OPTIONAL_FIELDS:
-        if o not in data and o in clean_whitelist:
+        if data.get(o) is None and o in clean_whitelist:
             remove_names.append(f"#{o}")
             expression_attribute_names[f"#{o}"] = o
+
+    expression_attribute_names["#backlog_date"] = "backlog_date"
+    if data.get("status") != "backlog":
+        remove_names.append("#backlog_date")
+    else:
+        set_names.append("#backlog_date=#created_at")
+        expression_attribute_names["#created_at"] = "created_at"
+
+    if len(set_names) == 0 and len(remove_names) == 0:
+        log.debug("No update needed, returning")
+        return
+
+    if len(set_names) > 0:
+        update_expression += f"SET {','.join(set_names)}"
     if len(remove_names) > 0:
         update_expression += f" REMOVE {','.join(remove_names)}"
 
-    log.debug("Running update_item")
+    key = {
+        "username": username,
+        "api_info": api_info,
+    }
+    log.debug(f"Dynamo Key: {key}")
     log.debug(f"Update expression: {update_expression}")
     log.debug(f"Expression attribute names: {expression_attribute_names}")
     log.debug(f"Expression attribute values: {expression_attribute_values}")
-    log.debug(f"Client ID: {username}")
 
     _get_table().update_item(
-        Key={
-            "username": username,
-            "api_info": api_info,
-        },
+        Key=key,
         UpdateExpression=update_expression,
         ExpressionAttributeNames=expression_attribute_names,
         ExpressionAttributeValues=expression_attribute_values
