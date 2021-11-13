@@ -189,7 +189,10 @@ def get_episodes(username, api_name, item_api_id):
 
 
 def update_item(username, api_name, api_id, data,
-                clean_whitelist=OPTIONAL_FIELDS):
+                clean_whitelist=None):
+    if clean_whitelist is None:
+        clean_whitelist = OPTIONAL_FIELDS
+
     _update_review(
         username,
         f"i_{api_name}_{api_id}",
@@ -199,7 +202,10 @@ def update_item(username, api_name, api_id, data,
 
 
 def update_episode(username, api_name, api_id, episode_id, data,
-                   clean_whitelist=OPTIONAL_FIELDS):
+                   clean_whitelist=None):
+    if clean_whitelist is None:
+        clean_whitelist = OPTIONAL_FIELDS
+
     _update_review(
         username,
         f"e_{api_name}_{api_id}_{episode_id}",
@@ -208,7 +214,7 @@ def update_episode(username, api_name, api_id, episode_id, data,
     )
 
 
-def _update_review(username, api_info, data, clean_whitelist=OPTIONAL_FIELDS):
+def _update_review(username, api_info, data, clean_whitelist):
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if data.get("dates_watched"):
