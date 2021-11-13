@@ -43,6 +43,8 @@ class Sort(StrEnum):
 
 
 class Item(BaseModel):
+    api_name: str
+    api_id: str
     created_at: str
     update_at: Optional[str]
     deleted_at: Optional[str]

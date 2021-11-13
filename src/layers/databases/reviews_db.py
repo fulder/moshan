@@ -162,10 +162,14 @@ def get_all_items(username, sort=None, cursor=None):
         kwargs["ExclusiveStartKey"] = cursor
 
     res = _get_table().query(**kwargs)
-
     ret = {
-        "items": res.get("Items", [])
+        "items": []
     }
+    for i in res.get("Items", []):
+        s = i["api_info"].split("_")
+        i["api_name"] = s[1]
+        i["api_id"] = s[2]
+        ret["items"].append(i)
 
     last_ev = res.get("LastEvaluatedKey")
     if last_ev != "":
