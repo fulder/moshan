@@ -68,16 +68,6 @@ def add_item(username, api_name, api_id, data):
 
 
 def update_item(username, api_name, api_id, data):
-    all_none = True
-    for v in data.values():
-        if v is not None:
-            all_none = False
-    if all_none:
-        raise HTTPException(
-            status_code=400,
-            detail="Please specify at least one of the optional fields"
-        )
-
     reviews_db.update_item(
         username,
         api_name,
