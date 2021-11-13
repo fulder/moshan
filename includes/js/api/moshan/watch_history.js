@@ -16,15 +16,10 @@ class WatchHistoryApi {
       });
   }
 
-  // getWatchHistory (statusFilter = '') {
-  //   let url = '/watch-history?sort=latest_watch_date';
-  //   if (statusFilter !== '') {
-  //     url += `&status=${statusFilter}`;
-  //   }
-  //
-  //   return this.apiAxios.get(url);
-  // }
-  //
+  getWatchHistory (sort = '') {
+    return this.apiAxios.get(`/watch-histories/items?sort=${sort}`);
+  }
+
   // getWatchHistoryByCollection (collectionName, sort, showApi) {
   //   return this.apiAxios.get(`/watch-history/collection/${collectionName}?sort=${sort}&show_api=${showApi}`);
   // }
