@@ -16,8 +16,20 @@ class WatchHistoryApi {
       });
   }
 
-  getWatchHistory (sort = '') {
-    return this.apiAxios.get(`/watch-histories/items?sort=${sort}`);
+  getWatchHistory (sort = '', cursor = '') {
+    let url = '/watch-histories/items';
+    if (sort !== '' && cursor !== '') {
+      url += '?';
+    }
+
+    if (sort !== '') {
+      url += `status=${statusFilter}`;
+    }
+    if (cursor !== '') {
+      url += `&cursor=${cursor}`;
+    }
+
+    return this.apiAxios.get(url);
   }
 
   // getWatchHistoryByCollection (collectionName, sort, showApi) {
