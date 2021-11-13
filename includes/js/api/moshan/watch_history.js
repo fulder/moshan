@@ -23,7 +23,7 @@ class WatchHistoryApi {
     }
 
     if (sort !== '') {
-      url += `status=${statusFilter}`;
+      url += `sort=${sort}`;
     }
     if (cursor !== '') {
       url += `&cursor=${cursor}`;
