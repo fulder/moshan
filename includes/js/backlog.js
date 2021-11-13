@@ -3,12 +3,6 @@
 
 const watchHistoryApi = new WatchHistoryApi();
 
-const apiNamesMapping = {
-  'movie': 'tmdb',
-  'show': 'tvmaze',
-  'anime': 'mal',
-};
-
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
 } else {
