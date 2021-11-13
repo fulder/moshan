@@ -31,20 +31,20 @@ async function createTableRows() {
     // }
     //
     // const responses = await Promise.all(apiRequests);
-    const moshanItems = {};
+    // const moshanItems = {};
     // for (let i=0; i< responses.length; i++) {
     //   moshanItems[`${responses[i].api_name}_${responses[i].id}`] = responses[i];
     // }
 
     html = '';
     for (let i=0; i< items.length; i++) {
-      html += createRow(items[i], moshanItems);
+      html += createRow(items[i]);
     }
     document.getElementById('backlog-table-body').innerHTML = html;
 }
 
 
-function createRow(watchHistoryItem, moshanItems) {
+function createRow(watchHistoryItem) {
   // moshanItem = moshanItems[`${watchHistoryItem.api_name}_${watchHistoryItem.api_id}`];
 
   let rowClass = 'bg-secondary';
@@ -56,8 +56,7 @@ function createRow(watchHistoryItem, moshanItems) {
   //     rowClass = 'bg-secondary';
   // }
 
-  const apiName = apiNamesMapping[moshanItem.collection_name];
-  const onClickAction = `window.location='item/index.html?collection=${moshanItem.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}'`;
+  const onClickAction = `window.location='item/index.html?api_name=${watchHistoryItem.api_name}&api_id=${watchHistoryItem.api_id}'`;
   return `
   <tr onclick="${onClickAction}" class=${rowClass}>
       <td>${watchHistoryItem.created_at}</td>
