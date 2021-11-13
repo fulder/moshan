@@ -11,8 +11,8 @@ app = FastAPI()
 
 
 @app.get("/watch-histories/items")
-def get_items(request: Request, sort: Optional[Sort]):
-    return routes.get_items(request.state.username, sort)
+def get_items(request: Request, sort: Optional[Sort], cursor: Optional[str]):
+    return routes.get_items(request.state.username, sort, cursor)
 
 
 @app.get("/watch-histories/items/{api_name}/{item_api_id}")
