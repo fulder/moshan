@@ -33,7 +33,7 @@ async function createTableRows() {
 
     html = '';
     for (let i=0; i< items.length; i++) {
-      html += createRow(items[i]);
+      html += createRow(items[i], moshanItems);
     }
     document.getElementById('backlog-table-body').innerHTML = html;
 }
@@ -69,6 +69,4 @@ function createRow(watchHistoryItem, moshanItems) {
       <td>${startDate}</td>
     </tr>
     `;
-
-
 }
