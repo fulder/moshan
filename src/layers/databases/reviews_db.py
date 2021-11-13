@@ -74,13 +74,18 @@ def _add_review(username, api_info, data=None):
     if data.get("dates_watched"):
         data["latest_watch_date"] = "0"
     try:
-        _get_review(
+        current_item = _get_review(
             username,
             api_info,
             include_deleted=True,
         )
+        created_at = current_item["created_at"]
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        created_at = data["created_at"]
+
+    if data.get("status") == "backlog":
+        data["backlog_date"] = created_at
 
     _update_review(
         username,
@@ -205,6 +210,9 @@ def update_episode(username, api_name, api_id, episode_id, data,
 
 def _update_review(username, api_info, data, clean_whitelist=OPTIONAL_FIELDS):
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if data.get("status") != "backlog":
+        clean_whitelist.append("backlog_date")
 
     if data.get("dates_watched"):
         m_d = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
