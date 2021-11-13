@@ -39,7 +39,7 @@ class PostEpisode(ReviewData):
 
 
 class Sort(StrEnum):
-    created_at = auto()
+    backlog_date = auto()
 
 
 def review_data_to_dict(data: ReviewData):
