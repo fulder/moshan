@@ -60,8 +60,8 @@ class Item(BaseModel):
 
 
 class Items(BaseModel):
-    items: Item
-    end_cursor: str
+    items: [Item]
+    end_cursor: Optional[str]
 
 
 def review_data_to_dict(data: ReviewData):
