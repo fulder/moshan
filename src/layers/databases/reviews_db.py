@@ -236,9 +236,6 @@ def _update_review(username, api_info, data, clean_whitelist):
     if len(set_names) > 0:
         update_expression += f"SET {','.join(set_names)}"
 
-    # remove last comma
-    update_expression = update_expression[:-1]
-
     if data.get("status") != "backlog":
         clean_whitelist.append("backlog_date")
     else:
