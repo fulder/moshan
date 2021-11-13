@@ -216,16 +216,19 @@ def _update_review(username, api_info, data, clean_whitelist=OPTIONAL_FIELDS):
         m_d = m_d.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         data["latest_watch_date"] = m_d.replace("000Z", "Z")
 
-    update_expression = "SET "
+    update_expression = ""
+    set_names = []
     expression_attribute_names = {}
     expression_attribute_values = {}
     for k, v in data.items():
         if v is None:
             continue
 
-        update_expression += f"#{k}=:{k},"
+        set_names.append(f"#{k}=:{k}")
         expression_attribute_names[f"#{k}"] = k
         expression_attribute_values[f":{k}"] = v
+    if len(set_names) > 0:
+        update_expression += f"SET {','.join(set_names)}"
 
     # remove last comma
     update_expression = update_expression[:-1]
