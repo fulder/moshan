@@ -82,10 +82,10 @@ def _add_review(username, api_info, data=None):
         created_at = current_item["created_at"]
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        created_at = data["created_at"]
+        # created_at = data["created_at"]
 
-    if data.get("status") == "backlog":
-        data["backlog_date"] = created_at
+    # if data.get("status") == "backlog":
+    #     data["backlog_date"] = created_at
 
     _update_review(
         username,
@@ -211,9 +211,6 @@ def update_episode(username, api_name, api_id, episode_id, data,
 def _update_review(username, api_info, data, clean_whitelist=OPTIONAL_FIELDS):
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if data.get("status") != "backlog":
-        clean_whitelist.append("backlog_date")
-
     if data.get("dates_watched"):
         m_d = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
         m_d = m_d.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
@@ -232,6 +229,11 @@ def _update_review(username, api_info, data, clean_whitelist=OPTIONAL_FIELDS):
 
     # remove last comma
     update_expression = update_expression[:-1]
+
+    if data.get("status") != "backlog":
+        clean_whitelist.append("backlog_date")
+    else:
+        update_expression += ",backlog_date=created_at"
 
     remove_names = []
     for o in OPTIONAL_FIELDS:
