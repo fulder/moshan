@@ -60,7 +60,7 @@ class Item(BaseModel):
 
 
 class Items(BaseModel):
-    items: [Item]
+    items: List[Item]
     end_cursor: Optional[str]
 
 
