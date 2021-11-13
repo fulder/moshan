@@ -159,7 +159,9 @@ def get_all_items(username, sort=None, cursor=None):
 
     res = _get_table().query(**kwargs)
 
-    ret = res.get("Items", [])
+    ret = {
+        "items": res.get("Items", [])
+    }
 
     last_ev = res.get("LastEvaluatedKey")
     if last_ev == "":

@@ -42,6 +42,28 @@ class Sort(StrEnum):
     backlog_date = auto()
 
 
+class Item(BaseModel):
+    created_at: str
+    update_at: str
+    deleted_at: Optional[str]
+    status: Optional[Status]
+    backlog_date: Optional[str]
+    latest_watch_date: Optional[str]
+    # eps
+    ep_count: Optional[int]
+    ep_progress: Optional[int]
+    watched_eps: Optional[int]
+    # specials
+    special_count: Optional[int]
+    special_progress: Optional[int]
+    watched_specials: Optional[int]
+
+
+class Items(BaseModel):
+    items: Item
+    end_cursor: str
+
+
 def review_data_to_dict(data: ReviewData):
     data = data.dict(exclude={"api_name", "item_api_id", "episode_api_id"})
     dates = data.get("dates_watched")
