@@ -172,7 +172,7 @@ def get_all_items(username, sort=None, cursor=None):
         ret["items"].append(i)
 
     last_ev = res.get("LastEvaluatedKey")
-    if last_ev != "":
+    if last_ev is not None:
         log.debug(f"LastEvaluatedKey={last_ev}")
         ret["end_cursor"] = last_ev["api_info"]
 
