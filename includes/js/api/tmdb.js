@@ -41,7 +41,7 @@ class TmdbApi {
       movie.status,
       movie.overview,
       false,
-      'movie'
+      'tmdb'
     );
   }
 }
