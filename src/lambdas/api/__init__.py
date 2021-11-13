@@ -5,12 +5,13 @@ from fastapi import FastAPI, Request
 from mangum import Mangum
 
 import routes
-from models import PostItem, PostEpisode, ReviewData, review_data_to_dict, Sort
+from models import PostItem, PostEpisode, ReviewData, review_data_to_dict, Sort, \
+    Items
 
 app = FastAPI()
 
 
-@app.get("/watch-histories/items")
+@app.get("/watch-histories/items", response_model=Items)
 def get_items(request: Request,
               sort: Optional[Sort] = None,
               cursor: Optional[str] = None):
