@@ -3,6 +3,9 @@
 
 const watchHistoryApi = new WatchHistoryApi();
 
+let currentCursor = null;
+let loadingMore = false;
+
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
 } else {
@@ -11,9 +14,10 @@ if (accessToken === null) {
 
 createTableRows();
 
-async function createTableRows() {
-    const response = await watchHistoryApi.getWatchHistory('backlog_date');
+async function createTableRows(cursor='') {
+    const response = await watchHistoryApi.getWatchHistory('backlog_date', cursor);
     const items = response.data.items;
+    currentCursor = response.data.cursor;
 
     const apiRequests = [];
     for (let i=0; i < items.length; i++) {
@@ -35,7 +39,7 @@ async function createTableRows() {
     for (let i=0; i< items.length; i++) {
       html += createRow(items[i], moshanItems);
     }
-    document.getElementById('backlog-table-body').innerHTML = html;
+    document.getElementById('backlog-table-body').innerHTML += html;
 }
 
 
@@ -71,8 +75,20 @@ function createRow(watchHistoryItem, moshanItems) {
     `;
 }
 
+async function loadMore() {
+  if (loadingMore || currentCursor === null) {
+    // Don't trigger load more than once and only if there are more items
+    return;
+  }
+  loadingMore = true;
+
+  await createTableRows('backlog_date', currentCursor);
+
+  loadingMore = false;
+}
+
 document.addEventListener('scroll', function() {
   if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-      console.log('BOTTOM!');
+      loadMore();
   }
 });
