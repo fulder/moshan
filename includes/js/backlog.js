@@ -63,7 +63,7 @@ function createRow(watchHistoryItem) {
       <td>${watchHistoryItem.api_name}</td>
       <td>${apiCache.title}</td>
       <td>${apiCache.status}</td>
-      <td>${apiCache.release_date}</td>
+      <td>${apiCache.release_date.split('T')[0]}</td>
     </tr>
     `;
 }
