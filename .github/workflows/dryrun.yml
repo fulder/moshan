@@ -1,8 +1,6 @@
 name: dryrun
 
 on:
-  pull_request:
-    branches: '*'
   push:
     branches: master
 
@@ -12,35 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: cdk diff
-        uses: youyo/aws-cdk-github-actions@v2.0.2
-        with:
-          cdk_stack: watch-history
-          cdk_version: 1.128.0
-          cdk_subcommand: diff
-          debug_log: true
-          working_dir: deploy
-          actions_comment: true
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-1
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PIP_NO_CACHE_DIR: off
-          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
+      - uses: aws-actions/setup-sam@v1
 
-      - name: cdk synth
-        uses: youyo/aws-cdk-github-actions@v2.0.2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          cdk_stack: watch-history
-          cdk_version: 1.128.0
-          cdk_subcommand: synth
-          debug_log: true
-          working_dir: deploy
-          actions_comment: false
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-1
-          PIP_NO_CACHE_DIR: off
-          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
+          aws-region: eu-west-1
+          role-to-assume: ${{ secrets.DEPLOY_ROLE_ARN }}
+          role-session-name: GitHubDeploySession
+
+      - name: validate template
+        run: sam validate

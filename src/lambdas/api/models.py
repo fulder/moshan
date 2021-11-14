@@ -38,6 +38,34 @@ class PostEpisode(ReviewData):
     episode_api_id: str
 
 
+class Sort(StrEnum):
+    backlog_date = auto()
+
+
+class Item(BaseModel):
+    api_name: str
+    api_id: str
+    created_at: str
+    update_at: Optional[str]
+    deleted_at: Optional[str]
+    status: Optional[Status]
+    backlog_date: Optional[str]
+    latest_watch_date: Optional[str]
+    # eps
+    ep_count: Optional[int]
+    ep_progress: Optional[int]
+    watched_eps: Optional[int]
+    # specials
+    special_count: Optional[int]
+    special_progress: Optional[int]
+    watched_specials: Optional[int]
+
+
+class Items(BaseModel):
+    items: List[Item]
+    end_cursor: Optional[str]
+
+
 def review_data_to_dict(data: ReviewData):
     data = data.dict(exclude={"api_name", "item_api_id", "episode_api_id"})
     dates = data.get("dates_watched")
@@ -47,4 +75,5 @@ def review_data_to_dict(data: ReviewData):
             new_d = d.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
             parsed_dates.append(new_d)
         data["dates_watched"] = parsed_dates
+
     return data

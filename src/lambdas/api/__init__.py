@@ -1,11 +1,21 @@
+from typing import Optional
+
 import jwt
 from fastapi import FastAPI, Request
 from mangum import Mangum
 
 import routes
-from models import PostItem, PostEpisode, ReviewData, review_data_to_dict
+from models import PostItem, PostEpisode, ReviewData, review_data_to_dict, Sort, \
+    Items
 
 app = FastAPI()
+
+
+@app.get("/watch-histories/items", response_model=Items)
+def get_items(request: Request,
+              sort: Optional[Sort] = None,
+              cursor: Optional[str] = None):
+    return routes.get_items(request.state.username, sort, cursor)
 
 
 @app.get("/watch-histories/items/{api_name}/{item_api_id}")
