@@ -239,6 +239,7 @@ Resources:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
           UPDATES_TOPIC_ARN: !Ref ItemUpdatesTopic
+          TMDB_TOKEN: !Ref TmdbToken
       Layers:
         - !Ref ApiLayer
         - !Ref DatabasesLayer
