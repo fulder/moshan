@@ -54,7 +54,7 @@ class TvMazeApi {
       show.status,
       show.summary,
       true,
-      'tvdb'
+      'tvmaze'
     );
   }
 
