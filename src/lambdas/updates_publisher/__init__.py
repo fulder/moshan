@@ -22,7 +22,8 @@ def handler(event, context):
 def _check_tmdb_updates():
     tmdb_updates = tmdb_api.get_changes()
 
-    for tmdb_id in tmdb_updates:
+    for update in tmdb_updates:
+        tmdb_id = update["id"]
         try:
             reviews_db.get_items("tmdb", tmdb_id)
         except reviews_db.NotFoundError:
