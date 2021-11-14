@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  DomainName:
+    Type: String
+
+  GitHubRepoPath:
+    Type: String
+
+Resources:
+
+  ReviewsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: reviews
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
+        - AttributeName: api_info
+          AttributeType: S
+        - AttributeName: latest_watch_date
+          AttributeType: S
+        - AttributeName: ep_progress
+          AttributeType: N
+        - AttributeName: special_progress
+          AttributeType: N
+        - AttributeName: rating
+          AttributeType: N
+        - AttributeName: state
+          AttributeType: S
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+        - AttributeName: api_info
+          KeyType: RANGE
+      BillingMode:
+        PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: api_info
+          KeySchema:
+            - AttributeName: api_info
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      LocalSecondaryIndexes:
+        - IndexName: latest_watch_date
+          KeySchema:
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: latest_watch_date
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ep_progress
+          KeySchema:
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: ep_progress
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: special_progress
+          KeySchema:
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: special_progress
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: rating
+          KeySchema:
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: rating
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: state
+          KeySchema:
+            - AttributeName: username
+              KeyType: HASH
+            - AttributeName: state
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+#  HostedZone:
+#    Type: AWS::Route53::HostedZone
+#    Properties:
+#      Name: !Ref DomainName
+
+  GithubOidc:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        - a031c46782e6e6c662c2c87c76da9aa62ccabd8e
+
+  GitHubRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated:
+                - !Ref GithubOidc
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubRepoPath}:*
+

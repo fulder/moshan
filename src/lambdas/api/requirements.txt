@@ -105,6 +105,10 @@ pydantic==1.8.2 \
     #   -r src/lambdas/api/watch_histories/requirements.in
     #   fastapi
     #   fastapi-utils
+pyjwt==2.3.0 \
+    --hash=sha256:b888b4d56f06f6dcd777210c334e69c737be74755d3e5e9ee3fe67dc18a0ee41 \
+    --hash=sha256:e0c4bb8d9f0af0c7f5b1ec4c5036309617d03d56932877f2f7a0beeb5318322f
+    # via -r src/lambdas/api/watch_histories/requirements.in
 sniffio==1.2.0 \
     --hash=sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663 \
     --hash=sha256:c4666eecec1d3f50960c6bdf61ab7bc350648da6c126e3cf6898d8cd4ddcd3de
