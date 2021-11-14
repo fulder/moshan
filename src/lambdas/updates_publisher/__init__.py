@@ -20,7 +20,7 @@ def handler(event, context):
 
 
 def _check_tmdb_updates():
-    tmdb_updates = tmdb_api.get_changes()
+    tmdb_updates = tmdb_api.get_all_changes()
 
     for update in tmdb_updates:
         tmdb_id = update["id"]
