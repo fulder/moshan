@@ -25,6 +25,7 @@ def handler(event, context):
             "release_date": api_item.get("release_date"),
             "status": api_item.get("status"),
             "cache_updated": cache_updated,
+            "image_url": api_item.get("poster_path"),
         }
     elif api_name == "tvmaze":
         api_item = tvmaze_api.get_item(api_id)
@@ -36,6 +37,7 @@ def handler(event, context):
             "ep_count": episodes_info.get("ep_count", 0),
             "special_count": episodes_info.get("special_count", 0),
             "cache_updated": cache_updated,
+            "image_url": api_item.get("image", {}).get("original"),
         }
     elif api_name == "mal":
         api_item = jikan_api.get_item(api_id)
@@ -47,6 +49,7 @@ def handler(event, context):
             "ep_count": episodes_info.get("ep_count", 0),
             "special_count": episodes_info.get("special_count", 0),
             "cache_updated": cache_updated,
+            "image_url": api_item.get("image_url"),
         }
     else:
         raise Exception(f"Unexpected api_name: {message['api_name']}")
