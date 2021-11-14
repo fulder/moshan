@@ -46,14 +46,13 @@ async function createTableRows(cursor='') {
 
 
 function createRow(watchHistoryItem) {
-  const api = getApiByName(watchHistoryItem.api_name);
-  const moshanItem = api.getMoshanItem(watchHistoryApi.api_cache);
+  const moshanItem = watchHistoryApi.api_cache;
 
   let rowClass = 'bg-secondary';
   if (moshanItem.status === 'Released' || moshanItem.status === 'Airing' || moshanItem.status === 'Ended' || moshanItem.status === 'Running') {
       rowClass = 'episodeRow';
   }
-  if (new Date(moshanItem.start_date) >= new Date()) {
+  if (new Date(moshanItem.release_date) >= new Date()) {
       rowClass = 'bg-secondary';
   }
 
@@ -64,7 +63,7 @@ function createRow(watchHistoryItem) {
       <td>${watchHistoryItem.api_name}</td>
       <td>${moshanItem.title}</td>
       <td>${moshanItem.status}</td>
-      <td>${moshanItem.start_date}</td>
+      <td>${moshanItem.release_date}</td>
     </tr>
     `;
 }
