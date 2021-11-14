@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 import jikan
 import tmdb
@@ -16,12 +17,14 @@ def handler(event, context):
     api_id = message["api_id"]
 
     episodes_info = {}
+    cache_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if api_name == "tmdb":
         api_item = tmdb_api.get_item(api_id)
         api_cache = {
             "title": api_item.get("title"),
             "release_date": api_item.get("release_date"),
-            "status": api_item.get("status")
+            "status": api_item.get("status"),
+            "cache_updated": cache_updated,
         }
     elif api_name == "tvmaze":
         api_item = tvmaze_api.get_item(api_id)
@@ -32,6 +35,7 @@ def handler(event, context):
             "status": api_item.get("status"),
             "ep_count": episodes_info.get("ep_count", 0),
             "special_count": episodes_info.get("special_count", 0),
+            "cache_updated": cache_updated,
         }
     elif api_name == "mal":
         api_item = jikan_api.get_item(api_id)
@@ -42,6 +46,7 @@ def handler(event, context):
             "status": api_item.get("status"),
             "ep_count": episodes_info.get("ep_count", 0),
             "special_count": episodes_info.get("special_count", 0),
+            "cache_updated": cache_updated,
         }
     else:
         raise Exception(f"Unexpected api_name: {message['api_name']}")
