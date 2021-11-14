@@ -29,3 +29,23 @@ class TmdbApi:
         if res.status_code != 200:
             raise utils.HttpError(res.status_code)
         return res.json()
+
+    def get_changes(self, page=1):
+        res = requests.get(
+            f"{self.base_url}/movie/changes?page={page}",
+            headers=self.headers,
+        )
+
+        if res.status_code != 200:
+            raise utils.HttpError(res.status_code)
+        return res.json()
+
+    def get_all_changes(self):
+        ret = self.get_changes()
+        total_pages = ret["total_pages"]
+        items = ret["results"]
+
+        for i in range(2, total_pages + 1):
+            ret = self.get_changes(i)
+            items += ret["results"]
+        return items
