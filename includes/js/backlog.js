@@ -17,7 +17,7 @@ createTableRows();
 async function createTableRows(cursor='') {
     const response = await watchHistoryApi.getWatchHistory('backlog_date', cursor);
     const items = response.data.items;
-    currentCursor = response.data.cursor;
+    currentCursor = response.data.end_cursor;
 
     const apiRequests = [];
     for (let i=0; i < items.length; i++) {
@@ -82,7 +82,7 @@ async function loadMore() {
   }
   loadingMore = true;
 
-  await createTableRows('backlog_date', currentCursor);
+  await createTableRows(currentCursor);
 
   loadingMore = false;
 }
