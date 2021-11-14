@@ -16,18 +16,15 @@ Parameters:
     Type: String
     Default: python3.9
 
-  CognitoDomainPrefix:
-    Type: String
-
 
 Resources:
   Certificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
       DomainName: !Sub "api.${DomainName}"
-#      DomainValidationOptions:
-#        - DomainName: !Sub "api.${DomainName}"
-#          HostedZoneId: !Ref HostedZoneId
+      #      DomainValidationOptions:
+      #        - DomainName: !Sub "api.${DomainName}"
+      #          HostedZoneId: !Ref HostedZoneId
       ValidationMethod: DNS
 
   CognitoUserPool:
@@ -68,7 +65,7 @@ Resources:
   CognitoDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain: !Ref CognitoDomainPrefix
+      Domain: !Join [ "-", !Split [ ".", !Ref DomainName ] ]
       UserPoolId: !Ref CognitoUserPool
 
   Gateway:

@@ -1,5 +1,7 @@
+import json
 import os
 import time
+from urllib.parse import quote, unquote
 from datetime import datetime
 
 import boto3
@@ -74,13 +76,18 @@ def _add_review(username, api_info, data=None):
     if data.get("dates_watched"):
         data["latest_watch_date"] = "0"
     try:
-        _get_review(
+        current_item = _get_review(
             username,
             api_info,
             include_deleted=True,
         )
+        created_at = current_item["created_at"]
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        created_at = data["created_at"]
+
+    if data.get("status") == "backlog":
+        data["backlog_date"] = created_at
 
     _update_review(
         username,
@@ -142,6 +149,40 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
+def get_all_items(username, sort=None, cursor=None):
+    kwargs = {
+        "KeyConditionExpression": Key("username").eq(username),
+        "Limit": 50,
+    }
+    if sort is not None:
+        kwargs["IndexName"] = sort
+    else:
+        kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
+
+    if cursor is not None:
+        kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
+
+    res = _get_table().query(**kwargs)
+    ret = {
+        "items": []
+    }
+    for i in res.get("Items", []):
+        s = i["api_info"].split("_")
+        i["api_name"] = s[1]
+        i["api_id"] = s[2]
+        ret["items"].append(i)
+
+    last_ev = res.get("LastEvaluatedKey")
+    log.debug(last_ev)
+    log.debug(type(last_ev))
+    log.debug(last_ev is not None)
+    if last_ev is not None:
+        log.debug(f"LastEvaluatedKey={last_ev}")
+        ret["end_cursor"] = quote(json.dumps(last_ev))
+
+    return ret
+
+
 def get_items(api_name, api_id):
     api_info = f"i_{api_name}_{api_id}"
     res = _get_table().query(
@@ -184,7 +225,10 @@ def get_episodes(username, api_name, item_api_id):
 
 
 def update_item(username, api_name, api_id, data,
-                clean_whitelist=OPTIONAL_FIELDS):
+                clean_whitelist=None):
+    if clean_whitelist is None:
+        clean_whitelist = OPTIONAL_FIELDS
+
     _update_review(
         username,
         f"i_{api_name}_{api_id}",
@@ -194,7 +238,10 @@ def update_item(username, api_name, api_id, data,
 
 
 def update_episode(username, api_name, api_id, episode_id, data,
-                   clean_whitelist=OPTIONAL_FIELDS):
+                   clean_whitelist=None):
+    if clean_whitelist is None:
+        clean_whitelist = OPTIONAL_FIELDS
+
     _update_review(
         username,
         f"e_{api_name}_{api_id}_{episode_id}",
@@ -203,7 +250,7 @@ def update_episode(username, api_name, api_id, episode_id, data,
     )
 
 
-def _update_review(username, api_info, data, clean_whitelist=OPTIONAL_FIELDS):
+def _update_review(username, api_info, data, clean_whitelist):
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if data.get("dates_watched"):
@@ -211,39 +258,54 @@ def _update_review(username, api_info, data, clean_whitelist=OPTIONAL_FIELDS):
         m_d = m_d.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         data["latest_watch_date"] = m_d.replace("000Z", "Z")
 
-    update_expression = "SET "
+    update_expression = ""
+    set_names = []
     expression_attribute_names = {}
     expression_attribute_values = {}
     for k, v in data.items():
         if v is None:
             continue
 
-        update_expression += f"#{k}=:{k},"
+        set_names.append(f"#{k}=:{k}")
         expression_attribute_names[f"#{k}"] = k
         expression_attribute_values[f":{k}"] = v
 
-    # remove last comma
-    update_expression = update_expression[:-1]
+    log.debug(f"Data: {data}")
+    log.debug(f"Clean whitelist: {clean_whitelist}")
 
     remove_names = []
     for o in OPTIONAL_FIELDS:
-        if o not in data and o in clean_whitelist:
+        if data.get(o) is None and o in clean_whitelist:
             remove_names.append(f"#{o}")
             expression_attribute_names[f"#{o}"] = o
+
+    expression_attribute_names["#backlog_date"] = "backlog_date"
+    if data.get("status") != "backlog":
+        remove_names.append("#backlog_date")
+    else:
+        set_names.append("#backlog_date=#created_at")
+        expression_attribute_names["#created_at"] = "created_at"
+
+    if len(set_names) == 0 and len(remove_names) == 0:
+        log.debug("No update needed, returning")
+        return
+
+    if len(set_names) > 0:
+        update_expression += f"SET {','.join(set_names)}"
     if len(remove_names) > 0:
         update_expression += f" REMOVE {','.join(remove_names)}"
 
-    log.debug("Running update_item")
+    key = {
+        "username": username,
+        "api_info": api_info,
+    }
+    log.debug(f"Dynamo Key: {key}")
     log.debug(f"Update expression: {update_expression}")
     log.debug(f"Expression attribute names: {expression_attribute_names}")
     log.debug(f"Expression attribute values: {expression_attribute_values}")
-    log.debug(f"Client ID: {username}")
 
     _get_table().update_item(
-        Key={
-            "username": username,
-            "api_info": api_info,
-        },
+        Key=key,
         UpdateExpression=update_expression,
         ExpressionAttributeNames=expression_attribute_names,
         ExpressionAttributeValues=expression_attribute_values
@@ -259,11 +321,13 @@ def change_watched_eps(username, api_name, api_id, change,
     api_info = f"i_{api_name}_{api_id}"
 
     item = _get_review(username, api_info)
-    if f"{field_name}_count" not in item or item[f"{field_name}_count"] == 0:
+    if f"{field_name}_count" not in item or item[
+        f"{field_name}_count"] == 0:
         ep_progress = 0
     else:
-        ep_progress = (item[f"watched_{field_name}s"] + (change)) / item[
-            f"{field_name}_count"]
+        count_v = item[f"{field_name}_count"]
+        watched_v = item[f"watched_{field_name}s"]
+        ep_progress = (watched_v + (change)) / count_v
     ep_progress = round(ep_progress * 100, 2)
 
     _get_table().update_item(
@@ -310,7 +374,8 @@ def get_user_items(username, index_name=None, status_filter=None):
             "S": status_filter
         }
     if index_name in ["ep_progress", "special_progress"]:
-        query_kwargs["KeyConditionExpression"] += " AND #index_name < :progress"
+        key_exp = " AND #index_name < :progress"
+        query_kwargs["KeyConditionExpression"] += key_exp
         query_kwargs["ExpressionAttributeNames"] = {
             "#index_name": index_name,
         }
