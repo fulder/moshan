@@ -1,7 +1,7 @@
 import json
 import os
 import time
-import urllib.parse
+from urllib.parse import quote, unquote
 from datetime import datetime
 
 import boto3
@@ -161,10 +161,7 @@ def get_all_items(username, sort=None, cursor=None):
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
 
     if cursor is not None:
-        kwargs["ExclusiveStartKey"] = {
-            "username": username,
-            "api_info": cursor,
-        }
+        kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
 
     res = _get_table().query(**kwargs)
     ret = {
@@ -182,7 +179,7 @@ def get_all_items(username, sort=None, cursor=None):
     log.debug(last_ev is not None)
     if last_ev is not None:
         log.debug(f"LastEvaluatedKey={last_ev}")
-        ret["end_cursor"] = urllib.parse.quote_plus(json.dumps(last_ev))
+        ret["end_cursor"] = quote(json.dumps(last_ev))
 
     return ret
 
