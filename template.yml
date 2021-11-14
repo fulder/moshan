@@ -244,10 +244,10 @@ Resources:
         - !Ref ApiLayer
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
-      MemorySize: 1024
+      MemorySize: 2048
       Role: !GetAtt UpdatesPubFunctionRole.Arn
       Runtime: !Ref PythonVers
-      Timeout: 60
+      Timeout: 120
       Events:
         InvocationLevel:
           Type: Schedule
