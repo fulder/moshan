@@ -37,7 +37,6 @@ async function createTableRows(cursor='') {
     //   moshanItems[`${responses[i].api_name}_${responses[i].id}`] = responses[i];
     // }
 
-    console.debug(response.data);
     html = '';
     for (let i=0; i< items.length; i++) {
       html += createRow(items[i]);
@@ -47,8 +46,7 @@ async function createTableRows(cursor='') {
 
 
 function createRow(watchHistoryItem) {
-  const apiCache = watchHistoryApi.api_cache;
-  console.debug(watchHistoryApi);
+  const apiCache = watchHistoryItem.api_cache;
 
   let rowClass = 'bg-secondary';
   if (apiCache.status === 'Released' || apiCache.status === 'Airing' || apiCache.status === 'Ended' || apiCache.status === 'Running') {
