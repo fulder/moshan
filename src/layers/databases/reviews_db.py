@@ -1,5 +1,7 @@
+import json
 import os
 import time
+import urllib.parse
 from datetime import datetime
 
 import boto3
@@ -175,9 +177,12 @@ def get_all_items(username, sort=None, cursor=None):
         ret["items"].append(i)
 
     last_ev = res.get("LastEvaluatedKey")
+    log.debug(last_ev)
+    log.debug(type(last_ev))
+    log.debug(last_ev is not None)
     if last_ev is not None:
         log.debug(f"LastEvaluatedKey={last_ev}")
-        ret["end_cursor"] = last_ev["api_info"]
+        ret["end_cursor"] = urllib.parse.quote_plus(json.dumps(last_ev))
 
     return ret
 
