@@ -70,3 +70,11 @@ function createRow(watchHistoryItem, moshanItems) {
     </tr>
     `;
 }
+
+document.body.addEventListener('scroll', function(event) {
+    const element = event.target;
+    if (element.scrollHeight - element.scrollTop === element.clientHeight)
+    {
+        console.log('scrolled');
+    }
+});
