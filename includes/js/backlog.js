@@ -71,11 +71,8 @@ function createRow(watchHistoryItem, moshanItems) {
     `;
 }
 
-document.addEventListener('scroll', function(event) {
-    cosnole.log('SCROLL');
-    const element = event.target;
-    if (element.scrollHeight - element.scrollTop === element.clientHeight)
-    {
-        console.log('scrolled');
-    }
+document.addEventListener('scroll', function() {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      console.log('BOTTOM!');
+  }
 });
