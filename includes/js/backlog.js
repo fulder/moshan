@@ -71,7 +71,7 @@ function createRow(watchHistoryItem, moshanItems) {
     `;
 }
 
-document.body.addEventListener('scroll', function(event) {
+document.addEventListener('scroll', function(event) {
     cosnole.log('SCROLL');
     const element = event.target;
     if (element.scrollHeight - element.scrollTop === element.clientHeight)
