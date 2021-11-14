@@ -76,6 +76,14 @@ async function getItemByApiId() {
         extra_ep: true,
         }
       );
+      moshanEpisodes.episodes.unshift(
+        {
+        episode_id: lastEpId + 2,
+        title: 'N/A',
+        aired: null,
+        extra_ep: true,
+        }
+      );
     }
 
     createEpisodesList(moshanEpisodes);
