@@ -1,18 +1,36 @@
 from datetime import datetime
 
 import jikan
+import tmdb
 import tvmaze
 import updates
 import reviews_db
 
+tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
 jikan_api = jikan.JikanApi()
 
 
 def handler(event, context):
+    _check_tmdb_updates()
+
     _check_tvmaze_updates()
 
     _check_mal_updates()
+
+
+def _check_tmdb_updates():
+    tmdb_updates = tmdb_api.get_changes()
+
+    for tmdb_id in tmdb_updates:
+        try:
+            reviews_db.get_items("tmdb", tmdb_id)
+        except reviews_db.NotFoundError:
+            # Show not present in db, exclude it from updates
+            continue
+
+        # Post to SNS topic
+        updates.publish_show_update("tmdb", tmdb_id)
 
 
 def _check_tvmaze_updates():
