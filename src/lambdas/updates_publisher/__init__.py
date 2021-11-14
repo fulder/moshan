@@ -41,4 +41,3 @@ def _check_mal_updates():
             continue
 
         updates.publish_show_update("mal", mal_id)
-
