@@ -161,7 +161,7 @@ def get_all_items(username, sort=None, cursor=None):
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = {
             "username": username,
-            "cursor": cursor,
+            "api_info": cursor,
         }
 
     res = _get_table().query(**kwargs)
