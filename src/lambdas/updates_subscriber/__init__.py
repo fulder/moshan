@@ -17,7 +17,7 @@ def handler(event, context):
 
     episodes_info = {}
     if api_name == "tmdb":
-        api_item = tmdb_api.get_item(api_name)
+        api_item = tmdb_api.get_item(api_id)
         api_cache = {
             "title": api_item.get("title"),
             "release_date": api_item.get("release_date"),
