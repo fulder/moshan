@@ -84,10 +84,10 @@ def _add_review(username, api_info, data=None):
         created_at = current_item["created_at"]
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # created_at = data["created_at"]
+        created_at = data["created_at"]
 
-    # if data.get("status") == "backlog":
-    #     data["backlog_date"] = created_at
+    if data.get("status") == "backlog":
+        data["backlog_date"] = created_at
 
     _update_review(
         username,
