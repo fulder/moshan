@@ -56,6 +56,11 @@ function createRow(watchHistoryItem) {
       rowClass = 'bg-secondary';
   }
 
+  if (apiCache.release_date !== null) {
+    apiCache.release_date = apiCache.release_date.split('T')[0];
+  }
+
+
   const onClickAction = `window.location='item/index.html?api_name=${watchHistoryItem.api_name}&api_id=${watchHistoryItem.api_id}'`;
   return `
   <tr onclick="${onClickAction}" class=${rowClass}>
@@ -63,7 +68,7 @@ function createRow(watchHistoryItem) {
       <td>${watchHistoryItem.api_name}</td>
       <td>${apiCache.title}</td>
       <td>${apiCache.status}</td>
-      <td>${apiCache.release_date.split('T')[0]}</td>
+      <td>${apiCache.release_date}</td>
     </tr>
     `;
 }
