@@ -2,16 +2,16 @@ import json
 
 import jikan
 import tvmaze
-import watch_history_db
+import reviews_db
 
 tvmaze_api = tvmaze.TvMazeApi()
 jikan_api = jikan.JikanApi()
 
 
-def handle(event, context):
+def handler(event, context):
     message = json.loads(event["Records"][0]["Sns"]["Message"])
 
-    items = watch_history_db.get_items_by_api_id(
+    items = reviews_db.get_items(
         message["api_name"],
         message["api_id"]
     )
@@ -38,11 +38,12 @@ def handle(event, context):
             ep_progress = item["watched_eps"] / item["ep_count"]
         item["ep_progress"] = round(ep_progress * 100, 2)
 
-        item["special_count"] = api_item["special_count"]
-        if item["special_count"] == 0:
-            special_progress = 0
-        else:
-            special_progress = item["watched_specials"] / item["special_count"]
-        item["special_progress"] = round(special_progress * 100, 2)
+        if "special_count" in api_item:
+            item["special_count"] = api_item["special_count"]
+            if item["special_count"] == 0:
+                special_progress = 0
+            else:
+                special_progress = item["watched_specials"] / item["special_count"]
+            item["special_progress"] = round(special_progress * 100, 2)
 
-        watch_history_db.put_item(item)
+        reviews_db.put_item(item)

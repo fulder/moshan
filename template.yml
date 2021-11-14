@@ -1,0 +1,292 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  DomainName:
+    Type: String
+
+  HostedZoneId:
+    Type: String
+    Default: ThirdPartyZone
+
+  TmdbToken:
+    Type: String
+
+  PythonVers:
+    Type: String
+    Default: python3.9
+
+  CognitoDomainPrefix:
+    Type: String
+
+
+Resources:
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub "api.${DomainName}"
+#      DomainValidationOptions:
+#        - DomainName: !Sub "api.${DomainName}"
+#          HostedZoneId: !Ref HostedZoneId
+      ValidationMethod: DNS
+
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AliasAttributes:
+        - email
+        - preferred_username
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 6
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+
+  CognitoClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+      CallbackURLs:
+        - !Sub "https://${DomainName}/callback.html"
+      ExplicitAuthFlows:
+        - ALLOW_REFRESH_TOKEN_AUTH
+      LogoutURLs:
+        - !Sub "https://${DomainName}/index.html"
+      UserPoolId: !Ref CognitoUserPool
+
+  CognitoDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Ref CognitoDomainPrefix
+      UserPoolId: !Ref CognitoUserPool
+
+  Gateway:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Auth:
+        Authorizers:
+          cognito:
+            IdentitySource: "$request.header.Authorization"
+            JwtConfiguration:
+              issuer: !Sub "https://cognito-idp.eu-west-1.amazonaws.com/${CognitoUserPool}"
+              audience:
+                - !Ref CognitoClient
+        DefaultAuthorizer: cognito
+      CorsConfiguration:
+        AllowHeaders:
+          - "authorization"
+          - "content-type"
+        AllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+        AllowOrigins:
+          - !Sub "https://${DomainName}"
+      DisableExecuteApiEndpoint: true
+      Domain:
+        CertificateArn: !Ref Certificate
+        DomainName: !Sub "api.${DomainName}"
+        EndpointConfiguration: REGIONAL
+        Route53:
+          HostedZoneId: !Ref HostedZoneId
+        SecurityPolicy: TLS_1_2
+
+  ApiLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: api
+      ContentUri: src/layers/api
+      CompatibleRuntimes:
+        - !Ref PythonVers
+    Metadata:
+      BuildMethod: !Ref PythonVers
+
+  DatabasesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: databases
+      ContentUri: src/layers/databases
+      CompatibleRuntimes:
+        - !Ref PythonVers
+    Metadata:
+      BuildMethod: !Ref PythonVers
+
+  UtilsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: utils
+      ContentUri: src/layers/utils
+      CompatibleRuntimes:
+        - !Ref PythonVers
+    Metadata:
+      BuildMethod: !Ref PythonVers
+
+  DatabasePolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: review_database
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+              - dynamodb:PutItem
+            Resource:
+              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
+              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews/index/*"
+      Roles:
+        - !Ref ApiFunctionRole
+        - !Ref UpdatesPubFunctionRole
+        - !Ref UpdatesSubFunctionRole
+
+  ApiFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/lambdas/api
+      Handler: __init__.handler
+      Environment:
+        Variables:
+          REVIEWS_DATABASE_NAME: reviews
+          LOG_LEVEL: INFO
+          TMDB_TOKEN: !Ref TmdbToken
+      Layers:
+        - !Ref ApiLayer
+        - !Ref DatabasesLayer
+        - !Ref UtilsLayer
+      MemorySize: 1024
+      Role: !GetAtt ApiFunctionRole.Arn
+      Runtime: !Ref PythonVers
+      Timeout: 10
+      Events:
+        GetMethod:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Method: GET
+            Path: "/{proxy+}"
+        PostMethod:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Method: POST
+            Path: "/{proxy+}"
+        DeleteMethod:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Method: DELETE
+            Path: "/{proxy+}"
+        PutMethod:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Method: PUT
+            Path: "/{proxy+}"
+
+  ItemUpdatesTopic:
+    Type: AWS::SNS::Topic
+
+  UpdatesPubFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: sns
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource:
+                  - !Ref ItemUpdatesTopic
+
+  UpdatesPubFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/lambdas/updates_publisher
+      Handler: __init__.handler
+      Environment:
+        Variables:
+          REVIEWS_DATABASE_NAME: reviews
+          LOG_LEVEL: INFO
+          UPDATES_TOPIC_ARN: !Ref ItemUpdatesTopic
+      Layers:
+        - !Ref ApiLayer
+        - !Ref DatabasesLayer
+        - !Ref UtilsLayer
+      MemorySize: 1024
+      Role: !GetAtt UpdatesPubFunctionRole.Arn
+      Runtime: !Ref PythonVers
+      Timeout: 60
+      Events:
+        InvocationLevel:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+
+  UpdatesSubFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  UpdatesSubFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/lambdas/updates_subscriber
+      Handler: __init__.handler
+      Environment:
+        Variables:
+          REVIEWS_DATABASE_NAME: reviews
+          LOG_LEVEL: INFO
+      Layers:
+        - !Ref ApiLayer
+        - !Ref DatabasesLayer
+        - !Ref UtilsLayer
+      MemorySize: 1024
+      Role: !GetAtt UpdatesSubFunctionRole.Arn
+      Runtime: !Ref PythonVers
+      Timeout: 60
+      Events:
+        UpdatesSNS:
+          Type: SNS
+          Properties:
+            Topic: !Ref ItemUpdatesTopic

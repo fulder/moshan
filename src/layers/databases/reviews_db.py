@@ -1,6 +1,5 @@
 import os
 import time
-import uuid
 from datetime import datetime
 
 import boto3
@@ -10,7 +9,7 @@ from dynamodb_json import json_util
 
 import logger
 
-DATABASE_NAME = os.getenv("DATABASE_NAME")
+REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
     "deleted_at",
     "overview",
@@ -41,7 +40,7 @@ class InvalidStartOffset(Error):
 def _get_table():
     global table
     if table is None:
-        table = boto3.resource("dynamodb").Table(DATABASE_NAME)
+        table = boto3.resource("dynamodb").Table(REVIEWS_DATABASE_NAME)
     return table
 
 
@@ -52,133 +51,101 @@ def _get_client():
     return client
 
 
-def add_item_v2(username, api_name, api_id, data=None):
+def add_item(username, api_name, api_id, data=None):
+    _add_review(
+        username,
+        f"i_{api_name}_{api_id}",
+        data=data,
+    )
+
+
+def add_episode(username, api_name, api_id, episode_id, data=None):
+    _add_review(
+        username,
+        f"e_{api_name}_{api_id}_{episode_id}",
+        data=data,
+    )
+
+
+def _add_review(username, api_info, data=None):
     if data is None:
         data = {}
-    data["api_info"] = f"{api_name}_{api_id}"
 
     if data.get("dates_watched"):
         data["latest_watch_date"] = "0"
     try:
-        get_item_by_api_id(
+        _get_review(
             username,
-            api_name,
-            api_id,
+            api_info,
             include_deleted=True,
         )
     except NotFoundError:
         data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # create legacy item properties
-    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
-    update_item(
+    _update_review(
         username,
-        collection_name,
-        item_id,
+        api_info,
         data,
         clean_whitelist=["deleted_at"],
     )
 
 
-def update_item_v2(username, api_name, api_id, data,
-                   clean_whitelist=OPTIONAL_FIELDS):
-    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
-    update_item(
+def delete_item(username, api_name, api_id):
+    _delete_review(
         username,
-        collection_name,
-        item_id,
-        data,
-        clean_whitelist=clean_whitelist,
+        f"i_{api_name}_{api_id}",
     )
 
 
-def get_collection_and_item_id(api_name, api_id):
-    if api_name == "tmdb":
-        movie_namespace = uuid.UUID("9c5bbb4a-5fef-4d16-917b-537421aabfa6")
-        api_uuid = uuid.uuid5(movie_namespace, api_name)
-        return "movie", str(uuid.uuid5(api_uuid, api_id))
-
-    if api_name == "tvmaze":
-        show_namespace = uuid.UUID("6045673a-9dd2-451c-aa58-d94a217b993a")
-        api_uuid = uuid.uuid5(show_namespace, api_name)
-        return "show", str(uuid.uuid5(api_uuid, api_id))
-
-    if api_name == "mal":
-        anime_namespace = uuid.UUID("e27bf9e0-e54a-4260-bcdc-7baad9a3c36b")
-        api_uuid = uuid.uuid5(anime_namespace, api_name)
-        return "anime", str(uuid.uuid5(api_uuid, api_id))
+def delete_episode(username, api_name, api_id, episode_id):
+    _delete_review(
+        username,
+        f"e_{api_name}_{api_id}_{episode_id}",
+    )
 
 
-def add_item(username, collection_name, item_id, data=None):
-    if data is None:
-        data = {}
-
-    if "dates_watched" not in data:
-        data["latest_watch_date"] = "0"
-    try:
-        get_item(username, collection_name, item_id, include_deleted=True)
-    except NotFoundError:
-        data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    update_item(username, collection_name, item_id, data,
-                clean_whitelist=["deleted_at"])
-
-
-def delete_item(username, collection_name, item_id):
+def _delete_review(username, api_info):
     data = {"deleted_at": int(time.time())}
-    update_item(username, collection_name, item_id, data, clean_whitelist=[])
+    _update_review(username, api_info, data, clean_whitelist=[])
 
 
-def delete_item_v2(username, api_name, api_id):
-    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
-    delete_item(
+def get_item(username, api_name, api_id, include_deleted=False):
+    return _get_review(
         username,
-        collection_name,
-        item_id,
+        f"i_{api_name}_{api_id}",
+        include_deleted=include_deleted,
     )
 
 
-def get_item(username, collection_name, item_id, include_deleted=False):
-    filter_exp = Attr("collection_name").eq(collection_name)
-    if not include_deleted:
-        filter_exp &= Attr("deleted_at").not_exists()
-
-    res = _get_table().query(
-        KeyConditionExpression=Key("username").eq(username) & Key("item_id").eq(
-            item_id),
-        FilterExpression=filter_exp,
+def get_episode(username, api_name, api_id, episode_id, include_deleted=False):
+    return _get_review(
+        username,
+        f"e_{api_name}_{api_id}_{episode_id}",
+        include_deleted=include_deleted,
     )
 
-    if not res["Items"]:
-        raise NotFoundError(
-            f"Item with id: {item_id} not found. Collection name: {collection_name}")
 
-    return res["Items"][0]
-
-
-def get_item_by_api_id(username, api_name, api_id, include_deleted=False):
-    api_info = f"{api_name}_{api_id}"
-
+def _get_review(username, api_info, include_deleted=False):
     kwargs = {
-        "IndexName": "api_info",
         "KeyConditionExpression": Key("username").eq(username) &
-                                  Key("api_info").eq(api_info)
+                                  Key("api_info").eq(api_info),
     }
+
     if not include_deleted:
         kwargs["FilterExpression"] = Attr("deleted_at").not_exists()
 
     res = _get_table().query(**kwargs)
 
     if not res["Items"]:
-        raise NotFoundError(f"Item with api_info: {api_info} not found")
+        raise NotFoundError(f"Item with api_info: {api_info} not found. ")
 
     return res["Items"][0]
 
 
-def get_items_by_api_id(api_name, api_id):
-    api_info = f"{api_name}_{api_id}"
+def get_items(api_name, api_id):
+    api_info = f"i_{api_name}_{api_id}"
     res = _get_table().query(
-        IndexName="all_api_info",
+        IndexName="api_info",
         KeyConditionExpression=Key("api_info").eq(api_info),
     )
 
@@ -188,9 +155,55 @@ def get_items_by_api_id(api_name, api_id):
     return res["Items"]
 
 
-def update_item(username, collection_name, item_id, data,
+def get_episodes(username, api_name, item_api_id):
+    api_info = f"e_{api_name}_{item_api_id}_"
+
+    paginator = _get_client().get_paginator('query')
+
+    query_kwargs = {
+        "TableName": REVIEWS_DATABASE_NAME,
+        "KeyConditionExpression": "username = :username AND begins_with(api_info, :api_info)",
+        "ExpressionAttributeValues": {
+            ":username": {"S": username},
+            ":api_info": {"S": api_info},
+        },
+        "ScanIndexForward": False,
+        "FilterExpression": "attribute_not_exists(deleted_at)",
+    }
+
+    log.debug(f"Query kwargs: {query_kwargs}")
+
+    page_iterator = paginator.paginate(**query_kwargs)
+
+    res = []
+    for p in page_iterator:
+        for i in p["Items"]:
+            i = json_util.loads(i)
+            res.append(i)
+    return res
+
+
+def update_item(username, api_name, api_id, data,
                 clean_whitelist=OPTIONAL_FIELDS):
-    data["collection_name"] = collection_name
+    _update_review(
+        username,
+        f"i_{api_name}_{api_id}",
+        data,
+        clean_whitelist=clean_whitelist,
+    )
+
+
+def update_episode(username, api_name, api_id, episode_id, data,
+                   clean_whitelist=OPTIONAL_FIELDS):
+    _update_review(
+        username,
+        f"e_{api_name}_{api_id}_{episode_id}",
+        data,
+        clean_whitelist=clean_whitelist,
+    )
+
+
+def _update_review(username, api_info, data, clean_whitelist=OPTIONAL_FIELDS):
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if data.get("dates_watched"):
@@ -229,7 +242,7 @@ def update_item(username, collection_name, item_id, data,
     _get_table().update_item(
         Key={
             "username": username,
-            "item_id": item_id,
+            "api_info": api_info,
         },
         UpdateExpression=update_expression,
         ExpressionAttributeNames=expression_attribute_names,
@@ -237,13 +250,15 @@ def update_item(username, collection_name, item_id, data,
     )
 
 
-def change_watched_eps(username, collection_name, item_id, change,
+def change_watched_eps(username, api_name, api_id, change,
                        special=False):
     field_name = "ep"
     if special:
         field_name = "special"
 
-    item = get_item(username, collection_name, item_id)
+    api_info = f"i_{api_name}_{api_id}"
+
+    item = _get_review(username, api_info)
     if f"{field_name}_count" not in item or item[f"{field_name}_count"] == 0:
         ep_progress = 0
     else:
@@ -254,7 +269,7 @@ def change_watched_eps(username, collection_name, item_id, change,
     _get_table().update_item(
         Key={
             "username": username,
-            "item_id": item_id,
+            "api_info": api_info,
         },
         UpdateExpression="SET #w=#w+:i, #p=:p",
         ExpressionAttributeNames={
@@ -268,26 +283,16 @@ def change_watched_eps(username, collection_name, item_id, change,
     )
 
 
-def change_watched_eps_v2(username, api_name, api_id, change, special=False):
-    collection_name, item_id = get_collection_and_item_id(api_name, api_id)
-    change_watched_eps(
-        username,
-        collection_name,
-        item_id,
-        change,
-        special=special
-    )
-
-
-def get_watch_history(username, collection_name=None,
-                      index_name=None, status_filter=None):
+def get_user_items(username, index_name=None, status_filter=None):
     paginator = _get_client().get_paginator('query')
 
     query_kwargs = {
-        "TableName": DATABASE_NAME,
-        "KeyConditionExpression": "username = :username",
+        "TableName": REVIEWS_DATABASE_NAME,
+        "KeyConditionExpression": "username = :username AND "
+                                  "begins_with(api_info, :api_info) ",
         "ExpressionAttributeValues": {
-            ":username": {"S": username}
+            ":username": {"S": username},
+            ":api_info": {"S": "i_"}
         },
         "ScanIndexForward": False,
         "FilterExpression": "attribute_not_exists(deleted_at)"
@@ -295,12 +300,6 @@ def get_watch_history(username, collection_name=None,
 
     if index_name is not None:
         query_kwargs["IndexName"] = index_name
-    if collection_name is not None:
-        collection_filter = " and collection_name = :collection_name"
-        query_kwargs["FilterExpression"] += collection_filter
-        query_kwargs["ExpressionAttributeValues"][":collection_name"] = {
-            "S": collection_name
-        }
     if status_filter is not None:
         st_filter = " and #status = :status"
         query_kwargs["FilterExpression"] += st_filter
@@ -329,18 +328,6 @@ def get_watch_history(username, collection_name=None,
             i = json_util.loads(i)
             res.append(i)
     return res
-
-
-def get_items_by_id(item_id):
-    res = _get_table().query(
-        IndexName="item_id",
-        KeyConditionExpression=Key("item_id").eq(item_id),
-    )
-
-    if not res["Items"]:
-        raise NotFoundError(f"Item with id: {item_id} not found.")
-
-    return res["Items"]
 
 
 def put_item(item):

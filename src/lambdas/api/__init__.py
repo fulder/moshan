@@ -1,8 +1,8 @@
+import jwt
 from fastapi import FastAPI, Request
 from mangum import Mangum
 
 import routes
-import jwt_utils
 from models import PostItem, PostEpisode, ReviewData, review_data_to_dict
 
 app = FastAPI()
@@ -102,8 +102,9 @@ def delete_episode(request: Request, api_name: str, item_api_id: str,
 @app.middleware("http")
 def parse_token(request: Request, call_next):
     auth_header = request.headers.get("authorization")
-    request.state.username = jwt_utils.get_username(auth_header)
+    decoded = jwt.decode(auth_header, options={"verify_signature": False})
+    request.state.username = decoded["username"]
     return call_next(request)
 
 
-handle = Mangum(app, api_gateway_base_path="/prod")
+handler = Mangum(app, api_gateway_base_path="/prod")
