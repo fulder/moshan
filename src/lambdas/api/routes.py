@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import jikan
 import reviews_db
 import tmdb
@@ -37,20 +39,23 @@ def get_item(username, api_name, api_id):
 def add_item(username, api_name, api_id, data):
     ep_count_res = None
     api_cache = None
+    cache_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     try:
         if api_name == "tmdb":
             api_item = tmdb_api.get_item(api_id)
             api_cache = {
                 "title": api_item.get("title"),
                 "release_date": api_item.get("release_date"),
-                "status": api_item.get("status")
+                "status": api_item.get("status"),
+                "cache_updated": cache_updated,
             }
         elif api_name == "tvmaze":
             api_item = tvmaze_api.get_item(api_id)
             api_cache = {
                 "title": api_item.get("name"),
                 "release_date": api_item.get("premiered"),
-                "status": api_item.get("status")
+                "status": api_item.get("status"),
+                "cache_updated": cache_updated,
             }
             ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
         elif api_name == "mal":
@@ -58,7 +63,8 @@ def add_item(username, api_name, api_id, data):
             api_cache = {
                 "title": api_item.get("title"),
                 "release_date": api_item.get("aired", {}).get("from"),
-                "status": api_item.get("status")
+                "status": api_item.get("status"),
+                "cache_updated": cache_updated,
             }
             ep_count_res = jikan_api.get_episode_count(api_id)
     except utils.HttpError as e:
