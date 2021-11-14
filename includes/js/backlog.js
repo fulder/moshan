@@ -37,6 +37,7 @@ async function createTableRows(cursor='') {
     //   moshanItems[`${responses[i].api_name}_${responses[i].id}`] = responses[i];
     // }
 
+    console.debug(response.data);
     html = '';
     for (let i=0; i< items.length; i++) {
       html += createRow(items[i]);
