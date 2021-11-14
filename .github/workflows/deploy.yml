@@ -22,7 +22,7 @@ jobs:
       - uses: aws-actions/setup-sam@v1
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@master
         with:
           aws-region: eu-west-1
           role-to-assume: ${{ secrets.DEPLOY_ROLE_ARN }}
