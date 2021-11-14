@@ -49,7 +49,7 @@ function createRow(watchHistoryItem) {
   const apiCache = watchHistoryItem.api_cache;
 
   let rowClass = 'bg-secondary';
-  if (apiCache.status === 'Released' || apiCache.status === 'Airing' || apiCache.status === 'Ended' || apiCache.status === 'Running') {
+  if (apiCache.status === 'Released' || apiCache.status === 'Airing' || apiCache.status === 'Ended' || apiCache.status === 'Running' || apiCache.status === 'Finished Airing') {
       rowClass = 'episodeRow';
   }
   if (new Date(apiCache.release_date) >= new Date()) {
