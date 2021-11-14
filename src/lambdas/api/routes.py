@@ -36,12 +36,30 @@ def get_item(username, api_name, api_id):
 
 def add_item(username, api_name, api_id, data):
     ep_count_res = None
+    api_cache = None
     try:
         if api_name == "tmdb":
-            tmdb_api.get_item(api_id)
+            api_item = tmdb_api.get_item(api_id)
+            api_cache = {
+                "title": api_item.get("title"),
+                "release_date": api_item.get("release_date"),
+                "status": api_item.get("status")
+            }
         elif api_name == "tvmaze":
+            api_item = tvmaze_api.get_item(api_id)
+            api_cache = {
+                "title": api_item.get("name"),
+                "release_date": api_item.get("premiered"),
+                "status": api_item.get("status")
+            }
             ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
         elif api_name == "mal":
+            api_item = jikan_api.get_item(api_id)
+            api_cache = {
+                "title": api_item.get("title"),
+                "release_date": api_item.get("aired", {}).get("from"),
+                "status": api_item.get("status")
+            }
             ep_count_res = jikan_api.get_episode_count(api_id)
     except utils.HttpError as e:
         err_msg = f"Could not validate item in add_item" \
@@ -59,9 +77,11 @@ def add_item(username, api_name, api_id, data):
     except reviews_db.NotFoundError:
         current_item = {}
 
+    data["api_cache"] = api_cache
+
     if ep_count_res is not None:
-        data["ep_count"] = ep_count_res.get("ep_count", 0)
-        data["special_count"] = ep_count_res.get("special_count", 0)
+        data["api_cache"]["ep_count"] = ep_count_res.get("ep_count", 0)
+        data["api_cache"]["special_count"] = ep_count_res.get("special_count", 0)
         data["ep_progress"] = current_item.get("ep_progress", 0)
         data["special_progress"] = current_item.get("special_progress", 0)
         data["watched_eps"] = current_item.get("watched_eps", 0)
