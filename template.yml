@@ -274,6 +274,7 @@ Resources:
         Variables:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
+          TMDB_TOKEN: !Ref TmdbToken
       Layers:
         - !Ref ApiLayer
         - !Ref DatabasesLayer

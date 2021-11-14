@@ -30,8 +30,8 @@ def handler(event, context):
             "title": api_item.get("name"),
             "release_date": api_item.get("premiered"),
             "status": api_item.get("status"),
-            "ep_count": episodes_info.get("ep_count"),
-            "special_count": episodes_info.get("special_count"),
+            "ep_count": episodes_info.get("ep_count", 0),
+            "special_count": episodes_info.get("special_count", 0),
         }
     elif api_name == "mal":
         api_item = jikan_api.get_item(api_id)
@@ -40,10 +40,9 @@ def handler(event, context):
             "title": api_item.get("title"),
             "release_date": api_item.get("aired", {}).get("from"),
             "status": api_item.get("status"),
-            "ep_count": episodes_info.get("ep_count"),
-            "special_count": episodes_info.get("special_count"),
+            "ep_count": episodes_info.get("ep_count", 0),
+            "special_count": episodes_info.get("special_count", 0),
         }
-
     else:
         raise Exception(f"Unexpected api_name: {message['api_name']}")
 
