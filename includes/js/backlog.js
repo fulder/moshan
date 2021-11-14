@@ -47,6 +47,7 @@ async function createTableRows(cursor='') {
 
 function createRow(watchHistoryItem) {
   const apiCache = watchHistoryApi.api_cache;
+  console.debug(apiCache);
 
   let rowClass = 'bg-secondary';
   if (apiCache.status === 'Released' || apiCache.status === 'Airing' || apiCache.status === 'Ended' || apiCache.status === 'Running') {
