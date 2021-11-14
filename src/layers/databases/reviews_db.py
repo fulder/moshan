@@ -159,7 +159,10 @@ def get_all_items(username, sort=None, cursor=None):
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
 
     if cursor is not None:
-        kwargs["ExclusiveStartKey"] = cursor
+        kwargs["ExclusiveStartKey"] = {
+            "username": username,
+            "cursor": cursor,
+        }
 
     res = _get_table().query(**kwargs)
     ret = {
