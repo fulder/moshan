@@ -162,7 +162,7 @@ def get_all_items(username, sort=None, cursor=None):
 
     if sort == "ep_progress":
         kwargs["KeyConditionExpression"] &= Key("ep_progress").between(
-            Decimal(0.01), Decimal(99.99)
+            Decimal("0.01"), Decimal("99.99")
         )
         kwargs["ScanIndexForward"] = False
 
