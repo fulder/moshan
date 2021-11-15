@@ -321,11 +321,10 @@ def change_watched_eps(username, api_name, api_id, change,
     api_info = f"i_{api_name}_{api_id}"
 
     item = _get_review(username, api_info)
-    if f"{field_name}_count" not in item or item[
-        f"{field_name}_count"] == 0:
+    count_v = item["api_cache"].get(f"{field_name}_count", 0)
+    if count_v == 0:
         ep_progress = 0
     else:
-        count_v = item[f"{field_name}_count"]
         watched_v = item[f"watched_{field_name}s"]
         ep_progress = (watched_v + (change)) / count_v
     ep_progress = round(ep_progress * 100, 2)
