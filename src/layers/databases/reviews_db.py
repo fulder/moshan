@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from decimal import Decimal
 from urllib.parse import quote, unquote
 from datetime import datetime
 
@@ -10,7 +11,6 @@ from boto3.dynamodb.conditions import Key, Attr
 from dynamodb_json import json_util
 
 import logger
-from api import Sort
 
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
@@ -160,8 +160,10 @@ def get_all_items(username, sort=None, cursor=None):
     else:
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
 
-    if sort == Sort.ep_progress.value:
-        kwargs["KeyConditionExpression"] &= Key("ep_progress").between(0.01, 99.99)
+    if sort == "ep_progress":
+        kwargs["KeyConditionExpression"] &= Key("ep_progress").between(
+            Decimal(0.01), Decimal(99.99)
+        )
         kwargs["ScanIndexForward"] = False
 
     if cursor is not None:
