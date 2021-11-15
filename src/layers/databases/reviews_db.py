@@ -10,6 +10,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from dynamodb_json import json_util
 
 import logger
+from api import Sort
 
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
@@ -158,6 +159,10 @@ def get_all_items(username, sort=None, cursor=None):
         kwargs["IndexName"] = sort
     else:
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
+
+    if sort == Sort.ep_progress.value:
+        kwargs["KeyConditionExpression"] &= Key("ep_progress").lt(100)
+        kwargs["ScanIndexForward"] = False
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
