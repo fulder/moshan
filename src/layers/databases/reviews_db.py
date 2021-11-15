@@ -161,7 +161,7 @@ def get_all_items(username, sort=None, cursor=None):
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
 
     if sort == Sort.ep_progress.value:
-        kwargs["KeyConditionExpression"] &= Key("ep_progress").lt(100)
+        kwargs["KeyConditionExpression"] &= Key("ep_progress").between(0.01, 99.99)
         kwargs["ScanIndexForward"] = False
 
     if cursor is not None:
