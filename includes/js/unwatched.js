@@ -21,7 +21,7 @@ async function createUnwatchedItems(cursor='') {
 
   const response = await watchHistoryApi.getWatchHistory('ep_progress', cursor);
 
-  createItems(response.data.items, collectionName);
+  createItems(response.data.items);
 }
 
 async function createItems(wathcHistoryItems) {
