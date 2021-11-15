@@ -17,8 +17,6 @@ createUnwatchedItems();
 // }
 
 async function createUnwatchedItems(cursor='') {
-  document.getElementById('unwatched').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
-
   const response = await watchHistoryApi.getWatchHistory('ep_progress', cursor);
 
   createItems(response.data.items);
@@ -26,8 +24,6 @@ async function createUnwatchedItems(cursor='') {
 
 async function createItems(items) {
   let resultHTML = '';
-  let res = true;
-  let itemCreated = false;
 
   console.debug(`Length: ${items.length}`);
 
@@ -48,16 +44,8 @@ async function createItems(items) {
     `;
 
     resultHTML += itemHTML;
-
-    itemCreated = itemHTML !== '';
-    res = res && itemCreated;
   }
 
-  if (res) {
-    document.getElementById('itemsLoadingAlert').className = 'd-none';
-  } else {
-    document.getElementById('itemsLoadingAlert').className = 'alert alert-warning';
-  }
 
   document.getElementById('unwatched').innerHTML += resultHTML;
 }
