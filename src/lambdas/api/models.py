@@ -40,6 +40,7 @@ class PostEpisode(ReviewData):
 
 class Sort(StrEnum):
     backlog_date = auto()
+    ep_progress = auto()
 
 
 class Item(BaseModel):
