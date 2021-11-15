@@ -24,15 +24,15 @@ async function createUnwatchedItems(cursor='') {
   createItems(response.data.items);
 }
 
-async function createItems(wathcHistoryItems) {
+async function createItems(items) {
   let resultHTML = '';
   let res = true;
   let itemCreated = false;
 
-  console.debug(`Length: ${wathcHistoryItems.length}`);
+  console.debug(`Length: ${items.length}`);
 
-  for (let i = 0; i < wathcHistoryItems.length; i++) {
-    const item = watchHistoryItems[i];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
     const apiCache = item.api_cache;
 
     const itemHTML = `
