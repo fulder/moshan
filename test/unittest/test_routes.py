@@ -30,10 +30,11 @@ def test_not_found(m_get_item, client, token):
     assert response.status_code == 404
 
 
+@patch.object(tvmaze.TvMazeApi, "get_item")
 @patch.object(tvmaze.TvMazeApi, "get_show_episodes_count")
 @patch("reviews_db.get_item")
 @patch("reviews_db.add_item")
-def test_post_item(m_add_item, m_get_item, mocked_ep_count, token, client):
+def test_post_item(m_add_item, m_get_ep, m_get_item, mocked_ep_count, token, client):
     mocked_ep_count.return_value = {
         "ep_count": 1,
         "special_count": 2,
@@ -53,7 +54,7 @@ def test_post_item(m_add_item, m_get_item, mocked_ep_count, token, client):
     assert response.status_code == 204
 
 
-@patch.object(tvmaze.TvMazeApi, "get_show_episodes_count")
+@patch.object(tvmaze.TvMazeApi, "get_item")
 def test_post_item_tvmaze_error(m_ep_count, token, client):
     m_ep_count.side_effect = utils.HttpError(503)
 
@@ -91,7 +92,7 @@ def test_post_item_not_found(m_add_item, m_get_item, mocked_ep_count, token,
         }
     )
 
-    assert response.status_code == 204
+    assert response.status_code == 404
 
 
 @patch("reviews_db.get_episode")
