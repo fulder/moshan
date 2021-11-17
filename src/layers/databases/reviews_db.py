@@ -11,6 +11,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from dynamodb_json import json_util
 
 import logger
+from decimal_encoder import DecimalEncoder
 
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
@@ -185,7 +186,7 @@ def get_all_items(username, sort=None, cursor=None):
     log.debug(last_ev is not None)
     if last_ev is not None:
         log.debug(f"LastEvaluatedKey={last_ev}")
-        ret["end_cursor"] = quote(json.dumps(last_ev))
+        ret["end_cursor"] = quote(json.dumps(last_ev, cls=DecimalEncoder))
 
     return ret
 
