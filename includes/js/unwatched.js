@@ -25,16 +25,19 @@ async function createUnwatchedItems(cursor='') {
 async function createItems(items) {
   let resultHTML = '';
 
+
   console.debug(`Length: ${items.length}`);
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     const apiCache = item.api_cache;
 
+    const image = apiCache.image_url.replace('original_untouched', 'medium_portrait');
+
     const itemHTML = `
         <div class="col-4 col-md-2 poster">
           <a href="/item?api_name=${item.api_name}&api_id=${item.api_id}">
-            <img class="img-fluid" src="${apiCache.image_url}" />
+            <img class="img-fluid" src="${image}" />
             <div class="progress">
               <div class="progress-bar" role="progressbar" style="width: ${item.ep_progress}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${item.ep_progress}%</div>
             </div>
