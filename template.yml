@@ -239,14 +239,15 @@ Resources:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
           UPDATES_TOPIC_ARN: !Ref ItemUpdatesTopic
+          TMDB_TOKEN: !Ref TmdbToken
       Layers:
         - !Ref ApiLayer
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
-      MemorySize: 1024
+      MemorySize: 2048
       Role: !GetAtt UpdatesPubFunctionRole.Arn
       Runtime: !Ref PythonVers
-      Timeout: 60
+      Timeout: 120
       Events:
         InvocationLevel:
           Type: Schedule
@@ -274,6 +275,7 @@ Resources:
         Variables:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
+          TMDB_TOKEN: !Ref TmdbToken
       Layers:
         - !Ref ApiLayer
         - !Ref DatabasesLayer

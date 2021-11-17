@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import auto
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from fastapi_utils.enums import StrEnum
 
@@ -46,6 +46,7 @@ class Item(BaseModel):
     api_name: str
     api_id: str
     created_at: str
+    api_cache: Dict
     update_at: Optional[str]
     deleted_at: Optional[str]
     status: Optional[Status]
