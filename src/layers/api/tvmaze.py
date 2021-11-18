@@ -51,7 +51,7 @@ class TvMazeApi:
         special_count = 0
 
         for e in episodes:
-            if dateutil.parser.parse(e["airdate"]) > datetime.now():
+            if e["airdate"] == "" or dateutil.parser.parse(e["airdate"]) > datetime.now():
                 # Ignore not yet aired eps
                 continue
 
