@@ -301,7 +301,7 @@ function createEpisodesList (moshanEpisodes) {
     }
 
     tableHTML += `
-            <tr onclick="${onClickAction}" class=${rowClass}>
+            <tr onclick="${onClickAction}" class="${rowClass}">
                 <td class="small">${moshanEpisode.number}</td>
                 <td class="text-truncate small">${moshanEpisode.title}</td>
                 <td class="small">${moshanEpisode.air_date}</td>
