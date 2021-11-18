@@ -7,6 +7,7 @@ document.getElementById('headTitle').innerHTML = `Moshan - ${qParams.collection}
 const watchHistoryApi = new WatchHistoryApi();
 const api = getApiByName(qParams.api_name);
 
+let watchHistoryEpisodeIDs = [];
 let totalPages = 0;
 let calendarInstances = {};
 let savedPatchData;
@@ -47,9 +48,8 @@ function QueryParams(urlParams) {
 }
 
 async function getItemByApiId() {
-  let watchHistoryItem = null;
   try {
-    watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItemByApiId(qParams);
+    const watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItemByApiId(qParams);
     console.debug(watchHistoryItemRes);
     watchHistoryItem = watchHistoryItemRes.data;
     qParams.id = watchHistoryItem.item_id;
@@ -65,6 +65,10 @@ async function getItemByApiId() {
 
   if (moshanItem.has_episodes) {
     const moshanEpisodes = await api.getEpisodes(qParams);
+    const watchHistoryEpisodes = await watchHistoryApi.getWatchHistoryEpisodes(qParams);
+    for (let i=0; i < watchHistoryEpisodes.length; i++) {
+      watchHistoryEpisodeIDs.push(watchHistoryEpisode[i].api_id);
+    }
 
     if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
       const lastEpId = moshanEpisodes.episodes[0].episode_id;
@@ -283,11 +287,15 @@ function createEpisodesList (moshanEpisodes) {
     let episodeApiId = moshanEpisode.id;
 
     rowClass = 'episodeRow';
-    onClickAction = `window.location='/episode?collection=${qParams.collection}&api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
+    onClickAction = `window.location='/episode?api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
     if (episode.extra_ep) {
       onClickAction += '&extra_ep=true\'';
     } else {
       onClickAction += '\'';
+    }
+
+    if (watchHistoryEpisodeIDs.includes(moshanEpisode.id)) {
+      rowClass += ' table-success';
     }
 
     tableHTML += `
