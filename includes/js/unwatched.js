@@ -32,8 +32,10 @@ async function createItems(items) {
     const item = items[i];
     const apiCache = item.api_cache;
 
-    console.debug(apiCache.image_url);
-    const image = apiCache.image_url.replace('original_untouched', 'medium_portrait');
+    let image = '/includes/img/image_not_available.png';
+    if (apiCache.image_url !== null) {
+      image = apiCache.image_url.replace('original_untouched', 'medium_portrait');
+    }
 
     const itemHTML = `
         <div class="col-4 col-md-2 poster">
