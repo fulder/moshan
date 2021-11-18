@@ -68,7 +68,7 @@ async function getItemByApiId() {
     const moshanEpisodes = await api.getEpisodes(qParams);
     const watchHistoryEpisodes = await watchHistoryApi.getWatchHistoryEpisodes(qParams);
     for (let i=0; i < watchHistoryEpisodes.data.length; i++) {
-      watchHistoryEpisodeIDs.push(watchHistoryEpisodes.data[i].api_id);
+      watchHistoryEpisodeIDs.push(parseInt(watchHistoryEpisodes.data[i].api_id));
     }
 
     if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
