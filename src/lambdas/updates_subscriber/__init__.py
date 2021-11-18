@@ -81,7 +81,7 @@ def handler(event, context):
 
 def _get_item_counts(episodes_info, watched_eps, watched_specials):
     counts = {}
-    if "episodes_count" in episodes_info:
+    if "ep_count" in episodes_info:
         p = _get_progress(watched_eps, episodes_info["ep_count"])
         counts = {
             "watched_eps": watched_eps,
