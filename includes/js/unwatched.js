@@ -32,6 +32,7 @@ async function createItems(items) {
     const item = items[i];
     const apiCache = item.api_cache;
 
+    console.debug(apiCache.image_url);
     const image = apiCache.image_url.replace('original_untouched', 'medium_portrait');
 
     const itemHTML = `
