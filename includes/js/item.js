@@ -295,6 +295,8 @@ function createEpisodesList (moshanEpisodes) {
       onClickAction += '\'';
     }
 
+    console.debug(moshanEpisode.id);
+
     if (watchHistoryEpisodeIDs.includes(moshanEpisode.id)) {
       rowClass += ' table-success';
     }
