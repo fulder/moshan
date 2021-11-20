@@ -49,6 +49,7 @@ function QueryParams(urlParams) {
 }
 
 async function getItemByApiId() {
+  let watchHistoryItem = null;
   try {
     const watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItemByApiId(qParams);
     console.debug(watchHistoryItemRes);
