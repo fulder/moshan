@@ -1,3 +1,6 @@
+from datetime import datetime
+
+import dateutil.parser
 import requests
 
 import utils
@@ -52,7 +55,13 @@ class JikanApi:
         ep_count = 0
 
         for eps in self._episodes_generator(anime_id):
-            ep_count += len(eps)
+            for e in eps:
+                ep_date = e["aired"].replace("+00:00", "")
+                if ep_date != "N/A" and dateutil.parser.parse(ep_date) > datetime.now():
+                    # Ignore not yet aired eps
+                    continue
+
+                ep_count += 1
 
         return {
             "ep_count": ep_count,
