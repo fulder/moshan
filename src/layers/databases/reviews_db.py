@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from decimal import Decimal
 from urllib.parse import quote, unquote
 from datetime import datetime
 
@@ -10,6 +11,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from dynamodb_json import json_util
 
 import logger
+from decimal_encoder import DecimalEncoder
 
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
@@ -159,6 +161,12 @@ def get_all_items(username, sort=None, cursor=None):
     else:
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
 
+    if sort == "ep_progress":
+        kwargs["KeyConditionExpression"] &= Key("ep_progress").between(
+            Decimal("0.01"), Decimal("99.99")
+        )
+        kwargs["ScanIndexForward"] = False
+
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
 
@@ -178,7 +186,7 @@ def get_all_items(username, sort=None, cursor=None):
     log.debug(last_ev is not None)
     if last_ev is not None:
         log.debug(f"LastEvaluatedKey={last_ev}")
-        ret["end_cursor"] = quote(json.dumps(last_ev))
+        ret["end_cursor"] = quote(json.dumps(last_ev, cls=DecimalEncoder))
 
     return ret
 
@@ -220,6 +228,7 @@ def get_episodes(username, api_name, item_api_id):
     for p in page_iterator:
         for i in p["Items"]:
             i = json_util.loads(i)
+            i["api_id"] = i["api_info"].split("_")[3]
             res.append(i)
     return res
 
@@ -321,11 +330,10 @@ def change_watched_eps(username, api_name, api_id, change,
     api_info = f"i_{api_name}_{api_id}"
 
     item = _get_review(username, api_info)
-    if f"{field_name}_count" not in item or item[
-        f"{field_name}_count"] == 0:
+    count_v = item["api_cache"].get(f"{field_name}_count", 0)
+    if count_v == 0:
         ep_progress = 0
     else:
-        count_v = item[f"{field_name}_count"]
         watched_v = item[f"watched_{field_name}s"]
         ep_progress = (watched_v + (change)) / count_v
     ep_progress = round(ep_progress * 100, 2)
