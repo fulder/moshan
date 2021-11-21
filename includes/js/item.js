@@ -74,22 +74,16 @@ async function getItemByApiId() {
 
     if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
       const lastEpId = moshanEpisodes.episodes[0].episode_id;
-      moshanEpisodes.episodes.unshift(
-        {
-        episode_id: lastEpId + 1,
-        title: 'N/A',
-        aired: null,
-        extra_ep: true,
-        }
-      );
-      moshanEpisodes.episodes.unshift(
-        {
-        episode_id: lastEpId + 2,
-        title: 'N/A',
-        aired: null,
-        extra_ep: true,
-        }
-      );
+      for (let i=0; i<5; i++) {
+        moshanEpisodes.episodes.unshift(
+          {
+          episode_id: lastEpId + i + 1,
+          title: 'N/A',
+          aired: null,
+          extra_ep: true,
+          }
+        );
+      }
     }
 
     createEpisodesList(moshanEpisodes);
