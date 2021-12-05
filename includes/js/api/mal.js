@@ -27,7 +27,7 @@ class MalApi {
     let status = 'Airing';
     if ('aired' in anime && 'to' in anime.aired && anime.aired.to !== null && new Date(anime.aired.to) < new Date()) {
       status = 'Finished';
-    } else if ('airing' in anime && !anime.airing) {
+    } else if ('status' in anime && anime.status == 'Finished Airing') {
       status = 'Finished';
     }
 
