@@ -73,7 +73,10 @@ async function getItemByApiId() {
     }
 
     if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
-      const lastEpId = moshanEpisodes.episodes[0].episode_id;
+      let lastEpId = 0;
+      if (moshanEpisodes.episodes.length != 0) {
+        lastEpId = moshanEpisodes.episodes[0].episode_id;
+      }
       for (let i=0; i<5; i++) {
         moshanEpisodes.episodes.unshift(
           {
