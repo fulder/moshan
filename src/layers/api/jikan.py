@@ -33,9 +33,18 @@ class JikanApi:
         page = int(int(episode_id) / 100) + 1
         eps = self.get_episodes(anime_id, page)["episodes"]
 
-        # Hack for allowing to add 1 more episodes than currently present in api
+        if not eps:
+            # Try getting previous page
+            eps = self.get_episodes(anime_id, page - 1)["episodes"]
+
+        if eps:
+            last_id = eps[-1]["episode_id"]
+        else:
+            last_id = 0
+
+        # Hack for allowing to add 5 more episodes than currently present in api
         # to quickfix slow api updates and jikan 24h cache
-        if episode_id == eps[-1]["episode_id"] + 1:
+        if last_id < int(episode_id) <= last_id + 5:
             return True
 
         for ep in eps:
@@ -71,6 +80,6 @@ class JikanApi:
         ret = self.get_episodes(anime_id)
         last_page = ret["episodes_last_page"]
 
-        for i in range(1, last_page+1):
+        for i in range(1, last_page + 1):
             ret = self.get_episodes(anime_id, i)
             yield ret["episodes"]
