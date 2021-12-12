@@ -31,7 +31,7 @@ class MalApi {
       status = 'Finished';
     }
 
-    const hasEpisodes = anime.type == 'TV';
+    const hasEpisodes = anime.type != 'Movie';
 
     let poster = '/includes/img/image_not_available.png';
     if (anime.image_url !== undefined) {
