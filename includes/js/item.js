@@ -77,7 +77,7 @@ async function getItemByApiId() {
       if (moshanEpisodes.episodes.length != 0) {
         lastEpId = moshanEpisodes.episodes[0].episode_id;
       }
-      for (let i=0; i<10; i++) {
+      for (let i=0; i<12; i++) {
         moshanEpisodes.episodes.unshift(
           {
           episode_id: lastEpId + i + 1,
