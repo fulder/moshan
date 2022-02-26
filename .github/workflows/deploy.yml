@@ -6,7 +6,8 @@ on:
       - master
     paths:
       - '.github/workflows/deploy.yml'
-      - 'src'
+      - 'src/lambdas/**'
+      - 'src/layers/**'
       - 'samconfig.toml'
       - 'template.yml'
 
