@@ -22,7 +22,7 @@ class JikanApi:
 
     def get_schedule(self, day_of_week):
         res = requests.get(
-            f"{self.base_url}/schedule/{day_of_week}",
+            f"{self.base_url}/schedule?filer={day_of_week}",
         )
 
         if res.status_code != 200:
