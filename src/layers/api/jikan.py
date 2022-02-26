@@ -9,7 +9,7 @@ import utils
 class JikanApi:
 
     def __init__(self):
-        self.base_url = "https://api.jikan.moe/v3"
+        self.base_url = "https://api.jikan.moe/v4"
 
     def get_item(self, anime_id):
         res = requests.get(
@@ -22,7 +22,7 @@ class JikanApi:
 
     def get_schedule(self, day_of_week):
         res = requests.get(
-            f"{self.base_url}/schedule/{day_of_week}",
+            f"{self.base_url}/schedule?filer={day_of_week}",
         )
 
         if res.status_code != 200:
@@ -53,7 +53,7 @@ class JikanApi:
 
     def get_episodes(self, anime_id, page=1):
         res = requests.get(
-            f"{self.base_url}/anime/{anime_id}/episodes/{page}",
+            f"{self.base_url}/anime/{anime_id}/episodes?page={page}",
         )
 
         if res.status_code != 200:
