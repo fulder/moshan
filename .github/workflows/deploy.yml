@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '.github/workflows/deploy.yml'
+      - '.src/**'
+      - 'samconfig.toml'
+      - 'template.yml'
 
 permissions:
   id-token: write
