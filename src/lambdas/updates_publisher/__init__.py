@@ -50,7 +50,7 @@ def _check_tvmaze_updates():
 
 def _check_mal_updates():
     day_of_week = datetime.today().strftime('%A').lower()
-    airing = jikan_api.get_schedule(day_of_week)[day_of_week]
+    airing = jikan_api.get_schedule(day_of_week)["data"]
 
     for a in airing:
         mal_id = a["mal_id"]
