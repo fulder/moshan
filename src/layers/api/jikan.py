@@ -53,7 +53,7 @@ class JikanApi:
 
     def get_episodes(self, anime_id, page=1):
         res = requests.get(
-            f"{self.base_url}/anime/{anime_id}/episodes/{page}",
+            f"{self.base_url}/anime/{anime_id}/episodes?page={page}",
         )
 
         if res.status_code != 200:
