@@ -65,7 +65,7 @@ class JikanApi:
 
         for eps in self._episodes_generator(anime_id):
             for e in eps:
-                ep_date = e["aired"].replace("+00:00", "")
+                ep_date = e.get("aired", "N/A").replace("+00:00", "")
                 if ep_date != "N/A" and dateutil.parser.parse(ep_date) > datetime.now():
                     # Ignore not yet aired eps
                     continue
