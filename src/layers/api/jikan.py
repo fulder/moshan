@@ -31,14 +31,14 @@ class JikanApi:
 
     def get_episode(self, anime_id, episode_id):
         page = int(int(episode_id) / 100) + 1
-        eps = self.get_episodes(anime_id, page)["episodes"]
+        eps = self.get_episodes(anime_id, page)["data"]
 
         if not eps:
             # Try getting previous page
-            eps = self.get_episodes(anime_id, page - 1)["episodes"]
+            eps = self.get_episodes(anime_id, page - 1)["data"]
 
         if eps:
-            last_id = eps[-1]["episode_id"]
+            last_id = eps[-1]["mal_id"]
         else:
             last_id = 0
 
@@ -48,7 +48,7 @@ class JikanApi:
             return True
 
         for ep in eps:
-            if ep["episode_id"] == episode_id:
+            if ep["mal_id"] == episode_id:
                 return ep
 
     def get_episodes(self, anime_id, page=1):
@@ -78,8 +78,8 @@ class JikanApi:
 
     def _episodes_generator(self, anime_id):
         ret = self.get_episodes(anime_id)
-        last_page = ret["episodes_last_page"]
+        last_page = ret["pagination"]["last_visible_page"]
 
         for i in range(1, last_page + 1):
             ret = self.get_episodes(anime_id, i)
-            yield ret["episodes"]
+            yield ret["data"]
