@@ -38,8 +38,8 @@ jobs:
 
       - name: deploy
         run: |
-          sam deploy --parameter-overrides
-            DomainName="moshan.fulder.dev"
+          sam deploy --parameter-overrides \
+            DomainName="moshan.fulder.dev" \
             TmdbToken=${{ secrets.TMDB_TOKEN }}
 
 

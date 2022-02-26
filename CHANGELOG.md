@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 * Remove dry-run workflow
+* Attempt fix failing deployment job
 
 ## [v8.0.1] - 2022-02-26
 
