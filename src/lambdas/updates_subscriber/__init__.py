@@ -40,7 +40,7 @@ def handler(event, context):
             "image_url": api_item.get("image", {}).get("original"),
         }
     elif api_name == "mal":
-        api_item = jikan_api.get_item(api_id)
+        api_item = jikan_api.get_item(api_id).get("data", {})
         episodes_info = jikan_api.get_episode_count(api_id)
         api_cache = {
             "title": api_item.get("title"),
