@@ -61,7 +61,7 @@ def add_item(username, api_name, api_id, data):
             }
             ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
         elif api_name == "mal":
-            api_item = jikan_api.get_item(api_id)
+            api_item = jikan_api.get_item(api_id).get("data", {})
             api_cache = {
                 "title": api_item.get("title"),
                 "release_date": api_item.get("aired", {}).get("from"),
