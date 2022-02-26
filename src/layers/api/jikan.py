@@ -42,8 +42,8 @@ class JikanApi:
         else:
             last_id = 0
 
-        # Hack for allowing to add 5 more episodes than currently present in api
-        # to quickfix slow api updates and jikan 24h cache
+        # Hack for allowing to add 12 more episodes than currently present in
+        # api to quickfix slow api updates and jikan 24h cache
         if last_id < int(episode_id) <= last_id + 12:
             return True
 
