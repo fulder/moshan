@@ -27,6 +27,9 @@ async function createItems(items) {
     let image = '/includes/img/image_not_available.png';
     if (apiCache.image_url !== null) {
       image = apiCache.image_url.replace('original_untouched', 'medium_portrait');
+      if (item.api_name === 'tmdb') {
+          image = `https://image.tmdb.org/t/p/w500/${image}`;
+      }
     }
 
     const itemHTML = `
