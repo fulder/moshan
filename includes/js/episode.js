@@ -79,11 +79,11 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
   document.getElementById('watched_amount').innerHTML = watchedAmount;
 
   if (moshanEpisode.previous_id !== null) {
-    document.getElementById('previous_episode').href = `/episode/?collection=${qParams.collection}&id=${qParams.id}&api_name=${qParams.api_name}&episode_id=${moshanEpisode.previous_id}`;
+    document.getElementById('previous_episode').href = `/episode/?api_name=${qParams.api_name}&item_api_id=${qParams.item_api_id}&episode_api_id=${moshanEpisode.previous_id}`;
     document.getElementById('previous_episode').classList.remove('d-none');
   }
   if (moshanEpisode.next_id !== null) {
-    document.getElementById('next_episode').href = `/episode/?collection=${qParams.collection}&id=${qParams.id}&api_name=${qParams.api_name}&episode_id=${moshanEpisode.next_id}`;
+    document.getElementById('next_episode').href = `/episode/?api_name=${qParams.api_name}&item_api_id=${qParams.item_api_id}&episode_api_id=${moshanEpisode.next_id}`;
     document.getElementById('next_episode').classList.remove('d-none');
   }
 
