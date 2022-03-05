@@ -166,6 +166,11 @@ def get_all_items(username, sort=None, cursor=None):
             Decimal("0.01"), Decimal("99.99")
         )
         kwargs["ScanIndexForward"] = False
+    elif sort == "latest_watch_date":
+        kwargs["KeyConditionExpression"] &= Key("api_info").begins_with(
+            "i_"
+        )
+        kwargs["ScanIndexForward"] = False
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
