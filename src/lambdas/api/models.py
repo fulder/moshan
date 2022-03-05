@@ -41,6 +41,7 @@ class PostEpisode(ReviewData):
 class Sort(StrEnum):
     backlog_date = auto()
     ep_progress = auto()
+    latest_watch_date = auto()
 
 
 class Item(BaseModel):
