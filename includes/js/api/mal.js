@@ -34,8 +34,8 @@ class MalApi {
     const hasEpisodes = anime.type != 'Movie';
 
     let poster = '/includes/img/image_not_available.png';
-    if (anime.image_url !== undefined) {
-      poster = anime.image_url;
+    if (anime.images.jpg.image_url !== undefined) {
+      poster = anime.images.jpg.image_url;
     }
 
     let date = 'N/A';
