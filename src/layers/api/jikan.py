@@ -20,9 +20,9 @@ class JikanApi:
             raise utils.HttpError(res.status_code)
         return res.json()
 
-    def get_schedule(self, day_of_week):
+    def get_schedules(self, day_of_week):
         res = requests.get(
-            f"{self.base_url}/schedule?filer={day_of_week}",
+            f"{self.base_url}/schedules?filer={day_of_week}",
         )
 
         if res.status_code != 200:
