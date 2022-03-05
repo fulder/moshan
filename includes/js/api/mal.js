@@ -88,7 +88,7 @@ class MalApi {
       episode.mal_id,
       episode.title,
       date,
-      episode.mal_id - 1,
+      episode.mal_id > 1 ? episode.mal_id - 1 : null,
       episode.mal_id + 1,
       'extra_ep' in episode
     );
