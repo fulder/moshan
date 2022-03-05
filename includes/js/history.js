@@ -33,9 +33,6 @@ async function createItems(items) {
         <div class="col-4 col-md-2 poster">
           <a href="/item?api_name=${item.api_name}&api_id=${item.api_id}">
             <img class="img-fluid" src="${image}" />
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: ${item.ep_progress}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${item.ep_progress}%</div>
-            </div>
             <p class="text-truncate small">${apiCache.title}</p>
           </a>
       </div>
