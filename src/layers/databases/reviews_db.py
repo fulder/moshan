@@ -167,7 +167,7 @@ def get_all_items(username, sort=None, cursor=None):
         )
         kwargs["ScanIndexForward"] = False
     elif sort == "latest_watch_date":
-        kwargs["KeyConditionExpression"] &= Key("api_info").begins_with(
+        kwargs["FilterExpression"] = Key("api_info").begins_with(
             "i_"
         )
         kwargs["ScanIndexForward"] = False
