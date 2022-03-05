@@ -67,7 +67,7 @@ def add_item(username, api_name, api_id, data):
                 "release_date": api_item.get("aired", {}).get("from"),
                 "status": api_item.get("status"),
                 "cache_updated": cache_updated,
-                "image_url": api_item.get("image_url"),
+                "image_url": api_item.get("images", {}).get("jpg", {}).get("image_url"),
             }
             ep_count_res = jikan_api.get_episode_count(api_id)
     except utils.HttpError as e:
