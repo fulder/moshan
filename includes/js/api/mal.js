@@ -25,7 +25,7 @@ class MalApi {
 
   getMoshanItem(anime) {
     let status = 'Airing';
-    if ('aired' in anime && 'to' in anime.aired && anime.aired.to !== null && new Date(anime.aired.to) < new Date()) {
+    if (anime.aired?.to !== undefined && new Date(anime.aired.to) < new Date()) {
       status = 'Finished';
     } else if ('status' in anime && anime.status == 'Finished Airing') {
       status = 'Finished';
@@ -34,14 +34,14 @@ class MalApi {
     const hasEpisodes = anime.type != 'Movie';
 
     let poster = '/includes/img/image_not_available.png';
-    if (anime.images.jpg.image_url !== undefined) {
+    if (anime.images?.jpg?.image_url !== undefined) {
       poster = anime.images.jpg.image_url;
     }
 
     let date = 'N/A';
-    if ('aired' in anime && anime.aired.from !== null) {
+    if (anime.aired?.from !== null) {
       date = new Date(anime.aired.from).toISOString().split('T')[0];
-    } else if ('start_date' in anime && anime.start_date !== null){
+    } else if (anime.start_date !== undefined){
       date = new Date(anime.start_date).toISOString().split('T')[0];
     }
 
