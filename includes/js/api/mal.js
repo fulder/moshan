@@ -70,10 +70,10 @@ class MalApi {
     return this.getMoshanEpisode(episode.data.data);
   }
 
-  getMoshanEpisodes(data) {
+  getMoshanEpisodes(episodes) {
     return new MoshanEpisodes(
-        data.episodes.reverse(),
-        data.episodes_last_page
+        episodes.reverse(),
+        episodes_last_page
     );
   }
 
