@@ -3,7 +3,7 @@
 class MalApi {
   constructor () {
     this.apiAxios = axios.create({
-      baseURL: 'https://api.jikan.moe/v3/',
+      baseURL: 'https://api.jikan.moe/v4/',
     });
   }
 
@@ -11,8 +11,8 @@ class MalApi {
     const res = await this.apiAxios.get(`/search/anime?q=${qParams.search}`);
 
     const moshanItems = new MoshanItems('anime');
-    for (let i=0; i<res.data.results.length; i++) {
-      const moshanItem = this.getMoshanItem(res.data.results[i]);
+    for (let i=0; i<res.data.data.length; i++) {
+      const moshanItem = this.getMoshanItem(res.data.data[i]);
       moshanItems.items.push(moshanItem);
     }
     return moshanItems;
@@ -20,7 +20,7 @@ class MalApi {
 
   async getItemById(qParams) {
     const res = await this.apiAxios.get(`/anime/${qParams.api_id}`);
-    return this.getMoshanItem(res.data);
+    return this.getMoshanItem(res.data.data);
   }
 
   getMoshanItem(anime) {
@@ -58,24 +58,16 @@ class MalApi {
   }
 
   async getEpisodes(qParams) {
-    const resFirst = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/1`);
-    const realPage = resFirst.data.episodes_last_page - qParams.episode_page + 1;
+    const resFirst = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes?page=1`);
+    const realPage = resFirst.data.pagination.last_visible_page - qParams.episode_page + 1;
 
-    let res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${realPage}`);
-    return this.getMoshanEpisodes(res.data);
+    let res = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes?page=${realPage}`);
+    return this.getMoshanEpisodes(res.data.data);
   }
 
   async getEpisode(qParams) {
-    qParams.api_id = qParams.item_api_id;
-    const page = parseInt(qParams.episode_api_id/100) + 1;
-    const episodes = await this.apiAxios.get(`/anime/${qParams.api_id}/episodes/${page}`);
-
-    for (let i=0; i < episodes.data.episodes.length; i++) {
-      const ep = episodes.data.episodes[i];
-      if (ep.episode_id == qParams.episode_api_id) {
-        return this.getMoshanEpisode(ep);
-      }
-    }
+    const episode = await this.apiAxios.get(`/anime/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
+    return this.getMoshanEpisode(episode.data.data);
   }
 
   getMoshanEpisodes(data) {
@@ -92,12 +84,12 @@ class MalApi {
     }
 
     return new MoshanEpisode(
-      episode.episode_id,
-      episode.episode_id,
+      episode.mal_id,
+      episode.mal_id,
       episode.title,
       date,
-      episode.episode_id - 1,
-      episode.episode_id + 1,
+      episode.mal_id - 1,
+      episode.mal_id + 1,
       'extra_ep' in episode
     );
   }
