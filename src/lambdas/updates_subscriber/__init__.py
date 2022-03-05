@@ -49,7 +49,7 @@ def handler(event, context):
             "ep_count": episodes_info.get("ep_count", 0),
             "special_count": episodes_info.get("special_count", 0),
             "cache_updated": cache_updated,
-            "image_url": api_item.get("image_url"),
+            "image_url": api_item.get("images", {}).get("jpg", {}).get("image_url"),
         }
     else:
         raise Exception(f"Unexpected api_name: {message['api_name']}")
