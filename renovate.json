@@ -11,5 +11,8 @@
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch"
     }
-  ]
+  ],
+  "pip-compile": {
+    "fileMatch": ["(^|/)requirements\\.in$"]
+  }
 }
