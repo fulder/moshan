@@ -11,7 +11,3 @@
 
 * `export TOKEN=<TEST_USER_TOKEN>`
 * `make apitest`
-
-# Deploy
-
-* `cdk deploy`
