@@ -1,7 +1,7 @@
-fastapi==0.70.0
-fastapi-utils==0.2.1
-mangum==0.12.3
-pydantic==1.8.2
+fastapi
+fastapi-utils
+mangum
+pydantic
 
-pyjwt==2.3.0
+pyjwt
 
