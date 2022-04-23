@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/layers/api/python" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/layers/databases/python" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/layers/utils/python" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/deploy" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lambdas" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lambdas/api/watch_histories" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lambdas/api/watch_histories/api/python" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/layers/api" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/layers/databases" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/layers/utils" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/.venv" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 3.9 (moshan)" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="pytest" />
+  </component>
+</module>
