@@ -14,7 +14,7 @@ botocore==1.24.46 \
     # via
     #   boto3
     #   s3transfer
-dynamodb_json==1.3 \
+dynamodb-json==1.3 \
     --hash=sha256:236672bc144f68de6477b748ab61b8187a7d64c400d7c0f400498a930e19b8b3 \
     --hash=sha256:3d1dbfde4cb22e993fd5d78e7a16fd70480ad9d567f4f95f67a860005b0430d2
     # via -r src/layers/databases/requirements.in
