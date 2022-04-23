@@ -15,6 +15,8 @@ permissions:
   id-token: write
   contents: read
 
+concurrency: deploy
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
