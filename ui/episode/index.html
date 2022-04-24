@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/includes/icons/logo.png" />
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Moshan CSS -->
+    <link rel="stylesheet" href="/includes/css/style.css">
+
+    <!-- Moshan scripts -->
+    <script src="/includes/js/common/token.js"></script>
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/f013262c1a.js" crossorigin="anonymous"></script>
+
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <title>Moshan - Episode</title>
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-2">
+    <a class="navbar-brand" href="/index.html">
+      <img src="/includes/icons/logo.svg" class="d-inline-block align-top navbar-logo" alt="moshan_logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler"
+            aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/index.html">Home</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item mr-3">
+                <form class="form-inline" action="/results.html">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="search">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+              <ul class="dropdown-menu pull-right" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/unwatched.html">Unwatched</a></li>
+                <li><a class="dropdown-item" href="/backlog.html">Backlog</a></li>
+                <li><a class="dropdown-item" href="/history.html">History</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" onclick="logout()" href="#">Logout</a></li>
+              </ul>
+            </li>
+        </ul>
+        <button id="loginButton" onclick="authorize()" class="btn btn-outline-success nav-item" type="submit">
+            <i class="fas fa-sign-in-alt"></i>
+            Login
+        </button>
+    </div>
+</nav>
+
+<body>
+
+<div class="container-fluid">
+    <div id="episode" class="row d-none">
+      <div class="col-md-3 col-5 item">
+          <img class="img-fluid" src="/includes/img/image_not_available.png" />
+      </div>
+
+      <div class="col-md-9 col-7">
+          <h5 id="title"></h5>
+          <b>Number</b>: <span id="number"></span><br>
+          <b>Aired</b>: <span id="air_date"></span><br>
+          <b>Status</b>: <span id="status"></span><br>
+          <a id="previous_episode" class="d-none"><i class="fas fa-2x fa-arrow-alt-circle-left"></i></a>
+          <a id="next_episode" class="d-none"><i class="fas fa-2x fa-arrow-alt-circle-right"></i></a>
+      </div>
+
+      <div class="col-md-4 col-10 mt-1">
+          <button id="add_button" class="btn btn-success d-none" onclick="addEpisode()"><i class="fa fa-plus"></i> Add</button>
+          <button id="remove_button" class="btn btn-danger d-none" onclick="removeEpisode()"><i class="fa fa-minus"></i> Remove</button>
+          <b>Watched</b>:<span id="watched_amount"></span>
+          <div class="input-group input-group-sm pt-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Date</span>
+            </div>
+
+            <input id="flatpickr" type="text" class="form-control" ${!episodeAired ? 'disabled' : ''}>
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate()"><i class="fas fa-calendar-day"></i></button><button class="btn btn-danger" type="button" onclick="removeWatchDate()"><i class="far fa-calendar-times"></i></button>
+            </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+<hr/>
+<footer class="px-2">
+    <p>© Moshan 2021</p>
+</footer>
+
+<!-- Moshan scripts -->
+<script src="/includes/js/common/navbar.js"></script>
+
+<script src="/includes/js/api/common.js"></script>
+
+<script src="/includes/js/api/moshan/watch_history.js"></script>
+<script src="/includes/js/api/tvmaze.js"></script>
+<script src="/includes/js/api/mal.js"></script>
+
+<script src="/includes/js/episode.js"></script>
+
+<!-- Boostrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
