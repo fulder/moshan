@@ -1,5 +1,5 @@
 {
-  "name": "ui-service",
+  "name": "moshan",
   "version": "1.0.0",
   "description": "UI service is created using vanilla HTML and JS together with bootstrap for CSS.",
   "main": "index.js",
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fulder/ui-service.git"
+    "url": "git+https://github.com/fulder/moshan.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fulder/ui-service/issues"
+    "url": "https://github.com/fulder/moshan/issues"
   },
-  "homepage": "https://github.com/fulder/ui-service#readme"
+  "homepage": "https://github.com/fulder/moshan#readme"
 }
