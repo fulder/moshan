@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/includes/icons/logo.png" />
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Moshan CSS -->
+    <link rel="stylesheet" href="/includes/css/style.css">
+
+    <!-- Moshan scripts -->
+    <script src="/includes/js/common/token.js"></script>
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/f013262c1a.js" crossorigin="anonymous"></script>
+
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <title id="headTitle"></title>
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-2">
+    <a class="navbar-brand" href="/index.html">
+      <img src="/includes/icons/logo.svg" class="d-inline-block align-top navbar-logo" alt="moshan_logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler"
+            aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/index.html">Home</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item mr-3">
+                <form class="form-inline" action="/results.html">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="search">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+              <ul class="dropdown-menu pull-right" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/unwatched.html">Unwatched</a></li>
+                <li><a class="dropdown-item" href="/backlog.html">Backlog</a></li>
+                <li><a class="dropdown-item" href="/history.html">History</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" onclick="logout()" href="#">Logout</a></li>
+              </ul>
+            </li>
+        </ul>
+        <button id="loginButton" onclick="authorize()" class="btn btn-outline-success nav-item" type="submit">
+            <i class="fas fa-sign-in-alt"></i>
+            Login
+        </button>
+    </div>
+</nav>
+
+<body>
+
+<div class="container-fluid">
+    <div id="item" class="row d-none">
+      <div class="col-md-3 col-5 item">
+          <img id="poster" class="img-fluid" />
+      </div>
+
+      <div class="col-md-9 col-7">
+          <h5 id="title"></h5>
+          <b>Released</b>: <span id="start-date"></span><br>
+          <b>Status</b>: <span id="status"></span>
+           <div class="card mt-2 col-7 col-md-3">
+              <div class="card-header">Links</div>
+              <div class="card-body p-1">
+                  <div id="links" class="row"></div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-7 col-12 mt-1 row">
+          <div>
+            <button id="save_info" class="btn btn-success" onclick="saveItem(this)"><i class="fa fa-save"></i> Save</button>
+            <button id="add_button" class="btn btn-success d-none" onclick="addItem(this)"><i class="fa fa-plus"></i> Add</button>
+            <button id="remove_button" class="btn btn-danger d-none" onclick="removeItem(this)"><i class="fa fa-minus"></i> Remove</button>
+          </div>
+
+          <div class="col-md-6 col-11 pe-0">
+            <div id="watched-dates">
+
+            </div>
+          </div>
+
+          <div class="col-1 ps-1 pt-1">
+            <button id="new-calendar-button" class="btn btn-success rounded-circle" type="button" onclick="addCalendar(this)"><i class="fas fa-plus"></i></button>
+          </div>
+
+
+          <div class="col-md-8 col-10 pt-1">
+            <select id="user-status" class="d-inline-block form-select item-select" aria-label=".form-select-status">
+              <option value="" selected>No Status</option>
+              <option value="finished">Finished</option>
+              <option value="following">Following</option>
+              <option value="watching">Watching</option>
+              <option value="dropped">Dropped</option>
+              <option value="backlog">Backlog</option>
+            </select>
+
+            <select id="user-rating" class="d-inline-block form-select item-select" aria-label=".form-select-rating">
+              <option value="" selected>No Rating</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="overview" class="form-label mb-0">Overview</label>
+            <div class="input-group">
+              <textarea class="form-control" id="overview" aria-label="Overview"></textarea>
+            </div>
+
+            <label for="review" class="form-label mb-0">Review</label>
+            <div class="input-group">
+              <textarea class="form-control" id="review" aria-label="Review"></textarea>
+            </div>
+          </div>
+
+          <div id="static_info">
+            <b>Watched</b>:<span id="watched_amount" class="pe-2"></span>
+            <b>Added</b>:<span id="user_added_date"></span>
+          </div>
+      </div>
+
+      <div id="synopsisCol" class="mt-2 col-12">
+          <div class="card">
+              <a data-toggle="collapse" data-target="#collapseSynopsis" aria-expanded="true" aria-controls="collapseSynopsis">
+                  <div id="synopsisCardHeader" class="card-header">Synopsis</div>
+              </a>
+              <div id="collapseSynopsis" class="collapse" aria-labelledby="synopsisHeader" data-parent="#synopsisCol">
+                  <div id="synopsis" class="card-body"></div>
+              </div>
+          </div>
+     </div>
+    </div>
+
+    <div class="mt-2 col-12">
+       <nav aria-label="Episode navigation">
+           <ul id="episodesPages" class="pagination pagination-sm flex-wrap"></ul>
+       </nav>
+       <table id="episodesTable" class="table table-striped table-hover d-none">
+           <thead>
+                <tr>
+                    <th scope="col" class="episode-number-header small">#</th>
+                    <th scope="col" class="small">Title</th>
+                    <th scope="col" class="episode-date-header small">Date</th>
+                </tr>
+            </thead>
+           <tbody id="episodeTableBody"></tbody>
+       </table>
+   </div>
+</div>
+
+<hr/>
+<footer class="px-2">
+    <p>© Moshan 2021</p>
+</footer>
+
+<!-- Moshan scripts -->
+<script src="/includes/js/common/navbar.js"></script>
+
+<script src="/includes/js/api/moshan/watch_history.js"></script>
+
+<script src="/includes/js/api/mal.js"></script>
+<script src="/includes/js/api/tvmaze.js"></script>
+<script src="/includes/js/api/tmdb.js"></script>
+
+<script src="/includes/js/api/common.js"></script>
+
+<script src="/includes/js/item.js"></script>
+
+
+<!-- Boostrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
