@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: "3.9"
 
-      - uses: aws-actions/setup-sam@v1
+      - uses: aws-actions/setup-sam@v2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@master
