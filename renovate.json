@@ -10,9 +10,19 @@
       ],
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch"
+    },
+    {
+      "matchManagers": [
+        "pip_requirements"
+      ],
+      "postUpgradeTasks": {
+        "commands": [
+          "cd $(dirname {{{packageFile}}}) && pip-compile --upgrade-package={{{depName}}}=={{{newVersion}}} $(basename {{{packageFile}}} .txt).in"
+        ],
+        "fileFilters": [
+          "**/requirements*.txt"
+        ]
+      }
     }
-  ],
-  "pip-compile": {
-    "fileMatch": [".*requirements\\.in"]
-  }
+  ]
 }
