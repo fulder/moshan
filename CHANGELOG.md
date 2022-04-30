@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v9.0.0] - 2022-03-05
+
+### Changed
+* Remove `/watch-histories` prefix from all routes
+
 ## [v8.0.9] - 2022-03-05
 
 ### Changed
@@ -55,4 +60,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Run deploy workflow only if service files or SAM related files changes
 * Add CHANGELOG.md instead of using tags
 
-For older releases refer to: https://github.com/projectmovio/watch-history-service/releases
+For older releases refer to: https://github.com/fulder/moshan/releases
