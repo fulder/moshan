@@ -11,7 +11,7 @@ TEST_EPISODE_ID = "456465"
 @patch("reviews_db.get_item")
 def test_get_item(m_get_item, token, client, username):
     response = client.get(
-        f"/watch-histories/items/tvmaze/{TEST_SHOW_ID}",
+        f"/items/tvmaze/{TEST_SHOW_ID}",
         headers={"Authorization": token}
     )
 
@@ -23,7 +23,7 @@ def test_not_found(m_get_item, client, token):
     m_get_item.side_effect = reviews_db.NotFoundError
 
     response = client.get(
-        f"/watch-histories/items/tvmaze/{TEST_SHOW_ID}",
+        f"/items/tvmaze/{TEST_SHOW_ID}",
         headers={"Authorization": token}
     )
 
@@ -43,7 +43,7 @@ def test_post_item(m_add_item, m_get_ep, m_get_item, mocked_ep_count, token, cli
     m_get_item.return_value = {}
 
     response = client.post(
-        "/watch-histories/items",
+        "/items",
         headers={"Authorization": token},
         json={
             "item_api_id": TEST_SHOW_ID,
@@ -59,7 +59,7 @@ def test_post_item_tvmaze_error(m_ep_count, token, client):
     m_ep_count.side_effect = utils.HttpError(503)
 
     response = client.post(
-        "/watch-histories/items",
+        "/items",
         headers={"Authorization": token},
         json={
             "item_api_id": TEST_SHOW_ID,
@@ -84,7 +84,7 @@ def test_post_item_not_found(m_add_item, m_get_item, mocked_ep_count, token,
     ]
 
     response = client.post(
-        "/watch-histories/items",
+        "/items",
         headers={"Authorization": token},
         json={
             "item_api_id": TEST_SHOW_ID,
@@ -103,7 +103,7 @@ def test_get_episode(m_get_ep, token, client, username):
     }
 
     response = client.get(
-        f"/watch-histories/items/tvmaze/{TEST_SHOW_ID}/episodes/{TEST_EPISODE_ID}",
+        f"/items/tvmaze/{TEST_SHOW_ID}/episodes/{TEST_EPISODE_ID}",
         headers={"Authorization": token}
     )
 
@@ -116,7 +116,7 @@ def test_get_episode_not_found(m_get_ep, token, client, username):
     m_get_ep.side_effect = reviews_db.NotFoundError
 
     response = client.get(
-        f"/watch-histories/items/tvmaze/{TEST_SHOW_ID}/episodes/{TEST_EPISODE_ID}",
+        f"/items/tvmaze/{TEST_SHOW_ID}/episodes/{TEST_EPISODE_ID}",
         headers={"Authorization": token}
     )
 
@@ -129,7 +129,7 @@ def test_get_episode_not_found(m_get_ep, token, client, username):
 def test_put_episode(m_update_ep, m_get_item, m_get_ep, token, client,
                      username):
     response = client.put(
-        f"/watch-histories/items/tvmaze/{TEST_SHOW_ID}/episodes/{TEST_EPISODE_ID}",
+        f"/items/tvmaze/{TEST_SHOW_ID}/episodes/{TEST_EPISODE_ID}",
         headers={"Authorization": token},
         json={
             "review": "new_review"
@@ -144,7 +144,7 @@ def test_get_episodes(m_get_eps, token, client, username):
     m_get_eps.return_value = [1, 2, 3]
 
     response = client.get(
-        f"/watch-histories/items/tvmaze/{TEST_SHOW_ID}/episodes",
+        f"/items/tvmaze/{TEST_SHOW_ID}/episodes",
         headers={"Authorization": token},
     )
 
