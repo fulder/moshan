@@ -60,4 +60,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Run deploy workflow only if service files or SAM related files changes
 * Add CHANGELOG.md instead of using tags
 
-For older releases refer to: https://github.com/projectmovio/watch-history-service/releases
+For older releases refer to: https://github.com/fulder/moshan/releases
