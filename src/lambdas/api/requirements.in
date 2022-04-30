@@ -4,5 +4,4 @@ mangum
 pydantic
 
 pyjwt
-starlette==0.17.1
 
