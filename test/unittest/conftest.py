@@ -3,7 +3,6 @@ import sys
 
 import jwt
 import pytest
-from api import app
 from starlette.testclient import TestClient
 
 os.environ["LOG_LEVEL"] = "DEBUG"
@@ -21,6 +20,8 @@ sys.path.append(UTILS_PATH)
 sys.path.append(DATABASES_PATH)
 sys.path.append(API_PATH)
 sys.path.append(API_LAMBDA_PATH)
+
+from app import app
 
 
 @pytest.fixture(scope="session")

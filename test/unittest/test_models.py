@@ -1,4 +1,4 @@
-from api.app import Review
+from app import Review
 
 EPISODE_DATA = {
     "api_id": "21",
