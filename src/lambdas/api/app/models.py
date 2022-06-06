@@ -61,6 +61,10 @@ class ApiCache(BaseModel):
     status: Optional[str]
     ep_count: Optional[int]
 
+    class Config:
+        alias_generator = to_camel
+        allow_population_by_field_name = True
+
 
 class Review(BaseModel):
     api_name: str
