@@ -29,7 +29,6 @@ async function getEpisode() {
     watchHistoryEpisode = watchHistoryRes.data;
     if (qParams.api_info === null) {
       qParams.api_id = watchHistoryEpisode[`${qParams.api_name}_id`];
-      qParams.episode_id = watchHistoryEpisode.id;
     }
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
