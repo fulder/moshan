@@ -98,8 +98,8 @@ function createItem (moshanItem, watchHistoryItem) {
   console.debug(moshanItem);
 
   let datesWatched = [];
-  if (itemAdded && 'dates_watched' in watchHistoryItem && watchHistoryItem['dates_watched'].length > 0) {
-    datesWatched = watchHistoryItem['dates_watched'];
+  if (itemAdded && 'datesWatched' in watchHistoryItem && watchHistoryItem['datesWatched'].length > 0) {
+    datesWatched = watchHistoryItem['datesWatched'];
   }
 
   if (itemAdded && 'overview' in watchHistoryItem) {
@@ -114,8 +114,8 @@ function createItem (moshanItem, watchHistoryItem) {
   if (itemAdded && 'rating' in watchHistoryItem) {
       document.getElementById('user-rating').value = watchHistoryItem.rating;
   }
-  if (itemAdded && 'created_at' in watchHistoryItem) {
-      document.getElementById('user_added_date').innerHTML = watchHistoryItem.created_at;
+  if (itemAdded && 'createdAt' in watchHistoryItem) {
+      document.getElementById('user_added_date').innerHTML = watchHistoryItem.createdAt;
   }
 
   document.getElementById('poster').src = moshanItem.poster;
