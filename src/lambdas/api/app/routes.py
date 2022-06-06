@@ -75,7 +75,7 @@ def add_item(username, api_name, api_id, data):
             ep_count_res = jikan_api.get_episode_count(api_id)
     except utils.HttpError as e:
         err_msg = (
-            f"Could not validate item in add_item"
+            "Could not validate item in add_item"
             f" from {api_name} api with id: {api_id}"
         )
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -156,7 +156,7 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
             raise HTTPException(status_code=501)
     except utils.HttpError as e:
         err_msg = (
-            f"Could not get show episode in add_episode func"
+            "Could not get show episode in add_episode func"
             f" from {api_name} api with id: {episode_api_id}"
         )
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -171,7 +171,7 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
     except reviews_db.NotFoundError:
         err_msg = (
             f"Item with api_id: {item_api_id} not found. "
-            f"Please add it to the watch-history before posting episode"
+            "Please add it to the watch-history before posting episode"
         )
         raise HTTPException(status_code=404, detail=err_msg)
 
@@ -203,7 +203,7 @@ def update_episode(username, api_name, item_api_id, episode_api_id, data):
             raise HTTPException(status_code=501)
     except utils.HttpError as e:
         err_msg = (
-            f"Could not get episode in add_episode func"
+            "Could not get episode in add_episode func"
             f" from {api_name} api with id: {episode_api_id}"
         )
         log.error(f"{err_msg}. Error: {str(e)}")
@@ -218,7 +218,7 @@ def update_episode(username, api_name, item_api_id, episode_api_id, data):
     except reviews_db.NotFoundError:
         err_msg = (
             f"Item with api_id: {item_api_id} not found. "
-            f"Please add it to the watch-history before posting episode"
+            "Please add it to the watch-history before posting episode"
         )
         raise HTTPException(status_code=404, detail=err_msg)
 
@@ -268,7 +268,7 @@ def delete_episode(username, api_name, item_api_id, episode_api_id):
             raise HTTPException(status_code=501)
     except utils.HttpError as e:
         err_msg = (
-            f"Could not get episode in delete_episode func"
+            "Could not get episode in delete_episode func"
             f" from {api_name} api with id: {episode_api_id}"
         )
         log.error(f"{err_msg}. Error: {str(e)}")

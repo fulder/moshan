@@ -211,7 +211,9 @@ def get_episodes(username, api_name, item_api_id):
 
     query_kwargs = {
         "TableName": REVIEWS_DATABASE_NAME,
-        "KeyConditionExpression": "username = :username AND begins_with(api_info, :api_info)",
+        "KeyConditionExpression": (
+            "username = :username AND begins_with(api_info, :api_info)"
+        ),
         "ExpressionAttributeValues": {
             ":username": {"S": username},
             ":api_info": {"S": api_info},
@@ -359,8 +361,9 @@ def get_user_items(username, index_name=None, status_filter=None):
 
     query_kwargs = {
         "TableName": REVIEWS_DATABASE_NAME,
-        "KeyConditionExpression": "username = :username AND "
-        "begins_with(api_info, :api_info) ",
+        "KeyConditionExpression": (
+            "username = :username AND begins_with(api_info, :api_info) "
+        ),
         "ExpressionAttributeValues": {
             ":username": {"S": username},
             ":api_info": {"S": "i_"},

@@ -20,7 +20,10 @@ def test_get_watch_history_invalid_collection_item():
 
     assert res.status_code == 400
     assert res.json() == {
-        "message": "Invalid collection name, allowed values: ['anime', 'show', 'movie']"
+        "message": (
+            "Invalid collection name, allowed values: ['anime', 'show',"
+            " 'movie']"
+        )
     }
     time.sleep(1)
 
@@ -28,14 +31,14 @@ def test_get_watch_history_invalid_collection_item():
 def test_get_watch_history():
     # Setup
     res = requests.post(
-        f"{API_URL}/watch-history/collection/anime",
+        f"{API_URL}/items",
         json={"id": "23d5d8c1-2ab0-5279-a501-4d248dc9a63c"},
         headers=BASE_HEADERS,
     )
     assert res.status_code == 204
     time.sleep(1)
     res = requests.post(
-        f"{API_URL}/watch-history/collection/anime",
+        f"{API_URL}/items",
         json={"api_id": "0877ed59-6198-5cf4-a254-91564808db3e"},
         headers=BASE_HEADERS,
     )
@@ -45,9 +48,7 @@ def test_get_watch_history():
     # Test
     res = requests.get(f"{API_URL}/watch-history", headers=BASE_HEADERS)
     time.sleep(1)
-    res_col = requests.get(
-        f"{API_URL}/watch-history/collection/anime", headers=BASE_HEADERS
-    )
+    res_col = requests.get(f"{API_URL}/items", headers=BASE_HEADERS)
 
     # Assert
     assert res.status_code == 200
@@ -94,7 +95,7 @@ def test_get_watch_history():
 
 def test_post_anime_item():
     res = requests.post(
-        f"{API_URL}/watch-history/collection/anime",
+        f"{API_URL}/items",
         json={"id": "23d5d8c1-2ab0-5279-a501-4d248dc9a63c"},
         headers=BASE_HEADERS,
     )
@@ -105,7 +106,7 @@ def test_post_anime_item():
 
 def test_delete_anime_item():
     res = requests.post(
-        f"{API_URL}/watch-history/collection/anime",
+        f"{API_URL}/items",
         json={"id": "23d5d8c1-2ab0-5279-a501-4d248dc9a63c"},
         headers=BASE_HEADERS,
     )
@@ -113,14 +114,14 @@ def test_delete_anime_item():
     time.sleep(1)
 
     res = requests.delete(
-        f"{API_URL}/watch-history/collection/anime/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
+        f"{API_URL}/items/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
         headers=BASE_HEADERS,
     )
     assert res.status_code == 204
     time.sleep(1)
 
     res = requests.get(
-        f"{API_URL}/watch-history/collection/anime/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
+        f"{API_URL}/items/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
         headers=BASE_HEADERS,
     )
     assert res.status_code == 404
@@ -129,7 +130,7 @@ def test_delete_anime_item():
 
 def test_get_anime_item():
     res = requests.post(
-        f"{API_URL}/watch-history/collection/anime",
+        f"{API_URL}/items",
         json={"id": "23d5d8c1-2ab0-5279-a501-4d248dc9a63c"},
         headers=BASE_HEADERS,
     )
@@ -137,7 +138,7 @@ def test_get_anime_item():
     time.sleep(1)
 
     res = requests.get(
-        f"{API_URL}/watch-history/collection/anime/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
+        f"{API_URL}/items/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
         headers=BASE_HEADERS,
     )
     assert res.status_code == 200
@@ -152,7 +153,7 @@ def test_get_anime_item():
 
 def test_patch_anime_item():
     res = requests.post(
-        f"{API_URL}/watch-history/collection/anime",
+        f"{API_URL}/items",
         json={"id": "23d5d8c1-2ab0-5279-a501-4d248dc9a63c"},
         headers=BASE_HEADERS,
     )
@@ -160,7 +161,7 @@ def test_patch_anime_item():
     time.sleep(1)
 
     res = requests.patch(
-        f"{API_URL}/watch-history/collection/anime/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
+        f"{API_URL}/items/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
         json={"rating": 2, "overview": "My overview", "review": "My review"},
         headers=BASE_HEADERS,
     )
@@ -169,7 +170,7 @@ def test_patch_anime_item():
     time.sleep(1)
 
     res = requests.get(
-        f"{API_URL}/watch-history/collection/anime/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
+        f"{API_URL}/items/23d5d8c1-2ab0-5279-a501-4d248dc9a63c",
         headers=BASE_HEADERS,
     )
     assert res.status_code == 200

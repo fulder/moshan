@@ -6,3 +6,4 @@ profile = "black"
 
 [tool.black]
 line-length = 80
+experimental-string-processing = true
