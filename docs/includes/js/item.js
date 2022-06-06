@@ -54,7 +54,6 @@ async function getItemByApiId() {
     const watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItemByApiId(qParams);
     console.debug(watchHistoryItemRes);
     watchHistoryItem = watchHistoryItemRes.data;
-    qParams.id = watchHistoryItem.item_id;
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
       console.log(error);
