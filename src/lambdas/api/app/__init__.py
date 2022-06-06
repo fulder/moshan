@@ -4,21 +4,21 @@ import jwt
 from fastapi import FastAPI, Request
 from mangum import Mangum
 
-import routes
-from models import PostItem, PostEpisode, ReviewData, review_data_to_dict, Sort, \
-    Items
+from . import routes
+from .models import PostItem, PostEpisode, ReviewData, review_data_to_dict, Sort, \
+    Reviews, Review
 
 app = FastAPI()
 
 
-@app.get("/items", response_model=Items)
+@app.get("/items", response_model=Reviews)
 def get_items(request: Request,
               sort: Optional[Sort] = None,
               cursor: Optional[str] = None):
     return routes.get_items(request.state.username, sort, cursor)
 
 
-@app.get("/items/{api_name}/{item_api_id}")
+@app.get("/items/{api_name}/{item_api_id}", response_model=Review)
 def get_item(request: Request, api_name: str, item_api_id: str):
     return routes.get_item(request.state.username, api_name, item_api_id)
 
@@ -49,7 +49,7 @@ def add_item(request: Request, item: PostItem):
     )
 
 
-@app.get("/items/{api_name}/{item_api_id}/episodes")
+@app.get("/items/{api_name}/{item_api_id}/episodes", response_model=Reviews)
 def get_episodes(request: Request, api_name: str, item_api_id: str):
     return routes.get_episodes(
         request.state.username,
@@ -71,7 +71,9 @@ def add_episode(request: Request, api_name, item_api_id, episode: PostEpisode):
 
 
 @app.get(
-    "/items/{api_name}/{item_api_id}/episodes/{episode_api_id}")
+    "/items/{api_name}/{item_api_id}/episodes/{episode_api_id}",
+    response_model=Review,
+)
 def get_episode(request: Request, api_name: str, item_api_id: str,
                 episode_api_id: str):
     return routes.get_episode(
@@ -84,7 +86,8 @@ def get_episode(request: Request, api_name: str, item_api_id: str,
 
 @app.put(
     "/items/{api_name}/{item_api_id}/episodes/{episode_api_id}",
-    status_code=204)
+    status_code=204,
+)
 def update_episode(request: Request, api_name: str, item_api_id: str,
                    episode_api_id: str, data: ReviewData):
     routes.update_episode(
@@ -98,7 +101,8 @@ def update_episode(request: Request, api_name: str, item_api_id: str,
 
 @app.delete(
     "/items/{api_name}/{item_api_id}/episodes/{episode_api_id}",
-    status_code=204)
+    status_code=204,
+)
 def delete_episode(request: Request, api_name: str, item_api_id: str,
                    episode_api_id: str):
     routes.delete_episode(

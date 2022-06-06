@@ -1,0 +1,10 @@
+-r src/lambdas/api/requirements.in
+-r src/layers/api/requirements.in
+-r src/layers/databases/requirements.in
+-r src/layers/utils/requirements.in
+
+
+pytest
+pytest-cov
+pytest-html
+boto3

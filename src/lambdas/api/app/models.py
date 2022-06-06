@@ -1,19 +1,18 @@
 from datetime import datetime
 from enum import auto
-from typing import Optional, List, Dict
+from typing import Optional, List
 
-from fastapi_utils.enums import StrEnum
+from fastapi_utils.enums import CamelStrEnum
 
 from pydantic import BaseModel
 
 
-class ApiName(StrEnum):
-    tmdb = auto()
-    tvmaze = auto()
-    mal = auto()
+def to_camel(snake_str):
+    s = snake_str.split('_')
+    return s[0] + ''.join(x.title() for x in s[1:])
 
 
-class Status(StrEnum):
+class Status(CamelStrEnum):
     finished = auto()
     following = auto()
     watching = auto()
@@ -28,6 +27,16 @@ class ReviewData(BaseModel):
     dates_watched: Optional[List[datetime]]
     status: Optional[Status]
 
+    class Config:
+        alias_generator = to_camel
+        allow_population_by_field_name = True
+
+
+class ApiName(CamelStrEnum):
+    tmdb = auto()
+    tvmaze = auto()
+    mal = auto()
+
 
 class PostItem(ReviewData):
     item_api_id: str
@@ -38,18 +47,29 @@ class PostEpisode(ReviewData):
     episode_api_id: str
 
 
-class Sort(StrEnum):
+class Sort(CamelStrEnum):
     backlog_date = auto()
     ep_progress = auto()
     latest_watch_date = auto()
 
 
-class Item(BaseModel):
+class ApiCache(BaseModel):
+    special_count: Optional[int]
+    release_date: Optional[str]
+    cache_updated: Optional[str]
+    image_url: Optional[str]
+    title: Optional[str]
+    status: Optional[str]
+    ep_count: Optional[int]
+
+class Review(BaseModel):
     api_name: str
     api_id: str
     created_at: str
-    api_cache: Dict
-    update_at: Optional[str]
+
+    api_cache: Optional[ApiCache]
+    dates_watched: Optional[List[str]]
+    updated_at: Optional[str]
     deleted_at: Optional[str]
     status: Optional[Status]
     backlog_date: Optional[str]
@@ -63,9 +83,13 @@ class Item(BaseModel):
     special_progress: Optional[int]
     watched_specials: Optional[int]
 
+    class Config:
+        alias_generator = to_camel
+        allow_population_by_field_name = True
 
-class Items(BaseModel):
-    items: List[Item]
+
+class Reviews(BaseModel):
+    items: List[Review]
     end_cursor: Optional[str]
 
 

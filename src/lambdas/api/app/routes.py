@@ -31,6 +31,8 @@ def get_item(username, api_name, api_id):
             api_name,
             api_id,
         )
+        w_ret["api_name"] = api_name
+        w_ret["api_id"] = api_id
         return w_ret
     except reviews_db.NotFoundError:
         raise HTTPException(status_code=404)

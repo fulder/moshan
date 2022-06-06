@@ -19,7 +19,22 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="" />
+    <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/moshan.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/moshan.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/renovate.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lambdas/api/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lambdas/api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lambdas/api/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lambdas/api/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/api/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/databases/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/databases/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/utils/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/utils/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/unittest/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/unittest/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/unittest/requirements.txt" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,36 +90,14 @@
       <recent name="$PROJECT_DIR$/src/layers/api/python" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/layers/databases" />
       <recent name="$PROJECT_DIR$/src/lambdas/api" />
       <recent name="$PROJECT_DIR$/src/lambdas" />
       <recent name="$PROJECT_DIR$/src/layers/utils" />
-      <recent name="$PROJECT_DIR$/src/layers/api" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.cleanup_downloads">
-    <configuration name="add_new_ep_count_properties" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="moshan" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="AWS_PROFILE" value="moshan" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/scripts" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/add_new_ep_count_properties.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python tests.pytest for test_models.test_parse_episode">
     <configuration name="cleanup_downloads" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="moshan" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -243,22 +236,38 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="pytest for test_models.test_parse_episode" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="moshan" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/unittest" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_models.test_parse_episode&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.migrate_anime_episodes_from_watchhistory" />
       <item itemvalue="Python.migrate_show_episodes_from_watchhistory" />
-      <item itemvalue="Python.add_new_ep_count_properties" />
+      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.scratch_29" />
       <item itemvalue="Python.scratch_41" />
       <item itemvalue="Python.scratch_42" />
-      <item itemvalue="Python.cleanup_downloads" />
+      <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
         <item itemvalue="Python.cleanup_downloads" />
         <item itemvalue="Python.scratch_42" />
         <item itemvalue="Python.scratch_41" />
         <item itemvalue="Python.scratch_29" />
-        <item itemvalue="Python.add_new_ep_count_properties" />
       </list>
     </recent_temporary>
   </component>
