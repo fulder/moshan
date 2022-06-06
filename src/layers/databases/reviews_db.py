@@ -232,7 +232,7 @@ def get_episodes(username, api_name, item_api_id):
             i = json_util.loads(i)
             i["api_name"] = api_name
             i["api_id"] = item_api_id
-            i["episode_api_id"] = i["api_info"].split("_")
+            i["episode_api_id"] = i["api_info"].split("_")[3]
 
             res.append(i)
     return res
