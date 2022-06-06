@@ -1,15 +1,14 @@
 from datetime import datetime
 from enum import auto
-from typing import Optional, List
+from typing import List, Optional
 
 from fastapi_utils.enums import CamelStrEnum
-
 from pydantic import BaseModel
 
 
 def to_camel(snake_str):
-    s = snake_str.split('_')
-    return s[0] + ''.join(x.title() for x in s[1:])
+    s = snake_str.split("_")
+    return s[0] + "".join(x.title() for x in s[1:])
 
 
 class Status(CamelStrEnum):
@@ -61,6 +60,7 @@ class ApiCache(BaseModel):
     title: Optional[str]
     status: Optional[str]
     ep_count: Optional[int]
+
 
 class Review(BaseModel):
     api_name: str

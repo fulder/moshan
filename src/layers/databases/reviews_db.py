@@ -1,17 +1,16 @@
 import json
 import os
 import time
+from datetime import datetime
 from decimal import Decimal
 from urllib.parse import quote, unquote
-from datetime import datetime
 
 import boto3
 import dateutil.parser
-from boto3.dynamodb.conditions import Key, Attr
-from dynamodb_json import json_util
-
 import logger
+from boto3.dynamodb.conditions import Attr, Key
 from decimal_encoder import DecimalEncoder
+from dynamodb_json import json_util
 
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
@@ -136,8 +135,8 @@ def get_episode(username, api_name, api_id, episode_id, include_deleted=False):
 
 def _get_review(username, api_info, include_deleted=False):
     kwargs = {
-        "KeyConditionExpression": Key("username").eq(username) &
-                                  Key("api_info").eq(api_info),
+        "KeyConditionExpression": Key("username").eq(username)
+        & Key("api_info").eq(api_info),
     }
 
     if not include_deleted:
@@ -174,9 +173,7 @@ def get_all_items(username, sort=None, cursor=None):
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
 
     res = _get_table().query(**kwargs)
-    ret = {
-        "items": []
-    }
+    ret = {"items": []}
     for i in res.get("Items", []):
         s = i["api_info"].split("_")
         i["api_name"] = s[1]
@@ -210,7 +207,7 @@ def get_items(api_name, api_id):
 def get_episodes(username, api_name, item_api_id):
     api_info = f"e_{api_name}_{item_api_id}_"
 
-    paginator = _get_client().get_paginator('query')
+    paginator = _get_client().get_paginator("query")
 
     query_kwargs = {
         "TableName": REVIEWS_DATABASE_NAME,
@@ -236,8 +233,7 @@ def get_episodes(username, api_name, item_api_id):
     return res
 
 
-def update_item(username, api_name, api_id, data,
-                clean_whitelist=None):
+def update_item(username, api_name, api_id, data, clean_whitelist=None):
     if clean_whitelist is None:
         clean_whitelist = OPTIONAL_FIELDS
 
@@ -249,8 +245,9 @@ def update_item(username, api_name, api_id, data,
     )
 
 
-def update_episode(username, api_name, api_id, episode_id, data,
-                   clean_whitelist=None):
+def update_episode(
+    username, api_name, api_id, episode_id, data, clean_whitelist=None
+):
     if clean_whitelist is None:
         clean_whitelist = OPTIONAL_FIELDS
 
@@ -320,12 +317,11 @@ def _update_review(username, api_info, data, clean_whitelist):
         Key=key,
         UpdateExpression=update_expression,
         ExpressionAttributeNames=expression_attribute_names,
-        ExpressionAttributeValues=expression_attribute_values
+        ExpressionAttributeValues=expression_attribute_values,
     )
 
 
-def change_watched_eps(username, api_name, api_id, change,
-                       special=False):
+def change_watched_eps(username, api_name, api_id, change, special=False):
     field_name = "ep"
     if special:
         field_name = "special"
@@ -354,23 +350,23 @@ def change_watched_eps(username, api_name, api_id, change,
         ExpressionAttributeValues={
             ":p": ep_progress,
             ":i": change,
-        }
+        },
     )
 
 
 def get_user_items(username, index_name=None, status_filter=None):
-    paginator = _get_client().get_paginator('query')
+    paginator = _get_client().get_paginator("query")
 
     query_kwargs = {
         "TableName": REVIEWS_DATABASE_NAME,
         "KeyConditionExpression": "username = :username AND "
-                                  "begins_with(api_info, :api_info) ",
+        "begins_with(api_info, :api_info) ",
         "ExpressionAttributeValues": {
             ":username": {"S": username},
-            ":api_info": {"S": "i_"}
+            ":api_info": {"S": "i_"},
         },
         "ScanIndexForward": False,
-        "FilterExpression": "attribute_not_exists(deleted_at)"
+        "FilterExpression": "attribute_not_exists(deleted_at)",
     }
 
     if index_name is not None:
@@ -390,9 +386,7 @@ def get_user_items(username, index_name=None, status_filter=None):
         query_kwargs["ExpressionAttributeNames"] = {
             "#index_name": index_name,
         }
-        query_kwargs["ExpressionAttributeValues"][":progress"] = {
-            "N": "100"
-        }
+        query_kwargs["ExpressionAttributeValues"][":progress"] = {"N": "100"}
 
     log.debug(f"Query kwargs: {query_kwargs}")
 

@@ -3,8 +3,8 @@ import sys
 
 import jwt
 import pytest
-from starlette.testclient import TestClient
 from api import app
+from starlette.testclient import TestClient
 
 os.environ["LOG_LEVEL"] = "DEBUG"
 
@@ -23,20 +23,16 @@ sys.path.append(API_PATH)
 sys.path.append(API_LAMBDA_PATH)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def client():
     return TestClient(app)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def username():
     return "TEST_USER"
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def token(username):
-    return jwt.encode(
-        {"username": username},
-        "secret",
-        algorithm="HS256"
-    )
+    return jwt.encode({"username": username}, "secret", algorithm="HS256")
