@@ -21,7 +21,7 @@ sys.path.append(DATABASES_PATH)
 sys.path.append(API_PATH)
 sys.path.append(API_LAMBDA_PATH)
 
-from app import app     # noqa
+from app import app  # noqa
 
 
 @pytest.fixture(scope="session")
