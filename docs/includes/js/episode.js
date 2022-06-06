@@ -56,17 +56,13 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
 
   const episodeAdded = watchHistoryEpisode !== null;
 
-  if (episodeAdded) {
-    qParams.episode_id = watchHistoryEpisode.id;
-  }
-
   let watchedAmount = 0;
   let latestWatchDate = '';
 
-  if (episodeAdded && 'dates_watched' in watchHistoryEpisode && watchHistoryEpisode['dates_watched'].length > 0) {
-    datesWatched = watchHistoryEpisode['dates_watched'];
+  if (episodeAdded && 'datesWatched' in watchHistoryEpisode && watchHistoryEpisode.datesWatched.length > 0) {
+    datesWatched = watchHistoryEpisode.datesWatched;
 
-    latestWatchDate = watchHistoryEpisode['latest_watch_date'];
+    latestWatchDate = watchHistoryEpisode.latestWatchDate;
     console.debug(`Latest watch date: ${latestWatchDate}`);
     watchedAmount = datesWatched.length;
   }
