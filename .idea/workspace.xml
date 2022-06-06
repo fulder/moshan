@@ -20,13 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/moshan.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/moshan.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/unittest/test_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/unittest/test_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/unittest/test_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/unittest/test_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

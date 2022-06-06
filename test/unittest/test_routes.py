@@ -91,8 +91,6 @@ def test_post_item_not_found(
 def test_get_episode(m_get_ep, token, client, username):
     m_get_ep.return_value = {"created_at": "CREATED_AT_DATE"}
 
-    api_info = f"tvmaze_{TEST_SHOW_ID}_{TEST_EPISODE_ID}"
-
     response = client.get(
         f"/items/tvmaze/{TEST_SHOW_ID}/episodes/{TEST_EPISODE_ID}",
         headers={"Authorization": token},
