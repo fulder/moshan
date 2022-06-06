@@ -10,6 +10,8 @@ TEST_EPISODE_ID = "456465"
 
 @patch("reviews_db.get_item")
 def test_get_item(m_get_item, token, client, username):
+    m_get_item.return_value = {"created_at": "CREATED_AT_DATE"}
+
     response = client.get(
         f"/items/tvmaze/{TEST_SHOW_ID}", headers={"Authorization": token}
     )
@@ -87,8 +89,9 @@ def test_post_item_not_found(
 
 @patch("reviews_db.get_episode")
 def test_get_episode(m_get_ep, token, client, username):
+    m_get_ep.return_value = {"created_at": "CREATED_AT_DATE"}
+
     api_info = f"tvmaze_{TEST_SHOW_ID}_{TEST_EPISODE_ID}"
-    m_get_ep.return_value = {"api_info": api_info}
 
     response = client.get(
         f"/items/tvmaze/{TEST_SHOW_ID}/episodes/{TEST_EPISODE_ID}",
@@ -96,7 +99,12 @@ def test_get_episode(m_get_ep, token, client, username):
     )
 
     assert response.status_code == 200
-    assert response.json() == {"api_info": api_info}
+    assert response.json() == {
+        "apiId": "123123",
+        "apiName": "tvmaze",
+        "createdAt": "CREATED_AT_DATE",
+        "episodeApiId": "456465",
+    }
 
 
 @patch("reviews_db.get_episode")
@@ -128,7 +136,26 @@ def test_put_episode(
 
 @patch("reviews_db.get_episodes")
 def test_get_episodes(m_get_eps, token, client, username):
-    m_get_eps.return_value = [1, 2, 3]
+    m_get_eps.return_value = [
+        {
+            "api_id": TEST_SHOW_ID,
+            "api_name": "tvmaze",
+            "episode_api_id": 1,
+            "created_at": "ep_1_created_at",
+        },
+        {
+            "api_id": TEST_SHOW_ID,
+            "api_name": "tvmaze",
+            "episode_api_id": 2,
+            "created_at": "ep_2_created_at",
+        },
+        {
+            "api_id": TEST_SHOW_ID,
+            "api_name": "tvmaze",
+            "episode_api_id": 3,
+            "created_at": "ep_3_created_at",
+        },
+    ]
 
     response = client.get(
         f"/items/tvmaze/{TEST_SHOW_ID}/episodes",
@@ -136,4 +163,25 @@ def test_get_episodes(m_get_eps, token, client, username):
     )
 
     assert response.status_code == 200
-    assert response.json() == m_get_eps.return_value
+    assert response.json() == {
+        "episodes": [
+            {
+                "apiId": "123123",
+                "apiName": "tvmaze",
+                "createdAt": "ep_1_created_at",
+                "episodeApiId": "1",
+            },
+            {
+                "apiId": "123123",
+                "apiName": "tvmaze",
+                "createdAt": "ep_2_created_at",
+                "episodeApiId": "2",
+            },
+            {
+                "apiId": "123123",
+                "apiName": "tvmaze",
+                "createdAt": "ep_3_created_at",
+                "episodeApiId": "3",
+            },
+        ]
+    }

@@ -6,12 +6,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/layers/databases/python" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/layers/utils/python" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/deploy" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/lambdas" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lambdas/api/watch_histories" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/lambdas/api/watch_histories/api/python" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/layers/api" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/layers/databases" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/layers/utils" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/lambdas/api" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>

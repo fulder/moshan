@@ -125,21 +125,26 @@ def delete_item(username, api_name, api_id):
 
 
 def get_episodes(username, api_name, api_id):
-    return reviews_db.get_episodes(
+    eps = reviews_db.get_episodes(
         username,
         api_name,
         api_id,
     )
+    return {"episodes": eps}
 
 
 def get_episode(username, api_name, item_api_id, episode_api_id):
     try:
-        return reviews_db.get_episode(
+        ret = reviews_db.get_episode(
             username,
             api_name,
             item_api_id,
             episode_api_id,
         )
+        ret["api_name"] = api_name
+        ret["api_id"] = item_api_id
+        ret["episode_api_id"] = episode_api_id
+        return ret
     except reviews_db.NotFoundError:
         raise HTTPException(status_code=404)
 

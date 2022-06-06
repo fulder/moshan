@@ -230,7 +230,10 @@ def get_episodes(username, api_name, item_api_id):
     for p in page_iterator:
         for i in p["Items"]:
             i = json_util.loads(i)
-            i["api_id"] = i["api_info"].split("_")[3]
+            i["api_name"] = api_name
+            i["api_id"] = item_api_id
+            i["episode_api_id"] = i["api_info"].split("_")
+
             res.append(i)
     return res
 

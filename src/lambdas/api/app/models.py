@@ -88,9 +88,17 @@ class Review(BaseModel):
         allow_population_by_field_name = True
 
 
+class EpisodeReview(Review):
+    episode_api_id: str
+
+
 class Reviews(BaseModel):
     items: List[Review]
     end_cursor: Optional[str]
+
+
+class EpisodeReviews(BaseModel):
+    episodes: List[EpisodeReview]
 
 
 def review_data_to_dict(data: ReviewData):

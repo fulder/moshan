@@ -6,6 +6,8 @@ from mangum import Mangum
 
 from . import routes
 from .models import (
+    EpisodeReview,
+    EpisodeReviews,
     PostEpisode,
     PostItem,
     Review,
@@ -63,7 +65,7 @@ def add_item(request: Request, item: PostItem):
 
 @app.get(
     "/items/{api_name}/{item_api_id}/episodes",
-    response_model=Reviews,
+    response_model=EpisodeReviews,
     response_model_exclude_none=True,
 )
 def get_episodes(request: Request, api_name: str, item_api_id: str):
@@ -87,7 +89,7 @@ def add_episode(request: Request, api_name, item_api_id, episode: PostEpisode):
 
 @app.get(
     "/items/{api_name}/{item_api_id}/episodes/{episode_api_id}",
-    response_model=Review,
+    response_model=EpisodeReview,
     response_model_exclude_none=True,
 )
 def get_episode(
