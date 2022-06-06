@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v10.0.0] - 2022-06-06
+
+### Changed
+* Added more strict response models for following `GET` routes including change of JSON keys from snake case to camel case:
+  * `GET /items/{api_name}/{item_api_id}`
+  * `GET /items`
+  * `GET /items/{api_name}/{item_api_id}/episodes`
+  * `GET /items/{api_name}/{item_api_id}/episodes/{episode_api_id}`
+
 ## [v9.0.0] - 2022-04-30
 
 ### Changed
