@@ -3,6 +3,7 @@ from typing import Optional
 import jwt
 from fastapi import FastAPI, Request
 from mangum import Mangum
+from starlette.responses import Response
 
 from . import routes
 from .models import (
@@ -139,11 +140,13 @@ def delete_episode(
 
 
 @app.middleware("http")
-def parse_token(request: Request, call_next):
+async def parse_token(request: Request, call_next):
     auth_header = request.headers.get("authorization")
+    if auth_header is None:
+        return Response(content="Missing Authorization Header", status_code=401)
     decoded = jwt.decode(auth_header, options={"verify_signature": False})
     request.state.username = decoded["username"]
-    return call_next(request)
+    return await call_next(request)
 
 
 handler = Mangum(app, api_gateway_base_path="/prod")
