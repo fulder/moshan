@@ -42,8 +42,8 @@ class WatchHistoryApi {
 
   addWatchHistoryItem (qParams) {
     let data = {
-      item_api_id: qParams.api_id,
-      api_name: qParams.api_name,
+      itemApiId: qParams.api_id,
+      apiName: qParams.api_name,
     };
     return this.apiAxios.post('/items', data);
   }
