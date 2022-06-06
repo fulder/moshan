@@ -3,8 +3,11 @@
 -r src/layers/databases/requirements.in
 -r src/layers/utils/requirements.in
 
-
 pytest
 pytest-cov
 pytest-html
 boto3
+
+black
+isort
+flake8
