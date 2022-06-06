@@ -79,11 +79,9 @@ class Review(BaseModel):
     backlog_date: Optional[str]
     latest_watch_date: Optional[str]
     # eps
-    ep_count: Optional[int]
     ep_progress: Optional[int]
     watched_eps: Optional[int]
     # specials
-    special_count: Optional[int]
     special_progress: Optional[int]
     watched_specials: Optional[int]
 
