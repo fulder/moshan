@@ -1,7 +1,7 @@
-/* global WatchHistoryApi, accessToken */
+/* global MoshanApi, accessToken */
 //const urlParams = new URLSearchParams(window.location.search);
 
-const watchHistoryApi = new WatchHistoryApi();
+const moshanApi = new MoshanApi();
 
 let currentCursor = null;
 let loadingMore = false;
@@ -15,7 +15,7 @@ if (accessToken === null) {
 createTableRows();
 
 async function createTableRows(cursor='') {
-    const response = await watchHistoryApi.getWatchHistory('backlogDate', cursor);
+    const response = await moshanApi.getItems('backlogDate', cursor);
     const items = response.data.items;
     currentCursor = response.data.endCursor;
 
