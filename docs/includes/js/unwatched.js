@@ -33,7 +33,7 @@ async function createItems(items) {
     const apiCache = item.apiCache;
 
     let image = '/includes/img/image_not_available.png';
-    if (apiCache.imageUrl !== null) {
+    if ('imageUrl' in apiCache && apiCache.imageUrl !== null) {
       image = apiCache.imageUrl.replace('original_untouched', 'medium_portrait');
     }
 
