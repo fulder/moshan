@@ -1,10 +1,10 @@
 from datetime import datetime
 
 import jikan
+import reviews_db
 import tmdb
 import tvmaze
 import updates
-import reviews_db
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
@@ -49,7 +49,7 @@ def _check_tvmaze_updates():
 
 
 def _check_mal_updates():
-    day_of_week = datetime.today().strftime('%A').lower()
+    day_of_week = datetime.today().strftime("%A").lower()
     airing = jikan_api.get_schedules(day_of_week)["data"]
 
     for a in airing:

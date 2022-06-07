@@ -9,14 +9,12 @@ class Error(Exception):
 
 
 class HttpError(Error):
-
     def __init__(self, code):
         Error.__init__(self, f"Unexpected status code: {code}")
         self.code = code
 
 
 class MediaRequestThread(Thread):
-
     def __init__(self, item, token, remove_status, show_api=None):
         Thread.__init__(self)
         self.item = item
@@ -41,9 +39,7 @@ class MediaRequestThread(Thread):
         api_name = s[0]
         api_id = s[1]
 
-        api_ret = {
-            api_name: api_map[api_name].get_item(api_id)
-        }
+        api_ret = {api_name: api_map[api_name].get_item(api_id)}
 
         del self.item["username"]
         del self.item["item_id"]

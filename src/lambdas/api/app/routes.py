@@ -1,14 +1,13 @@
 from datetime import datetime
 
+import dateutil.parser
 import jikan
+import logger
 import reviews_db
 import tmdb
+import tvmaze
 import utils
 from fastapi import HTTPException
-import dateutil.parser
-
-import logger
-import tvmaze
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
@@ -31,6 +30,8 @@ def get_item(username, api_name, api_id):
             api_name,
             api_id,
         )
+        w_ret["api_name"] = api_name
+        w_ret["api_id"] = api_id
         return w_ret
     except reviews_db.NotFoundError:
         raise HTTPException(status_code=404)
@@ -67,12 +68,16 @@ def add_item(username, api_name, api_id, data):
                 "release_date": api_item.get("aired", {}).get("from"),
                 "status": api_item.get("status"),
                 "cache_updated": cache_updated,
-                "image_url": api_item.get("images", {}).get("jpg", {}).get("image_url"),
+                "image_url": api_item.get("images", {})
+                .get("jpg", {})
+                .get("image_url"),
             }
             ep_count_res = jikan_api.get_episode_count(api_id)
     except utils.HttpError as e:
-        err_msg = f"Could not validate item in add_item" \
-                  f" from {api_name} api with id: {api_id}"
+        err_msg = (
+            "Could not validate item in add_item"
+            f" from {api_name} api with id: {api_id}"
+        )
         log.error(f"{err_msg}. Error: {str(e)}")
         raise HTTPException(status_code=e.code)
 
@@ -90,7 +95,9 @@ def add_item(username, api_name, api_id, data):
 
     if ep_count_res is not None:
         data["api_cache"]["ep_count"] = ep_count_res.get("ep_count", 0)
-        data["api_cache"]["special_count"] = ep_count_res.get("special_count", 0)
+        data["api_cache"]["special_count"] = ep_count_res.get(
+            "special_count", 0
+        )
         data["ep_progress"] = current_item.get("ep_progress", 0)
         data["special_progress"] = current_item.get("special_progress", 0)
         data["watched_eps"] = current_item.get("watched_eps", 0)
@@ -118,21 +125,26 @@ def delete_item(username, api_name, api_id):
 
 
 def get_episodes(username, api_name, api_id):
-    return reviews_db.get_episodes(
+    eps = reviews_db.get_episodes(
         username,
         api_name,
         api_id,
     )
+    return {"episodes": eps}
 
 
 def get_episode(username, api_name, item_api_id, episode_api_id):
     try:
-        return reviews_db.get_episode(
+        ret = reviews_db.get_episode(
             username,
             api_name,
             item_api_id,
             episode_api_id,
         )
+        ret["api_name"] = api_name
+        ret["api_id"] = item_api_id
+        ret["episode_api_id"] = episode_api_id
+        return ret
     except reviews_db.NotFoundError:
         raise HTTPException(status_code=404)
 
@@ -148,8 +160,10 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
         else:
             raise HTTPException(status_code=501)
     except utils.HttpError as e:
-        err_msg = f"Could not get show episode in add_episode func" \
-                  f" from {api_name} api with id: {episode_api_id}"
+        err_msg = (
+            "Could not get show episode in add_episode func"
+            f" from {api_name} api with id: {episode_api_id}"
+        )
         log.error(f"{err_msg}. Error: {str(e)}")
         raise HTTPException(status_code=e.code)
 
@@ -160,8 +174,10 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
             item_api_id,
         )
     except reviews_db.NotFoundError:
-        err_msg = f"Item with api_id: {item_api_id} not found. " \
-                  f"Please add it to the watch-history before posting episode"
+        err_msg = (
+            f"Item with api_id: {item_api_id} not found. "
+            "Please add it to the watch-history before posting episode"
+        )
         raise HTTPException(status_code=404, detail=err_msg)
 
     reviews_db.add_episode(
@@ -173,11 +189,7 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
     )
 
     reviews_db.change_watched_eps(
-        username,
-        api_name,
-        item_api_id,
-        1,
-        special=is_special
+        username, api_name, item_api_id, 1, special=is_special
     )
 
     if not data.get("dates_watched"):
@@ -195,8 +207,10 @@ def update_episode(username, api_name, item_api_id, episode_api_id, data):
         else:
             raise HTTPException(status_code=501)
     except utils.HttpError as e:
-        err_msg = f"Could not get episode in add_episode func" \
-                  f" from {api_name} api with id: {episode_api_id}"
+        err_msg = (
+            "Could not get episode in add_episode func"
+            f" from {api_name} api with id: {episode_api_id}"
+        )
         log.error(f"{err_msg}. Error: {str(e)}")
         raise HTTPException(status_code=e.code)
 
@@ -207,8 +221,10 @@ def update_episode(username, api_name, item_api_id, episode_api_id, data):
             item_api_id,
         )
     except reviews_db.NotFoundError:
-        err_msg = f"Item with api_id: {item_api_id} not found. " \
-                  f"Please add it to the watch-history before posting episode"
+        err_msg = (
+            f"Item with api_id: {item_api_id} not found. "
+            "Please add it to the watch-history before posting episode"
+        )
         raise HTTPException(status_code=404, detail=err_msg)
 
     reviews_db.update_episode(
@@ -230,8 +246,11 @@ def _update_latest_watch_date(item, data, username, api_name, item_api_id):
     # item latest date and update item if that's the case
     ep_date = max([dateutil.parser.parse(d) for d in data["dates_watched"]])
 
-    if ("latest_watch_date" not in item or item["latest_watch_date"] == "0" or
-        ep_date > dateutil.parser.parse(item["latest_watch_date"])):
+    if (
+        "latest_watch_date" not in item
+        or item["latest_watch_date"] == "0"
+        or ep_date > dateutil.parser.parse(item["latest_watch_date"])
+    ):
         ep_date = ep_date.strftime("%Y-%m-%dT%H:%M:%S.%fZ").replace("000Z", "Z")
         reviews_db.update_item(
             username,
@@ -253,8 +272,10 @@ def delete_episode(username, api_name, item_api_id, episode_api_id):
         else:
             raise HTTPException(status_code=501)
     except utils.HttpError as e:
-        err_msg = f"Could not get episode in delete_episode func" \
-                  f" from {api_name} api with id: {episode_api_id}"
+        err_msg = (
+            "Could not get episode in delete_episode func"
+            f" from {api_name} api with id: {episode_api_id}"
+        )
         log.error(f"{err_msg}. Error: {str(e)}")
         raise HTTPException(status_code=e.code)
 
@@ -266,9 +287,5 @@ def delete_episode(username, api_name, item_api_id, episode_api_id):
     )
 
     reviews_db.change_watched_eps(
-        username,
-        api_name,
-        item_api_id,
-        -1,
-        special=is_special
+        username, api_name, item_api_id, -1, special=is_special
     )
