@@ -93,7 +93,7 @@ class WatchHistoryApi {
 
   updateWatchHistoryEpisode (qParams, watchDates = []) {
     const data = {};
-    data.dates_watched = watchDates;
+    data.datesWatched = watchDates;
     return this.apiAxios.put(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
   }
 }
