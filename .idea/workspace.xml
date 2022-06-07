@@ -19,7 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="" />
+    <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/episode.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/episode.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,17 +58,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/home/michal/git/moshan&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "last_opened_file_path": "/home/michal/git/moshan",
+    "settings.editor.selected.configurable": "copyright.filetypes.Python"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PUML&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PUML"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
@@ -75,36 +78,14 @@
       <recent name="$PROJECT_DIR$/src/layers/api/python" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs/includes/js/api" />
+      <recent name="$PROJECT_DIR$/src/lambdas/api/app" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/layers/databases" />
       <recent name="$PROJECT_DIR$/src/lambdas/api" />
-      <recent name="$PROJECT_DIR$/src/lambdas" />
-      <recent name="$PROJECT_DIR$/src/layers/utils" />
-      <recent name="$PROJECT_DIR$/src/layers/api" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.cleanup_downloads">
-    <configuration name="add_new_ep_count_properties" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="moshan" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="AWS_PROFILE" value="moshan" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/scripts" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/add_new_ep_count_properties.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python tests.pytest in unittest">
     <configuration name="cleanup_downloads" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="moshan" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -180,27 +161,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="scratch_29" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="moshan" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_29.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="scratch_41" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="moshan" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -243,22 +203,54 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="pytest for test_models.test_parse_episode" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="moshan" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/unittest" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_models.test_parse_episode&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest in unittest" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="moshan" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/unittest" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/unittest&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.migrate_anime_episodes_from_watchhistory" />
       <item itemvalue="Python.migrate_show_episodes_from_watchhistory" />
-      <item itemvalue="Python.add_new_ep_count_properties" />
-      <item itemvalue="Python.scratch_29" />
+      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.scratch_41" />
       <item itemvalue="Python.scratch_42" />
-      <item itemvalue="Python.cleanup_downloads" />
+      <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
+      <item itemvalue="Python tests.pytest in unittest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.pytest in unittest" />
+        <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
         <item itemvalue="Python.cleanup_downloads" />
         <item itemvalue="Python.scratch_42" />
         <item itemvalue="Python.scratch_41" />
-        <item itemvalue="Python.scratch_29" />
-        <item itemvalue="Python.add_new_ep_count_properties" />
       </list>
     </recent_temporary>
   </component>

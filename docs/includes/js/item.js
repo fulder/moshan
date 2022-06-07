@@ -54,7 +54,6 @@ async function getItemByApiId() {
     const watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItemByApiId(qParams);
     console.debug(watchHistoryItemRes);
     watchHistoryItem = watchHistoryItemRes.data;
-    qParams.id = watchHistoryItem.item_id;
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
       console.log(error);
@@ -68,8 +67,8 @@ async function getItemByApiId() {
   if (moshanItem.has_episodes) {
     const moshanEpisodes = await api.getEpisodes(qParams);
     const watchHistoryEpisodes = await watchHistoryApi.getWatchHistoryEpisodes(qParams);
-    for (let i=0; i < watchHistoryEpisodes.data.length; i++) {
-      watchHistoryEpisodeIDs.push(parseInt(watchHistoryEpisodes.data[i].api_id));
+    for (let i=0; i < watchHistoryEpisodes.data.episodes.length; i++) {
+      watchHistoryEpisodeIDs.push(parseInt(watchHistoryEpisodes.data.episodes[i].episodeApiId));
     }
 
     if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
@@ -99,8 +98,8 @@ function createItem (moshanItem, watchHistoryItem) {
   console.debug(moshanItem);
 
   let datesWatched = [];
-  if (itemAdded && 'dates_watched' in watchHistoryItem && watchHistoryItem['dates_watched'].length > 0) {
-    datesWatched = watchHistoryItem['dates_watched'];
+  if (itemAdded && 'datesWatched' in watchHistoryItem && watchHistoryItem['datesWatched'].length > 0) {
+    datesWatched = watchHistoryItem['datesWatched'];
   }
 
   if (itemAdded && 'overview' in watchHistoryItem) {
@@ -115,8 +114,8 @@ function createItem (moshanItem, watchHistoryItem) {
   if (itemAdded && 'rating' in watchHistoryItem) {
       document.getElementById('user-rating').value = watchHistoryItem.rating;
   }
-  if (itemAdded && 'created_at' in watchHistoryItem) {
-      document.getElementById('user_added_date').innerHTML = watchHistoryItem.created_at;
+  if (itemAdded && 'createdAt' in watchHistoryItem) {
+      document.getElementById('user_added_date').innerHTML = watchHistoryItem.createdAt;
   }
 
   document.getElementById('poster').src = moshanItem.poster;

@@ -1,9 +1,8 @@
 from datetime import datetime
 
 import dateutil.parser
-import requests
-
 import logger
+import requests
 import utils
 
 log = logger.get_logger(__name__)
@@ -51,7 +50,10 @@ class TvMazeApi:
         special_count = 0
 
         for e in episodes:
-            if e["airdate"] == "" or dateutil.parser.parse(e["airdate"]) > datetime.now():
+            if (
+                e["airdate"] == ""
+                or dateutil.parser.parse(e["airdate"]) > datetime.now()
+            ):
                 # Ignore not yet aired eps
                 continue
 
