@@ -1,6 +1,6 @@
 /* global axios, axiosTokenInterceptor */
-/* exported WatchHistoryApi */
-class WatchHistoryApi {
+/* exported MoshanApi */
+class MoshanApi {
   constructor () {
     this.apiAxios = axios.create({
       baseURL: 'https://api.moshan.fulder.dev',
@@ -16,7 +16,7 @@ class WatchHistoryApi {
       });
   }
 
-  getWatchHistory (sort = '', cursor = '') {
+  getItems (sort = '', cursor = '') {
     let url = '/items';
     if (sort !== '' || cursor !== '') {
       url += '?';
@@ -36,11 +36,11 @@ class WatchHistoryApi {
   //   return this.apiAxios.get(`/watch-history/collection/${collectionName}?sort=${sort}&show_api=${showApi}`);
   // }
 
-  removeWatchHistoryItem (qParams) {
+  removeItem (qParams) {
     return this.apiAxios.delete(`/items/${qParams.api_name}/${qParams.api_id}`);
   }
 
-  addWatchHistoryItem (qParams) {
+  addItem (qParams) {
     let data = {
       itemApiId: qParams.api_id,
       apiName: qParams.api_name,
@@ -48,11 +48,11 @@ class WatchHistoryApi {
     return this.apiAxios.post('/items', data);
   }
 
-  getWatchHistoryItemByApiId (qParams) {
+  getItem (qParams) {
     return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.api_id}`);
   }
 
-  updateWatchHistoryItem (qParams, overview, review, status = '', rating = '', watchDates = []) {
+  updateItem (qParams, overview, review, status = '', rating = '', watchDates = []) {
     const data = {};
     if (watchDates.length !== 0 ) {
       data.datesWatched = watchDates;
@@ -72,26 +72,26 @@ class WatchHistoryApi {
     return this.apiAxios.put(`/items/${qParams.api_name}/${qParams.api_id}`, data);
   }
 
-  addWatchHistoryEpisode (qParams) {
+  addEpisode (qParams) {
     const data = {
       episodeApiId: qParams.episode_api_id,
     };
     return this.apiAxios.post(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`, data);
   }
 
-  removeWatchHistoryEpisode (qParams) {
+  removeEpisode (qParams) {
     return this.apiAxios.delete(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
   }
 
-  getWatchHistoryEpisodeByApiId (qParams) {
+  getEpisode (qParams) {
     return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
   }
 
-  getWatchHistoryEpisodes (qParams) {
+  getEpisodes (qParams) {
     return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`);
   }
 
-  updateWatchHistoryEpisode (qParams, watchDates = []) {
+  updateEpisode (qParams, watchDates = []) {
     const data = {};
     data.datesWatched = watchDates;
     return this.apiAxios.put(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
