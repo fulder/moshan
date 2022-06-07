@@ -98,6 +98,10 @@ class Reviews(BaseModel):
     items: List[Review]
     end_cursor: Optional[str]
 
+    class Config:
+        alias_generator = to_camel
+        allow_population_by_field_name = True
+
 
 class EpisodeReviews(BaseModel):
     episodes: List[EpisodeReview]
