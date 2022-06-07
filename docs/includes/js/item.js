@@ -1,10 +1,10 @@
-/* global WatchHistoryApi, getApiByName */
+/* global MoshanApi, getApiByName */
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
 document.getElementById('headTitle').innerHTML = `Moshan - ${qParams.collection}`;
 
-const watchHistoryApi = new WatchHistoryApi();
+const moshanApi = new MoshanApi();
 const api = getApiByName(qParams.api_name);
 
 let watchHistoryEpisodeIDs = [];
@@ -51,7 +51,7 @@ function QueryParams(urlParams) {
 async function getItemByApiId() {
   let watchHistoryItem = null;
   try {
-    const watchHistoryItemRes = await watchHistoryApi.getWatchHistoryItemByApiId(qParams);
+    const watchHistoryItemRes = await moshanApi.getItem(qParams);
     console.debug(watchHistoryItemRes);
     watchHistoryItem = watchHistoryItemRes.data;
   } catch(error) {
@@ -66,7 +66,7 @@ async function getItemByApiId() {
 
   if (moshanItem.has_episodes) {
     const moshanEpisodes = await api.getEpisodes(qParams);
-    const watchHistoryEpisodes = await watchHistoryApi.getWatchHistoryEpisodes(qParams);
+    const watchHistoryEpisodes = await moshanApi.getEpisodes(qParams);
     for (let i=0; i < watchHistoryEpisodes.data.episodes.length; i++) {
       watchHistoryEpisodeIDs.push(parseInt(watchHistoryEpisodes.data.episodes[i].episodeApiId));
     }
@@ -227,7 +227,7 @@ function getPatchData() {
 /* exported addItem */
 async function addItem (button) {
   try {
-    const addItemRes = await watchHistoryApi.addWatchHistoryItem(qParams);
+    const addItemRes = await moshanApi.addItem(qParams);
     console.debug(addItemRes);
 
     qParams.id = addItemRes.data.id;
@@ -243,7 +243,7 @@ async function addItem (button) {
 /* exported removeItem */
 async function removeItem (button) {
   try {
-    await watchHistoryApi.removeWatchHistoryItem(qParams);
+    await moshanApi.removeItem(qParams);
     document.getElementById('add_button').classList.remove('d-none');
     document.getElementById('remove_button').classList.add('d-none');
   } catch (error) {
@@ -257,7 +257,7 @@ async function removeItem (button) {
 async function saveItem (button) {
   currentPatchData = getPatchData();
   try {
-    await watchHistoryApi.updateWatchHistoryItem(
+    await moshanApi.updateItem(
       qParams,
       currentPatchData.overview,
       currentPatchData.review,

@@ -1,9 +1,9 @@
 /* global flatpickr, getApiByName */
-/* global WatchHistoryApi */
+/* global MoshanApi */
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
-const watchHistoryApi = new WatchHistoryApi();
+const moshanApi = new MoshanApi();
 const api = getApiByName(qParams.api_name);
 
 let datesWatched;
@@ -25,7 +25,7 @@ function QueryParams(urlParams) {
 async function getEpisode() {
   let watchHistoryEpisode = null;
   try {
-    const watchHistoryRes = await watchHistoryApi.getWatchHistoryEpisodeByApiId(qParams);
+    const watchHistoryRes = await moshanApi.getEpisode(qParams);
     watchHistoryEpisode = watchHistoryRes.data;
     qParams.api_id = watchHistoryEpisode.apiId;
   } catch(error) {
@@ -131,7 +131,7 @@ async function patchWatchDate(date) {
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
   console.debug(datesWatched);
 
-  await watchHistoryApi.updateWatchHistoryEpisode(qParams, datesWatched);
+  await moshanApi.updateEpisode(qParams, datesWatched);
 }
 
 /* exported removeWatchDate */
@@ -149,12 +149,12 @@ async function removeWatchDate() {
       calendarInstance.setDate(datesWatched[datesWatched.length - 1]);
   }
 
-  await watchHistoryApi.updateWatchHistoryEpisode(qParams, datesWatched);
+  await moshanApi.updateEpisode(qParams, datesWatched);
 }
 
 /* exported addEpisode */
 async function addEpisode () {
-  const addEpisodeRes = await watchHistoryApi.addWatchHistoryEpisode(qParams);
+  const addEpisodeRes = await moshanApi.addEpisode(qParams);
   qParams.episode_id = addEpisodeRes.data.id;
   document.getElementById('add_button').classList.add('d-none');
   document.getElementById('remove_button').classList.remove('d-none');
@@ -162,7 +162,7 @@ async function addEpisode () {
 
 /* exported removeEpisode */
 async function removeEpisode () {
-  await watchHistoryApi.removeWatchHistoryEpisode(qParams);
+  await moshanApi.removeEpisode(qParams);
   document.getElementById('add_button').classList.remove('d-none');
   document.getElementById('remove_button').classList.add('d-none');
 }
