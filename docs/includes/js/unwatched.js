@@ -17,7 +17,7 @@ createUnwatchedItems();
 // }
 
 async function createUnwatchedItems(cursor='') {
-  const response = await watchHistoryApi.getWatchHistory('ep_progress', cursor);
+  const response = await watchHistoryApi.getWatchHistory('epProgress', cursor);
 
   createItems(response.data.items);
 }
@@ -30,19 +30,19 @@ async function createItems(items) {
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-    const apiCache = item.api_cache;
+    const apiCache = item.apiCache;
 
     let image = '/includes/img/image_not_available.png';
-    if (apiCache.image_url !== null) {
-      image = apiCache.image_url.replace('original_untouched', 'medium_portrait');
+    if (apiCache.imageUrl !== null) {
+      image = apiCache.imageUrl.replace('original_untouched', 'medium_portrait');
     }
 
     const itemHTML = `
         <div class="col-4 col-md-2 poster">
-          <a href="/item?api_name=${item.api_name}&api_id=${item.api_id}">
+          <a href="/item?api_name=${item.apiName}&api_id=${item.apiId}">
             <img class="img-fluid" src="${image}" />
             <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: ${item.ep_progress}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${item.ep_progress}%</div>
+              <div class="progress-bar" role="progressbar" style="width: ${item.epProgress}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${item.epProgress}%</div>
             </div>
             <p class="text-truncate small">${apiCache.title}</p>
           </a>
