@@ -15,8 +15,8 @@ if (accessToken === null) {
 createHistory();
 
 async function createHistory(cursor='') {
-  const response = await watchHistoryApi.getWatchHistory('latest_watch_date', cursor);
-  currentCursor = response.data.end_cursor;
+  const response = await watchHistoryApi.getWatchHistory('latestWatchDate', cursor);
+  currentCursor = response.data.endCursor;
 
   createItems(response.data.items);
 }
@@ -26,19 +26,19 @@ async function createItems(items) {
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-    const apiCache = item.api_cache;
+    const apiCache = item.apiCache;
 
     let image = '/includes/img/image_not_available.png';
-    if (apiCache.image_url !== null) {
-      image = apiCache.image_url.replace('original_untouched', 'medium_portrait');
-      if (item.api_name === 'tmdb') {
+    if (apiCache.imageUrl !== null) {
+      image = apiCache.imageUrl.replace('original_untouched', 'medium_portrait');
+      if (item.apiName === 'tmdb') {
           image = `https://image.tmdb.org/t/p/w500/${image}`;
       }
     }
 
     const itemHTML = `
         <div class="col-4 col-md-2 poster">
-          <a href="/item?api_name=${item.api_name}&api_id=${item.api_id}">
+          <a href="/item?api_name=${item.apiName}&api_id=${item.apiId}">
             <img class="img-fluid" src="${image}" />
             <p class="text-truncate small">${apiCache.title}</p>
           </a>

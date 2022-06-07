@@ -15,9 +15,9 @@ if (accessToken === null) {
 createTableRows();
 
 async function createTableRows(cursor='') {
-    const response = await watchHistoryApi.getWatchHistory('backlog_date', cursor);
+    const response = await watchHistoryApi.getWatchHistory('backlogDate', cursor);
     const items = response.data.items;
-    currentCursor = response.data.end_cursor;
+    currentCursor = response.data.endCursor;
 
     // const apiRequests = [];
     // for (let i=0; i < items.length; i++) {
@@ -46,29 +46,29 @@ async function createTableRows(cursor='') {
 
 
 function createRow(watchHistoryItem) {
-  const apiCache = watchHistoryItem.api_cache;
+  const apiCache = watchHistoryItem.apiCache;
 
   let rowClass = 'bg-secondary';
   if (apiCache.status === 'Released' || apiCache.status === 'Airing' || apiCache.status === 'Ended' || apiCache.status === 'Running' || apiCache.status === 'Finished Airing') {
       rowClass = 'episodeRow';
   }
-  if (new Date(apiCache.release_date) >= new Date()) {
+  if (new Date(apiCache.releaseDate) >= new Date()) {
       rowClass = 'bg-secondary';
   }
 
-  if (apiCache.release_date !== null) {
-    apiCache.release_date = apiCache.release_date.split('T')[0];
+  if (apiCache.releaseDate !== null) {
+    apiCache.releaseDate = apiCache.releaseDate.split('T')[0];
   }
 
 
-  const onClickAction = `window.location='item/index.html?api_name=${watchHistoryItem.api_name}&api_id=${watchHistoryItem.api_id}'`;
+  const onClickAction = `window.location='item/index.html?api_name=${watchHistoryItem.apiName}&api_id=${watchHistoryItem.apiId}'`;
   return `
   <tr onclick="${onClickAction}" class=${rowClass}>
-      <td>${watchHistoryItem.created_at}</td>
-      <td>${watchHistoryItem.api_name}</td>
+      <td>${watchHistoryItem.createdAt}</td>
+      <td>${watchHistoryItem.apiName}</td>
       <td>${apiCache.title}</td>
       <td>${apiCache.status}</td>
-      <td>${apiCache.release_date}</td>
+      <td>${apiCache.releaseDate}</td>
     </tr>
     `;
 }

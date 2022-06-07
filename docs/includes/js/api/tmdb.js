@@ -37,7 +37,7 @@ class TmdbApi {
       movie.id,
       poster,
       movie.title,
-      movie.release_date,
+      movie.releaseDate,
       movie.status,
       movie.overview,
       false,
