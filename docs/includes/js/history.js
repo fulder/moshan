@@ -1,7 +1,7 @@
-/* global WatchHistoryApi, accessToken */
+/* global MoshanApi, accessToken */
 // const urlParams = new URLSearchParams(window.location.search);
 // const qParams = new QueryParams(urlParams);
-const watchHistoryApi = new WatchHistoryApi();
+const moshanApi = new MoshanApi();
 
 let currentCursor = null;
 let loadingMore = false;
@@ -15,7 +15,7 @@ if (accessToken === null) {
 createHistory();
 
 async function createHistory(cursor='') {
-  const response = await watchHistoryApi.getWatchHistory('latestWatchDate', cursor);
+  const response = await moshanApi.getItems('latestWatchDate', cursor);
   currentCursor = response.data.endCursor;
 
   createItems(response.data.items);

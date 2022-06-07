@@ -1,8 +1,8 @@
-/* global WatchHistoryApi, accessToken */
+/* global MoshanApi, accessToken */
 // const urlParams = new URLSearchParams(window.location.search);
 // const qParams = new QueryParams(urlParams);
 
-const watchHistoryApi = new WatchHistoryApi();
+const moshanApi = new MoshanApi();
 
 if (accessToken === null) {
   document.getElementById('logInAlert').className = 'alert alert-danger';
@@ -17,7 +17,7 @@ createUnwatchedItems();
 // }
 
 async function createUnwatchedItems(cursor='') {
-  const response = await watchHistoryApi.getWatchHistory('epProgress', cursor);
+  const response = await moshanApi.getItems('epProgress', cursor);
 
   createItems(response.data.items);
 }
