@@ -2,12 +2,10 @@ from datetime import datetime
 
 import dateutil.parser
 import requests
-
 import utils
 
 
 class JikanApi:
-
     def __init__(self):
         self.base_url = "https://api.jikan.moe/v4"
 
@@ -70,7 +68,10 @@ class JikanApi:
                     ep_date = "N/A"
 
                 ep_date = ep_date.replace("+00:00", "")
-                if ep_date != "N/A" and dateutil.parser.parse(ep_date) > datetime.now():
+                if (
+                    ep_date != "N/A"
+                    and dateutil.parser.parse(ep_date) > datetime.now()
+                ):
                     # Ignore not yet aired eps
                     continue
 

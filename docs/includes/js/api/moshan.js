@@ -42,8 +42,8 @@ class WatchHistoryApi {
 
   addWatchHistoryItem (qParams) {
     let data = {
-      item_api_id: qParams.api_id,
-      api_name: qParams.api_name,
+      itemApiId: qParams.api_id,
+      apiName: qParams.api_name,
     };
     return this.apiAxios.post('/items', data);
   }
@@ -55,7 +55,7 @@ class WatchHistoryApi {
   updateWatchHistoryItem (qParams, overview, review, status = '', rating = '', watchDates = []) {
     const data = {};
     if (watchDates.length !== 0 ) {
-      data.dates_watched = watchDates;
+      data.datesWatched = watchDates;
     }
     if (overview !== '') {
       data.overview = overview;
@@ -74,7 +74,7 @@ class WatchHistoryApi {
 
   addWatchHistoryEpisode (qParams) {
     const data = {
-      episode_api_id: qParams.episode_api_id,
+      episodeApiId: qParams.episode_api_id,
     };
     return this.apiAxios.post(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`, data);
   }
@@ -93,7 +93,7 @@ class WatchHistoryApi {
 
   updateWatchHistoryEpisode (qParams, watchDates = []) {
     const data = {};
-    data.dates_watched = watchDates;
+    data.datesWatched = watchDates;
     return this.apiAxios.put(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
   }
 }

@@ -2,9 +2,9 @@ import json
 from datetime import datetime
 
 import jikan
+import reviews_db
 import tmdb
 import tvmaze
-import reviews_db
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
@@ -49,15 +49,14 @@ def handler(event, context):
             "ep_count": episodes_info.get("ep_count", 0),
             "special_count": episodes_info.get("special_count", 0),
             "cache_updated": cache_updated,
-            "image_url": api_item.get("images", {}).get("jpg", {}).get("image_url"),
+            "image_url": api_item.get("images", {})
+            .get("jpg", {})
+            .get("image_url"),
         }
     else:
         raise Exception(f"Unexpected api_name: {message['api_name']}")
 
-    items = reviews_db.get_items(
-        message["api_name"],
-        message["api_id"]
-    )
+    items = reviews_db.get_items(message["api_name"], message["api_id"])
 
     for item in items:
         print(f"Updating item: {item}")
@@ -66,9 +65,7 @@ def handler(event, context):
         watched_specials = item.get("watched_specials", 0)
 
         count_info = _get_item_counts(
-            episodes_info,
-            watched_eps,
-            watched_specials
+            episodes_info, watched_eps, watched_specials
         )
         item = {
             **item,

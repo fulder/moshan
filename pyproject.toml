@@ -1,0 +1,9 @@
+[tool.pytest.ini_options]
+addopts = "--cov-report html --cov=src -vv"
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 80
+experimental-string-processing = true
