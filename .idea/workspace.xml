@@ -21,6 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/episode.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/episode.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,11 +78,11 @@
       <recent name="$PROJECT_DIR$/src/layers/api/python" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs/includes/js/api" />
       <recent name="$PROJECT_DIR$/src/lambdas/api/app" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/layers/databases" />
       <recent name="$PROJECT_DIR$/src/lambdas/api" />
-      <recent name="$PROJECT_DIR$/src/lambdas" />
     </key>
   </component>
   <component name="RunManager" selected="Python tests.pytest in unittest">
