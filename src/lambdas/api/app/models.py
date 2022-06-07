@@ -72,10 +72,15 @@ class Review(BaseModel):
     created_at: str
 
     api_cache: Optional[ApiCache]
+
+    overview: Optional[str]
+    review: Optional[str]
+    status: Optional[Status]
+    rating: Optional[int]
+
     dates_watched: Optional[List[str]]
     updated_at: Optional[str]
     deleted_at: Optional[str]
-    status: Optional[Status]
     backlog_date: Optional[str]
     latest_watch_date: Optional[str]
     # eps
