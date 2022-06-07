@@ -25,7 +25,7 @@ app = FastAPI()
 def get_items(
     request: Request, sort: Optional[Sort] = None, cursor: Optional[str] = None
 ):
-    return routes.get_items(request.state.username, sort, cursor)
+    return routes.get_items(request.state.username, sort.name, cursor)
 
 
 @app.get(
