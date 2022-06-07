@@ -20,8 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/includes/js/backlog.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/backlog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/unwatched.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/unwatched.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

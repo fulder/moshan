@@ -17,7 +17,11 @@ createTableRows();
 async function createTableRows(cursor='') {
     const response = await moshanApi.getItems('backlogDate', cursor);
     const items = response.data.items;
-    currentCursor = response.data.endCursor;
+
+    currentCursor = null;
+    if ('endCursor' in response.data) {
+        currentCursor = response.data.endCursor;
+    }
 
     // const apiRequests = [];
     // for (let i=0; i < items.length; i++) {
