@@ -56,7 +56,7 @@ function createRow(watchHistoryItem) {
       rowClass = 'bg-secondary';
   }
 
-  if (apiCache.releaseDate !== null) {
+  if ("releaseDate" in apiCache && apiCache.releaseDate !== null) {
     apiCache.releaseDate = apiCache.releaseDate.split('T')[0];
   }
 
