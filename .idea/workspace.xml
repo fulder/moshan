@@ -235,9 +235,9 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.migrate_anime_episodes_from_watchhistory" />
       <item itemvalue="Python.migrate_show_episodes_from_watchhistory" />
-      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.scratch_41" />
       <item itemvalue="Python.scratch_42" />
       <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
