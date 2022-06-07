@@ -58,17 +58,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "last_opened_file_path": "/home/michal/git/moshan",
-    "settings.editor.selected.configurable": "copyright.filetypes.Python"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;last_opened_file_path&quot;: &quot;/home/michal/git/moshan&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;copyright.filetypes.Python&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "PUML"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;PUML&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
@@ -236,9 +236,9 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.migrate_anime_episodes_from_watchhistory" />
       <item itemvalue="Python.migrate_show_episodes_from_watchhistory" />
-      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.scratch_41" />
       <item itemvalue="Python.scratch_42" />
       <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
