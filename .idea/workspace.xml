@@ -19,7 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="" />
+    <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -233,9 +235,9 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.migrate_anime_episodes_from_watchhistory" />
       <item itemvalue="Python.migrate_show_episodes_from_watchhistory" />
+      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.scratch_41" />
       <item itemvalue="Python.scratch_42" />
       <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
