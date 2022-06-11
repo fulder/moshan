@@ -1,6 +1,6 @@
-/* global axios */
-/* exported TmdbApi */
-class TmdbApi {
+import {MoshanItems, MoshanItem} from './common.js'
+
+export class TmdbApi {
   constructor () {
     this.apiAxios = axios.create({
       baseURL: 'https://api.themoviedb.org/3',

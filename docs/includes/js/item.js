@@ -1,4 +1,10 @@
-/* global MoshanApi, getApiByName */
+import {getApiByName} from './api/common.js'
+import {MoshanApi} from './api/moshan.js'
+import {createNavbar} from './common/navbar.js'
+import {isLoggedIn} from './common/auth.js'
+
+createNavbar();
+
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
@@ -11,8 +17,11 @@ let watchHistoryEpisodeIDs = [];
 let totalPages = 0;
 let calendarInstances = {};
 let savedPatchData;
+let currentPatchData;
 
-getItemByApiId();
+if (isLoggedIn()) {
+  getItemByApiId();
+}
 
 window.onbeforeunload = function(){
   console.debug(savedPatchData);
@@ -49,22 +58,22 @@ function QueryParams(urlParams) {
 }
 
 async function getItemByApiId() {
-  let watchHistoryItem = null;
+  let item = null;
   try {
-    const watchHistoryItemRes = await moshanApi.getItem(qParams);
-    console.debug(watchHistoryItemRes);
-    watchHistoryItem = watchHistoryItemRes.data;
+    item = await moshanApi.getItem(qParams).data;
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
       console.log(error);
     }
   }
 
-  moshanItem = await api.getItemById(qParams);
+  if (item === null) {
+    item = await api.getItemById(qParams);
+  }
 
-  createItem(moshanItem, watchHistoryItem);
+  /*createItem(item);
 
-  if (moshanItem.has_episodes) {
+  if (item.hasEpisodes) {
     const moshanEpisodes = await api.getEpisodes(qParams);
     const watchHistoryEpisodes = await moshanApi.getEpisodes(qParams);
     for (let i=0; i < watchHistoryEpisodes.data.episodes.length; i++) {
@@ -89,7 +98,7 @@ async function getItemByApiId() {
     }
 
     createEpisodesList(moshanEpisodes);
-  }
+  }*/
 }
 
 function createItem (moshanItem, watchHistoryItem) {
@@ -193,7 +202,7 @@ function getPatchData() {
     let watchedDates = [];
     const calendarDivs = document.getElementById('watched-dates').getElementsByTagName('div');
 
-    for( i=0; i< calendarDivs.length; i++ ) {
+    for(let i=0; i< calendarDivs.length; i++ ) {
      const childDiv = calendarDivs[i];
      const calendarNbr = childDiv.dataset.calendarNumber;
 

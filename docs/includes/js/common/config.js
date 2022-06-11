@@ -1,5 +1,14 @@
-const cognitoDomainName = 'moshan-fulder-dev.auth.eu-west-1.amazoncognito.com';
+import {localClientId, localRedirectBaseUrl} from './configLocal.js'
 
-let clientId = '1ra91kse5btmpmt3tmran2441a';
-let redirectBaseUrl = 'https://moshan.fulder.dev';
+export const cognitoDomainName = 'moshan-fulder-dev.auth.eu-west-1.amazoncognito.com';
 
+export let clientId = '1ra91kse5btmpmt3tmran2441a';
+export let redirectBaseUrl = 'https://moshan.fulder.dev';
+
+if (localClientId !== "") {
+    clientId = localClientId;
+}
+
+if (localRedirectBaseUrl !== "") {
+    redirectBaseUrl = localRedirectBaseUrl;
+}

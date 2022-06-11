@@ -1,18 +1,17 @@
-/* global MoshanApi, accessToken */
-//const urlParams = new URLSearchParams(window.location.search);
+import {createNavbar} from './common/navbar.js'
+import {MoshanApi} from './api/moshan.js'
+import {isLoggedIn} from './common/auth.js'
+
+createNavbar();
 
 const moshanApi = new MoshanApi();
 
 let currentCursor = null;
 let loadingMore = false;
 
-if (accessToken === null) {
-  document.getElementById('logInAlert').className = 'alert alert-danger';
-} else {
-  document.getElementById('logInAlert').className = 'd-none';
+if (isLoggedIn()) {
+    createTableRows();
 }
-
-createTableRows();
 
 async function createTableRows(cursor='') {
     const response = await moshanApi.getItems('backlogDate', cursor);
@@ -41,7 +40,7 @@ async function createTableRows(cursor='') {
     //   moshanItems[`${responses[i].api_name}_${responses[i].id}`] = responses[i];
     // }
 
-    html = '';
+    let html = '';
     for (let i=0; i< items.length; i++) {
       html += createRow(items[i]);
     }

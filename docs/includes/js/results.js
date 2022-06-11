@@ -1,3 +1,9 @@
+import {createNavbar} from './common/navbar.js'
+import {getApiByName} from './api/common.js'
+import {isLoggedIn} from './common/auth.js'
+
+createNavbar();
+
 /* global accessToken */
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
@@ -11,16 +17,13 @@ const animeApi = getApiByName(animeApiName);
 const showApi = getApiByName(showApiName);
 const movieApi = getApiByName(movieApiName);
 
-if (accessToken === null) {
-  document.getElementById('logInAlert').className = 'alert alert-danger';
-} else {
-  document.getElementById('logInAlert').className = 'd-none';
+if (isLoggedIn()) {
   document.getElementById('animeResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
   document.getElementById('showResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
   document.getElementById('movieResults').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
-}
 
-getResults();
+  getResults();
+}
 
 function QueryParams(urlParams) {
   this.search = urlParams.get('search');
@@ -45,7 +48,7 @@ function createResults(moshanItems, apiName) {
     resultHTML += `
       <div class="col-4 col-md-2 poster">
         <a href="/item/index.html?collection=${moshanItems.collection_name}&api_name=${apiName}&api_id=${moshanItem.id}">
-          <img class="img-fluid" src=${moshanItem.poster} />
+          <img class="img-fluid" src=${moshanItem.imageUrl} />
           <p class="text-truncate small">${moshanItem.title}</p>
         </a>
       </div>

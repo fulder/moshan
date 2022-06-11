@@ -7,3 +7,5 @@ htmlcov/
 .aws-sam/
 
 scripts/
+
+configLocal.js

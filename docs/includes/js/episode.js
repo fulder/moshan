@@ -1,5 +1,10 @@
-/* global flatpickr, getApiByName */
-/* global MoshanApi */
+import {createNavbar} from './common/navbar.js'
+import {getApiByName} from './api/common.js'
+import {MoshanApi} from './api/moshan.js'
+import {isLoggedIn} from './common/auth.js'
+
+createNavbar();
+
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
@@ -9,7 +14,9 @@ const api = getApiByName(qParams.api_name);
 let datesWatched;
 let calendarInstance;
 
-getEpisode();
+if (isLoggedIn()) {
+  getEpisode();
+}
 
 function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');

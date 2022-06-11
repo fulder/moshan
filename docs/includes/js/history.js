@@ -1,18 +1,17 @@
-/* global MoshanApi, accessToken */
-// const urlParams = new URLSearchParams(window.location.search);
-// const qParams = new QueryParams(urlParams);
+import {createNavbar} from './common/navbar.js';
+import {MoshanApi} from './api/moshan.js';
+import {isLoggedIn} from './common/auth.js';
+
+createNavbar();
+
 const moshanApi = new MoshanApi();
 
 let currentCursor = null;
 let loadingMore = false;
 
-if (accessToken === null) {
-  document.getElementById('logInAlert').className = 'alert alert-danger';
-} else {
-  document.getElementById('logInAlert').className = 'd-none';
+if (isLoggedIn()) {
+    createHistory();
 }
-
-createHistory();
 
 async function createHistory(cursor='') {
   const response = await moshanApi.getItems('latestWatchDate', cursor);

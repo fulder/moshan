@@ -1,6 +1,6 @@
-/* global axios, axiosTokenInterceptor */
-/* exported MoshanApi */
-class MoshanApi {
+import {axiosTokenInterceptor, MoshanItem} from './common.js'
+
+export class MoshanApi {
   constructor () {
     this.apiAxios = axios.create({
       baseURL: 'https://api.moshan.fulder.dev',

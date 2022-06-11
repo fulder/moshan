@@ -1,13 +1,13 @@
-/* global axios */
-/* exported parseJwt */
-let accessToken = localStorage.getItem('moshan_access_token');
-let parsedToken = null;
+import {clientId, cognitoDomainName} from './config.js'
+
+export let accessToken = localStorage.getItem('moshan_access_token');
+export let parsedToken = null;
 
 if (accessToken !== null) {
   parsedToken = parseJwt(accessToken);
 }
 
-function parseJwt (token) {
+export function parseJwt (token) {
   try {
     return JSON.parse(atob(token.split('.')[1]));
   } catch (e) {
@@ -15,11 +15,10 @@ function parseJwt (token) {
   }
 }
 
-/* exported checkToken */
-async function checkToken () {
+export async function checkToken () {
   const currentTimeStamp = Math.floor(Date.now() / 1000);
 
-  if (parsedToken.exp < currentTimeStamp) {
+  if (parsedToken !== null && parsedToken.exp < currentTimeStamp) {
     accessToken = await refreshToken();
     parsedToken = parseJwt(accessToken);
   }

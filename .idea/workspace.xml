@@ -20,21 +20,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/backlog.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/backlog.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/callback.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/callback.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/episode/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/episode/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/history.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/history.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/includes/js/common/navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/common/navbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/includes/js/oauth_callback.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/oauth_callback.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/mal.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/mal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/moshan.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/moshan.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/tmdb.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/tmdb.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/tvmaze.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/tvmaze.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/backlog.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/backlog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/common/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/common/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/common/navbar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/common/token.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/common/token.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/episode.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/episode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/history.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/history.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/item.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/oauth_callback.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/callback.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/results.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/results.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/unwatched.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/unwatched.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/item/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/item/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/results.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/results.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/unwatched.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/unwatched.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/template.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,11 +100,11 @@
       <recent name="$PROJECT_DIR$/src/layers/databases/python" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/docs/includes/js/api" />
       <recent name="$PROJECT_DIR$/src/lambdas/api/app" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/layers/databases" />
-      <recent name="$PROJECT_DIR$/src/lambdas/api" />
     </key>
   </component>
   <component name="RunManager" selected="Python tests.pytest in unittest">

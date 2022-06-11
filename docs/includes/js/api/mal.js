@@ -1,6 +1,6 @@
-/* global axios, MoshanItem */
-/* exported MalApi */
-class MalApi {
+import {MoshanItems, MoshanItem, MoshanEpisode} from './common.js'
+
+export class MalApi {
   constructor () {
     this.apiAxios = axios.create({
       baseURL: 'https://api.jikan.moe/v4/',
