@@ -1,4 +1,4 @@
-/* global axios */
+/* global axios, redirectBaseUrl, clientId */
 
 const urlParams = new URLSearchParams(window.location.search);
 const code = urlParams.get('code');
@@ -14,7 +14,7 @@ if (code === null) {
 
   const postData = new URLSearchParams({
     grant_type: 'authorization_code',
-    redirect_uri: 'https://' + window.location.hostname + '/callback.html',
+    redirect_uri: `${redirectBaseUrl}/callback.html`,
     code: code,
     client_id: clientId,
     code_verifier: codeVerifier,

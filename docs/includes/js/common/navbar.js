@@ -1,10 +1,4 @@
-/* global accessToken, parsedToken */
-
-/* exported getDomainName */
-const cognitoDomainName = 'moshan-fulder-dev.auth.eu-west-1.amazoncognito.com';
-const clientId = '1ra91kse5btmpmt3tmran2441a';
-
-
+/* global accessToken, parsedToken, cognitoDomainName, clientId, redirectUrl */
 if (accessToken === null) {
   document.getElementById('loginButton').classList.remove('d-none');
   document.getElementById('profileDropdown').classList.add('d-none');
@@ -20,7 +14,7 @@ if (accessToken === null) {
 function logout () {
   localStorage.removeItem('moshan_access_token');
   localStorage.removeItem('moshan_refresh_token');
-  window.location.href = `https://${cognitoDomainName}/logout?logout_uri=https://${window.location.hostname}/index.html&client_id=${clientId}`;
+  window.location.href = `https://${cognitoDomainName}/logout?logout_uri=${redirectBaseUrl}/index.html&client_id=${clientId}`;
 }
 
 /* exported authorize */
@@ -39,7 +33,7 @@ async function authorize () {
   authorizeUrl.searchParams.append('client_id', clientId);
   authorizeUrl.searchParams.append('response_type', 'code');
   authorizeUrl.searchParams.append('scope', 'email openid');
-  authorizeUrl.searchParams.append('redirect_uri', 'https://' + window.location.hostname + '/callback.html');
+  authorizeUrl.searchParams.append('redirect_uri', `${redirectBaseUrl}/callback.html`);
   authorizeUrl.searchParams.append('code_challenge_method', 'S256');
   authorizeUrl.searchParams.append('state', state);
 

@@ -19,7 +19,23 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="" />
+    <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/backlog.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/backlog.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/callback.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/callback.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/episode/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/episode/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/history.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/history.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/common/navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/common/navbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/oauth_callback.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/oauth_callback.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/item/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/item/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/results.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/results.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/unwatched.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/unwatched.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,24 +71,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/home/michal/git/moshan&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;copyright.filetypes.Python&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "last_opened_file_path": "/home/michal/git/moshan/docs/includes/js/common",
+    "settings.editor.selected.configurable": "copyright.filetypes.Python"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PUML&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PUML"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs/includes/js/common" />
       <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
       <recent name="$PROJECT_DIR$/scripts" />
       <recent name="$PROJECT_DIR$/src/lambdas/api/watch_histories" />
       <recent name="$PROJECT_DIR$/src/layers/databases/python" />
-      <recent name="$PROJECT_DIR$/src/layers/api/python" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs/includes/js/api" />
@@ -233,9 +249,9 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.migrate_anime_episodes_from_watchhistory" />
       <item itemvalue="Python.migrate_show_episodes_from_watchhistory" />
+      <item itemvalue="Python.cleanup_downloads" />
       <item itemvalue="Python.scratch_41" />
       <item itemvalue="Python.scratch_42" />
       <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
