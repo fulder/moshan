@@ -1,4 +1,4 @@
-import {axiosTokenInterceptor, MoshanItem} from './common.js'
+import {axiosTokenInterceptor, MoshanItem, Review} from './common.js'
 
 export class MoshanApi {
   constructor () {
@@ -48,8 +48,30 @@ export class MoshanApi {
     return this.apiAxios.post('/items', data);
   }
 
-  getItem (qParams) {
-    return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.api_id}`);
+  async getItem (qParams) {
+    const ret = await this.apiAxios.get(`/items/${qParams.api_name}/${qParams.api_id}`);
+
+    const review = new Review(
+        ret.data.overview,
+        ret.data.review,
+        ret.data.rating,
+        ret.data.datesWatched,
+        ret.data.createdAt,
+        ret.data.updatedAt,
+    )
+
+    console.debug(review);
+    return new MoshanItem(
+      ret.data.apiId,
+      ret.data.apiCache.imageUrl,
+      ret.data.apiCache.title,
+      ret.data.apiCache.releaseDate,
+      ret.data.apiCache.status,
+      "",
+      "epCount" in ret.data.apiCache,
+      "moshan",
+      review,
+    );
   }
 
   updateItem (qParams, overview, review, status = '', rating = '', watchDates = []) {

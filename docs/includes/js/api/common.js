@@ -25,7 +25,7 @@ export function MoshanItems(collection_name) {
   this.items = [];
 }
 
-export function MoshanItem(id, poster, title, releaseDate, status, synopsis, hasEpisodes, apiName, review) {
+export function MoshanItem(id, poster, title, releaseDate, status, synopsis, hasEpisodes, apiName, review={}) {
   this.id = id;
   this.imageUrl = poster;
   this.title = title;
@@ -34,11 +34,16 @@ export function MoshanItem(id, poster, title, releaseDate, status, synopsis, has
   //this.synopsis = synopsis;
   this.hasEpisodes = hasEpisodes;
   this.apiName = apiName;
-  this.review = review
+  this.review = review;
 }
 
-function Review(createdAt, overview, review, rating, datesWatched, updatedAt, backlogDate, latestWatchDate, epProgress, watchedEps, specialProgress, watchedSpecials) {
-
+export function Review(overview, review, rating, datesWatched, createdAt, updatedAt) {
+    this.overview = overview;
+    this.review = review;
+    this.rating = rating;
+    this.datesWatched = datesWatched;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
 }
 
 export function MoshanEpisodes(episodes, total_pages) {

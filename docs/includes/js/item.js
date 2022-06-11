@@ -60,7 +60,7 @@ function QueryParams(urlParams) {
 async function getItemByApiId() {
   let item = null;
   try {
-    item = await moshanApi.getItem(qParams).data;
+    item = await moshanApi.getItem(qParams);
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
       console.log(error);
@@ -71,9 +71,9 @@ async function getItemByApiId() {
     item = await api.getItemById(qParams);
   }
 
-  /*createItem(item);
+  createItem(item);
 
-  if (item.hasEpisodes) {
+  /*if (item.hasEpisodes) {
     const moshanEpisodes = await api.getEpisodes(qParams);
     const watchHistoryEpisodes = await moshanApi.getEpisodes(qParams);
     for (let i=0; i < watchHistoryEpisodes.data.episodes.length; i++) {
@@ -101,37 +101,38 @@ async function getItemByApiId() {
   }*/
 }
 
-function createItem (moshanItem, watchHistoryItem) {
-  const itemAdded = watchHistoryItem !== null;
+function createItem (item) {
+  const itemAdded = item.apiName === "moshan";
   console.debug(`Item added: ${itemAdded}`);
-  console.debug(moshanItem);
+  console.debug(item);
+
 
   let datesWatched = [];
-  if (itemAdded && 'datesWatched' in watchHistoryItem && watchHistoryItem['datesWatched'].length > 0) {
-    datesWatched = watchHistoryItem['datesWatched'];
+  if (itemAdded && 'datesWatched' in item.review && item.review.datesWatched.length > 0) {
+    datesWatched = item.review.datesWatched;
   }
 
-  if (itemAdded && 'overview' in watchHistoryItem) {
-      document.getElementById('overview').value = watchHistoryItem.overview;
+  if (item.review.overview !== undefined) {
+      document.getElementById('overview').value = item.review.overview;
   }
-  if (itemAdded && 'review' in watchHistoryItem) {
-      document.getElementById('review').value = watchHistoryItem.review;
+  if (item.review.review !== undefined) {
+      document.getElementById('review').value = item.review.review;
   }
-  if (itemAdded && 'status' in watchHistoryItem) {
-      document.getElementById('user-status').value = watchHistoryItem.status;
+  if (item.review.status !== undefined) {
+      document.getElementById('user-status').value = item.review.status;
   }
-  if (itemAdded && 'rating' in watchHistoryItem) {
-      document.getElementById('user-rating').value = watchHistoryItem.rating;
+  if (item.review.rating) {
+      document.getElementById('user-rating').value = item.review.rating;
   }
-  if (itemAdded && 'createdAt' in watchHistoryItem) {
-      document.getElementById('user_added_date').innerHTML = watchHistoryItem.createdAt;
+  if (item.review.createdAt) {
+      document.getElementById('user_added_date').innerHTML = item.review.createdAt;
   }
 
-  document.getElementById('poster').src = moshanItem.poster;
-  document.getElementById('title').innerHTML = moshanItem.title;
-  document.getElementById('start-date').innerHTML = moshanItem.start_date;
-  document.getElementById('status').innerHTML = moshanItem.status;
-  document.getElementById('synopsis').innerHTML = moshanItem.synopsis;
+  document.getElementById('poster').src = item.imageUrl;
+  document.getElementById('title').innerHTML = item.title;
+  document.getElementById('start-date').innerHTML = item.releaseDate;
+  document.getElementById('status').innerHTML = item.status;
+  //document.getElementById('synopsis').innerHTML = item.synopsis;
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
 
   // TODO: store links in api and loop through them creating the links dynamically
@@ -149,7 +150,7 @@ function createItem (moshanItem, watchHistoryItem) {
     document.getElementById('add_button').classList.remove('d-none');
   }
 
-  if (!moshanItem.has_episodes) {
+  if (!item.hasEpisodes) {
     if (datesWatched.length === 0) {
       createOneCalendar();
     }
