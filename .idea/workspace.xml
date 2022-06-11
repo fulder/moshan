@@ -20,6 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/backlog.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/backlog.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/callback.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/callback.html" afterDir="false" />
