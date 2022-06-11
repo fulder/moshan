@@ -6,7 +6,6 @@ createNavbar();
 
 const moshanApi = new MoshanApi();
 
-
 if (isLoggedIn()) {
     createUnwatchedItems();
 }
