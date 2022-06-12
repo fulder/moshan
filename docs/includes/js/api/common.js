@@ -1,10 +1,12 @@
+import {MalApi} from './mal.js';
+import {TmdbApi} from './tmdb.js';
+import {TvMazeApi} from './tvmaze.js';
+import {checkToken, accessToken} from '../common/token.js';
+
 let checkTokenPromise = null;
 
-/* exported collectionNames */
-const collectionNames = ['movie', 'show', 'anime'];
-
 /* exported axiosTokenInterceptor */
-async function axiosTokenInterceptor (config) {
+export async function axiosTokenInterceptor (config) {
   if (checkTokenPromise === null) {
     checkTokenPromise = checkToken();
   }
@@ -15,32 +17,39 @@ async function axiosTokenInterceptor (config) {
   return config;
 }
 
-/* exported MoshanItems */
-function MoshanItems(collection_name) {
+export function MoshanItems(collection_name) {
   this.collection_name = collection_name;
   this.items = [];
 }
 
-/* exported MoshanItem */
-function MoshanItem(id, poster, title, start_date, status, synopsis, has_episodes, api_name) {
+export function MoshanItem(id, poster, title, releaseDate, status, synopsis, hasEpisodes, apiName, review={}) {
   this.id = id;
-  this.poster = poster;
+  this.imageUrl = poster;
   this.title = title;
-  this.start_date = start_date;
+  this.releaseDate = releaseDate;
   this.status = status;
-  this.synopsis = synopsis;
-  this.has_episodes = has_episodes;
-  this.api_name = api_name;
+  //this.synopsis = synopsis;
+  this.hasEpisodes = hasEpisodes;
+  this.apiName = apiName;
+  this.review = review;
 }
 
-/* exported MoshanEpisodes */
-function MoshanEpisodes(episodes, total_pages) {
+export function Review(overview, review, rating, datesWatched, createdAt, updatedAt, status) {
+    this.overview = overview;
+    this.review = review;
+    this.rating = rating;
+    this.datesWatched = datesWatched;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.status = status;
+}
+
+export function MoshanEpisodes(episodes, total_pages) {
   this.episodes = episodes;
   this.total_pages = total_pages;
 }
 
-/* exported MoshanEpisode */
-function MoshanEpisode(id, number, title, air_date, previous_id, next_id, extra_ep=false) {
+export function MoshanEpisode(id, number, title, air_date, previous_id, next_id, extra_ep=false) {
   this.id = id;
   this.number = number;
   this.title = title;
@@ -52,8 +61,7 @@ function MoshanEpisode(id, number, title, air_date, previous_id, next_id, extra_
   this.extra_ep = extra_ep;
 }
 
-/* exported getApiByName */
-function getApiByName(name) {
+export function getApiByName(name) {
   switch(name) {
     case 'mal':
       return new MalApi();

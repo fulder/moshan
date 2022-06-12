@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "description": "UI service is created using vanilla HTML and JS together with bootstrap for CSS.",
   "main": "index.js",
-  "dependencies": {},
   "devDependencies": {
     "eslint": "^8.17.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0"
+    "eslint-plugin-promise": "^6.0.0",
+    "http-server": "^14.1.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-local": "http-server"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,2 @@
+export const localClientId = '';
+export const localRedirectBaseUrl = '';
