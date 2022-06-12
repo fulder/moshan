@@ -1,6 +1,6 @@
-/* global axios, axiosTokenInterceptor */
-/* exported MoshanApi */
-class MoshanApi {
+import {axiosTokenInterceptor, MoshanItem, Review} from './common.js';
+
+export class MoshanApi {
   constructor () {
     this.apiAxios = axios.create({
       baseURL: 'https://api.moshan.fulder.dev',
@@ -48,8 +48,37 @@ class MoshanApi {
     return this.apiAxios.post('/items', data);
   }
 
-  getItem (qParams) {
-    return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.api_id}`);
+  async getItem (qParams) {
+    const ret = await this.apiAxios.get(`/items/${qParams.api_name}/${qParams.api_id}`);
+
+    const review = new Review(
+        ret.data.overview,
+        ret.data.review,
+        ret.data.rating,
+        ret.data.datesWatched,
+        ret.data.createdAt,
+        ret.data.updatedAt,
+        ret.data.status
+    );
+
+    let poster = ret.data.apiCache.imageUrl;
+    if (!ret.data.apiCache.imageUrl.includes('http')) {
+      poster = `https://image.tmdb.org/t/p/w500/${ret.data.apiCache.imageUrl}`;
+    }
+
+    console.log(ret.data);
+
+    return new MoshanItem(
+      ret.data.apiId,
+      poster,
+      ret.data.apiCache.title,
+      ret.data.apiCache.releaseDate,
+      ret.data.apiCache.status,
+      '',
+      'epCount' in ret.data.apiCache,
+      'moshan',
+      review
+    );
   }
 
   updateItem (qParams, overview, review, status = '', rating = '', watchDates = []) {

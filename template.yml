@@ -16,6 +16,9 @@ Parameters:
     Type: String
     Default: python3.9
 
+  LocalCognitoClient:
+    Type: String
+
 
 Resources:
   Certificate:
@@ -79,6 +82,7 @@ Resources:
               issuer: !Sub "https://cognito-idp.eu-west-1.amazonaws.com/${CognitoUserPool}"
               audience:
                 - !Ref CognitoClient
+                - !Ref LocalCognitoClient
         DefaultAuthorizer: cognito
       CorsConfiguration:
         AllowHeaders:
@@ -91,6 +95,7 @@ Resources:
           - "DELETE"
         AllowOrigins:
           - !Sub "https://${DomainName}"
+          - "http://localhost:8080"
       DisableExecuteApiEndpoint: true
       Domain:
         CertificateArn: !Ref Certificate

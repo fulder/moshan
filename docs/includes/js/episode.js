@@ -1,5 +1,15 @@
-/* global flatpickr, getApiByName */
-/* global MoshanApi */
+import {createNavbar} from './common/navbar.js';
+import {getApiByName} from './api/common.js';
+import {MoshanApi} from './api/moshan.js';
+import {isLoggedIn} from './common/auth.js';
+
+createNavbar();
+
+document.getElementById('addButton').addEventListener('click', addEpisode);
+document.getElementById('removeButton').addEventListener('click', removeEpisode);
+document.getElementById('setDateButton').addEventListener('click', setCurrentWatchDate);
+document.getElementById('removeDateButton').addEventListener('click', removeWatchDate);
+
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
@@ -9,7 +19,9 @@ const api = getApiByName(qParams.api_name);
 let datesWatched;
 let calendarInstance;
 
-getEpisode();
+if (isLoggedIn()) {
+  getEpisode();
+}
 
 function QueryParams(urlParams) {
   this.collection = urlParams.get('collection');
@@ -81,9 +93,9 @@ function createEpisodePage (moshanEpisode, watchHistoryEpisode) {
   }
 
   if (episodeAdded) {
-    document.getElementById('remove_button').classList.remove('d-none');
+    document.getElementById('removeButton').classList.remove('d-none');
   } else {
-    document.getElementById('add_button').classList.remove('d-none');
+    document.getElementById('addButton').classList.remove('d-none');
   }
 
   document.getElementById('episode').classList.remove('d-none');
@@ -113,7 +125,6 @@ async function onCalendarClose (selectedDates, dateStr) {
   await patchWatchDate(date);
 }
 
-/* exported setCurrentWatchDate */
 async function setCurrentWatchDate() {
   const dateNow = new Date();
 
@@ -134,7 +145,6 @@ async function patchWatchDate(date) {
   await moshanApi.updateEpisode(qParams, datesWatched);
 }
 
-/* exported removeWatchDate */
 async function removeWatchDate() {
   if (datesWatched === undefined || datesWatched.length == 0) {
     return;
@@ -152,17 +162,19 @@ async function removeWatchDate() {
   await moshanApi.updateEpisode(qParams, datesWatched);
 }
 
-/* exported addEpisode */
-async function addEpisode () {
+async function addEpisode (evt) {
   const addEpisodeRes = await moshanApi.addEpisode(qParams);
   qParams.episode_id = addEpisodeRes.data.id;
-  document.getElementById('add_button').classList.add('d-none');
-  document.getElementById('remove_button').classList.remove('d-none');
+  document.getElementById('addButton').classList.add('d-none');
+  document.getElementById('removeButton').classList.remove('d-none');
+
+  evt.target.blur();
 }
 
-/* exported removeEpisode */
-async function removeEpisode () {
+async function removeEpisode (evt) {
   await moshanApi.removeEpisode(qParams);
-  document.getElementById('add_button').classList.remove('d-none');
-  document.getElementById('remove_button').classList.add('d-none');
+  document.getElementById('addButton').classList.remove('d-none');
+  document.getElementById('removeButton').classList.add('d-none');
+
+  evt.target.blur();
 }

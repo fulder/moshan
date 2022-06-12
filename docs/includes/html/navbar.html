@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-2">
+    <a class="navbar-brand" href="/index.html">
+      <img src="/includes/icons/logo.svg" class="d-inline-block align-top navbar-logo" alt="moshan_logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler"
+            aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/index.html">Moshan</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item mr-3">
+                <form class="form-inline" action="/results.html">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="search">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+              <ul class="dropdown-menu pull-right" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/unwatched.html">Unwatched</a></li>
+                <li><a class="dropdown-item" href="/backlog.html">Backlog</a></li>
+                <li><a class="dropdown-item" href="/history.html">History</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" id="logoutButton" href="#">Logout</a></li>
+              </ul>
+            </li>
+        </ul>
+        <button id="loginButton" class="btn btn-outline-success nav-item" type="submit">
+            <i class="fas fa-sign-in-alt"></i>
+            Login
+        </button>
+    </div>
+</nav>
+
+<div id="logInAlert" class="alert alert-danger d-none" role="alert">
+    Please log in before accessing this page
+</div>
+<!--<div id="itemsLoadingAlert" class="alert alert-warning d-none" role="alert">-->
+<!--    Some watch history items are still loading-->
+<!--</div>-->

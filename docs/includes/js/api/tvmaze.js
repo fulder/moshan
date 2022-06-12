@@ -1,6 +1,6 @@
-/* global axios */
-/* exported TvMazeApi */
-class TvMazeApi {
+import {MoshanItems, MoshanItem, MoshanEpisodes, MoshanEpisode} from './common.js';
+
+export class TvMazeApi {
   constructor () {
     this.apiAxios = axios.create({
       baseURL: 'https://api.tvmaze.com',
