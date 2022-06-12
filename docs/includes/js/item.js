@@ -8,7 +8,7 @@ createNavbar();
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
-document.getElementById('headTitle').innerHTML = `Moshan - ${qParams.collection}`;
+document.getElementById('headTitle').innerHTML = "Moshan - Item";
 document.getElementById('saveItem').addEventListener('click', saveItem);
 document.getElementById('addButton').addEventListener('click', addItem);
 document.getElementById('removeButton').addEventListener('click', removeItem);
