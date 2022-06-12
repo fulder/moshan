@@ -21,9 +21,9 @@
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/mal.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/mal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/moshan.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/moshan.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/tvmaze.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/tvmaze.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/episode/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/episode/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/backlog.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/backlog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/episode.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/episode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/includes/js/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/item.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/item/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/item/index.html" afterDir="false" />
     </list>

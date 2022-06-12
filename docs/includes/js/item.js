@@ -9,16 +9,10 @@ const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
 document.getElementById('headTitle').innerHTML = `Moshan - ${qParams.collection}`;
-
-const saveItemButton = document.getElementById('saveItem')
-saveItemButton.addEventListener('click', saveItem);
-
-const addItemButton = document.getElementById('addButton')
-addItemButton.addEventListener('click', addItem);
-
-const removeItemButton = document.getElementById('removeButton')
-removeItemButton.addEventListener('click', removeItem);
-
+document.getElementById('saveItem').addEventListener('click', saveItem);
+document.getElementById('addButton').addEventListener('click', addItem);
+document.getElementById('removeButton').addEventListener('click', removeItem);
+document.getElementById('newCalendarButton').addEventListener('click', addCalendar);
 
 const moshanApi = new MoshanApi();
 const api = getApiByName(qParams.api_name);
@@ -190,9 +184,10 @@ function createOneCalendar(calDate=null) {
     </div>
     <input id="${calendarId}" type="text" class="form-control">
     <div class="input-group-append">
-      <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate(${i}, this)"><i class="fas fa-calendar-day"></i></button>
-      <button class="btn btn-danger" type="button" onclick="removeWatchDate(${i}, this)"><i class="far fa-calendar-times"></i></button>
+      <button id="setDateButton${calendarId}" class="btn btn-primary" type="button"><i class="fas fa-calendar-day"></i></button>
+      <button id="removeDateButton${calendarId}"  class="btn btn-danger" type="button"><i class="far fa-calendar-times"></i></button>
     </div>`;
+
 
   document.getElementById('watched-dates').appendChild(calendarDiv);
 
@@ -208,6 +203,9 @@ function createOneCalendar(calDate=null) {
   });
 
   console.debug(calendarInstances);
+
+  document.getElementById(`setDateButton${calendarId}`).addEventListener('click', function(){setCurrentWatchDate(this, i)});
+  document.getElementById(`removeDateButton${calendarId}`).addEventListener('click', function(){removeWatchDate(this, i)});
 }
 
 function getPatchData() {
@@ -245,7 +243,7 @@ function getPatchData() {
     );
 }
 
-async function addItem () {
+async function addItem (evt) {
   try {
     const addItemRes = await moshanApi.addItem(qParams);
     console.debug(addItemRes);
@@ -257,10 +255,10 @@ async function addItem () {
     console.log(error);
   }
 
-  addItemButton.blur();
+  evt.target.blur();
 }
 
-async function removeItem () {
+async function removeItem (evt) {
   try {
     await moshanApi.removeItem(qParams);
     document.getElementById('addButton').classList.remove('d-none');
@@ -269,10 +267,10 @@ async function removeItem () {
     console.log(error);
   }
 
-  removeItemButton.blur();
+  evt.target.blur();
 }
 
-async function saveItem () {
+async function saveItem (evt) {
   currentPatchData = getPatchData();
   try {
     await moshanApi.updateItem(
@@ -288,11 +286,11 @@ async function saveItem () {
   }
 
   savedPatchData = currentPatchData;
-  saveItemButton.blur();
+  evt.target.blur();
 }
 
 function createEpisodesList (apiEpisodes) {
-  let tableHTML = '';
+  document.getElementById('episodesTable').classList.remove('d-none');
 
   apiEpisodes.episodes.forEach(function (episode) {
     const moshanEpisode = api.getMoshanEpisode(episode);
@@ -303,50 +301,94 @@ function createEpisodesList (apiEpisodes) {
     let episodeApiId = moshanEpisode.id;
 
     rowClass = 'episodeRow';
-    onClickAction = `window.location='/episode?api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
+    onClickAction = `/episode?api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
     if (episode.extra_ep) {
-      onClickAction += '&extra_ep=true\'';
-    } else {
-      onClickAction += '\'';
+      onClickAction += '&extra_ep=true';
     }
 
     if (watchHistoryEpisodeIDs.includes(moshanEpisode.id)) {
       rowClass += ' table-success';
     }
 
-    tableHTML += `
-            <tr onclick="${onClickAction}" class="${rowClass}">
-                <td class="small">${moshanEpisode.number}</td>
-                <td class="text-truncate small">${moshanEpisode.title}</td>
-                <td class="small">${moshanEpisode.air_date}</td>
-            </tr>
-        `;
+    /*
+    <tr class="${rowClass}">
+        <td class="small">${moshanEpisode.number}</td>
+        <td class="text-truncate small">${moshanEpisode.title}</td>
+        <td class="small">${moshanEpisode.air_date}</td>
+    </tr>
+    */
+    const tableRow = document.createElement('tr');
+    tableRow.className = rowClass;
+    tableRow.addEventListener('click', function(){ window.open(onClickAction, "_self") });
+
+    const epNumberRow = document.createElement('td');
+    epNumberRow.className = "small";
+    epNumberRow.innerHTML = moshanEpisode.number;
+    tableRow.appendChild(epNumberRow);
+    const epTitleRow = document.createElement('td');
+    epTitleRow.className = "text-truncate small";
+    epTitleRow.innerHTML = moshanEpisode.title;
+    tableRow.appendChild(epTitleRow);
+    const epAirDate = document.createElement('td');
+    epAirDate.className = "small";
+    epAirDate.innerHTML = moshanEpisode.air_date;
+    tableRow.appendChild(epAirDate);
+    document.getElementById('episodeTableBody').appendChild(tableRow);
   });
 
-  document.getElementById('episodeTableBody').innerHTML = tableHTML;
-  document.getElementById('episodesTable').classList.remove('d-none');
-
   if (document.getElementById('episodesPages').innerHTML === '') {
-    let paginationHTML = '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes(this)">Previous</a></li>';
+
+    /*
+    <li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes(this)">Previous</a></li>
+    ...
+    <li id="episodePage10" class="${className}"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(10, this)">${i}</a></li>
+    <li id="episodePage11" class="${className}"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(11, this)">${i}</a></li>
+    ...
+    <li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadNextEpisodes(this)">Next</a></li>
+    */
+    const previousLi = document.createElement('li');
+    previousLi.className='page-item';
+    const previousA = document.createElement('a');
+    previousA.className = 'page-link'
+    previousA.href = 'javascript:void(0)';
+    previousA.innerHTML = "Previous"
+    previousA.addEventListener('click', loadPreviousEpisodes)
+    previousLi.appendChild(previousA);
+    document.getElementById('episodesPages').appendChild(previousLi);
 
     totalPages = apiEpisodes.total_pages;
     for (let i = 1; i <= totalPages; i++) {
-      let className = 'page-item';
-      if (i === qParams.episode_page) {
-        className = 'page-item active';
-      }
-      paginationHTML += `<li id="episodePage${i}" class="${className}"><a href="javascript:void(0)" class="page-link" onclick="loadEpisodes(${i}, this)">${i}</a></li>`;
-    }
-    paginationHTML += '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadNextEpisodes(this)">Next</a></li>';
+      const li = document.createElement('li');
 
-    document.getElementById('episodesPages').innerHTML = paginationHTML;
+      li.className = 'page-item';
+      if (i === qParams.episode_page) {
+        li.className = 'page-item active';
+      }
+
+      const a = document.createElement('a');
+      a.className = 'page-link'
+      a.href = 'javascript:void(0)';
+      a.innerHTML = i;
+      a.addEventListener('click', function(){loadEpisodes(i, a)})
+      li.appendChild(a);
+      document.getElementById('episodesPages').appendChild(li);
+    }
+
+    const nextLi = document.createElement('li');
+    nextLi.className='page-item';
+    const nextA = document.createElement('a');
+    nextA.className = 'page-link'
+    nextA.href = 'javascript:void(0)';
+    nextA.innerHTML = "Next"
+    nextA.addEventListener('click', loadNextEpisodes)
+    nextLi.appendChild(nextA);
+    document.getElementById('episodesPages').appendChild(nextLi);
   }
 }
 
-/* exported loadPreviousEpisodes */
-function loadPreviousEpisodes (button) {
+function loadPreviousEpisodes (evt) {
   if (qParams.episode_page > 1) {
-    loadEpisodes(qParams.episode_page - 1, button);
+    loadEpisodes(qParams.episode_page - 1, evt.target);
   }
 }
 
@@ -376,8 +418,7 @@ async function loadEpisodes (page, button) {
   button.blur();
 }
 
-/* exported setCurrentWatchDate */
-function setCurrentWatchDate(calendarIndex, button) {
+function setCurrentWatchDate(button, calendarIndex) {
   const previousDates = calendarInstances[calendarIndex].selectedDates;
 
   const dateNow = new Date();
@@ -391,8 +432,10 @@ function setCurrentWatchDate(calendarIndex, button) {
   button.blur();
 }
 
-/* exported removeWatchDate */
-function removeWatchDate(calendarIndex, button) {
+function removeWatchDate(button, calendarIndex) {
+    console.log(calendarIndex)
+    console.log(calendarInstances[calendarIndex])
+    console.log(calendarInstances)
   const previousDates = calendarInstances[calendarIndex].selectedDates;
 
   const calendarAmount = Object.keys(calendarInstances).length;
@@ -415,8 +458,7 @@ function removeWatchDate(calendarIndex, button) {
   button.blur();
 }
 
-/* exported addCalendar */
-function addCalendar(button) {
+function addCalendar(evt) {
   createOneCalendar();
-  button.blur();
+  evt.target.blur();
 }

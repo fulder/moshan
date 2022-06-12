@@ -40,11 +40,9 @@ async function createTableRows(cursor='') {
     //   moshanItems[`${responses[i].api_name}_${responses[i].id}`] = responses[i];
     // }
 
-    let html = '';
     for (let i=0; i< items.length; i++) {
-      html += createRow(items[i]);
+      createRow(items[i]);
     }
-    document.getElementById('backlog-table-body').innerHTML += html;
 }
 
 
@@ -63,17 +61,33 @@ function createRow(watchHistoryItem) {
     apiCache.releaseDate = apiCache.releaseDate.split('T')[0];
   }
 
-
-  const onClickAction = `window.location='item/index.html?api_name=${watchHistoryItem.apiName}&api_id=${watchHistoryItem.apiId}'`;
-  return `
-  <tr onclick="${onClickAction}" class=${rowClass}>
+    /*
+    <tr class=${rowClass}>
       <td>${watchHistoryItem.createdAt}</td>
       <td>${watchHistoryItem.apiName}</td>
       <td>${apiCache.title}</td>
       <td>${apiCache.status}</td>
       <td>${apiCache.releaseDate}</td>
     </tr>
-    `;
+    */
+    const tableRow = document.createElement('tr');
+    tableRow.className = rowClass;
+    tableRow.addEventListener('click', function(){ window.open(`item/index.html?api_name=${watchHistoryItem.apiName}&api_id=${watchHistoryItem.apiId}, "_self") });
+
+    const columnValues = [
+        watchHistoryItem.createdAt,
+        watchHistoryItem.apiName,
+        apiCache.title,
+        apiCache.status,
+        apiCache.releaseDate,
+    ]
+    for (let i = 0; i < columnValues.length; i++) {
+        const td = document.createElement('td');
+        td.innerHTML = columnValues[i];
+        tableRow.appendChild(td);
+    }
+
+    document.getElementById('backlog-table-body').appendChild(tableRow);
 }
 
 async function loadMore() {

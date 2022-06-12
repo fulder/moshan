@@ -48,8 +48,8 @@
       </div>
 
       <div class="col-md-4 col-10 mt-1">
-          <button id="add_button" class="btn btn-success d-none" onclick="addEpisode()"><i class="fa fa-plus"></i> Add</button>
-          <button id="remove_button" class="btn btn-danger d-none" onclick="removeEpisode()"><i class="fa fa-minus"></i> Remove</button>
+          <button id="addButton" class="btn btn-success d-none"><i class="fa fa-plus"></i> Add</button>
+          <button id="removeButton" class="btn btn-danger d-none"><i class="fa fa-minus"></i> Remove</button>
           <b>Watched</b>:<span id="watched_amount"></span>
           <div class="input-group input-group-sm pt-1">
             <div class="input-group-prepend">
@@ -58,7 +58,7 @@
 
             <input id="flatpickr" type="text" class="form-control" ${!episodeAired ? 'disabled' : ''}>
             <div class="input-group-append">
-              <button class="btn btn-primary" type="button" onclick="setCurrentWatchDate()"><i class="fas fa-calendar-day"></i></button><button class="btn btn-danger" type="button" onclick="removeWatchDate()"><i class="far fa-calendar-times"></i></button>
+              <button id="setDateButton" class="btn btn-primary" type="button"><i class="fas fa-calendar-day"></i></button><button id="removeDateButton" class="btn btn-danger" type="button"><i class="far fa-calendar-times"></i></button>
             </div>
           </div>
       </div>
