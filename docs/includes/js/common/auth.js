@@ -1,5 +1,5 @@
-import {cognitoDomainName, clientId, redirectBaseUrl} from './config.js'
-import {accessToken, parsedToken} from './token.js'
+import {cognitoDomainName, clientId, redirectBaseUrl} from './config.js';
+import {accessToken} from './token.js';
 
 export function isLoggedIn() {
     return accessToken !== null;

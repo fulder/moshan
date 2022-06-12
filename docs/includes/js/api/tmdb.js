@@ -1,4 +1,4 @@
-import {MoshanItems, MoshanItem} from './common.js'
+import {MoshanItems, MoshanItem} from './common.js';
 
 export class TmdbApi {
   constructor () {

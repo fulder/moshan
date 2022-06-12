@@ -1,3 +1,3 @@
-import {createNavbar} from './common/navbar.js'
+import {createNavbar} from './common/navbar.js';
 
 createNavbar(false);

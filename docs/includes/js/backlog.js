@@ -1,6 +1,6 @@
-import {createNavbar} from './common/navbar.js'
-import {MoshanApi} from './api/moshan.js'
-import {isLoggedIn} from './common/auth.js'
+import {createNavbar} from './common/navbar.js';
+import {MoshanApi} from './api/moshan.js';
+import {isLoggedIn} from './common/auth.js';
 
 createNavbar();
 
@@ -72,7 +72,7 @@ function createRow(watchHistoryItem) {
     */
     const tableRow = document.createElement('tr');
     tableRow.className = rowClass;
-    tableRow.addEventListener('click', function(){ window.open(`item/index.html?api_name=${watchHistoryItem.apiName}&api_id=${watchHistoryItem.apiId}`, "_self") });
+    tableRow.addEventListener('click', function(){ window.open(`item/index.html?api_name=${watchHistoryItem.apiName}&api_id=${watchHistoryItem.apiId}`, '_self'); });
 
     const columnValues = [
         watchHistoryItem.createdAt,
@@ -80,7 +80,7 @@ function createRow(watchHistoryItem) {
         apiCache.title,
         apiCache.status,
         apiCache.releaseDate,
-    ]
+    ];
     for (let i = 0; i < columnValues.length; i++) {
         const td = document.createElement('td');
         td.innerHTML = columnValues[i];

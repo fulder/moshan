@@ -21,11 +21,22 @@
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/episode/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/episode/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.eslintrc.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.eslintrc.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/mal.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/mal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/moshan.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/moshan.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/tmdb.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/tmdb.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/tvmaze.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/tvmaze.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/includes/js/backlog.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/backlog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/callback.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/callback.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/common/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/common/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/common/navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/common/navbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/common/token.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/common/token.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/includes/js/episode.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/episode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/includes/js/item.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/item/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/item/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/results.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/results.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/unwatched.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/unwatched.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

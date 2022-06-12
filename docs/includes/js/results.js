@@ -1,10 +1,9 @@
-import {createNavbar} from './common/navbar.js'
-import {getApiByName} from './api/common.js'
-import {isLoggedIn} from './common/auth.js'
+import {createNavbar} from './common/navbar.js';
+import {getApiByName} from './api/common.js';
+import {isLoggedIn} from './common/auth.js';
 
 createNavbar();
 
-/* global accessToken */
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 

@@ -1,12 +1,9 @@
-import {MalApi} from './mal.js'
-import {TmdbApi} from './tmdb.js'
-import {TvMazeApi} from './tvmaze.js'
-import {checkToken, accessToken} from '../common/token.js'
+import {MalApi} from './mal.js';
+import {TmdbApi} from './tmdb.js';
+import {TvMazeApi} from './tvmaze.js';
+import {checkToken, accessToken} from '../common/token.js';
 
 let checkTokenPromise = null;
-
-/* exported collectionNames */
-const collectionNames = ['movie', 'show', 'anime'];
 
 /* exported axiosTokenInterceptor */
 export async function axiosTokenInterceptor (config) {

@@ -1,4 +1,4 @@
-import {axiosTokenInterceptor, MoshanItem, Review} from './common.js'
+import {axiosTokenInterceptor, MoshanItem, Review} from './common.js';
 
 export class MoshanApi {
   constructor () {
@@ -58,15 +58,15 @@ export class MoshanApi {
         ret.data.datesWatched,
         ret.data.createdAt,
         ret.data.updatedAt,
-        ret.data.status,
-    )
+        ret.data.status
+    );
 
     let poster = ret.data.apiCache.imageUrl;
-    if (!ret.data.apiCache.imageUrl.includes("http")) {
+    if (!ret.data.apiCache.imageUrl.includes('http')) {
       poster = `https://image.tmdb.org/t/p/w500/${ret.data.apiCache.imageUrl}`;
     }
 
-    console.log(ret.data)
+    console.log(ret.data);
 
     return new MoshanItem(
       ret.data.apiId,
@@ -74,10 +74,10 @@ export class MoshanApi {
       ret.data.apiCache.title,
       ret.data.apiCache.releaseDate,
       ret.data.apiCache.status,
-      "",
-      "epCount" in ret.data.apiCache,
-      "moshan",
-      review,
+      '',
+      'epCount' in ret.data.apiCache,
+      'moshan',
+      review
     );
   }
 

@@ -1,4 +1,4 @@
-import {clientId, cognitoDomainName} from './config.js'
+import {clientId, cognitoDomainName} from './config.js';
 
 export let accessToken = localStorage.getItem('moshan_access_token');
 export let parsedToken = null;

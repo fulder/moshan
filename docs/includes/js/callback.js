@@ -1,4 +1,4 @@
-import {redirectBaseUrl, clientId, cognitoDomainName} from './common/config.js'
+import {redirectBaseUrl, clientId, cognitoDomainName} from './common/config.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const code = urlParams.get('code');
@@ -34,7 +34,7 @@ async function sendPostAuthRequest() {
     },
   };
 
-  const res = await axios.post(`https://${cognitoDomainName}/oauth2/token`, postData, options)
+  const res = await axios.post(`https://${cognitoDomainName}/oauth2/token`, postData, options);
   const data = res.data;
   localStorage.setItem('moshan_access_token', data.access_token);
   localStorage.setItem('moshan_refresh_token', data.refresh_token);

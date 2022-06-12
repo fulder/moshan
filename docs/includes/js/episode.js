@@ -1,7 +1,7 @@
-import {createNavbar} from './common/navbar.js'
-import {getApiByName} from './api/common.js'
-import {MoshanApi} from './api/moshan.js'
-import {isLoggedIn} from './common/auth.js'
+import {createNavbar} from './common/navbar.js';
+import {getApiByName} from './api/common.js';
+import {MoshanApi} from './api/moshan.js';
+import {isLoggedIn} from './common/auth.js';
 
 createNavbar();
 

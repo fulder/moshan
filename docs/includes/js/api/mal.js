@@ -1,4 +1,4 @@
-import {MoshanItems, MoshanItem, MoshanEpisodes, MoshanEpisode} from './common.js'
+import {MoshanItems, MoshanItem, MoshanEpisodes, MoshanEpisode} from './common.js';
 
 export class MalApi {
   constructor () {

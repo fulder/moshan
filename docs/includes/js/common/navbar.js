@@ -1,5 +1,5 @@
-import {login, logout} from './auth.js'
-import {accessToken, parsedToken} from './token.js'
+import {login, logout} from './auth.js';
+import {accessToken, parsedToken} from './token.js';
 
 export async function createNavbar(showAlert = true) {
     await loadHtml();
@@ -23,8 +23,8 @@ export async function createNavbar(showAlert = true) {
 }
 
 async function loadHtml() {
-    const response = await fetch("./../../includes/html/navbar.html")
-    const text = await response.text()
+    const response = await fetch('./../../includes/html/navbar.html');
+    const text = await response.text();
     document.getElementById('navbar').innerHTML = text;
 
     document.getElementById('loginButton').addEventListener('click', login);

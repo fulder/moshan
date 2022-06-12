@@ -2,7 +2,7 @@ let internalClientId, internalRedirectBaseUrl;
 
 try {
   // hack for local config
-  const { localClientId, localRedirectBaseUrl } = await import('./configLocal.js');
+  const { localClientId, localRedirectBaseUrl } = import('./configLocal.js');
 
   internalClientId = localClientId;
   internalRedirectBaseUrl = localRedirectBaseUrl;

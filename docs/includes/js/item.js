@@ -1,7 +1,7 @@
-import {getApiByName} from './api/common.js'
-import {MoshanApi} from './api/moshan.js'
-import {createNavbar} from './common/navbar.js'
-import {isLoggedIn} from './common/auth.js'
+import {getApiByName} from './api/common.js';
+import {MoshanApi} from './api/moshan.js';
+import {createNavbar} from './common/navbar.js';
+import {isLoggedIn} from './common/auth.js';
 
 createNavbar();
 
@@ -107,7 +107,7 @@ async function getItemByApiId() {
 }
 
 function createItem (item) {
-  const itemAdded = item.apiName === "moshan";
+  const itemAdded = item.apiName === 'moshan';
   console.debug(`Item added: ${itemAdded}`);
   console.debug(item);
 
@@ -204,8 +204,8 @@ function createOneCalendar(calDate=null) {
 
   console.debug(calendarInstances);
 
-  document.getElementById(`setDateButton${calendarId}`).addEventListener('click', function(){setCurrentWatchDate(this, i)});
-  document.getElementById(`removeDateButton${calendarId}`).addEventListener('click', function(){removeWatchDate(this, i)});
+  document.getElementById(`setDateButton${calendarId}`).addEventListener('click', function(){setCurrentWatchDate(this, i);});
+  document.getElementById(`removeDateButton${calendarId}`).addEventListener('click', function(){removeWatchDate(this, i);});
 }
 
 function getPatchData() {
@@ -319,18 +319,18 @@ function createEpisodesList (apiEpisodes) {
     */
     const tableRow = document.createElement('tr');
     tableRow.className = rowClass;
-    tableRow.addEventListener('click', function(){ window.open(onClickAction, "_self") });
+    tableRow.addEventListener('click', function(){ window.open(onClickAction, '_self'); });
 
     const epNumberRow = document.createElement('td');
-    epNumberRow.className = "small";
+    epNumberRow.className = 'small';
     epNumberRow.innerHTML = moshanEpisode.number;
     tableRow.appendChild(epNumberRow);
     const epTitleRow = document.createElement('td');
-    epTitleRow.className = "text-truncate small";
+    epTitleRow.className = 'text-truncate small';
     epTitleRow.innerHTML = moshanEpisode.title;
     tableRow.appendChild(epTitleRow);
     const epAirDate = document.createElement('td');
-    epAirDate.className = "small";
+    epAirDate.className = 'small';
     epAirDate.innerHTML = moshanEpisode.air_date;
     tableRow.appendChild(epAirDate);
     document.getElementById('episodeTableBody').appendChild(tableRow);
@@ -349,10 +349,10 @@ function createEpisodesList (apiEpisodes) {
     const previousLi = document.createElement('li');
     previousLi.className='page-item';
     const previousA = document.createElement('a');
-    previousA.className = 'page-link'
+    previousA.className = 'page-link';
     previousA.href = 'javascript:void(0)';
-    previousA.innerHTML = "Previous"
-    previousA.addEventListener('click', loadPreviousEpisodes)
+    previousA.innerHTML = 'Previous';
+    previousA.addEventListener('click', loadPreviousEpisodes);
     previousLi.appendChild(previousA);
     document.getElementById('episodesPages').appendChild(previousLi);
 
@@ -366,10 +366,10 @@ function createEpisodesList (apiEpisodes) {
       }
 
       const a = document.createElement('a');
-      a.className = 'page-link'
+      a.className = 'page-link';
       a.href = 'javascript:void(0)';
       a.innerHTML = i;
-      a.addEventListener('click', function(){loadEpisodes(i, a)})
+      a.addEventListener('click', function(){loadEpisodes(i, a);});
       li.appendChild(a);
       document.getElementById('episodesPages').appendChild(li);
     }
@@ -377,10 +377,10 @@ function createEpisodesList (apiEpisodes) {
     const nextLi = document.createElement('li');
     nextLi.className='page-item';
     const nextA = document.createElement('a');
-    nextA.className = 'page-link'
+    nextA.className = 'page-link';
     nextA.href = 'javascript:void(0)';
-    nextA.innerHTML = "Next"
-    nextA.addEventListener('click', loadNextEpisodes)
+    nextA.innerHTML = 'Next';
+    nextA.addEventListener('click', loadNextEpisodes);
     nextLi.appendChild(nextA);
     document.getElementById('episodesPages').appendChild(nextLi);
   }
@@ -433,9 +433,9 @@ function setCurrentWatchDate(button, calendarIndex) {
 }
 
 function removeWatchDate(button, calendarIndex) {
-    console.log(calendarIndex)
-    console.log(calendarInstances[calendarIndex])
-    console.log(calendarInstances)
+    console.log(calendarIndex);
+    console.log(calendarInstances[calendarIndex]);
+    console.log(calendarInstances);
   const previousDates = calendarInstances[calendarIndex].selectedDates;
 
   const calendarAmount = Object.keys(calendarInstances).length;
