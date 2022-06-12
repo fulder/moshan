@@ -37,13 +37,14 @@ export function MoshanItem(id, poster, title, releaseDate, status, synopsis, has
   this.review = review;
 }
 
-export function Review(overview, review, rating, datesWatched, createdAt, updatedAt) {
+export function Review(overview, review, rating, datesWatched, createdAt, updatedAt, status) {
     this.overview = overview;
     this.review = review;
     this.rating = rating;
     this.datesWatched = datesWatched;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.status = status;
 }
 
 export function MoshanEpisodes(episodes, total_pages) {

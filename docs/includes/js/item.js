@@ -10,6 +10,16 @@ const qParams = new QueryParams(urlParams);
 
 document.getElementById('headTitle').innerHTML = `Moshan - ${qParams.collection}`;
 
+const saveItemButton = document.getElementById('saveItem')
+saveItemButton.addEventListener('click', saveItem);
+
+const addItemButton = document.getElementById('addButton')
+addItemButton.addEventListener('click', addItem);
+
+const removeItemButton = document.getElementById('removeButton')
+removeItemButton.addEventListener('click', removeItem);
+
+
 const moshanApi = new MoshanApi();
 const api = getApiByName(qParams.api_name);
 
@@ -73,20 +83,21 @@ async function getItemByApiId() {
 
   createItem(item);
 
-  /*if (item.hasEpisodes) {
-    const moshanEpisodes = await api.getEpisodes(qParams);
-    const watchHistoryEpisodes = await moshanApi.getEpisodes(qParams);
-    for (let i=0; i < watchHistoryEpisodes.data.episodes.length; i++) {
-      watchHistoryEpisodeIDs.push(parseInt(watchHistoryEpisodes.data.episodes[i].episodeApiId));
+  if (item.hasEpisodes) {
+    const apiEpisodes = await api.getEpisodes(qParams);
+
+    const moshanEpisodes = await moshanApi.getEpisodes(qParams);
+    for (let i=0; i < moshanEpisodes.data.episodes.length; i++) {
+      watchHistoryEpisodeIDs.push(parseInt(moshanEpisodes.data.episodes[i].episodeApiId));
     }
 
-    if (qParams.api_name == 'mal' && moshanItem.status === 'Airing') {
+    if (qParams.api_name == 'mal' && item.status === 'Airing') {
       let lastEpId = 0;
-      if (moshanEpisodes.episodes.length != 0) {
-        lastEpId = moshanEpisodes.episodes[0].episode_id;
+      if (apiEpisodes.episodes.length != 0) {
+        lastEpId = apiEpisodes.episodes[0].episode_id;
       }
       for (let i=0; i<12; i++) {
-        moshanEpisodes.episodes.unshift(
+        apiEpisodes.episodes.unshift(
           {
           episode_id: lastEpId + i + 1,
           title: 'N/A',
@@ -97,8 +108,8 @@ async function getItemByApiId() {
       }
     }
 
-    createEpisodesList(moshanEpisodes);
-  }*/
+    createEpisodesList(apiEpisodes);
+  }
 }
 
 function createItem (item) {
@@ -108,7 +119,7 @@ function createItem (item) {
 
 
   let datesWatched = [];
-  if (itemAdded && 'datesWatched' in item.review && item.review.datesWatched.length > 0) {
+  if (item.review.datesWatched !== undefined && item.review.datesWatched.length > 0) {
     datesWatched = item.review.datesWatched;
   }
 
@@ -145,9 +156,9 @@ function createItem (item) {
   document.getElementById('links').innerHTML = links;*/
 
   if (itemAdded) {
-    document.getElementById('remove_button').classList.remove('d-none');
+    document.getElementById('removeButton').classList.remove('d-none');
   } else {
-    document.getElementById('add_button').classList.remove('d-none');
+    document.getElementById('addButton').classList.remove('d-none');
   }
 
   if (!item.hasEpisodes) {
@@ -234,37 +245,34 @@ function getPatchData() {
     );
 }
 
-/* exported addItem */
-async function addItem (button) {
+async function addItem () {
   try {
     const addItemRes = await moshanApi.addItem(qParams);
     console.debug(addItemRes);
 
     qParams.id = addItemRes.data.id;
-    document.getElementById('add_button').classList.add('d-none');
-    document.getElementById('remove_button').classList.remove('d-none');
+    document.getElementById('addButton').classList.add('d-none');
+    document.getElementById('removeButton').classList.remove('d-none');
   } catch (error) {
     console.log(error);
   }
 
-  button.blur();
+  addItemButton.blur();
 }
 
-/* exported removeItem */
-async function removeItem (button) {
+async function removeItem () {
   try {
     await moshanApi.removeItem(qParams);
-    document.getElementById('add_button').classList.remove('d-none');
-    document.getElementById('remove_button').classList.add('d-none');
+    document.getElementById('addButton').classList.remove('d-none');
+    document.getElementById('removeButton').classList.add('d-none');
   } catch (error) {
     console.log(error);
   }
 
-  button.blur();
+  removeItemButton.blur();
 }
 
-/* exported saveItem */
-async function saveItem (button) {
+async function saveItem () {
   currentPatchData = getPatchData();
   try {
     await moshanApi.updateItem(
@@ -280,14 +288,14 @@ async function saveItem (button) {
   }
 
   savedPatchData = currentPatchData;
-  button.blur();
+  saveItemButton.blur();
 }
 
-function createEpisodesList (moshanEpisodes) {
+function createEpisodesList (apiEpisodes) {
   let tableHTML = '';
 
-  moshanEpisodes.episodes.forEach(function (episode) {
-    moshanEpisode = api.getMoshanEpisode(episode);
+  apiEpisodes.episodes.forEach(function (episode) {
+    const moshanEpisode = api.getMoshanEpisode(episode);
 
     let rowClass = 'bg-secondary';
     let onClickAction = '';
@@ -321,7 +329,7 @@ function createEpisodesList (moshanEpisodes) {
   if (document.getElementById('episodesPages').innerHTML === '') {
     let paginationHTML = '<li class="page-item"><a href="javascript:void(0)" class="page-link" onclick="loadPreviousEpisodes(this)">Previous</a></li>';
 
-    totalPages = moshanEpisodes.total_pages;
+    totalPages = apiEpisodes.total_pages;
     for (let i = 1; i <= totalPages; i++) {
       let className = 'page-item';
       if (i === qParams.episode_page) {
@@ -357,8 +365,8 @@ async function loadEpisodes (page, button) {
 
   qParams.episode_page = page;
 
-  const moshanEpisodes = await api.getEpisodes(qParams);
-  createEpisodesList(moshanEpisodes);
+  const apiEpisodes = await api.getEpisodes(qParams);
+  createEpisodesList(apiEpisodes);
 
   document.getElementById('episodesPages').getElementsByTagName('LI')[qParams.episode_page].classList.add('active');
 
