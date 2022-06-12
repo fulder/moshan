@@ -153,6 +153,7 @@ def _get_review(username, api_info, include_deleted=False):
 def get_all_items(username, sort=None, cursor=None):
     kwargs = {
         "KeyConditionExpression": Key("username").eq(username),
+        "FilterExpression": "attribute_not_exists(deleted_at)",
         "Limit": 50,
     }
     if sort is not None:
@@ -166,7 +167,7 @@ def get_all_items(username, sort=None, cursor=None):
         )
         kwargs["ScanIndexForward"] = False
     elif sort == "latest_watch_date":
-        kwargs["FilterExpression"] = Key("api_info").begins_with("i_")
+        kwargs["FilterExpression"] &= Key("api_info").begins_with("i_")
         kwargs["ScanIndexForward"] = False
 
     if cursor is not None:
