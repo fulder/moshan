@@ -1,8 +1,9 @@
 let internalClientId, internalRedirectBaseUrl;
 
+
 try {
   // hack for local config
-  const { localClientId, localRedirectBaseUrl } = import('./configLocal.js');
+  const { localClientId, localRedirectBaseUrl } = await import('./configLocal.js');
 
   internalClientId = localClientId;
   internalRedirectBaseUrl = localRedirectBaseUrl;
@@ -10,6 +11,7 @@ try {
   internalClientId = '1ra91kse5btmpmt3tmran2441a';
   internalRedirectBaseUrl= 'https://moshan.fulder.dev';
 }
+
 
 export const cognitoDomainName = 'moshan-fulder-dev.auth.eu-west-1.amazoncognito.com';
 export const clientId = internalClientId;
