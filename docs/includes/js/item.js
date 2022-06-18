@@ -78,6 +78,7 @@ async function getItemByApiId() {
   createItem(item);
 
   if (item.hasEpisodes) {
+    document.getElementById('newCalendarButton').classList.add('d-none');
     const apiEpisodes = await api.getEpisodes(qParams);
 
     const moshanEpisodes = await moshanApi.getEpisodes(qParams);
