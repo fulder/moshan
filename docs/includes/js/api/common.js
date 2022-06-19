@@ -28,7 +28,7 @@ export function MoshanItem(id, poster, title, releaseDate, status, synopsis, has
   this.title = title;
   this.releaseDate = releaseDate;
   this.status = status;
-  //this.synopsis = synopsis;
+  this.synopsis = synopsis;
   this.hasEpisodes = hasEpisodes;
   this.apiName = apiName;
   this.review = review;
