@@ -1,8 +1,11 @@
 from datetime import datetime
 
 import dateutil.parser
+import logger
 import requests
 import utils
+
+log = logger.get_logger(__name__)
 
 
 class JikanApi:
@@ -50,11 +53,13 @@ class JikanApi:
                 return ep
 
     def get_episodes(self, anime_id, page=1):
-        res = requests.get(
-            f"{self.base_url}/anime/{anime_id}/episodes?page={page}",
-        )
+        url = f"{self.base_url}/anime/{anime_id}/episodes?page={page}"
+        log.debug(f"Sending request to {url}")
+        res = requests.get(url)
 
         if res.status_code != 200:
+            if res.text is not None:
+                log.error(f"Error from get episodes: {res.text}")
             raise utils.HttpError(res.status_code)
         return res.json()
 
