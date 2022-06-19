@@ -58,6 +58,8 @@ class JikanApi:
         res = requests.get(url)
 
         if res.status_code != 200:
+            if res.text is not None:
+                log.error(f"Error from get episodes: {res.text}")
             raise utils.HttpError(res.status_code)
         return res.json()
 
