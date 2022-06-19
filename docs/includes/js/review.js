@@ -21,6 +21,7 @@ let totalPages = 0;
 let calendarInstances = {};
 let savedPatchData;
 let currentPatchData;
+const episodeReview = qParams.episode_api_id !== null;
 
 if (isLoggedIn()) {
   createReview();
@@ -62,7 +63,7 @@ function QueryParams(urlParams) {
 }
 
 async function createReview() {
-  if (qParams.episode_api_id != null) {
+  if (episodeReview) {
     createEpisode();
   } else {
     createItem();
@@ -116,17 +117,24 @@ async function createItem() {
 }
 
 async function createEpisode() {
-  let episode = null;
+  let episode = {};
+  episode.review = {}
   try {
-    episode = await moshanApi.getEpisode(qParams).data;
+    episode = await moshanApi.getEpisode(qParams);
   } catch(error) {
     if (!('response' in error && error.response.status == 404)) {
       console.log(error);
     }
   }
 
+  console.debug(episode);
+
   // TODO: use cache for episodes?
-  episode.apiCache = await api.getEpisode(qParams);
+  const apiEpisode = await api.getEpisode(qParams);
+  episode.title = apiEpisode.title;
+  episode.releaseDate = apiEpisode.releaseDate;
+  episode.imageUrl = apiEpisode.imageUrl;
+  episode.status = apiEpisode.status;
 
   createReviewPage(episode);
 }
