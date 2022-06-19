@@ -8,9 +8,9 @@ createNavbar();
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
-document.getElementById('saveItem').addEventListener('click', saveItem);
-document.getElementById('addButton').addEventListener('click', addItem);
-document.getElementById('removeButton').addEventListener('click', removeItem);
+document.getElementById('saveButton').addEventListener('click', saveButtonClicked);
+document.getElementById('addButton').addEventListener('click', addButtonClicked);
+document.getElementById('removeButton').addEventListener('click', removeButtonClicked);
 document.getElementById('newCalendarButton').addEventListener('click', addCalendar);
 
 const moshanApi = new MoshanApi();
@@ -136,7 +136,7 @@ function createReviewPage (reviewItem) {
 
   const itemAdded = reviewItem.apiName === 'moshan';
   console.debug(`Item added: ${itemAdded}`);
-  console.debug(item);
+  console.debug(reviewItem);
 
   if (reviewItem.status !== undefined) {
     document.getElementById('status').innerHTML = `<b>Status</b>: <span id="status">${reviewItem.status}</span>`;
@@ -271,9 +271,14 @@ function getPatchData() {
     );
 }
 
-async function addItem (evt) {
+async function addButtonClicked (evt) {
+  let addFunc = moshanApi.addItem.bind(moshanApi);
+  if (episodeReview) {
+    addFunc = moshanApi.addEpisode.bind(moshanApi);
+  }
+
   try {
-    const addItemRes = await moshanApi.addItem(qParams);
+    const addItemRes = await addFunc(qParams);
     console.debug(addItemRes);
 
     qParams.id = addItemRes.data.id;
@@ -286,9 +291,14 @@ async function addItem (evt) {
   evt.target.blur();
 }
 
-async function removeItem (evt) {
+async function removeButtonClicked (evt) {
+  let removeFunc = moshanApi.removeItem.bind(moshanApi);
+  if (episodeReview) {
+    removeFunc = moshanApi.removeEpisode.bind(moshanApi);
+  }
+
   try {
-    await moshanApi.removeItem(qParams);
+    await removeFunc(qParams);
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
   } catch (error) {
@@ -298,10 +308,18 @@ async function removeItem (evt) {
   evt.target.blur();
 }
 
-async function saveItem (evt) {
+async function saveButtonClicked (evt) {
   currentPatchData = getPatchData();
+
+  let updateFunc = moshanApi.updateItem.bind(moshanApi);
+  if (episodeReview) {
+    updateFunc = moshanApi.updateEpisode.bind(moshanApi);
+  }
+
+  console.debug(updateFunc);
+
   try {
-    await moshanApi.updateItem(
+    await updateFunc(
       qParams,
       currentPatchData.overview,
       currentPatchData.review,
