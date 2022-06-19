@@ -22,6 +22,12 @@
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/includes/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/mal.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/mal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/moshan.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/moshan.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/tvmaze.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/tvmaze.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/includes/js/review.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/review.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/review.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/review.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,8 +66,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "last_opened_file_path": "/home/michal/git/moshan/docs/includes/js",
-    "settings.editor.selected.configurable": "copyright.filetypes.Python"
+    "last_opened_file_path": "/home/michal/git/moshan/docs/includes/icons",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.General"
   },
   "keyToStringList": {
     "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
@@ -71,11 +77,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs/includes/icons" />
       <recent name="$PROJECT_DIR$/docs/includes/js" />
       <recent name="$PROJECT_DIR$/docs/includes/js/common" />
       <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
       <recent name="$PROJECT_DIR$/scripts" />
-      <recent name="$PROJECT_DIR$/src/lambdas/api/watch_histories" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs" />
