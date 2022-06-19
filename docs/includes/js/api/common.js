@@ -49,16 +49,19 @@ export function MoshanEpisodes(episodes, total_pages) {
   this.total_pages = total_pages;
 }
 
-export function MoshanEpisode(id, number, title, air_date, previous_id, next_id, extra_ep=false) {
+export function MoshanEpisode(id, apiName, number, title, releaseDate, poster, previousId, nextId, review={}, extraEp=false) {
   this.id = id;
+  this.apiName = apiName;
   this.number = number;
   this.title = title;
-  this.air_date = air_date;
-  this.aired = Date.parse(this.air_date) <= (new Date()).getTime();
+  this.releaseDate = releaseDate;
+  this.imageUrl = poster;
+  this.aired = Date.parse(this.releaseDate) <= (new Date()).getTime();
   this.status = this.aired ? 'Aired' : 'Not Aired';
-  this.previous_id = previous_id;
-  this.next_id = next_id;
-  this.extra_ep = extra_ep;
+  this.previousId = previousId;
+  this.nextId = nextId;
+  this.extraEp = extraEp;
+  this.review = review;
 }
 
 export function getApiByName(name) {

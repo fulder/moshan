@@ -72,11 +72,18 @@ export class TvMazeApi {
 
     const episodeId = `S${seasonNbr}E${episodeNbr}`;
 
+    let poster = '/includes/img/image_not_available.png';
+    if (episode.image !== null && episode.image !== undefined && episode.image.medium !== undefined) {
+      poster = episode.image.medium;
+    }
+
     return new MoshanEpisode(
       episode.id,
+      "tvmaze",
       episodeId,
       episode.name,
-      episode.airdate
+      episode.airdate,
+      poster,
     );
   }
 }

@@ -1,4 +1,4 @@
-import {axiosTokenInterceptor, MoshanItem, Review} from './common.js';
+import {axiosTokenInterceptor, MoshanItem, MoshanEpisode, Review} from './common.js';
 
 export class MoshanApi {
   constructor () {
@@ -31,10 +31,6 @@ export class MoshanApi {
 
     return this.apiAxios.get(url);
   }
-
-  // getWatchHistoryByCollection (collectionName, sort, showApi) {
-  //   return this.apiAxios.get(`/watch-history/collection/${collectionName}?sort=${sort}&show_api=${showApi}`);
-  // }
 
   removeItem (qParams) {
     return this.apiAxios.delete(`/items/${qParams.api_name}/${qParams.api_id}`);
@@ -112,17 +108,60 @@ export class MoshanApi {
     return this.apiAxios.delete(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
   }
 
-  getEpisode (qParams) {
-    return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
+  async getEpisode (qParams) {
+    const ret = await this.apiAxios.get(`/items/${qParams.api_name}/${qParams.api_id}/episodes/${qParams.episode_api_id}`);
+
+    const review = new Review(
+        ret.data.overview,
+        ret.data.review,
+        ret.data.rating,
+        ret.data.datesWatched,
+        ret.data.createdAt,
+        ret.data.updatedAt,
+        ret.data.status
+    );
+
+    const ep = new MoshanEpisode(
+      ret.data.apiId,
+      "moshan",
+      ret.data.episodeApiId,
+    );
+    ep.review = review;
+    return ep;
   }
 
-  getEpisodes (qParams) {
-    return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`);
+  async getEpisodes (qParams) {
+    const ret = await this.apiAxios.get(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`);
+
+    return new Review(
+        ret.data.overview,
+        ret.data.review,
+        ret.data.rating,
+        ret.data.datesWatched,
+        ret.data.createdAt,
+        ret.data.updatedAt,
+        ret.data.status
+    );
   }
 
-  updateEpisode (qParams, watchDates = []) {
+  updateEpisode (qParams, overview, review, status = '', rating = '', watchDates = []) {
     const data = {};
-    data.datesWatched = watchDates;
+    if (watchDates.length !== 0 ) {
+      data.datesWatched = watchDates;
+    }
+    if (overview !== '') {
+      data.overview = overview;
+    }
+    if (review !== '') {
+      data.review = review;
+    }
+    if (status !== '') {
+      data.status = status;
+    }
+    if (rating !== '') {
+      data.rating = rating;
+    }
+    console.debug(this)
     return this.apiAxios.put(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
   }
 }
