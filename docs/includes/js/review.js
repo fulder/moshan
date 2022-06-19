@@ -355,7 +355,7 @@ function createEpisodesList (apiEpisodes) {
     let episodeApiId = moshanEpisode.id;
 
     rowClass = 'episodeRow';
-    onClickAction = `/episode?api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
+    onClickAction = `review.html?api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
     if (episode.extra_ep) {
       onClickAction += '&extra_ep=true';
     }
