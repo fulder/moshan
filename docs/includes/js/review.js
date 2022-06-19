@@ -127,8 +127,6 @@ async function createEpisode() {
     }
   }
 
-  console.debug(episode);
-
   // TODO: use cache for episodes?
   const apiEpisode = await api.getEpisode(qParams);
   episode.title = apiEpisode.title;
@@ -176,14 +174,27 @@ function createReviewPage (reviewItem) {
   document.getElementById('start-date').innerHTML = reviewItem.releaseDate;
 
   let apiUrl;
-  if (qParams.api_name === 'tvmaze' && qParams.episode_api_id === null) {
-    apiUrl = `https://www.tvmaze.com/shows/${qParams.api_id}`;
+  if (qParams.api_name === 'tmdb') {
+    apiUrl = `https://www.themoviedb.org/movie/${qParams.api_id}`;
+  } else if (qParams.api_name === 'tvmaze') {
+    if (episodeReview) {
+        apiUrl = `https://www.tvmaze.com/episodes/${qParams.episode_api_id}`;
+    } else {
+        apiUrl = `https://www.tvmaze.com/shows/${qParams.api_id}`;
+    }
+  } else if (qParams.api_name === 'mal') {
+    if (episodeReview) {
+        // TODO: get episode ID from item?
+    } else {
+        apiUrl = `https://myanimelist.net/anime/${qParams.api_id}`
+    }
   }
-  document.getElementById('link').innerHTML = `<a href=${apiUrl} target="_blank"><img class="api-link" src="/includes/icons/${qParams.api_name}.png" /></a>`;
 
+  if (apiUrl !== undefined) {
+    document.getElementById('link').innerHTML = `<a href=${apiUrl} target="_blank"><img class="api-link" src="/includes/icons/${qParams.api_name}.png" /></a>`;
+  }
   document.getElementById('synopsis').innerHTML = item.synopsis;
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
-  document.getElementById('headTitle').innerHTML = `Moshan - Review - ${reviewItem.title}`;
 
   if (itemAdded) {
     document.getElementById('removeButton').classList.remove('d-none');
@@ -385,7 +396,7 @@ function createEpisodesList (apiEpisodes) {
     tableRow.appendChild(epTitleRow);
     const epAirDate = document.createElement('td');
     epAirDate.className = 'small';
-    epAirDate.innerHTML = moshanEpisode.air_date;
+    epAirDate.innerHTML = moshanEpisode.releaseDate;
     tableRow.appendChild(epAirDate);
     document.getElementById('episodeTableBody').appendChild(tableRow);
   });

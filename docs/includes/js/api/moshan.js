@@ -130,18 +130,8 @@ export class MoshanApi {
     return ep;
   }
 
-  async getEpisodes (qParams) {
-    const ret = await this.apiAxios.get(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`);
-
-    return new Review(
-        ret.data.overview,
-        ret.data.review,
-        ret.data.rating,
-        ret.data.datesWatched,
-        ret.data.createdAt,
-        ret.data.updatedAt,
-        ret.data.status
-    );
+  getEpisodes (qParams) {
+    return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`);
   }
 
   updateEpisode (qParams, overview, review, status = '', rating = '', watchDates = []) {
