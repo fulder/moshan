@@ -118,7 +118,7 @@ async function createItem() {
 
 async function createEpisode() {
   let episode = {};
-  episode.review = {}
+  episode.review = {};
   try {
     episode = await moshanApi.getEpisode(qParams);
   } catch(error) {
@@ -188,7 +188,7 @@ function createReviewPage (reviewItem) {
     if (episodeReview) {
         // TODO: get episode ID from item?
     } else {
-        apiUrl = `https://myanimelist.net/anime/${qParams.api_id}`
+        apiUrl = `https://myanimelist.net/anime/${qParams.api_id}`;
     }
   }
 

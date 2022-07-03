@@ -85,7 +85,7 @@ export class MalApi {
 
     return new MoshanEpisode(
       episode.mal_id,
-      "mal",
+      'mal',
       episode.mal_id,
       episode.title,
       date,

@@ -123,8 +123,8 @@ export class MoshanApi {
 
     const ep = new MoshanEpisode(
       ret.data.apiId,
-      "moshan",
-      ret.data.episodeApiId,
+      'moshan',
+      ret.data.episodeApiId
     );
     ep.review = review;
     return ep;
@@ -151,7 +151,7 @@ export class MoshanApi {
     if (rating !== '') {
       data.rating = rating;
     }
-    console.debug(this)
+    console.debug(this);
     return this.apiAxios.put(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
   }
 }

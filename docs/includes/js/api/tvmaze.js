@@ -79,11 +79,11 @@ export class TvMazeApi {
 
     return new MoshanEpisode(
       episode.id,
-      "tvmaze",
+      'tvmaze',
       episodeId,
       episode.name,
       episode.airdate,
-      poster,
+      poster
     );
   }
 }
