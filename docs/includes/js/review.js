@@ -133,6 +133,8 @@ async function createEpisode() {
   episode.releaseDate = apiEpisode.releaseDate;
   episode.imageUrl = apiEpisode.imageUrl;
   episode.status = apiEpisode.status;
+  episode.previousId = apiEpisode.previousId;
+  episode.nextId = apiEpisode.nextId;
 
   createReviewPage(episode);
 }
@@ -200,6 +202,15 @@ function createReviewPage (reviewItem) {
     document.getElementById('removeButton').classList.remove('d-none');
   } else {
     document.getElementById('addButton').classList.remove('d-none');
+  }
+
+  if (episodeReview && reviewItem.previousId !== null) {
+    document.getElementById('previousButton').href = `/review?api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_api_id=${reviewItem.previousId}`;
+    document.getElementById('previousButton').classList.remove('d-none');
+  }
+  if (episodeReview && reviewItem.nextId !== null) {
+    document.getElementById('nextButton').href = `/review?api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_api_id=${reviewItem.nextId}`;
+    document.getElementById('nextButton').classList.remove('d-none');
   }
 
   if (!reviewItem.hasEpisodes) {

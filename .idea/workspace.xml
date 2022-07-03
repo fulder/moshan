@@ -21,7 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/includes/js/api/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/api/common.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/includes/js/review.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/review.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/review.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/review.html" afterDir="false" />
     </list>
@@ -60,17 +59,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "last_opened_file_path": "/home/michal/git/moshan/docs/includes/icons",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.General"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;last_opened_file_path&quot;: &quot;/home/michal/git/moshan/docs/includes/icons&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.General&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "PUML"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;PUML&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs/includes/icons" />
@@ -87,7 +86,7 @@
       <recent name="$PROJECT_DIR$/src/layers/databases" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest in unittest">
+  <component name="RunManager" selected="Python.cleanup_downloads">
     <configuration name="cleanup_downloads" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="moshan" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -243,10 +242,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.cleanup_downloads" />
         <item itemvalue="Python tests.pytest in unittest" />
         <item itemvalue="Python tests.pytest in test" />
         <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
-        <item itemvalue="Python.cleanup_downloads" />
         <item itemvalue="Python.scratch_42" />
       </list>
     </recent_temporary>
