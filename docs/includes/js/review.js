@@ -172,8 +172,8 @@ function createReviewPage (reviewItem) {
       document.getElementById('user_added_date').innerHTML = review.createdAt;
   }
 
-  if (reviewItem.title === "") {
-    reviewItem.title = "N/A"
+  if (reviewItem.title === '') {
+    reviewItem.title = 'N/A';
   }
 
   document.getElementById('poster').src = reviewItem.imageUrl;
@@ -181,7 +181,7 @@ function createReviewPage (reviewItem) {
   document.getElementById('start-date').innerHTML = reviewItem.releaseDate;
 
   if (episodeReview) {
-    document.getElementById('number').classList.remove("d-none");
+    document.getElementById('number').classList.remove('d-none');
     document.getElementById('number-val').innerHTML = reviewItem.number;
   }
 
