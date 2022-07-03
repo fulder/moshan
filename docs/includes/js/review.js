@@ -135,6 +135,7 @@ async function createEpisode() {
   episode.status = apiEpisode.status;
   episode.previousId = apiEpisode.previousId;
   episode.nextId = apiEpisode.nextId;
+  episode.number = apiEpisode.number;
 
   createReviewPage(episode);
 }
@@ -171,9 +172,18 @@ function createReviewPage (reviewItem) {
       document.getElementById('user_added_date').innerHTML = review.createdAt;
   }
 
+  if (reviewItem.title === "") {
+    reviewItem.title = "N/A"
+  }
+
   document.getElementById('poster').src = reviewItem.imageUrl;
   document.getElementById('title').innerHTML = reviewItem.title;
   document.getElementById('start-date').innerHTML = reviewItem.releaseDate;
+
+  if (episodeReview) {
+    document.getElementById('number').classList.remove("d-none");
+    document.getElementById('number-val').innerHTML = reviewItem.number;
+  }
 
   let apiUrl;
   if (qParams.api_name === 'tmdb') {
