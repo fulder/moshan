@@ -8,10 +8,9 @@ createNavbar();
 const urlParams = new URLSearchParams(window.location.search);
 const qParams = new QueryParams(urlParams);
 
-document.getElementById('headTitle').innerHTML = 'Moshan - Item';
-document.getElementById('saveItem').addEventListener('click', saveItem);
-document.getElementById('addButton').addEventListener('click', addItem);
-document.getElementById('removeButton').addEventListener('click', removeItem);
+document.getElementById('saveButton').addEventListener('click', saveButtonClicked);
+document.getElementById('addButton').addEventListener('click', addButtonClicked);
+document.getElementById('removeButton').addEventListener('click', removeButtonClicked);
 document.getElementById('newCalendarButton').addEventListener('click', addCalendar);
 
 const moshanApi = new MoshanApi();
@@ -22,9 +21,10 @@ let totalPages = 0;
 let calendarInstances = {};
 let savedPatchData;
 let currentPatchData;
+const episodeReview = qParams.episode_api_id !== null;
 
 if (isLoggedIn()) {
-  getItemByApiId();
+  createReview();
 }
 
 window.onbeforeunload = function(){
@@ -53,6 +53,7 @@ function QueryParams(urlParams) {
   this.api_id = urlParams.get('api_id');
   this.item_api_id = this.api_id;
   this.episode_page = urlParams.get('episode_page');
+  this.episode_api_id = urlParams.get('episode_api_id');
 
   if (this.episode_page === null) {
     this.episode_page = 1;
@@ -61,7 +62,15 @@ function QueryParams(urlParams) {
   }
 }
 
-async function getItemByApiId() {
+async function createReview() {
+  if (episodeReview) {
+    createEpisode();
+  } else {
+    createItem();
+  }
+}
+
+async function createItem() {
   let item = null;
   try {
     item = await moshanApi.getItem(qParams);
@@ -75,7 +84,7 @@ async function getItemByApiId() {
     item = await api.getItemById(qParams);
   }
 
-  createItem(item);
+  createReviewPage(item);
 
   if (item.hasEpisodes) {
     document.getElementById('newCalendarButton').classList.add('d-none');
@@ -107,48 +116,87 @@ async function getItemByApiId() {
   }
 }
 
-function createItem (item) {
-  const itemAdded = item.apiName === 'moshan';
-  console.debug(`Item added: ${itemAdded}`);
-  console.debug(item);
+async function createEpisode() {
+  let episode = {};
+  episode.review = {};
+  try {
+    episode = await moshanApi.getEpisode(qParams);
+  } catch(error) {
+    if (!('response' in error && error.response.status == 404)) {
+      console.log(error);
+    }
+  }
 
+  // TODO: use cache for episodes?
+  const apiEpisode = await api.getEpisode(qParams);
+  episode.title = apiEpisode.title;
+  episode.releaseDate = apiEpisode.releaseDate;
+  episode.imageUrl = apiEpisode.imageUrl;
+  episode.status = apiEpisode.status;
+  episode.previousId = apiEpisode.previousId;
+  episode.nextId = apiEpisode.nextId;
+
+  createReviewPage(episode);
+}
+
+function createReviewPage (reviewItem) {
+  const review = reviewItem.review;
+
+  const itemAdded = reviewItem.apiName === 'moshan';
+  console.debug(`Item added: ${itemAdded}`);
+  console.debug(reviewItem);
+
+  if (reviewItem.status !== undefined) {
+    document.getElementById('status').innerHTML = `<b>Status</b>: <span id="status">${reviewItem.status}</span>`;
+  }
 
   let datesWatched = [];
-  if (item.review.datesWatched !== undefined && item.review.datesWatched.length > 0) {
-    datesWatched = item.review.datesWatched;
+  if (review.datesWatched !== undefined && review.datesWatched.length > 0) {
+    datesWatched = review.datesWatched;
   }
 
-  if (item.review.overview !== undefined) {
-      document.getElementById('overview').value = item.review.overview;
+  if (review.overview !== undefined) {
+      document.getElementById('overview').value = review.overview;
   }
-  if (item.review.review !== undefined) {
-      document.getElementById('review').value = item.review.review;
+  if (review.review !== undefined) {
+      document.getElementById('review').value = review.review;
   }
-  if (item.review.status !== undefined) {
-      document.getElementById('user-status').value = item.review.status;
+  if (review.status !== undefined) {
+      document.getElementById('user-status').value = review.status;
   }
-  if (item.review.rating) {
-      document.getElementById('user-rating').value = item.review.rating;
+  if (review.rating) {
+      document.getElementById('user-rating').value = review.rating;
   }
-  if (item.review.createdAt) {
-      document.getElementById('user_added_date').innerHTML = item.review.createdAt;
+  if (review.createdAt) {
+      document.getElementById('user_added_date').innerHTML = review.createdAt;
   }
 
-  document.getElementById('poster').src = item.imageUrl;
-  document.getElementById('title').innerHTML = item.title;
-  document.getElementById('start-date').innerHTML = item.releaseDate;
-  document.getElementById('status').innerHTML = item.status;
-  //document.getElementById('synopsis').innerHTML = item.synopsis;
+  document.getElementById('poster').src = reviewItem.imageUrl;
+  document.getElementById('title').innerHTML = reviewItem.title;
+  document.getElementById('start-date').innerHTML = reviewItem.releaseDate;
+
+  let apiUrl;
+  if (qParams.api_name === 'tmdb') {
+    apiUrl = `https://www.themoviedb.org/movie/${qParams.api_id}`;
+  } else if (qParams.api_name === 'tvmaze') {
+    if (episodeReview) {
+        apiUrl = `https://www.tvmaze.com/episodes/${qParams.episode_api_id}`;
+    } else {
+        apiUrl = `https://www.tvmaze.com/shows/${qParams.api_id}`;
+    }
+  } else if (qParams.api_name === 'mal') {
+    if (episodeReview) {
+        // TODO: get episode ID from item?
+    } else {
+        apiUrl = `https://myanimelist.net/anime/${qParams.api_id}`;
+    }
+  }
+
+  if (apiUrl !== undefined) {
+    document.getElementById('link').innerHTML = `<a href=${apiUrl} target="_blank"><img class="api-link" src="/includes/icons/${qParams.api_name}.png" /></a>`;
+  }
+  document.getElementById('synopsis').innerHTML = item.synopsis;
   document.getElementById('watched_amount').innerHTML = datesWatched.length;
-
-  // TODO: store links in api and loop through them creating the links dynamically
-  /*let links = '';
-  links += `
-    <div class="col-6 col-md-5">
-        <a id="mal-link" href=${apiLink} target="_blank"><img class="img-fluid" src="/includes/icons/${apiName}.png" /></a>
-    </div>
-  `;
-  document.getElementById('links').innerHTML = links;*/
 
   if (itemAdded) {
     document.getElementById('removeButton').classList.remove('d-none');
@@ -156,7 +204,16 @@ function createItem (item) {
     document.getElementById('addButton').classList.remove('d-none');
   }
 
-  if (!item.hasEpisodes) {
+  if (episodeReview && reviewItem.previousId !== null) {
+    document.getElementById('previousButton').href = `/review?api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_api_id=${reviewItem.previousId}`;
+    document.getElementById('previousButton').classList.remove('d-none');
+  }
+  if (episodeReview && reviewItem.nextId !== null) {
+    document.getElementById('nextButton').href = `/review?api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_api_id=${reviewItem.nextId}`;
+    document.getElementById('nextButton').classList.remove('d-none');
+  }
+
+  if (!reviewItem.hasEpisodes) {
     if (datesWatched.length === 0) {
       createOneCalendar();
     }
@@ -244,9 +301,14 @@ function getPatchData() {
     );
 }
 
-async function addItem (evt) {
+async function addButtonClicked (evt) {
+  let addFunc = moshanApi.addItem.bind(moshanApi);
+  if (episodeReview) {
+    addFunc = moshanApi.addEpisode.bind(moshanApi);
+  }
+
   try {
-    const addItemRes = await moshanApi.addItem(qParams);
+    const addItemRes = await addFunc(qParams);
     console.debug(addItemRes);
 
     qParams.id = addItemRes.data.id;
@@ -259,9 +321,14 @@ async function addItem (evt) {
   evt.target.blur();
 }
 
-async function removeItem (evt) {
+async function removeButtonClicked (evt) {
+  let removeFunc = moshanApi.removeItem.bind(moshanApi);
+  if (episodeReview) {
+    removeFunc = moshanApi.removeEpisode.bind(moshanApi);
+  }
+
   try {
-    await moshanApi.removeItem(qParams);
+    await removeFunc(qParams);
     document.getElementById('addButton').classList.remove('d-none');
     document.getElementById('removeButton').classList.add('d-none');
   } catch (error) {
@@ -271,10 +338,18 @@ async function removeItem (evt) {
   evt.target.blur();
 }
 
-async function saveItem (evt) {
+async function saveButtonClicked (evt) {
   currentPatchData = getPatchData();
+
+  let updateFunc = moshanApi.updateItem.bind(moshanApi);
+  if (episodeReview) {
+    updateFunc = moshanApi.updateEpisode.bind(moshanApi);
+  }
+
+  console.debug(updateFunc);
+
   try {
-    await moshanApi.updateItem(
+    await updateFunc(
       qParams,
       currentPatchData.overview,
       currentPatchData.review,
@@ -302,7 +377,7 @@ function createEpisodesList (apiEpisodes) {
     let episodeApiId = moshanEpisode.id;
 
     rowClass = 'episodeRow';
-    onClickAction = `/episode?api_name=${qParams.api_name}&item_api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
+    onClickAction = `review.html?api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_api_id=${episodeApiId}`;
     if (episode.extra_ep) {
       onClickAction += '&extra_ep=true';
     }
@@ -332,7 +407,7 @@ function createEpisodesList (apiEpisodes) {
     tableRow.appendChild(epTitleRow);
     const epAirDate = document.createElement('td');
     epAirDate.className = 'small';
-    epAirDate.innerHTML = moshanEpisode.air_date;
+    epAirDate.innerHTML = moshanEpisode.releaseDate;
     tableRow.appendChild(epAirDate);
     document.getElementById('episodeTableBody').appendChild(tableRow);
   });

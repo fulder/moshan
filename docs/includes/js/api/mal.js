@@ -85,11 +85,14 @@ export class MalApi {
 
     return new MoshanEpisode(
       episode.mal_id,
+      'mal',
       episode.mal_id,
       episode.title,
       date,
+      '/includes/img/image_not_available.png',
       episode.mal_id > 1 ? episode.mal_id - 1 : null,
       episode.mal_id + 1,
+      {},
       'extra_ep' in episode
     );
   }
