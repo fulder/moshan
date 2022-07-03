@@ -72,7 +72,7 @@ function createRow(watchHistoryItem) {
     */
     const tableRow = document.createElement('tr');
     tableRow.className = rowClass;
-    tableRow.addEventListener('click', function(){ window.open(`item/index.html?api_name=${watchHistoryItem.apiName}&api_id=${watchHistoryItem.apiId}`, '_self'); });
+    tableRow.addEventListener('click', function(){ window.open(`review.html?api_name=${watchHistoryItem.apiName}&api_id=${watchHistoryItem.apiId}`, '_self'); });
 
     const columnValues = [
         watchHistoryItem.createdAt,

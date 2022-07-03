@@ -58,3 +58,9 @@ body {
 .watch-history-select {
   width: auto;
 }
+
+.api-link {
+  width: 30px;
+  height: 30px;
+  border-style: solid;
+}
