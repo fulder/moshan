@@ -71,7 +71,7 @@ export class MoshanApi {
       ret.data.apiCache.releaseDate,
       ret.data.apiCache.status,
       '',
-      'epCount' in ret.data.apiCache,
+      'epCount' in ret.data.apiCache && res.data.apiCache.epCount != 0,
       'moshan',
       review
     );
