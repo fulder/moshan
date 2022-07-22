@@ -2,10 +2,9 @@ import json
 import os
 
 import boto3
-import logger
+from loguru import logger
 
 TOPIC_ARN = os.getenv("UPDATES_TOPIC_ARN")
-log = logger.get_logger(__name__)
 
 topic = None
 
@@ -21,7 +20,7 @@ def _get_topic():
 
 
 def publish_show_update(api_name, api_id):
-    log.debug(f"Publish update for: {api_name}_{api_id}")
+    logger.bind(apiName=api_name).bind(apiId=api_id).debug("Publish update")
     _get_topic().publish(
         Message=json.dumps(
             {

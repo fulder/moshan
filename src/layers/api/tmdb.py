@@ -1,10 +1,7 @@
 import os
 
-import logger
-import requests
+from loguru import logger
 import utils
-
-log = logger.get_logger(__name__)
 
 TMDB_TOKEN = os.getenv("TMDB_TOKEN")
 
@@ -17,27 +14,13 @@ class TmdbApi:
             "Authorization": f"Bearer {TMDB_TOKEN}",
         }
 
-        log.debug("Tmdb base_url: {}".format(self.base_url))
+        logger.bind(baseUrl=self.base_url, headers=self.headers).debug("Initialized TmdbApi")
 
     def get_item(self, movie_id):
-        res = requests.get(
-            f"{self.base_url}/movie/{movie_id}",
-            headers=self.headers,
-        )
-
-        if res.status_code != 200:
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get(f"/movie/{movie_id}")
 
     def get_changes(self, page=1):
-        res = requests.get(
-            f"{self.base_url}/movie/changes?page={page}",
-            headers=self.headers,
-        )
-
-        if res.status_code != 200:
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get(f"/movie/changes?page={page}")
 
     def get_all_changes(self):
         ret = self.get_changes()
@@ -48,3 +31,6 @@ class TmdbApi:
             ret = self.get_changes(i)
             items += ret["results"]
         return items
+
+    def _get(self, path):
+        return utils.send_request(self.base_url, "GET", path, headers=self.headers)

@@ -2,17 +2,16 @@ from datetime import datetime
 
 import dateutil.parser
 import jikan
-import logger
 import reviews_db
 import tmdb
 import tvmaze
 import utils
 from fastapi import HTTPException
+from loguru import logger
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
 jikan_api = jikan.JikanApi()
-log = logger.get_logger(__name__)
 
 
 def get_items(username, sort=None, cursor=None):
@@ -78,7 +77,7 @@ def add_item(username, api_name, api_id, data):
             "Could not validate item in add_item"
             f" from {api_name} api with id: {api_id}"
         )
-        log.error(f"{err_msg}. Error: {str(e)}")
+        logger.bind(error=str(e)).error(err_msg)
         raise HTTPException(status_code=e.code)
 
     try:
@@ -164,7 +163,7 @@ def add_episode(username, api_name, item_api_id, episode_api_id, data):
             "Could not get show episode in add_episode func"
             f" from {api_name} api with id: {episode_api_id}"
         )
-        log.error(f"{err_msg}. Error: {str(e)}")
+        logger.bind(error=str(e)).error(err_msg)
         raise HTTPException(status_code=e.code)
 
     try:
@@ -212,7 +211,7 @@ def update_episode(username, api_name, item_api_id, episode_api_id, data):
             "Could not get episode in add_episode func"
             f" from {api_name} api with id: {episode_api_id}"
         )
-        log.error(f"{err_msg}. Error: {str(e)}")
+        logger.bind(error=str(e)).error(err_msg)
         raise HTTPException(status_code=e.code)
 
     try:
@@ -277,7 +276,7 @@ def delete_episode(username, api_name, item_api_id, episode_api_id):
             "Could not get episode in delete_episode func"
             f" from {api_name} api with id: {episode_api_id}"
         )
-        log.error(f"{err_msg}. Error: {str(e)}")
+        logger.bind(error=str(e)).error(err_msg)
         raise HTTPException(status_code=e.code)
 
     reviews_db.delete_episode(

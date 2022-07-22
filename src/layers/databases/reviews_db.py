@@ -7,7 +7,7 @@ from urllib.parse import quote, unquote
 
 import boto3
 import dateutil.parser
-import logger
+from loguru import logger
 from boto3.dynamodb.conditions import Attr, Key
 from decimal_encoder import DecimalEncoder
 from dynamodb_json import json_util
@@ -24,8 +24,6 @@ OPTIONAL_FIELDS = [
 
 table = None
 client = None
-
-log = logger.get_logger(__name__)
 
 
 class Error(Exception):
@@ -182,11 +180,8 @@ def get_all_items(username, sort=None, cursor=None):
         ret["items"].append(i)
 
     last_ev = res.get("LastEvaluatedKey")
-    log.debug(last_ev)
-    log.debug(type(last_ev))
-    log.debug(last_ev is not None)
     if last_ev is not None:
-        log.debug(f"LastEvaluatedKey={last_ev}")
+        logger.bind(lastEvaluatedKey=last_ev).debug("Not last page")
         ret["end_cursor"] = quote(json.dumps(last_ev, cls=DecimalEncoder))
 
     return ret
@@ -223,7 +218,7 @@ def get_episodes(username, api_name, item_api_id):
         "FilterExpression": "attribute_not_exists(deleted_at)",
     }
 
-    log.debug(f"Query kwargs: {query_kwargs}")
+    logger.bind(params=query_kwargs).debug("Getting episodes")
 
     page_iterator = paginator.paginate(**query_kwargs)
 
@@ -285,8 +280,8 @@ def _update_review(username, api_info, data, clean_whitelist):
         expression_attribute_names[f"#{k}"] = k
         expression_attribute_values[f":{k}"] = v
 
-    log.debug(f"Data: {data}")
-    log.debug(f"Clean whitelist: {clean_whitelist}")
+    log = logger.bind(data=data, cleanWhitelist=clean_whitelist)
+    log.debug("Starting update review")
 
     remove_names = []
     for o in OPTIONAL_FIELDS:
@@ -314,10 +309,13 @@ def _update_review(username, api_info, data, clean_whitelist):
         "username": username,
         "api_info": api_info,
     }
-    log.debug(f"Dynamo Key: {key}")
-    log.debug(f"Update expression: {update_expression}")
-    log.debug(f"Expression attribute names: {expression_attribute_names}")
-    log.debug(f"Expression attribute values: {expression_attribute_values}")
+
+    log.bind(
+        key=key,
+        updateEpression=update_expression,
+        expressionAttributeNames=expression_attribute_names,
+        expressionAttributeValues=expression_attribute_values,
+    ).debug("Running update_item")
 
     _get_table().update_item(
         Key=key,
@@ -395,7 +393,7 @@ def get_user_items(username, index_name=None, status_filter=None):
         }
         query_kwargs["ExpressionAttributeValues"][":progress"] = {"N": "100"}
 
-    log.debug(f"Query kwargs: {query_kwargs}")
+    logger.bind(params=query_kwargs).debug("Getting user items")
 
     page_iterator = paginator.paginate(**query_kwargs)
 

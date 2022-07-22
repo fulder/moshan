@@ -21,8 +21,21 @@
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/includes/js/review.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/includes/js/review.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/review.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/review.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements-dev.in" beforeDir="false" afterPath="$PROJECT_DIR$/requirements-dev.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements-dev.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements-dev.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lambdas/updates_publisher/updates.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/updates_publisher/updates.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/api/jikan.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/jikan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/api/tmdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/tmdb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/api/tvmaze.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/tvmaze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/api/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/databases/reviews_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/databases/reviews_db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/fastapi/requirements.in" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/fastapi/requirements.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/fastapi/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/fastapi/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/utils/logger.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/utils/requirements.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/utils/requirements.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

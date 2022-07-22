@@ -5,6 +5,8 @@ from fastapi import FastAPI, Request
 from mangum import Mangum
 from starlette.responses import Response
 
+from loguru import logger
+
 from . import routes
 from .models import (
     EpisodeReview,
