@@ -37,7 +37,7 @@ async function createItems(items) {
 
     const itemHTML = `
         <div class="col-4 col-md-2 poster">
-          <a href="/item?api_name=${item.apiName}&api_id=${item.apiId}">
+          <a href="review.html?api_name=${item.apiName}&api_id=${item.apiId}">
             <img class="img-fluid" src="${image}" />
             <p class="text-truncate small">${apiCache.title}</p>
           </a>
