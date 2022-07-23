@@ -1,16 +1,6 @@
 import json
-import sys
 
 from loguru import logger
-
-# def format(record):
-#     print(record)
-#     new_rec = {
-#         "message": record["message"]
-#     }
-#
-#     record["serialized"] = json.dumps(new_rec)
-#     return "{serialized}\n"
 
 
 def serialize(record):

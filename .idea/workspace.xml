@@ -21,10 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lambdas/updates_publisher/updates.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/updates_publisher/updates.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/api/tmdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/tmdb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/databases/reviews_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/databases/reviews_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +59,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "last_opened_file_path": "/home/michal/git/moshan/docs/includes/icons",
+    "last_opened_file_path": "/home/michal/git/moshan/src/layers/utils",
     "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.General"
   },
   "keyToStringList": {
@@ -75,11 +71,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/layers/utils" />
       <recent name="$PROJECT_DIR$/docs/includes/icons" />
       <recent name="$PROJECT_DIR$/docs/includes/js" />
       <recent name="$PROJECT_DIR$/docs/includes/js/common" />
       <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
-      <recent name="$PROJECT_DIR$/scripts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs" />
