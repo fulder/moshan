@@ -1,3 +1,4 @@
+import json
 from threading import Lock, Thread
 
 import requests
@@ -86,7 +87,7 @@ def send_request(base_url, method, path, headers=None):
     except HTTPError as e:
         logger.bind(
             statusCode=e.response.status_code,
-            content=e.response.content,
+            content=json.loads(e.response.content.decode()),
             url=url,
             method=method,
         ).error("Error during request")

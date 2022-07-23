@@ -3,8 +3,10 @@ from typing import Optional
 import jwt
 from fastapi import FastAPI, Request
 from log import setup_logger
+from loguru import logger
 from mangum import Mangum
-from starlette.responses import Response
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.responses import JSONResponse, Response
 
 from . import routes
 from .models import (
@@ -22,6 +24,20 @@ from .models import (
 app = FastAPI()
 
 setup_logger()
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request, exc):
+    logger.bind(
+        statusCode=exc.status_code,
+        detail=exc.detail,
+        method=request.method,
+        path=request.url.path,
+        headers=dict(request.headers),
+        queryParams=dict(request.query_params),
+        pathParams=dict(request.path_params),
+    ).debug("API exception")
+    return JSONResponse(str(exc.detail), status_code=exc.status_code)
 
 
 @app.get("/items", response_model=Reviews, response_model_exclude_none=True)
