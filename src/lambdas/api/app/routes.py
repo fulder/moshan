@@ -140,7 +140,7 @@ def add_episode(
         api_res = tvmaze_api.get_episode(episode_api_id)
         is_special = api_res["type"] != "regular"
     elif api_name == ApiNameWithEpisodes.mal.value:
-        # jikan_api.get_episode(item_api_id, episode_api_id)
+        jikan_api.get_episode(item_api_id, episode_api_id)
         is_special = False  # mal items are special not episodes
 
     item = reviews_db.get_item(
@@ -173,8 +173,7 @@ def update_episode(
     if api_name == ApiNameWithEpisodes.tvmaze.value:
         tvmaze_api.get_episode(episode_api_id)
     elif api_name == ApiNameWithEpisodes.mal.value:
-        # jikan_api.get_episode(item_api_id, episode_api_id)
-        pass
+        jikan_api.get_episode(item_api_id, episode_api_id)
 
     item = reviews_db.get_item(
         username,
@@ -223,7 +222,7 @@ def delete_episode(
         api_res = tvmaze_api.get_episode(episode_api_id)
         is_special = api_res["type"] != "regular"
     elif api_name == ApiNameWithEpisodes.mal.value:
-        # jikan_api.get_episode(item_api_id, episode_api_id)
+        jikan_api.get_episode(item_api_id, episode_api_id)
         is_special = False  # mal items are special not episodes
 
     reviews_db.delete_episode(
