@@ -1,4 +1,5 @@
 import json
+import os
 
 from loguru import logger
 
@@ -31,4 +32,4 @@ def sink(message):
 
 def setup_logger():
     logger.remove()
-    logger.add(sink)
+    logger.add(sink, level=os.getenv("LOG_LEVEL", "INFO"))
