@@ -36,8 +36,10 @@ class ApiNameWithEpisodes(CamelStrEnum):
     mal = auto()
 
 
-class ApiName(ApiNameWithEpisodes):
+class ApiName(CamelStrEnum):
     tmdb = auto()
+    tvmaze = auto()
+    mal = auto()
 
 
 class PostItem(ReviewData):

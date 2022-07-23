@@ -5,7 +5,8 @@ import jikan
 import reviews_db
 import tmdb
 import tvmaze
-from app import ApiNameWithEpisodes
+
+from .models import ApiNameWithEpisodes
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
