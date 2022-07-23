@@ -4,7 +4,7 @@
 #
 #    pip-compile --generate-hashes ./src/layers/utils/requirements.in
 #
-python-json-logger==2.0.2 \
-    --hash=sha256:202a4f29901a4b8002a6d1b958407eeb2dd1d83c18b18b816f5b64476dde9096 \
-    --hash=sha256:99310d148f054e858cd5f4258794ed6777e7ad2c3fd7e1c1b527f1cba4d08420
-    # via -r ./src/layers/utils/requirements.in
+python-json-logger==2.0.4 \
+    --hash=sha256:3b03487b14eb9e4f77e4fc2a023358b5394b82fd89cecf5586259baed57d8c6f \
+    --hash=sha256:764d762175f99fcc4630bd4853b09632acb60a6224acb27ce08cd70f0b1b81bd
+    # via -r requirements.in
