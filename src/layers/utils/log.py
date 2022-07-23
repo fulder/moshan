@@ -1,7 +1,6 @@
 import decimal
 import json
 import os
-from decimal import Decimal
 
 from loguru import logger
 
