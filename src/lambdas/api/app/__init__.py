@@ -2,10 +2,9 @@ from typing import Optional
 
 import jwt
 from fastapi import FastAPI, Request
+from log import setup_logger
 from mangum import Mangum
 from starlette.responses import Response
-
-from loguru import logger
 
 from . import routes
 from .models import (
@@ -21,6 +20,8 @@ from .models import (
 )
 
 app = FastAPI()
+
+setup_logger()
 
 
 @app.get("/items", response_model=Reviews, response_model_exclude_none=True)

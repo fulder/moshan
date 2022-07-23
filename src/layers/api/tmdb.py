@@ -1,7 +1,7 @@
 import os
 
-from loguru import logger
 import utils
+from loguru import logger
 
 TMDB_TOKEN = os.getenv("TMDB_TOKEN")
 
@@ -14,7 +14,9 @@ class TmdbApi:
             "Authorization": f"Bearer {TMDB_TOKEN}",
         }
 
-        logger.bind(baseUrl=self.base_url, headers=self.headers).debug("Initialized TmdbApi")
+        logger.bind(baseUrl=self.base_url, headers=self.headers).debug(
+            "Initialized TmdbApi"
+        )
 
     def get_item(self, movie_id):
         return self._get(f"/movie/{movie_id}")
@@ -33,4 +35,6 @@ class TmdbApi:
         return items
 
     def _get(self, path):
-        return utils.send_request(self.base_url, "GET", path, headers=self.headers)
+        return utils.send_request(
+            self.base_url, "GET", path, headers=self.headers
+        )

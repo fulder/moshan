@@ -7,10 +7,10 @@ from urllib.parse import quote, unquote
 
 import boto3
 import dateutil.parser
-from loguru import logger
 from boto3.dynamodb.conditions import Attr, Key
 from decimal_encoder import DecimalEncoder
 from dynamodb_json import json_util
+from loguru import logger
 
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [

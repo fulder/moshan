@@ -3,5 +3,3 @@ fastapi-utils
 mangum
 pydantic
 
-loguru
-

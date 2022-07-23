@@ -21,21 +21,10 @@
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements-dev.in" beforeDir="false" afterPath="$PROJECT_DIR$/requirements-dev.in" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements-dev.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements-dev.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/routes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lambdas/updates_publisher/updates.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/updates_publisher/updates.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/api/jikan.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/jikan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layers/api/tmdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/tmdb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/api/tvmaze.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/tvmaze.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/api/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/api/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layers/databases/reviews_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/databases/reviews_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/fastapi/requirements.in" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/fastapi/requirements.in" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/fastapi/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/fastapi/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/utils/logger.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/utils/requirements.in" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layers/utils/requirements.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,17 +61,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/home/michal/git/moshan/docs/includes/icons&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.General&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "last_opened_file_path": "/home/michal/git/moshan/docs/includes/icons",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.General"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PUML&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JSON",
+      "PUML"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs/includes/icons" />
@@ -99,28 +89,7 @@
       <recent name="$PROJECT_DIR$/src/layers/databases" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.cleanup_downloads">
-    <configuration name="cleanup_downloads" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="moshan" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/cleanup_downloads.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python tests.pytest in unittest">
     <configuration name="migrate_anime_episodes_from_watchhistory" type="PythonConfigurationType" factoryName="Python">
       <module name="moshan" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -175,7 +144,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="scratch_42" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="tmdb" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="moshan" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -183,11 +152,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/layers/api" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_42.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/layers/api/tmdb.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -196,7 +165,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_models.test_parse_episode" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="tmp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="moshan" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/layers/api" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/layers/api/tmp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_api.test_tmp" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="moshan" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -208,7 +198,7 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_models.test_parse_episode&quot;" />
+      <option name="_new_target" value="&quot;test_api.test_tmp&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -247,19 +237,19 @@
     <list>
       <item itemvalue="Python.migrate_anime_episodes_from_watchhistory" />
       <item itemvalue="Python.migrate_show_episodes_from_watchhistory" />
-      <item itemvalue="Python.cleanup_downloads" />
-      <item itemvalue="Python.scratch_42" />
+      <item itemvalue="Python.tmdb" />
+      <item itemvalue="Python.tmp" />
+      <item itemvalue="Python tests.pytest for test_api.test_tmp" />
       <item itemvalue="Python tests.pytest in test" />
-      <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
       <item itemvalue="Python tests.pytest in unittest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.cleanup_downloads" />
         <item itemvalue="Python tests.pytest in unittest" />
+        <item itemvalue="Python.tmp" />
+        <item itemvalue="Python.tmdb" />
+        <item itemvalue="Python tests.pytest for test_api.test_tmp" />
         <item itemvalue="Python tests.pytest in test" />
-        <item itemvalue="Python tests.pytest for test_models.test_parse_episode" />
-        <item itemvalue="Python.scratch_42" />
       </list>
     </recent_temporary>
   </component>
