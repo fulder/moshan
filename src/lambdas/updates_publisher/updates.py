@@ -2,14 +2,11 @@ import json
 import os
 
 import boto3
-from log import setup_logger
 from loguru import logger
 
 TOPIC_ARN = os.getenv("UPDATES_TOPIC_ARN")
 
 topic = None
-
-setup_logger()
 
 
 def _get_topic():

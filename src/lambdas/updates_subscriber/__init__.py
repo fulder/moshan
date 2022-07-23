@@ -5,6 +5,10 @@ import jikan
 import reviews_db
 import tmdb
 import tvmaze
+from log import setup_logger
+from loguru import logger
+
+setup_logger()
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
@@ -59,7 +63,12 @@ def handler(event, context):
     items = reviews_db.get_items(message["api_name"], message["api_id"])
 
     for item in items:
-        print(f"Updating item: {item}")
+        logger.bind(
+            apiId=message["api_id"],
+            apiName=message["api_name"],
+            username=item["username"],
+            apiCache=item["api_cache"],
+        ).debug("Updating item")
 
         watched_eps = item.get("watched_eps", 0)
         watched_specials = item.get("watched_specials", 0)

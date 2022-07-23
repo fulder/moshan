@@ -5,6 +5,9 @@ import reviews_db
 import tmdb
 import tvmaze
 import updates
+from log import setup_logger
+
+setup_logger()
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
