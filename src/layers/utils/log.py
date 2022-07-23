@@ -1,7 +1,16 @@
+import decimal
 import json
 import os
+from decimal import Decimal
 
 from loguru import logger
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            return str(o)
+        return super(DecimalEncoder, self).default(o)
 
 
 def serialize(record):
@@ -22,7 +31,7 @@ def serialize(record):
     if record.get("exception"):
         subset["exception"] = record["exception"]
 
-    return json.dumps(subset)
+    return json.dumps(subset, cls=DecimalEncoder)
 
 
 def sink(message):
