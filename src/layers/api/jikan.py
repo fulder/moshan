@@ -1,11 +1,7 @@
 from datetime import datetime
 
 import dateutil.parser
-import logger
-import requests
 import utils
-
-log = logger.get_logger(__name__)
 
 
 class JikanApi:
@@ -13,22 +9,10 @@ class JikanApi:
         self.base_url = "https://api.jikan.moe/v4"
 
     def get_item(self, anime_id):
-        res = requests.get(
-            f"{self.base_url}/anime/{anime_id}",
-        )
-
-        if res.status_code != 200:
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get(f"/anime/{anime_id}")
 
     def get_schedules(self, day_of_week):
-        res = requests.get(
-            f"{self.base_url}/schedules?filer={day_of_week}",
-        )
-
-        if res.status_code != 200:
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get(f"/schedules?filer={day_of_week}")
 
     def get_episode(self, anime_id, episode_id):
         page = int(int(episode_id) / 100) + 1
@@ -53,15 +37,7 @@ class JikanApi:
                 return ep
 
     def get_episodes(self, anime_id, page=1):
-        url = f"{self.base_url}/anime/{anime_id}/episodes?page={page}"
-        log.debug(f"Sending request to {url}")
-        res = requests.get(url)
-
-        if res.status_code != 200:
-            if res.text is not None:
-                log.error(f"Error from get episodes: {res.text}")
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get(f"/anime/{anime_id}/episodes?page={page}")
 
     def get_episode_count(self, anime_id):
         ep_count = 0
@@ -85,6 +61,9 @@ class JikanApi:
         return {
             "ep_count": ep_count,
         }
+
+    def _get(self, path):
+        return utils.send_request(self.base_url, "GET", path)
 
     def _episodes_generator(self, anime_id):
         ret = self.get_episodes(anime_id)

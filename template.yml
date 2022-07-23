@@ -135,6 +135,16 @@ Resources:
     Metadata:
       BuildMethod: !Ref PythonVers
 
+  FastApiLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: fastapi
+      ContentUri: src/layers/fastapi
+      CompatibleRuntimes:
+        - !Ref PythonVers
+    Metadata:
+      BuildMethod: !Ref PythonVers
+
   DatabasePolicy:
     Type: 'AWS::IAM::Policy'
     Properties:
@@ -180,6 +190,7 @@ Resources:
         - !Ref ApiLayer
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
+        - !Ref FastApiLayer
       MemorySize: 1024
       Role: !GetAtt ApiFunctionRole.Arn
       Runtime: !Ref PythonVers

@@ -1,47 +1,26 @@
 from datetime import datetime
 
 import dateutil.parser
-import logger
-import requests
 import utils
-
-log = logger.get_logger(__name__)
+from loguru import logger
 
 
 class TvMazeApi:
     def __init__(self):
         self.base_url = "https://api.tvmaze.com"
-
-        log.debug("TvMazeApi base_url: {}".format(self.base_url))
+        logger.bind(baseUrl=self.base_url).debug("Initialized TvMazeApi")
 
     def get_item(self, show_id):
-        res = requests.get(f"{self.base_url}/shows/{show_id}")
-
-        if res.status_code != 200:
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get(f"/shows/{show_id}")
 
     def get_episode(self, episode_id):
-        res = requests.get(f"{self.base_url}/episodes/{episode_id}")
-
-        if res.status_code != 200:
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get(f"/episodes/{episode_id}")
 
     def get_day_updates(self):
-        res = requests.get(f"{self.base_url}/updates/shows?since=day")
-        if res.status_code != 200:
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get("/updates/shows?since=day")
 
     def get_show_episodes(self, show_id):
-        res = requests.get(
-            f"{self.base_url}/shows/{show_id}/episodes?specials=1"
-        )
-
-        if res.status_code != 200:
-            raise utils.HttpError(res.status_code)
-        return res.json()
+        return self._get(f"/shows/{show_id}/episodes?specials=1")
 
     def get_show_episodes_count(self, show_id):
         episodes = self.get_show_episodes(show_id)
@@ -66,3 +45,6 @@ class TvMazeApi:
             "ep_count": ep_count,
             "special_count": special_count,
         }
+
+    def _get(self, path):
+        return utils.send_request(self.base_url, "GET", path)

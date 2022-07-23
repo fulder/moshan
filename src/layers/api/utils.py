@@ -1,4 +1,9 @@
+import json
 from threading import Lock, Thread
+
+import requests
+from loguru import logger
+from requests import HTTPError
 
 items_lock = Lock()
 merged_items = []
@@ -67,3 +72,23 @@ def merge_media_api_info_from_items(items, remove_status, token, show_api=None):
         t.join()
 
     return merged_items
+
+
+def send_request(base_url, method, path, headers=None):
+    url = f"{base_url}{path}"
+    try:
+        logger.bind(
+            url=url,
+            method=method,
+        ).debug("Sending request")
+        res = requests.request(method, url, headers=headers)
+        res.raise_for_status()
+        return res.json()
+    except HTTPError as e:
+        logger.bind(
+            statusCode=e.response.status_code,
+            content=json.loads(e.response.content.decode()),
+            url=url,
+            method=method,
+        ).error("Error during request")
+        raise HttpError(e.response.status_code)
