@@ -31,10 +31,13 @@ class ReviewData(BaseModel):
         allow_population_by_field_name = True
 
 
-class ApiName(CamelStrEnum):
-    tmdb = auto()
+class ApiNameWithEpisodes(CamelStrEnum):
     tvmaze = auto()
     mal = auto()
+
+
+class ApiName(ApiNameWithEpisodes):
+    tmdb = auto()
 
 
 class PostItem(ReviewData):
