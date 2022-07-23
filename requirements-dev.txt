@@ -199,6 +199,10 @@ jmespath==1.0.0 \
     # via
     #   boto3
     #   botocore
+loguru==0.6.0 \
+    --hash=sha256:066bd06758d0a513e9836fd9c6b5a75bfb3fd36841f4b996bc60b547a309d41c \
+    --hash=sha256:4e2414d534a2ab57573365b3e6d0234dfb1d84b68b7f3b948e6fb743860a77c3
+    # via -r ./src/layers/utils/requirements.in
 mangum==0.15.0 \
     --hash=sha256:12e84806198b23bbd5a54b9b69c1aef3c62177347219bb57c8ec114b8a6b8537 \
     --hash=sha256:bfd0e59ca8102be119b00b0d65894fcead8184438ecfa3110f87c7d2d9c90f01

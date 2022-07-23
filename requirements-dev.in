@@ -2,6 +2,7 @@
 -r src/layers/api/requirements.in
 -r src/layers/databases/requirements.in
 -r src/layers/fastapi/requirements.in
+-r src/layers/utils/requirements.in
 
 pytest
 pytest-cov
