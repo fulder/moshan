@@ -15,13 +15,14 @@ from .models import (
     ApiNameWithEpisodes,
     EpisodeReview,
     EpisodeReviews,
+    Filter,
     PostEpisode,
     PostItem,
     Review,
     ReviewData,
     Reviews,
     Sort,
-    review_data_to_dict, Filter,
+    review_data_to_dict,
 )
 
 app = FastAPI()
@@ -45,9 +46,14 @@ async def http_exception_handler(request, exc):
 
 @app.get("/items", response_model=Reviews, response_model_exclude_none=True)
 def get_items(
-    request: Request, sort: Optional[Sort] = None, filter: Optional[Filter] = None, cursor: Optional[str] = None
+    request: Request,
+    sort: Optional[Sort] = None,
+    filter: Optional[Filter] = None,
+    cursor: Optional[str] = None,
 ):
-    return routes.get_items(request.state.username, sort.name, cursor, filter.name)
+    return routes.get_items(
+        request.state.username, sort.name, cursor, filter.name
+    )
 
 
 @app.get(

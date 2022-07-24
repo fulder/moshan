@@ -169,7 +169,9 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         kwargs["ScanIndexForward"] = False
 
     if filter == "in_progress":
-        kwargs["FilterExpression"] &= (Key("status").eq("following") | Key("status").eq("watching"))
+        following = Key("status").eq("following")
+        watching = Key("status").eq("watching")
+        kwargs["FilterExpression"] &= following | watching
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
