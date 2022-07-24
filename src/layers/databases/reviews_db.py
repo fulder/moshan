@@ -148,7 +148,7 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
-def get_all_items(username, sort=None, cursor=None):
+def get_all_items(username, sort=None, cursor=None, filter=None):
     kwargs = {
         "KeyConditionExpression": Key("username").eq(username),
         "FilterExpression": Attr("deleted_at").not_exists(),
@@ -167,6 +167,9 @@ def get_all_items(username, sort=None, cursor=None):
     elif sort == "latest_watch_date":
         kwargs["FilterExpression"] &= Key("api_info").begins_with("i_")
         kwargs["ScanIndexForward"] = False
+
+    if filter == "in_progress":
+        kwargs["FilterExpression"] &= (Key("status").eq("following") | Key("status").eq("watching"))
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))

@@ -13,11 +13,12 @@ tvmaze_api = tvmaze.TvMazeApi()
 jikan_api = jikan.JikanApi()
 
 
-def get_items(username, sort=None, cursor=None):
+def get_items(username, sort=None, cursor=None, filter=None):
     return reviews_db.get_all_items(
         username,
         sort,
         cursor,
+        filter,
     )
 
 
