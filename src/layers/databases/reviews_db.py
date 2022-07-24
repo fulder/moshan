@@ -155,6 +155,7 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
     }
     if sort is not None:
         kwargs["IndexName"] = sort
+        kwargs["Limit"] = 100
     else:
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
 
@@ -171,6 +172,7 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         kwargs["FilterExpression"] &= Attr("status").is_in(
             ["following", "watching"]
         )
+        del kwargs["Limit"]
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
