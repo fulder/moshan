@@ -172,6 +172,7 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         following = Key("status").eq("following")
         watching = Key("status").eq("watching")
         kwargs["FilterExpression"] &= following | watching
+        kwargs["Limit"] = 200
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
