@@ -14,6 +14,11 @@ jikan_api = jikan.JikanApi()
 
 
 def get_items(username, sort=None, cursor=None, filter=None):
+    if sort is not None:
+        sort = sort.name
+    if filter is not None:
+        filter = filter.name
+
     return reviews_db.get_all_items(
         username,
         sort,

@@ -51,9 +51,7 @@ def get_items(
     filter: Optional[Filter] = None,
     cursor: Optional[str] = None,
 ):
-    return routes.get_items(
-        request.state.username, sort.name, cursor, filter.name
-    )
+    return routes.get_items(request.state.username, sort, cursor, filter)
 
 
 @app.get(
