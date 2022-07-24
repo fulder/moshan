@@ -20,9 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ab0434b-1335-4890-8c69-62c5f233c642" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lambdas/api/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lambdas/api/app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layers/databases/reviews_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/layers/databases/reviews_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

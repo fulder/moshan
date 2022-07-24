@@ -16,9 +16,9 @@ export class MoshanApi {
       });
   }
 
-  getItems (sort = '', cursor = '') {
+  getItems (sort = '', cursor = '', filter = '') {
     let url = '/items';
-    if (sort !== '' || cursor !== '') {
+    if (sort !== '' || cursor !== '' || filter !== '') {
       url += '?';
     }
 
@@ -27,6 +27,9 @@ export class MoshanApi {
     }
     if (cursor !== '') {
       url += `&cursor=${cursor}`;
+    }
+    if (filter !== '') {
+      url += `&filter=${filter}`;
     }
 
     return this.apiAxios.get(url);
