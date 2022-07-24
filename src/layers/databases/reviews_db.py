@@ -152,7 +152,6 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
     kwargs = {
         "KeyConditionExpression": Key("username").eq(username),
         "FilterExpression": Attr("deleted_at").not_exists(),
-        "Limit": 50,
     }
     if sort is not None:
         kwargs["IndexName"] = sort
@@ -169,10 +168,9 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         kwargs["ScanIndexForward"] = False
 
     if filter == "in_progress":
-        following = Key("status").eq("following")
-        watching = Key("status").eq("watching")
-        kwargs["FilterExpression"] &= following | watching
-        kwargs["Limit"] = 200
+        kwargs["FilterExpression"] &= Attr("status").is_in(
+            ["following", "watching"]
+        )
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
