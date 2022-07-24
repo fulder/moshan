@@ -28,7 +28,7 @@ async function createItems(items) {
     const apiCache = item.apiCache;
 
     let image = '/includes/img/image_not_available.png';
-    if (apiCache.imageUrl !== null) {
+    if (apiCache.imageUrl !== null && apiCache.imageUrl !== undefined) {
       image = apiCache.imageUrl.replace('original_untouched', 'medium_portrait');
       if (item.apiName === 'tmdb') {
           image = `https://image.tmdb.org/t/p/w500/${image}`;
