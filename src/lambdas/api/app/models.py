@@ -57,6 +57,10 @@ class Sort(CamelStrEnum):
     latest_watch_date = auto()
 
 
+class Filter(CamelStrEnum):
+    in_progress = auto()
+
+
 class ApiCache(BaseModel):
     special_count: Optional[int]
     release_date: Optional[str]
