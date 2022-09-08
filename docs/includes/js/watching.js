@@ -61,7 +61,7 @@ async function loadMore() {
   }
   loadingMore = true;
 
-  await createHistory(currentCursor);
+  await createWatchingList(currentCursor);
 
   loadingMore = false;
 }
