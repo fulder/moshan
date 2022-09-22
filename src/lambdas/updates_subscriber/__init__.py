@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from decimal import Decimal
 
 import jikan
 import reviews_db
@@ -110,4 +111,4 @@ def _get_progress(watched, count):
     if count != 0:
         progress = watched / count
 
-    return round(progress * 100, 2)
+    return Decimal(round(progress * 100, 2))
