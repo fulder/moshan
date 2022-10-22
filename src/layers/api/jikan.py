@@ -12,7 +12,7 @@ class JikanApi:
         return self._get(f"/anime/{anime_id}")
 
     def get_schedules(self, day_of_week):
-        return self._get(f"/schedules?filer={day_of_week}")
+        return self._get(f"/schedules?filter={day_of_week}")
 
     def get_episode(self, anime_id, episode_id):
         page = int(int(episode_id) / 100) + 1
