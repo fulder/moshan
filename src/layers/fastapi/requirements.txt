@@ -12,12 +12,12 @@ fastapi==0.79.0 \
     --hash=sha256:cf0ff6db25b91d321050c4112baab0908c90f19b40bf257f9591d2f9780d1f22 \
     --hash=sha256:d337563424ceada23857f73d5abe8dae0c28e4cccb53b2af06e78b7bb4a1c7d7
     # via
-    #   -r ./src/layers/fastapi/requirements.in
+    #   -r requirements.in
     #   fastapi-utils
 fastapi-utils==0.2.1 \
     --hash=sha256:0e6c7fc1870b80e681494957abf65d4f4f42f4c7f70005918e9181b22f1bd759 \
     --hash=sha256:dd0be7dc7f03fa681b25487a206651d99f2330d5a567fb8ab6cb5f8a06a29360
-    # via -r ./src/layers/fastapi/requirements.in
+    # via -r requirements.in
 greenlet==1.1.2 \
     --hash=sha256:0051c6f1f27cb756ffc0ffbac7d2cd48cb0362ac1736871399a739b2885134d3 \
     --hash=sha256:00e44c8afdbe5467e4f7b5851be223be68adb4272f44696ee71fe46b7036a711 \
@@ -79,10 +79,10 @@ idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
     # via anyio
-mangum==0.15.0 \
-    --hash=sha256:12e84806198b23bbd5a54b9b69c1aef3c62177347219bb57c8ec114b8a6b8537 \
-    --hash=sha256:bfd0e59ca8102be119b00b0d65894fcead8184438ecfa3110f87c7d2d9c90f01
-    # via -r ./src/layers/fastapi/requirements.in
+mangum==0.16.0 \
+    --hash=sha256:afdf3799797696d849870ede07d4aedadb2df815019b1f469d3cabe45fb8e42e \
+    --hash=sha256:c687724d10504ae2570733a14b939479454268094309c596ef6cc1710e5029b0
+    # via -r requirements.in
 pydantic==1.9.1 \
     --hash=sha256:02eefd7087268b711a3ff4db528e9916ac9aa18616da7bca69c1871d0b7a091f \
     --hash=sha256:059b6c1795170809103a1538255883e1983e5b831faea6558ef873d4955b4a74 \
@@ -120,7 +120,7 @@ pydantic==1.9.1 \
     --hash=sha256:f0f047e11febe5c3198ed346b507e1d010330d56ad615a7e0a89fae604065a0e \
     --hash=sha256:fe4670cb32ea98ffbf5a1262f14c3e102cccd92b1869df3bb09538158ba90fe6
     # via
-    #   -r ./src/layers/fastapi/requirements.in
+    #   -r requirements.in
     #   fastapi
     #   fastapi-utils
 sniffio==1.2.0 \
