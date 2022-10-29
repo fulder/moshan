@@ -98,7 +98,7 @@ async function createItem() {
     if (qParams.api_name == 'mal' && (item.status === 'Currently Airing' || apiEpisodes.episodes.length == 0) ) {
       let lastEpId = 0;
       if (apiEpisodes.episodes.length != 0) {
-        lastEpId = apiEpisodes.episodes[0].episode_id;
+        lastEpId = apiEpisodes.episodes[0].mal_id;
       }
       for (let i=0; i<12; i++) {
         apiEpisodes.episodes.unshift(
