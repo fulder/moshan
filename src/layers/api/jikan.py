@@ -40,9 +40,6 @@ class JikanApi:
         return self._get(f"/anime/{anime_id}/episodes?page={page}")
 
     def get_episode_count(self, anime_id):
-        item = self.get_item(anime_id).get("data", {})
-        item_ep_count = item.get("episodes", 0)
-
         ep_count = 0
         for eps in self._episodes_generator(anime_id):
             for e in eps:
@@ -61,7 +58,7 @@ class JikanApi:
                 ep_count += 1
 
         return {
-            "ep_count": max(item_ep_count, ep_count),
+            "ep_count": ep_count,
         }
 
     def _get(self, path):

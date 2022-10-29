@@ -47,11 +47,14 @@ def handler(event, context):
     elif api_name == "mal":
         api_item = jikan_api.get_item(api_id).get("data", {})
         episodes_info = jikan_api.get_episode_count(api_id)
+        ep_count = max(
+            api_item.get("episodes", 0), episodes_info.get("ep_count", 0)
+        )
         api_cache = {
             "title": api_item.get("title"),
             "release_date": api_item.get("aired", {}).get("from"),
             "status": api_item.get("status"),
-            "ep_count": episodes_info.get("ep_count", 0),
+            "ep_count": ep_count,
             "special_count": episodes_info.get("special_count", 0),
             "cache_updated": cache_updated,
             "image_url": api_item.get("images", {})
