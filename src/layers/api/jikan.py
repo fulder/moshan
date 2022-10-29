@@ -65,12 +65,12 @@ class JikanApi:
 
     def _get(self, path):
         try:
-            utils.send_request(self.base_url, "GET", path)
+            return utils.send_request(self.base_url, "GET", path)
         except utils.HttpError as e:
             if e.code == 429:
                 logger.info("Rate limited, sleep and try again")
                 time.sleep(3)
-                self._get(path)
+                return self._get(path)
 
     def _episodes_generator(self, anime_id):
         ret = self.get_episodes(anime_id)
