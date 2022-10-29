@@ -95,7 +95,7 @@ async function createItem() {
       watchHistoryEpisodeIDs.push(parseInt(moshanEpisodes.data.episodes[i].episodeApiId));
     }
 
-    if (qParams.api_name == 'mal' && item.status === 'Airing') {
+    if (qParams.api_name == 'mal' && (item.status === 'Airing' || apiEpisodes.episodes.length == 0) ) {
       let lastEpId = 0;
       if (apiEpisodes.episodes.length != 0) {
         lastEpId = apiEpisodes.episodes[0].episode_id;
