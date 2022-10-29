@@ -103,7 +103,7 @@ async function createItem() {
       for (let i=0; i<12; i++) {
         apiEpisodes.episodes.unshift(
           {
-          episode_id: lastEpId + i + 1,
+          mal_id: lastEpId + i + 1,
           title: 'N/A',
           aired: null,
           extra_ep: true,
