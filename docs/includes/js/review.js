@@ -101,7 +101,7 @@ async function createItem() {
         lastEpId = apiEpisodes.episodes[0].mal_id;
       }
 
-      const latestMalId = 0
+      const latestMalId = 0;
       if (apiEpisodes.episodes.length != 0) {
         latestMalId = apiEpisodes.episodes[apiEpisodes.length - 1].mal_id;
       }
