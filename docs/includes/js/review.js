@@ -107,7 +107,7 @@ async function createItem() {
       }
       let latestWatchedMalId = 0;
       if (watchHistoryEpisodeIDs.length != 0) {
-        latestWatchedMalId = Math.max(watchHistoryEpisodeIDs);
+        latestWatchedMalId = Math.max(...watchHistoryEpisodeIDs);
       }
       console.debug(latestMalId);
       console.debug(latestWatchedMalId);
