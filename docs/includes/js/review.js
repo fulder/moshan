@@ -103,7 +103,7 @@ async function createItem() {
 
       let extraEps = 12;
       if (watchHistoryEpisodeIDs.length != 0) {
-        extraEps = watchHistoryEpisodeIDs.length - apiEpisodes.episodes.length  + 1;
+        extraEps = watchHistoryEpisodeIDs.length - apiEpisodes.episodes[apiEpisodes.length - 1].mal_id  + 1;
       }
 
       for (let i=0; i<extraEps; i++) {
