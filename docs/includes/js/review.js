@@ -107,8 +107,10 @@ async function createItem() {
       }
       let latestWatchedMalId = 0;
       if (watchHistoryEpisodeIDs.length != 0) {
-        latestWatchedMalId = watchHistoryEpisodeIDs[watchHistoryEpisodeIDs.length - 1];
+        latestWatchedMalId = watchHistoryEpisodeIDs[0];
       }
+      console.debug(latestMalId);
+      console.debug(latestWatchedMalId);
 
       const extraEps = latestWatchedMalId - latestMalId + 1;
 
