@@ -101,10 +101,12 @@ async function createItem() {
         lastEpId = apiEpisodes.episodes[0].mal_id;
       }
 
-      let extraEps = 12;
-      if (watchHistoryEpisodeIDs.length != 0) {
-        extraEps = watchHistoryEpisodeIDs.length - apiEpisodes.episodes[apiEpisodes.length - 1].mal_id  + 1;
+      const latestMalId = 0
+      if (apiEpisodes.episodes.length != 0) {
+        latestMalId = apiEpisodes.episodes[apiEpisodes.length - 1].mal_id;
       }
+
+      const extraEps = watchHistoryEpisodeIDs.length - latestMalId + 1;
 
       for (let i=0; i<extraEps; i++) {
         apiEpisodes.episodes.unshift(
