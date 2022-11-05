@@ -100,7 +100,13 @@ async function createItem() {
       if (apiEpisodes.episodes.length != 0) {
         lastEpId = apiEpisodes.episodes[0].mal_id;
       }
-      for (let i=0; i<12; i++) {
+
+      let extraEps = 12;
+      if (lastEpiId != 0) {
+        extraEps = 1;
+      }
+
+      for (let i=0; i<extraEps; i++) {
         apiEpisodes.episodes.unshift(
           {
           mal_id: lastEpId + i + 1,
