@@ -102,7 +102,7 @@ async function createItem() {
       }
 
       let extraEps = 12;
-      if (lastEpiId != 0) {
+      if (lastEpId != 0) {
         extraEps = 1;
       }
 
