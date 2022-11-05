@@ -103,10 +103,8 @@ async function createItem() {
 
       let extraEps = 12;
       if (watchHistoryEpisodeIDs.length != 0) {
-        extraEps = watchHistoryEpisodeIDs[watchHistoryEpisodeIDs.length-1] + 1;
+        extraEps = watchHistoryEpisodeIDs.length - apiEpisodes.episodes.length  + 1;
       }
-      console.debug(watchHistoryEpisodeIDs);
-      console.debug(extraEps);
 
       for (let i=0; i<extraEps; i++) {
         apiEpisodes.episodes.unshift(
