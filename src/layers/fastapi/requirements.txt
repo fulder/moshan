@@ -8,9 +8,9 @@ anyio==3.6.1 \
     --hash=sha256:413adf95f93886e442aea925f3ee43baa5a765a64a0f52c6081894f9992fdd0b \
     --hash=sha256:cb29b9c70620506a9a8f87a309591713446953302d7d995344d0d7c6c0c9a7be
     # via starlette
-fastapi==0.94.1 \
-    --hash=sha256:451387550c2d25a972193f22e408a82e75a8e7867c834a03076704fe20df3256 \
-    --hash=sha256:4a75936dbf9eb74be5eb0d41a793adefe9f3fc6ba66dbdabd160120fd3c2d9cd
+fastapi==0.95.0 \
+    --hash=sha256:99d4fdb10e9dd9a24027ac1d0bd4b56702652056ca17a6c8721eec4ad2f14e18 \
+    --hash=sha256:daf73bbe844180200be7966f68e8ec9fd8be57079dff1bacb366db32729e6eb5
     # via
     #   -r requirements.in
     #   fastapi-utils
