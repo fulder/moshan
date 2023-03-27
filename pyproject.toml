@@ -10,6 +10,7 @@ python = "^3.10"
 
 [tool.poetry.group.dev.dependencies]
 boto3 = "^1.26.99"
+httpx = "^0.23.3"
 
 [tool.poetry.group.pytest]
 optional = true
