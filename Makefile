@@ -1,6 +1,6 @@
 .PHONY: test
 test:
-	poetry install --with pytest
+	poetry install --with pytest,dev,layers-api,layers-databases,layers-utils,layers-fastapi,api
 	poetry run pytest test/unittest
 
 .PHONY: apitest
