@@ -5,7 +5,7 @@ test:
 
 .PHONY: apitest
 apitest:
-	poetry install --with pytest
+	poetry install --with pytest,dev
 	PYTHONPATH=test poetry run pytest test/apitest -vv
 
 .PHONY: deploy-provision
