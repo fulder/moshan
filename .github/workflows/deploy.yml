@@ -10,6 +10,8 @@ on:
       - 'src/layers/**'
       - 'samconfig.toml'
       - 'template.yml'
+      - 'poetry.lock'
+      - 'pyproject.toml'
 
 permissions:
   id-token: write
