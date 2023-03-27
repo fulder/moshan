@@ -31,6 +31,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install poetry
           poetry install --with lint,pytest,dev
 
       - name: Lint and format
