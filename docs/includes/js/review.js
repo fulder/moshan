@@ -54,6 +54,7 @@ function QueryParams(urlParams) {
   this.item_api_id = this.api_id;
   this.episode_page = urlParams.get('episode_page');
   this.episode_api_id = urlParams.get('episode_api_id');
+  this.extra_ep = urlParams.get('extra_ep');
 
   if (this.episode_page === null) {
     this.episode_page = 1;
@@ -80,7 +81,7 @@ async function createItem() {
     }
   }
 
-  if (item === null && extra_ep !== 'true') {
+  if (item === null && qParams.extra_ep !== 'true') {
     item = await api.getItemById(qParams);
   }
 
