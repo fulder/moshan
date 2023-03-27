@@ -143,7 +143,7 @@ async function createEpisode() {
   }
 
   episode.title = 'N/A';
-  episode.number = 0;
+  episode.number = qParams.episode_api_id;
   episode.releaseDate = 'N/A';
   episode.imageUrl = '/includes/img/image_not_available.png';
 
