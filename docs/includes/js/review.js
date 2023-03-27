@@ -80,7 +80,7 @@ async function createItem() {
     }
   }
 
-  if (item === null) {
+  if (item === null && extra_ep !== "true") {
     item = await api.getItemById(qParams);
   }
 
