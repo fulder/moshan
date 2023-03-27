@@ -36,6 +36,16 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOY_ROLE_ARN }}
           role-session-name: GitHubDeploySession
 
+      - name: Export requirements
+        shell: bash
+        run: |
+          pip install poetry
+          poetry export --with api --output ./src/lambdas/api/requirements.txt
+          poetry export --with layers-api --output ./src/layers/api/requirements.txt
+          poetry export --with layers-databases --output ./src/layers/databases/requirements.txt
+          poetry export --with layers-fastapi --output ./src/layers/fastapi/requirements.txt
+          poetry export --with layers-utils --output ./src/layers/utils/requirements.txt
+
       - name: build
         run: sam build --use-container --build-image public.ecr.aws/sam/build-python3.9
 

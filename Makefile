@@ -1,15 +1,12 @@
 .PHONY: test
 test:
-	pytest test/unittest
+	poetry install --with pytest,dev,layers-api,layers-databases,layers-utils,layers-fastapi,api
+	poetry run pytest test/unittest
 
 .PHONY: apitest
 apitest:
-	PYTHONPATH=test pytest test/apitest -vv
-
-.PHONY: generate-hashes
-generate-hashes:
-	pip install pip-tools
-	find . -name "requirements*.in" -exec pip-compile --generate-hashes {} \;
+	poetry install --with pytest,dev
+	PYTHONPATH=test poetry run pytest test/apitest -vv
 
 .PHONY: deploy-provision
 deploy-provision:
@@ -17,5 +14,7 @@ deploy-provision:
 
 .PHONY: format
 format:
-	black .
-	isort .
+	poetry install --with lint
+	poetry run black .
+	poetry run isort .
+	poetry run flake8 .

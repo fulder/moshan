@@ -3,23 +3,7 @@ version: 2
 updates:
 
   - package-ecosystem: "pip"
-    directory: "/src/layers/api"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "pip"
-    directory: "/src/layers/databases"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "pip"
-    directory: "/src/layers/utils"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "pip"
-    directory: "src/layers/fastapi"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "pip"
-    directory: "src/lambdas/api"
+    directory: "/"
     schedule:
       interval: "daily"
 
