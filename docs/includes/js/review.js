@@ -143,14 +143,16 @@ async function createEpisode() {
   }
 
   // TODO: use cache for episodes?
-  const apiEpisode = await api.getEpisode(qParams);
-  episode.title = apiEpisode.title;
-  episode.releaseDate = apiEpisode.releaseDate;
-  episode.imageUrl = apiEpisode.imageUrl;
-  episode.status = apiEpisode.status;
-  episode.previousId = apiEpisode.previousId;
-  episode.nextId = apiEpisode.nextId;
-  episode.number = apiEpisode.number;
+  if (qParams.extra_ep !== 'true') {
+      const apiEpisode = await api.getEpisode(qParams);
+      episode.title = apiEpisode.title;
+      episode.releaseDate = apiEpisode.releaseDate;
+      episode.imageUrl = apiEpisode.imageUrl;
+      episode.status = apiEpisode.status;
+      episode.previousId = apiEpisode.previousId;
+      episode.nextId = apiEpisode.nextId;
+      episode.number = apiEpisode.number;
+  }
 
   createReviewPage(episode);
 }
