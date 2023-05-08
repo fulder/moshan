@@ -4,7 +4,7 @@
   "description": "UI service is created using vanilla HTML and JS together with bootstrap for CSS.",
   "main": "index.js",
   "devDependencies": {
-    "eslint": "^8.36.0",
+    "eslint": "^8.40.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",
