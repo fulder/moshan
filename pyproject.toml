@@ -10,7 +10,7 @@ python = "^3.9"
 
 [tool.poetry.group.dev.dependencies]
 boto3 = "^1.26.100"
-httpx = "^0.23.3"
+httpx = "^0.24.1"
 
 
 
@@ -27,7 +27,7 @@ pytest-html = "^4.0.0rc4"
 optional = true
 
 [tool.poetry.group.lint.dependencies]
-black = "^23.1.0"
+black = "^23.3.0"
 isort = "^5.12.0"
 flake8 = "^6.0.0"
 
@@ -53,7 +53,7 @@ optional = true
 fastapi = "^0.95.0"
 fastapi-utils = "^0.2.1"
 mangum = "^0.17.0"
-pydantic = "^1.10.7"
+pydantic = "^1.10.9"
 
 
 [tool.poetry.group.layers-utils]
@@ -61,14 +61,14 @@ optional = true
 
 
 [tool.poetry.group.layers-utils.dependencies]
-loguru = "^0.6.0"
+loguru = "^0.7.0"
 
 
 [tool.poetry.group.api]
 optional = true
 
 [tool.poetry.group.api.dependencies]
-pyjwt = "^2.6.0"
+pyjwt = "^2.7.0"
 requests = "^2.31.0"
 
 [build-system]
