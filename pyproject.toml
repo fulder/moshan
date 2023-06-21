@@ -68,7 +68,7 @@ loguru = "^0.7.0"
 optional = true
 
 [tool.poetry.group.api.dependencies]
-pyjwt = "^2.6.0"
+pyjwt = "^2.7.0"
 requests = "^2.31.0"
 
 [build-system]
