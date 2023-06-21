@@ -61,7 +61,7 @@ optional = true
 
 
 [tool.poetry.group.layers-utils.dependencies]
-loguru = "^0.6.0"
+loguru = "^0.7.0"
 
 
 [tool.poetry.group.api]
