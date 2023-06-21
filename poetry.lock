@@ -869,19 +869,22 @@ testing = ["fields", "hunter", "process-tests", "pytest-xdist", "six", "virtuale
 
 [[package]]
 name = "pytest-html"
-version = "4.0.0rc0"
+version = "4.0.0rc4"
 description = "pytest plugin for generating HTML reports"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pytest_html-4.0.0rc0-py3-none-any.whl", hash = "sha256:1b8789f0f338f4d7c5cd49d94e9eb15df4c5fecc7e2a7bd07e7040fc4cf675d3"},
-    {file = "pytest_html-4.0.0rc0.tar.gz", hash = "sha256:f803a1f93106752575f51a89250af7e01d3470de13657207c6bb5409b5258a29"},
+    {file = "pytest_html-4.0.0rc4-py3-none-any.whl", hash = "sha256:045ce9abdfe172d6496a943b48094ef1262bfb3ea4758c649684cc97cddce484"},
+    {file = "pytest_html-4.0.0rc4.tar.gz", hash = "sha256:65a85883c295fb0e37f4335bacbe769d484623cbffc77da0be071d3449e4d774"},
 ]
 
 [package.dependencies]
-Jinja2 = ">=3.0.0"
+jinja2 = ">=3.0.0"
 pytest = ">=7.0.0"
 pytest-metadata = ">=2.0.2"
+
+[package.extras]
+test = ["assertpy (>=1.1)", "beautifulsoup4 (>=4.11.1)", "black (>=22.1.0)", "flake8 (>=4.0.1)", "pre-commit (>=2.17.0)", "pytest-mock (>=3.7.0)", "pytest-rerunfailures (>=11.1.2)", "pytest-xdist (>=2.4.0)", "selenium (>=4.3.0)", "tox (>=3.24.5)"]
 
 [[package]]
 name = "pytest-metadata"
@@ -1229,4 +1232,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "a2fbdd6f0147ff20fe0cdc317ca81a44e1354b0a06da2343143ea2c0d05f1bb0"
+content-hash = "121b3bcafcc5b1716bd03acf75ac145eb8b299e57560136dd168ab233d70831b"
