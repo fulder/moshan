@@ -11,3 +11,4 @@ scripts/
 configLocal.js
 
 .pytest-cache
+.idea
