@@ -13,8 +13,16 @@ class JikanApi:
     def get_item(self, anime_id):
         return self._get(f"/anime/{anime_id}")
 
-    def get_schedules(self, day_of_week):
-        return self._get(f"/schedules?filter={day_of_week}")
+    def get_schedules(self):
+        ret = self._get("/schedules")
+        data = ret["data"]
+        last_page = ret["pagination"]["last_visible_page"]
+
+        for i in range(2, last_page + 1):
+            ret = self._get(f"/schedules?page={i}")
+            data += ret["data"]
+
+        return data
 
     def get_episode(self, anime_id, episode_id):
         page = int(int(episode_id) / 100) + 1
