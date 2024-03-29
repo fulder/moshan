@@ -3,6 +3,9 @@ name: test
 on:
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   ui-lint:
     runs-on: ubuntu-latest
