@@ -56,9 +56,9 @@ jobs:
       - ui-lint
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'}}
-    env:
-      GH_TOKEN: ${{ secrets.AUTO_MERGE_TOKEN }}
     steps:
       - name: Merge PR
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_TOKEN }}
         shell: bash
         run: gh pr merge
