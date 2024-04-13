@@ -7,7 +7,7 @@ try {
 
   internalClientId = localClientId;
   internalRedirectBaseUrl = localRedirectBaseUrl;
-} catch(err) {
+} catch {
   internalClientId = '1ra91kse5btmpmt3tmran2441a';
   internalRedirectBaseUrl= 'https://moshan.fulder.dev';
 }
