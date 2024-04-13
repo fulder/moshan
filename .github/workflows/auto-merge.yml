@@ -8,6 +8,8 @@ jobs:
    runs-on: ubuntu-latest
    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request_target'}}
    steps:
+     - uses: actions/checkout@v4
+
      - name: Merge PR
        env:
          GH_TOKEN: ${{ secrets.AUTO_MERGE_TOKEN }}
