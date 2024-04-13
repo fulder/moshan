@@ -14,4 +14,6 @@ jobs:
        env:
          GH_TOKEN: ${{ secrets.AUTO_MERGE_TOKEN }}
        shell: bash
-       run: gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+       run: | 
+        gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+        gh pr review ${{ github.event.pull_request.number }} --approve
