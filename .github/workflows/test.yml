@@ -49,16 +49,3 @@ jobs:
 
       - name: Test
         run: make test
-
-  merge-dependabot:
-    needs:
-      - test
-      - ui-lint
-    runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'}}
-    steps:
-      - name: Merge PR
-        run: gh pr merge --auto --merge "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
