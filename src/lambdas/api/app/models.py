@@ -87,10 +87,10 @@ class Review(BaseModel):
     backlog_date: Optional[str] = None
     latest_watch_date: Optional[str] = None
     # eps
-    ep_progress: Optional[int] = None
+    ep_progress: Optional[float] = None
     watched_eps: Optional[int] = None
     # specials
-    special_progress: Optional[int] = None
+    special_progress: Optional[float] = None
     watched_specials: Optional[int] = None
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
