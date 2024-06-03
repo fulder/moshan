@@ -50,9 +50,7 @@ def handler(event, context):
         if api_ep_count is None:
             api_ep_count = 0
         episodes_info = jikan_api.get_episode_count(api_id)
-        ep_count = max(
-            api_ep_count, episodes_info.get("ep_count", 0)
-        )
+        ep_count = max(api_ep_count, episodes_info.get("ep_count", 0))
         api_cache = {
             "title": api_item.get("title"),
             "release_date": api_item.get("aired", {}).get("from"),
