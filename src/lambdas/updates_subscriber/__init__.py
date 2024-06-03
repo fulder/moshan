@@ -46,9 +46,12 @@ def handler(event, context):
         }
     elif api_name == "mal":
         api_item = jikan_api.get_item(api_id).get("data", {})
+        api_ep_count = api_item.get("episodes")
+        if api_ep_count is None:
+            api_ep_count = 0
         episodes_info = jikan_api.get_episode_count(api_id)
         ep_count = max(
-            api_item.get("episodes", 0), episodes_info.get("ep_count", 0)
+            api_ep_count, episodes_info.get("ep_count", 0)
         )
         api_cache = {
             "title": api_item.get("title"),
