@@ -138,19 +138,19 @@ def test_get_episodes(m_get_eps, token, client, username):
         {
             "api_id": TEST_SHOW_ID,
             "api_name": "tvmaze",
-            "episode_api_id": 1,
+            "episode_api_id": "1",
             "created_at": "ep_1_created_at",
         },
         {
             "api_id": TEST_SHOW_ID,
             "api_name": "tvmaze",
-            "episode_api_id": 2,
+            "episode_api_id": "2",
             "created_at": "ep_2_created_at",
         },
         {
             "api_id": TEST_SHOW_ID,
             "api_name": "tvmaze",
-            "episode_api_id": 3,
+            "episode_api_id": "3",
             "created_at": "ep_3_created_at",
         },
     ]

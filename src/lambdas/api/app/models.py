@@ -3,7 +3,7 @@ from enum import auto
 from typing import List, Optional
 
 from fastapi_utils.enums import CamelStrEnum
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 def to_camel(snake_str):
@@ -20,15 +20,12 @@ class Status(CamelStrEnum):
 
 
 class ReviewData(BaseModel):
-    rating: Optional[int]
-    overview: Optional[str]
-    review: Optional[str]
-    dates_watched: Optional[List[datetime]]
-    status: Optional[Status]
-
-    class Config:
-        alias_generator = to_camel
-        allow_population_by_field_name = True
+    rating: Optional[int] = None
+    overview: Optional[str] = None
+    review: Optional[str] = None
+    dates_watched: Optional[List[datetime]] = None
+    status: Optional[Status] = None
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 class ApiNameWithEpisodes(CamelStrEnum):
@@ -62,17 +59,14 @@ class Filter(CamelStrEnum):
 
 
 class ApiCache(BaseModel):
-    special_count: Optional[int]
-    release_date: Optional[str]
-    cache_updated: Optional[str]
-    image_url: Optional[str]
-    title: Optional[str]
-    status: Optional[str]
-    ep_count: Optional[int]
-
-    class Config:
-        alias_generator = to_camel
-        allow_population_by_field_name = True
+    special_count: Optional[int] = None
+    release_date: Optional[str] = None
+    cache_updated: Optional[str] = None
+    image_url: Optional[str] = None
+    title: Optional[str] = None
+    status: Optional[str] = None
+    ep_count: Optional[int] = None
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 class Review(BaseModel):
@@ -80,28 +74,25 @@ class Review(BaseModel):
     api_id: str
     created_at: str
 
-    api_cache: Optional[ApiCache]
+    api_cache: Optional[ApiCache] = None
 
-    overview: Optional[str]
-    review: Optional[str]
-    status: Optional[Status]
-    rating: Optional[int]
+    overview: Optional[str] = None
+    review: Optional[str] = None
+    status: Optional[Status] = None
+    rating: Optional[int] = None
 
-    dates_watched: Optional[List[str]]
-    updated_at: Optional[str]
-    deleted_at: Optional[str]
-    backlog_date: Optional[str]
-    latest_watch_date: Optional[str]
+    dates_watched: Optional[List[str]] = None
+    updated_at: Optional[str] = None
+    deleted_at: Optional[str] = None
+    backlog_date: Optional[str] = None
+    latest_watch_date: Optional[str] = None
     # eps
-    ep_progress: Optional[int]
-    watched_eps: Optional[int]
+    ep_progress: Optional[int] = None
+    watched_eps: Optional[int] = None
     # specials
-    special_progress: Optional[int]
-    watched_specials: Optional[int]
-
-    class Config:
-        alias_generator = to_camel
-        allow_population_by_field_name = True
+    special_progress: Optional[int] = None
+    watched_specials: Optional[int] = None
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 class EpisodeReview(Review):
@@ -110,11 +101,8 @@ class EpisodeReview(Review):
 
 class Reviews(BaseModel):
     items: List[Review]
-    end_cursor: Optional[str]
-
-    class Config:
-        alias_generator = to_camel
-        allow_population_by_field_name = True
+    end_cursor: Optional[str] = None
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
 class EpisodeReviews(BaseModel):
