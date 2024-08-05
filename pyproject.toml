@@ -25,9 +25,9 @@ pytest-mock = "^3.14.0"
 optional = true
 
 [tool.poetry.group.lint.dependencies]
-black = "^24.4.2"
+black = "^24.8.0"
 isort = "^5.13.2"
-flake8 = "^7.1.0"
+flake8 = "^7.1.1"
 
 [tool.poetry.group.layers-api]
 optional = true
@@ -46,7 +46,7 @@ dynamodb-json = "^1.4"
 optional = true
 
 [tool.poetry.group.layers-fastapi.dependencies]
-fastapi = "^0.111.1"
+fastapi = "^0.112.0"
 fastapi-utils = "^0.7.0"
 mangum = "^0.17.0"
 pydantic = "^2.8.2"
