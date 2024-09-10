@@ -49,7 +49,7 @@ optional = true
 fastapi = "^0.114.0"
 fastapi-utils = "^0.7.0"
 mangum = "^0.17.0"
-pydantic = "^2.9.0"
+pydantic = "^2.9.1"
 typing-inspect = "^0.9.0"
 
 [tool.poetry.group.layers-utils]
