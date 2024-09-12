@@ -46,7 +46,7 @@ dynamodb-json = "^1.4"
 optional = true
 
 [tool.poetry.group.layers-fastapi.dependencies]
-fastapi = "^0.114.0"
+fastapi = "^0.114.1"
 fastapi-utils = "^0.7.0"
 mangum = "^0.17.0"
 pydantic = "^2.9.1"
