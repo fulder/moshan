@@ -541,13 +541,13 @@ dev = ["Sphinx (==7.2.5)", "colorama (==0.4.5)", "colorama (==0.4.6)", "exceptio
 
 [[package]]
 name = "mangum"
-version = "0.17.0"
+version = "0.18.0"
 description = "AWS Lambda support for ASGI applications"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "mangum-0.17.0-py3-none-any.whl", hash = "sha256:f00be705605bc4793958df62e4d249abf58d254c39d90bb410d069570206f4a2"},
-    {file = "mangum-0.17.0.tar.gz", hash = "sha256:5b4e26375e12eed051687670466d17968f8b74beecaca432edd4eb4127f78509"},
+    {file = "mangum-0.18.0-py3-none-any.whl", hash = "sha256:cf71aa89bd655d465ece62c9c336be6b537eb297cfc72f7ea463aabc5eda2e6a"},
+    {file = "mangum-0.18.0.tar.gz", hash = "sha256:50179395012d9ae3df30484c16280decf0c56fb4c76bd6e1979b9b60135f254f"},
 ]
 
 [package.dependencies]
@@ -1237,4 +1237,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "64f42cea58f4440668ffd213f7e4123ad33628dab6c7ce780814cf7c8cd06b01"
+content-hash = "c23f057021672e346bb89f6090e1f6c5882d974915b968c6b99e04561fc9591b"
