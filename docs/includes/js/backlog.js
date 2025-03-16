@@ -68,6 +68,7 @@ function createRow(watchHistoryItem) {
       <td>${apiCache.title}</td>
       <td>${apiCache.status}</td>
       <td>${apiCache.releaseDate}</td>
+      <td>${watchHistoryItem.rating}</td>
     </tr>
     */
     const tableRow = document.createElement('tr');
@@ -76,6 +77,7 @@ function createRow(watchHistoryItem) {
 
     const columnValues = [
         watchHistoryItem.createdAt,
+        watchHistoryItem.rating,
         watchHistoryItem.apiName,
         apiCache.title,
         apiCache.status,
