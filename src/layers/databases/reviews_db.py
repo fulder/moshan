@@ -169,7 +169,6 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
     elif sort == "latest_watch_date":
         kwargs["FilterExpression"] &= Key("api_info").begins_with("i_")
 
-
     if filter == "in_progress":
         kwargs["FilterExpression"] &= Attr("status").is_in(
             ["following", "watching"]
