@@ -14,7 +14,7 @@ if (isLoggedIn()) {
 }
 
 async function createTableRows(cursor='') {
-    const response = await moshanApi.getItems('backlogDate', cursor);
+    const response = await moshanApi.getItems('rating', cursor, 'onlyBacklog');
     const items = response.data.items;
 
     currentCursor = null;
