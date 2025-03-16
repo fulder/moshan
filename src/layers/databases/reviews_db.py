@@ -12,6 +12,8 @@ from decimal_encoder import DecimalEncoder
 from dynamodb_json import json_util
 from loguru import logger
 
+from src.lambdas.api.app import Filter, Sort
+
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
     "deleted_at",
@@ -148,7 +150,7 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
-def get_all_items(username, sort=None, cursor=None, filter=None):
+def get_all_items(username:str, sort: Sort=None, cursor=None, filter: Filter=None):
     kwargs = {
         "KeyConditionExpression": Key("username").eq(username),
         "FilterExpression": Attr("deleted_at").not_exists(),
@@ -156,6 +158,7 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
     if sort is not None:
         kwargs["IndexName"] = sort
         kwargs["Limit"] = 100
+        kwargs["ScanIndexForward"] = False
     else:
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
 
@@ -163,15 +166,17 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         kwargs["KeyConditionExpression"] &= Key("ep_progress").between(
             Decimal("0.01"), Decimal("99.99")
         )
-        kwargs["ScanIndexForward"] = False
     elif sort == "latest_watch_date":
         kwargs["FilterExpression"] &= Key("api_info").begins_with("i_")
-        kwargs["ScanIndexForward"] = False
+
 
     if filter == "in_progress":
         kwargs["FilterExpression"] &= Attr("status").is_in(
             ["following", "watching"]
         )
+        del kwargs["Limit"]
+    elif filter == "only_backlog":
+        kwargs["FilterExpression"] &= Attr("status").eq("backlog")
         del kwargs["Limit"]
 
     if cursor is not None:

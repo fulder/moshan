@@ -56,6 +56,7 @@ class Sort(CamelStrEnum):
 
 class Filter(CamelStrEnum):
     in_progress = auto()
+    only_backlog = auto()
 
 
 class ApiCache(BaseModel):
