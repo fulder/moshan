@@ -42,6 +42,7 @@ jobs:
         shell: bash
         run: |
           pip install poetry
+          poetry self add poetry-plugin-export
           mkdir ./src/layers/fastapi
           poetry export --with api --output ./src/lambdas/api/requirements.txt
           poetry export --with layers-api --output ./src/layers/api/requirements.txt
