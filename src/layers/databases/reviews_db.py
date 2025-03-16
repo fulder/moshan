@@ -156,6 +156,7 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
     if sort is not None:
         kwargs["IndexName"] = sort
         kwargs["Limit"] = 100
+        kwargs["ScanIndexForward"] = False
     else:
         kwargs["KeyConditionExpression"] &= Key("api_info").begins_with("i_")
 
@@ -163,15 +164,16 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         kwargs["KeyConditionExpression"] &= Key("ep_progress").between(
             Decimal("0.01"), Decimal("99.99")
         )
-        kwargs["ScanIndexForward"] = False
     elif sort == "latest_watch_date":
         kwargs["FilterExpression"] &= Key("api_info").begins_with("i_")
-        kwargs["ScanIndexForward"] = False
 
     if filter == "in_progress":
         kwargs["FilterExpression"] &= Attr("status").is_in(
             ["following", "watching"]
         )
+        del kwargs["Limit"]
+    elif filter == "only_backlog":
+        kwargs["FilterExpression"] &= Attr("status").eq("backlog")
         del kwargs["Limit"]
 
     if cursor is not None:
