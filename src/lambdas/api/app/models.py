@@ -52,6 +52,7 @@ class Sort(CamelStrEnum):
     backlog_date = auto()
     ep_progress = auto()
     latest_watch_date = auto()
+    rating = auto()
 
 
 class Filter(CamelStrEnum):
