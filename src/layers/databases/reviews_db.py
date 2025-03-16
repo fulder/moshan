@@ -188,6 +188,10 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         ret["items"].append(i)
 
     last_ev = res.get("LastEvaluatedKey")
+
+    if not ret["items"] and last_ev is not None:
+        return get_all_items(username, sort, last_ev, filter)
+
     if last_ev is not None:
         logger.bind(lastEvaluatedKey=last_ev).debug("Not last page")
         ret["end_cursor"] = quote(json.dumps(last_ev, cls=DecimalEncoder))
