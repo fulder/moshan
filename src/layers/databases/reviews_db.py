@@ -150,7 +150,7 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
-def get_all_items(username:str, sort: Sort=None, cursor=None, filter: Filter=None):
+def get_all_items(username, sort=None, cursor=None, filter=None):
     kwargs = {
         "KeyConditionExpression": Key("username").eq(username),
         "FilterExpression": Attr("deleted_at").not_exists(),
