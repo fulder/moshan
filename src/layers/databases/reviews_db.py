@@ -12,8 +12,6 @@ from decimal_encoder import DecimalEncoder
 from dynamodb_json import json_util
 from loguru import logger
 
-from src.lambdas.api.app import Filter, Sort
-
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
     "deleted_at",
