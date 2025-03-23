@@ -61,7 +61,8 @@ export class MoshanApi {
     );
 
     let poster = ret.data.apiCache.imageUrl;
-    if (!ret.data.apiCache.imageUrl.includes('http')) {
+
+    if (ret.data.apiCache.imageUrl && !ret.data.apiCache.imageUrl.includes('http')) {
       poster = `https://image.tmdb.org/t/p/w500/${ret.data.apiCache.imageUrl}`;
     }
 
