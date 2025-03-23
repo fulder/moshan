@@ -198,7 +198,11 @@ function createReviewPage (reviewItem) {
     reviewItem.title = 'N/A';
   }
 
-  document.getElementById('poster').src = reviewItem.imageUrl;
+  let poster = reviewItem.imageUrl;
+  if (poster === undefined) {
+    poster = '/includes/img/image_not_available.png';
+  }
+  document.getElementById('poster').src = poster;
   document.getElementById('title').innerHTML = reviewItem.title;
   document.getElementById('start-date').innerHTML = reviewItem.releaseDate;
 
