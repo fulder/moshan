@@ -83,34 +83,34 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "boto3"
-version = "1.37.0"
+version = "1.38.0"
 description = "The AWS SDK for Python"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["dev", "layers-databases"]
 files = [
-    {file = "boto3-1.37.0-py3-none-any.whl", hash = "sha256:03bd8c93b226f07d944fd6b022e11a307bff94ab6a21d51675d7e3ea81ee8424"},
-    {file = "boto3-1.37.0.tar.gz", hash = "sha256:01015b38017876d79efd7273f35d9a4adfba505237159621365bed21b9b65eca"},
+    {file = "boto3-1.38.0-py3-none-any.whl", hash = "sha256:96898facb164b47859d40a4271007824a0a791c3811a7079ce52459d753d4474"},
+    {file = "boto3-1.38.0.tar.gz", hash = "sha256:8b6544eca17e31d1bfd538e5d152b96a68d6c92950352a0cd9679f89d217d53a"},
 ]
 
 [package.dependencies]
-botocore = ">=1.37.0,<1.38.0"
+botocore = ">=1.38.0,<1.39.0"
 jmespath = ">=0.7.1,<2.0.0"
-s3transfer = ">=0.11.0,<0.12.0"
+s3transfer = ">=0.12.0,<0.13.0"
 
 [package.extras]
 crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.37.0"
+version = "1.38.0"
 description = "Low-level, data-driven core of boto 3."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["dev", "layers-databases"]
 files = [
-    {file = "botocore-1.37.0-py3-none-any.whl", hash = "sha256:d01661f38c0edac87424344cdf4169f3ab9bc1bf1b677c8b230d025eb66c54a3"},
-    {file = "botocore-1.37.0.tar.gz", hash = "sha256:b129d091a8360b4152ab65327186bf4e250de827c4a9b7ddf40a72b1acf1f3c1"},
+    {file = "botocore-1.38.0-py3-none-any.whl", hash = "sha256:f9d58404796a44746d54c4a9318a8970fb4dbcbdc45aa0e75bf528af4213b6b5"},
+    {file = "botocore-1.38.0.tar.gz", hash = "sha256:ac8997291bcfd28d329a779ceda429fbe9f8950ba051429a37ba93cbda025e94"},
 ]
 
 [package.dependencies]
@@ -1075,21 +1075,21 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "s3transfer"
-version = "0.11.2"
+version = "0.12.0"
 description = "An Amazon S3 Transfer Manager"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["dev", "layers-databases"]
 files = [
-    {file = "s3transfer-0.11.2-py3-none-any.whl", hash = "sha256:be6ecb39fadd986ef1701097771f87e4d2f821f27f6071c872143884d2950fbc"},
-    {file = "s3transfer-0.11.2.tar.gz", hash = "sha256:3b39185cb72f5acc77db1a58b6e25b977f28d20496b6e58d6813d75f464d632f"},
+    {file = "s3transfer-0.12.0-py3-none-any.whl", hash = "sha256:35b314d7d82865756edab59f7baebc6b477189e6ab4c53050e28c1de4d9cce18"},
+    {file = "s3transfer-0.12.0.tar.gz", hash = "sha256:8ac58bc1989a3fdb7c7f3ee0918a66b160d038a147c7b5db1500930a607e9a1c"},
 ]
 
 [package.dependencies]
-botocore = ">=1.36.0,<2.0a.0"
+botocore = ">=1.37.4,<2.0a.0"
 
 [package.extras]
-crt = ["botocore[crt] (>=1.36.0,<2.0a.0)"]
+crt = ["botocore[crt] (>=1.37.4,<2.0a.0)"]
 
 [[package]]
 name = "simplejson"
@@ -1322,4 +1322,4 @@ dev = ["black (>=19.3b0) ; python_version >= \"3.6\"", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "9c351a5bcdc7b0ea5c4d64af31232982faa25fcf66eebacc5cabff0176cee05f"
+content-hash = "139b7e36a38ca6c23121f9a8ca9bd15cfafc3ee0ceec8b24c6527a6128f00d5b"
