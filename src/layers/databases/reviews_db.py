@@ -72,6 +72,7 @@ def _add_review(username, api_info, data=None):
     if data is None:
         data = {}
 
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if data.get("dates_watched"):
         data["latest_watch_date"] = "0"
     try:
@@ -80,9 +81,9 @@ def _add_review(username, api_info, data=None):
             api_info,
             include_deleted=True,
         )
-        created_at = current_item["created_at"]
+        created_at = current_item.get("created_at", now)
     except NotFoundError:
-        data["created_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        data["created_at"] = now
         created_at = data["created_at"]
 
     if data.get("status") == "backlog":
