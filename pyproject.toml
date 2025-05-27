@@ -20,7 +20,7 @@ optional = true
 pytest = "^8.3.5"
 pytest-cov = "^6.1.1"
 pytest-html = "^4.1.1"
-pytest-mock = "^3.14.0"
+pytest-mock = "^3.14.1"
 
 [tool.poetry.group.lint]
 optional = true
