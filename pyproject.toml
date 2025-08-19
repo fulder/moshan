@@ -34,7 +34,7 @@ flake8 = "^7.3.0"
 optional = true
 
 [tool.poetry.group.layers-api.dependencies]
-requests = "^2.32.4"
+requests = "^2.32.5"
 
 [tool.poetry.group.layers-databases]
 optional = true
