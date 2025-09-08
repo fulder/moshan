@@ -18,7 +18,7 @@ optional = true
 
 [tool.poetry.group.pytest.dependencies]
 pytest = "^8.4.2"
-pytest-cov = "^6.2.1"
+pytest-cov = "^6.3.0"
 pytest-html = "^4.1.1"
 pytest-mock = "^3.15.0"
 
