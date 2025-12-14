@@ -15,7 +15,7 @@ EPISODE_DATA = {
 
 def test_parse_episode():
     review = Review(**EPISODE_DATA)
-    assert review.dict(exclude_none=True) == {
+    assert review.model_dump(exclude_none=True) == {
         "api_id": "21",
         "api_name": "mal",
         "created_at": "2021-11-14 22:17:33",
