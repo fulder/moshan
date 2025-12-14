@@ -112,7 +112,9 @@ class EpisodeReviews(BaseModel):
 
 
 def review_data_to_dict(data: ReviewData):
-    data = data.dict(exclude={"api_name", "item_api_id", "episode_api_id"})
+    data = data.model_dump(
+        exclude={"api_name", "item_api_id", "episode_api_id"}
+    )
     dates = data.get("dates_watched")
     if dates:
         parsed_dates = []

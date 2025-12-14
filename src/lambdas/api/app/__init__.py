@@ -88,7 +88,7 @@ def add_item(request: Request, item: PostItem):
     try:
         routes.add_item(
             request.state.username,
-            item.api_name,
+            item.api_name.value,
             item.item_api_id,
             review_data_to_dict(item),
         )
