@@ -107,9 +107,9 @@ Resources:
       LayerName: api
       ContentUri: src/layers/api
       CompatibleRuntimes:
-        - 3.13
+        - python3.13
     Metadata:
-      BuildMethod: 3.13
+      BuildMethod: python3.13
 
   DatabasesLayer:
     Type: AWS::Serverless::LayerVersion
@@ -117,9 +117,9 @@ Resources:
       LayerName: databases
       ContentUri: src/layers/databases
       CompatibleRuntimes:
-        - 3.13
+        - python3.13
     Metadata:
-      BuildMethod: 3.13
+      BuildMethod: python3.13
 
   UtilsLayer:
     Type: AWS::Serverless::LayerVersion
@@ -127,9 +127,9 @@ Resources:
       LayerName: utils
       ContentUri: src/layers/utils
       CompatibleRuntimes:
-        - 3.13
+        - python3.13
     Metadata:
-      BuildMethod: 3.13
+      BuildMethod: python3.13
 
   FastApiLayer:
     Type: AWS::Serverless::LayerVersion
@@ -137,9 +137,9 @@ Resources:
       LayerName: fastapi
       ContentUri: src/layers/fastapi
       CompatibleRuntimes:
-        - 3.13
+        - python3.13
     Metadata:
-      BuildMethod: 3.13
+      BuildMethod: python3.13
 
   DatabasePolicy:
     Type: 'AWS::IAM::Policy'
@@ -189,7 +189,7 @@ Resources:
         - !Ref FastApiLayer
       MemorySize: 1024
       Role: !GetAtt ApiFunctionRole.Arn
-      Runtime: 3.13
+      Runtime: python3.13
       Timeout: 10
       Events:
         GetMethod:
@@ -258,7 +258,7 @@ Resources:
         - !Ref UtilsLayer
       MemorySize: 2048
       Role: !GetAtt UpdatesPubFunctionRole.Arn
-      Runtime: 3.13
+      Runtime: python3.13
       Timeout: 120
       Events:
         InvocationLevel:
@@ -294,7 +294,7 @@ Resources:
         - !Ref UtilsLayer
       MemorySize: 1024
       Role: !GetAtt UpdatesSubFunctionRole.Arn
-      Runtime: 3.13
+      Runtime: python3.13
       Timeout: 60
       Events:
         UpdatesSNS:
