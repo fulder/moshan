@@ -14,7 +14,7 @@ Parameters:
 
   PythonVers:
     Type: String
-    Default: python3.14
+    Default: python3.13
 
   LocalCognitoClient:
     Type: String

@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.14"
+          python-version: "3.13"
 
       - uses: aws-actions/setup-sam@v2
 
@@ -51,7 +51,7 @@ jobs:
           poetry export --with layers-utils --output ./src/layers/utils/requirements.txt
 
       - name: build
-        run: sam build --use-container --build-image public.ecr.aws/sam/build-python3.14
+        run: sam build --use-container
 
       - name: deploy
         run: |
