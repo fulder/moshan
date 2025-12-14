@@ -119,7 +119,7 @@ def add_episode(
     try:
         routes.add_episode(
             request.state.username,
-            api_name,
+            api_name.value,
             item_api_id,
             episode.episode_api_id,
             review_data_to_dict(episode),
