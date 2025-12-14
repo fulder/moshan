@@ -167,7 +167,7 @@ def update_episode(
     try:
         routes.update_episode(
             request.state.username,
-            api_name,
+            api_name.value,
             item_api_id,
             episode_api_id,
             review_data_to_dict(data),
@@ -195,7 +195,7 @@ def delete_episode(
     try:
         routes.delete_episode(
             request.state.username,
-            api_name,
+            api_name.value,
             item_api_id,
             episode_api_id,
         )
