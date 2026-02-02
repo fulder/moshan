@@ -49,7 +49,7 @@ optional = true
 [tool.poetry.group.layers-fastapi.dependencies]
 fastapi = "^0.128.0"
 fastapi-utils = "^0.8.0"
-mangum = "^0.20.0"
+mangum = "^0.21.0"
 pydantic = "^2.12.5"
 typing-inspect = "^0.9.0"
 
@@ -63,7 +63,7 @@ loguru = "^0.7.3"
 optional = true
 
 [tool.poetry.group.api.dependencies]
-pyjwt = "^2.10.1"
+pyjwt = "^2.11.0"
 requests = "^2.31.0"
 
 [build-system]
