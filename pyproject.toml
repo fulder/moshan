@@ -27,7 +27,7 @@ optional = true
 
 [tool.poetry.group.lint.dependencies]
 black = "^26.1.0"
-isort = "^8.0.0"
+isort = "^8.0.1"
 flake8 = "^7.3.0"
 
 [tool.poetry.group.layers-api]
@@ -47,7 +47,7 @@ dynamodb-json = "^1.4"
 optional = true
 
 [tool.poetry.group.layers-fastapi.dependencies]
-fastapi = "^0.133.1"
+fastapi = "^0.135.1"
 fastapi-utils = "^0.8.0"
 mangum = "^0.21.0"
 pydantic = "^2.12.5"
