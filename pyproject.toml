@@ -17,7 +17,7 @@ httpx = "^0.28.1"
 optional = true
 
 [tool.poetry.group.pytest.dependencies]
-pytest = "^9.1.0"
+pytest = "^9.1.1"
 pytest-cov = "^7.1.0"
 pytest-html = "^4.2.0"
 pytest-mock = "^3.15.1"
@@ -47,7 +47,7 @@ dynamodb-json = "^1.4"
 optional = true
 
 [tool.poetry.group.layers-fastapi.dependencies]
-fastapi = "^0.137.2"
+fastapi = "^0.138.0"
 fastapi-utils = "^0.8.0"
 mangum = "^0.21.0"
 pydantic = "^2.13.4"
