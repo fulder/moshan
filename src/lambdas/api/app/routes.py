@@ -1,8 +1,8 @@
 from datetime import datetime
 
 import dateutil.parser
-import jikan
 import reviews_db
+import tenrai
 import tmdb
 import tvmaze
 
@@ -10,7 +10,7 @@ from .models import ApiNameWithEpisodes
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
-jikan_api = jikan.JikanApi()
+tenrai_api = tenrai.TenraiApi()
 
 
 def get_items(username, sort=None, cursor=None, filter=None):
@@ -66,7 +66,7 @@ def add_item(username, api_name, api_id, data):
         }
         ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
     elif api_name == "mal":
-        api_item = jikan_api.get_item(api_id).get("data", {})
+        api_item = tenrai_api.get_item(api_id).get("data", {})
         api_cache = {
             "title": api_item.get("title"),
             "release_date": api_item.get("aired", {}).get("from"),
@@ -76,7 +76,7 @@ def add_item(username, api_name, api_id, data):
             .get("jpg", {})
             .get("image_url"),
         }
-        ep_count_res = jikan_api.get_episode_count(api_id)
+        ep_count_res = tenrai_api.get_episode_count(api_id)
 
     try:
         current_item = reviews_db.get_item(
@@ -150,7 +150,7 @@ def add_episode(
         api_res = tvmaze_api.get_episode(episode_api_id)
         is_special = api_res["type"] != "regular"
     elif api_name == ApiNameWithEpisodes.mal.value:
-        jikan_api.get_episode(item_api_id, episode_api_id)
+        tenrai_api.get_episode(item_api_id, episode_api_id)
         is_special = False  # mal items are special not episodes
 
     item = reviews_db.get_item(
@@ -183,7 +183,7 @@ def update_episode(
     if api_name == ApiNameWithEpisodes.tvmaze.value:
         tvmaze_api.get_episode(episode_api_id)
     elif api_name == ApiNameWithEpisodes.mal.value:
-        jikan_api.get_episode(item_api_id, episode_api_id)
+        tenrai_api.get_episode(item_api_id, episode_api_id)
 
     item = reviews_db.get_item(
         username,
@@ -232,7 +232,7 @@ def delete_episode(
         api_res = tvmaze_api.get_episode(episode_api_id)
         is_special = api_res["type"] != "regular"
     elif api_name == ApiNameWithEpisodes.mal.value:
-        jikan_api.get_episode(item_api_id, episode_api_id)
+        tenrai_api.get_episode(item_api_id, episode_api_id)
         is_special = False  # mal items are special not episodes
 
     reviews_db.delete_episode(

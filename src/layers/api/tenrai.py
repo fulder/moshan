@@ -6,9 +6,9 @@ import utils
 from loguru import logger
 
 
-class JikanApi:
+class TenraiApi:
     def __init__(self):
-        self.base_url = "https://api.jikan.moe/v4"
+        self.base_url = "https://api.tenrai.org/v1"
 
     def get_item(self, anime_id):
         return self._get(f"/anime/{anime_id}")
@@ -38,7 +38,7 @@ class JikanApi:
             last_id = 0
 
         # Hack for allowing to add 25 more episodes than currently present in
-        # api to quickfix slow api updates and jikan 24h cache
+        # api to quickfix slow api updates and tenrai 24h cache
         if last_id < int(episode_id) <= last_id + 25:
             return True
 
