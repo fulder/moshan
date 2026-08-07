@@ -1,5 +1,5 @@
-import jikan
 import reviews_db
+import tenrai
 import tmdb
 import tvmaze
 import updates
@@ -9,7 +9,7 @@ setup_logger()
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
-jikan_api = jikan.JikanApi()
+tenrai_api = tenrai.TenraiApi()
 
 
 def handler(event, context):
@@ -50,7 +50,7 @@ def _check_tvmaze_updates():
 
 
 def _check_mal_updates():
-    airing = jikan_api.get_schedules()
+    airing = tenrai_api.get_schedules()
 
     for a in airing:
         mal_id = a["mal_id"]

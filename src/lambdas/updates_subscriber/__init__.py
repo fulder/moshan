@@ -2,8 +2,8 @@ import json
 from datetime import datetime
 from decimal import Decimal
 
-import jikan
 import reviews_db
+import tenrai
 import tmdb
 import tvmaze
 from log import setup_logger
@@ -13,7 +13,7 @@ setup_logger()
 
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
-jikan_api = jikan.JikanApi()
+tenrai_api = tenrai.TenraiApi()
 
 
 def handler(event, context):
@@ -45,11 +45,11 @@ def handler(event, context):
             "image_url": api_item.get("image", {}).get("original"),
         }
     elif api_name == "mal":
-        api_item = jikan_api.get_item(api_id).get("data", {})
+        api_item = tenrai_api.get_item(api_id).get("data", {})
         api_ep_count = api_item.get("episodes")
         if api_ep_count is None:
             api_ep_count = 0
-        episodes_info = jikan_api.get_episode_count(api_id)
+        episodes_info = tenrai_api.get_episode_count(api_id)
         ep_count = max(api_ep_count, episodes_info.get("ep_count", 0))
         api_cache = {
             "title": api_item.get("title"),

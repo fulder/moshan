@@ -1,5 +1,5 @@
 import pytest
-from jikan import JikanApi
+from tenrai import TenraiApi
 
 
 @pytest.fixture()
@@ -9,7 +9,7 @@ def mocked_send_request(mocker):
 
 @pytest.fixture()
 def mocked_api(mocked_send_request):
-    return JikanApi()
+    return TenraiApi()
 
 
 def _create_schedules_res(data, pages=2):

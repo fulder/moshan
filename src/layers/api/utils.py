@@ -30,14 +30,14 @@ class MediaRequestThread(Thread):
         self.show_api = show_api
 
     def run(self):
-        import jikan
+        import tenrai
         import tmdb
         import tvmaze
 
         api_map = {
             "tvmaze": tvmaze.TvMazeApi(),
             "tmdb": tmdb.TmdbApi(),
-            "mal": jikan.JikanApi(),
+            "mal": tenrai.TenraiApi(),
         }
 
         s = self.item["api_info"].split("_")

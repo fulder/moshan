@@ -3,7 +3,7 @@ import {MoshanItems, MoshanItem, MoshanEpisodes, MoshanEpisode} from './common.j
 export class MalApi {
   constructor () {
     this.apiAxios = axios.create({
-      baseURL: 'https://api.jikan.moe/v4/',
+      baseURL: 'https://api.tenrai.org/v1/',
     });
   }
 
