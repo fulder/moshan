@@ -28,7 +28,7 @@ optional = true
 [tool.poetry.group.lint.dependencies]
 black = "^26.5.1"
 isort = "^9.0.1"
-flake8 = "^7.3.0"
+flake8 = "^7.4.1"
 
 [tool.poetry.group.layers-api]
 optional = true
@@ -63,7 +63,7 @@ loguru = "^0.7.3"
 optional = true
 
 [tool.poetry.group.api.dependencies]
-pyjwt = "^2.14.0"
+pyjwt = "^2.15.0"
 requests = "^2.31.0"
 
 [build-system]
