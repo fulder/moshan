@@ -22,6 +22,10 @@ NOTIFY_USERNAME = os.getenv("TELEGRAM_USERNAME")
 
 def handler(event, context):
     message = json.loads(event["Records"][0]["Sns"]["Message"])
+    if message.get("type") == "sequel":
+        _handle_sequel(message)
+        return
+
     api_name = message["api_name"]
     api_id = message["api_id"]
 
@@ -154,6 +158,47 @@ def _notify_new_season(item, old_next_episode):
     telegram.send(
         f"📅 {item['api_cache']['title']}: season {new['season']} starts "
         f"{new['airstamp'][:10]}"
+    )
+
+
+def _handle_sequel(message):
+    prequel_id = message["prequel_id"]
+    sequel = message["sequel"]
+    try:
+        items = reviews_db.get_items("mal", prequel_id)
+    except reviews_db.NotFoundError:
+        return
+
+    for item in items:
+        if "deleted_at" in item:
+            continue
+        old = item.get("api_cache", {}).get("sequel")
+        if old == sequel:
+            continue
+
+        reviews_db.set_api_cache_fields(
+            item["username"], "mal", prequel_id, {"sequel": sequel}
+        )
+        if old is None or old.get("mal_id") != sequel["mal_id"]:
+            _notify_sequel(item, sequel)
+
+
+def _notify_sequel(item, sequel):
+    if item["username"] != NOTIFY_USERNAME:
+        return
+    if item.get("status") == "dropped":
+        return
+    try:
+        # Already in the list: the calendar shows it anyway
+        reviews_db.get_item(item["username"], "mal", sequel["mal_id"])
+        return
+    except reviews_db.NotFoundError:
+        pass
+
+    start = (sequel.get("start") or "")[:10] or "TBA"
+    telegram.send(
+        f"📅 {sequel['title']} announced "
+        f"(after {item['api_cache']['title']}), starts {start}"
     )
 
 

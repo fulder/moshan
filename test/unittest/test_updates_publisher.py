@@ -39,3 +39,41 @@ def test_mal_updates_refresh_finished_airing(mocker):
         "2",
         "3",
     ]
+
+
+def test_mal_sequels_checks_new_and_publishes_known(mocker):
+    mocker.patch.object(
+        updates_publisher.tenrai_api,
+        "get_season_anime",
+        return_value=[
+            {"mal_id": 10, "title": "S2", "aired": {"from": "2027-01-05"}},
+            {"mal_id": 20, "title": "Other", "aired": {"from": None}},
+        ],
+    )
+    # 10 is new: its prequel 5 is in a list; 20 was checked before
+    mocker.patch.object(
+        updates_publisher.reviews_db,
+        "get_checked_sequels",
+        return_value={"20": []},
+    )
+    relations = mocker.patch.object(
+        updates_publisher.tenrai_api,
+        "get_relations",
+        return_value=[
+            {"relation": "Prequel", "entry": [{"mal_id": 5, "type": "anime"}]}
+        ],
+    )
+    put = mocker.patch.object(
+        updates_publisher.reviews_db, "put_checked_sequels"
+    )
+    mocker.patch.object(updates_publisher.reviews_db, "get_items")
+    published = mocker.patch.object(updates_publisher.updates, "publish_sequel")
+
+    updates_publisher._check_mal_sequels()
+
+    relations.assert_called_once_with("10")
+    put.assert_called_once_with({"20": [], "10": ["5"]})
+    published.assert_called_once_with(
+        "5",
+        {"mal_id": 10, "title": "S2", "start": "2027-01-05", "status": None},
+    )

@@ -77,3 +77,13 @@ def test_get_episode_empty_episode_list(mocked_send_request, mocked_api):
 
     assert mocked_api.get_episode(33010, "1") is True
     assert mocked_send_request.call_count == 1
+
+
+def test_prequel_ids():
+    relations = [
+        {"relation": "Prequel", "entry": [{"mal_id": 38524, "type": "anime"}]},
+        {"relation": "Adaptation", "entry": [{"mal_id": 1, "type": "manga"}]},
+        {"relation": "Sequel", "entry": [{"mal_id": 48583, "type": "anime"}]},
+    ]
+
+    assert TenraiApi.prequel_ids(relations) == ["38524"]
