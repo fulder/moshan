@@ -60,3 +60,15 @@ the SNS topic, IAM roles/policies). `template_provision.yml` defines the
 DynamoDB table separately (deployed independently via `make deploy-provision`)
 so the table survives app stack redeploys. `template_cognito_cert.yml` handles
 the ACM certificate for the Cognito custom domain.
+
+## Workflow tips
+
+- Preview UI changes without a login: copy the page to a temp
+  `docs/_x.html`, inject a script before the module that sets a fake JWT
+  (`x.<base64 {"exp":4102444800,"username":"me"}>.x`) in localStorage and
+  stubs `window.fetch` for api.moshan.fulder.dev, serve `docs/` on :8080
+  and screenshot with `google-chrome --headless=new --screenshot`. Delete
+  the temp page afterwards.
+- Bulk data fixes: browser-console scripts using
+  `localStorage.moshan_access_token`, dry run first. Re-adding an existing
+  episode (POST) triggers a recount without touching its data.
