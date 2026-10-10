@@ -143,3 +143,14 @@ progress.far-behind {
 .watch-date input[inputmode=numeric] {
   max-width: 6rem;
 }
+
+button.danger {
+  --pico-background-color: #d93526;
+  --pico-border-color: #d93526;
+  --pico-color: #fff;
+}
+
+button.danger:hover {
+  --pico-background-color: #b72a1e;
+  --pico-border-color: #b72a1e;
+}
