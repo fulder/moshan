@@ -25,7 +25,8 @@ def handler(event, context):
     api_name = message["api_name"]
     api_id = message["api_id"]
 
-    episodes_info = {}
+    # Counts watched episodes from a user's saved ones (shows with episodes)
+    count_watched = None
     cache_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if api_name == "tmdb":
         api_item = tmdb_api.get_item(api_id)
@@ -38,7 +39,8 @@ def handler(event, context):
         }
     elif api_name == "tvmaze":
         api_item = tvmaze_api.get_item(api_id)
-        episodes_info = tvmaze_api.get_show_episodes_count(api_id)
+        api_episodes = tvmaze_api.get_show_episodes(api_id)
+        episodes_info = tvmaze_api.count_episodes(api_episodes)
         api_cache = {
             "title": api_item.get("name"),
             "release_date": api_item.get("premiered"),
@@ -49,6 +51,11 @@ def handler(event, context):
             "image_url": api_item.get("image", {}).get("original"),
             "next_episode": tvmaze_api.next_episode(api_item),
         }
+
+        count_watched = lambda ids: tvmaze_api.watched_counts(  # noqa: E731
+            api_episodes, ids
+        )
+
     elif api_name == "mal":
         api_item = tenrai_api.get_item(api_id).get("data", {})
         ep_count = tenrai_api.get_item_ep_count(api_id, api_item)
@@ -63,6 +70,11 @@ def handler(event, context):
             .get("jpg", {})
             .get("image_url"),
         }
+
+        count_watched = lambda ids: tenrai_api.watched_counts(  # noqa: E731
+            ep_count, ids
+        )
+
     else:
         raise Exception(f"Unexpected api_name: {message['api_name']}")
 
@@ -78,12 +90,21 @@ def handler(event, context):
 
         old_ep_count = item["api_cache"].get("ep_count")
         old_next_episode = item["api_cache"].get("next_episode")
-        watched_eps = item.get("watched_eps", 0)
-        watched_specials = item.get("watched_specials", 0)
-
-        count_info = _get_item_counts(
-            episodes_info, watched_eps, watched_specials
-        )
+        count_info = {}
+        if count_watched is not None:
+            # Recount from the saved episodes, fixing any old drift
+            saved = reviews_db.get_episodes(
+                item["username"], message["api_name"], message["api_id"]
+            )
+            c = count_watched([e["episode_api_id"] for e in saved])
+            count_info = {
+                "watched_eps": c["watched_eps"],
+                "ep_progress": _get_progress(c["watched_eps"], c["ep_count"]),
+                "watched_specials": c["watched_specials"],
+                "special_progress": _get_progress(
+                    c["watched_specials"], c["special_count"]
+                ),
+            }
         item = {
             **item,
             **count_info,
@@ -134,26 +155,6 @@ def _notify_new_season(item, old_next_episode):
         f"📅 {item['api_cache']['title']}: season {new['season']} starts "
         f"{new['airstamp'][:10]}"
     )
-
-
-def _get_item_counts(episodes_info, watched_eps, watched_specials):
-    counts = {}
-    if "ep_count" in episodes_info:
-        p = _get_progress(watched_eps, episodes_info["ep_count"])
-        counts = {
-            "watched_eps": watched_eps,
-            "ep_progress": p,
-        }
-
-    if "special_count" in episodes_info:
-        p = _get_progress(watched_specials, episodes_info["special_count"])
-        counts = {
-            **counts,
-            "watched_specials": watched_specials,
-            "special_progress": p,
-        }
-
-    return counts
 
 
 def _get_progress(watched, count):

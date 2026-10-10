@@ -52,3 +52,15 @@ def test_get_item_ep_count(mocker, mocked_api, status, exp):
     )
     api_item = {"status": status, "episodes": 10}
     assert mocked_api.get_item_ep_count(1, api_item) == exp
+
+
+def test_watched_counts_only_released():
+    # 13 saved ahead of release, -1 is a stray
+    saved = ["1", "2", "12", "13", "-1"]
+
+    assert TenraiApi.watched_counts(12, saved) == {
+        "watched_eps": 3,
+        "watched_specials": 0,
+        "ep_count": 12,
+        "special_count": 0,
+    }
