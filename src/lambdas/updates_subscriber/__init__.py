@@ -18,6 +18,14 @@ tvmaze_api = tvmaze.TvMazeApi()
 tenrai_api = tenrai.TenraiApi()
 
 NOTIFY_USERNAME = os.getenv("TELEGRAM_USERNAME")
+REVIEW_URL = "https://moshan.fulder.dev/review.html"
+
+
+def _url(api_name, api_id, episode_id=None):
+    url = f"{REVIEW_URL}?api_name={api_name}&api_id={api_id}"
+    if episode_id is not None:
+        url += f"&episode_api_id={episode_id}"
+    return url
 
 
 def handler(event, context):
@@ -31,6 +39,8 @@ def handler(event, context):
 
     # Counts watched episodes from a user's saved ones (shows with episodes)
     count_watched = None
+    # Newest aired episode, linked from the new episode ping
+    latest_episode = None
     cache_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if api_name == "tmdb":
         api_item = tmdb_api.get_item(api_id)
@@ -59,6 +69,10 @@ def handler(event, context):
         count_watched = lambda ids: tvmaze_api.watched_counts(  # noqa: E731
             api_episodes, ids
         )
+        aired, _ = tvmaze_api.aired_episode_ids(api_episodes)
+        aired_regular = [e["id"] for e in api_episodes if str(e["id"]) in aired]
+        if aired_regular:
+            latest_episode = aired_regular[-1]
 
     elif api_name == "mal":
         res = tenrai_api.get_item(api_id)
@@ -83,6 +97,7 @@ def handler(event, context):
         count_watched = lambda ids: tenrai_api.watched_counts(  # noqa: E731
             ep_count, ids
         )
+        latest_episode = ep_count or None
 
     else:
         raise Exception(f"Unexpected api_name: {message['api_name']}")
@@ -122,11 +137,11 @@ def handler(event, context):
 
         reviews_db.put_item(item)
 
-        _notify_new_episodes(item, old_ep_count)
+        _notify_new_episodes(item, old_ep_count, latest_episode)
         _notify_new_season(item, old_next_episode)
 
 
-def _notify_new_episodes(item, old_ep_count):
+def _notify_new_episodes(item, old_ep_count, latest_episode=None):
     if item["username"] != NOTIFY_USERNAME:
         return
     if item.get("status") not in ("following", "watching"):
@@ -142,9 +157,11 @@ def _notify_new_episodes(item, old_ep_count):
     if watched_eps >= new_ep_count:
         return
 
+    _, api_name, api_id = item["api_info"].split("_", 2)
     telegram.send(
         f"{item['api_cache']['title']}: episode {new_ep_count} is out "
-        f"({new_ep_count - watched_eps} unseen)"
+        f"({new_ep_count - watched_eps} unseen)\n"
+        f"{_url(api_name, api_id, latest_episode)}"
     )
 
 
@@ -160,9 +177,10 @@ def _notify_new_season(item, old_next_episode):
     if old_next_episode and old_next_episode.get("season") == new["season"]:
         return
 
+    _, api_name, api_id = item["api_info"].split("_", 2)
     telegram.send(
         f"📅 {item['api_cache']['title']}: season {new['season']} starts "
-        f"{new['airstamp'][:10]}"
+        f"{new['airstamp'][:10]}\n{_url(api_name, api_id)}"
     )
 
 
@@ -203,7 +221,8 @@ def _notify_sequel(item, sequel):
     start = (sequel.get("start") or "")[:10] or "TBA"
     telegram.send(
         f"📅 {sequel['title']} announced "
-        f"(after {item['api_cache']['title']}), starts {start}"
+        f"(after {item['api_cache']['title']}), starts {start}\n"
+        f"{_url('mal', sequel['mal_id'])}"
     )
 
 
