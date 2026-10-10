@@ -139,3 +139,7 @@ progress.far-behind {
 .posters.hide-done a:has(progress.done) {
   display: none;
 }
+
+.watch-date input[inputmode=numeric] {
+  max-width: 6rem;
+}

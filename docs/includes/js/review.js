@@ -209,33 +209,41 @@ function createReviewPage(reviewItem) {
   savedPatchData = getPatchData();
 }
 
-// ISO string -> value for <input type="datetime-local"> in local time
-function toLocalInput(iso) {
+// ISO string -> ['YYYY-MM-DD', 'HH:MM'] in local time
+function toLocalParts(iso) {
   const d = new Date(iso);
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  return d.toISOString().slice(0, 16);
+  return d.toISOString().slice(0, 16).split('T');
 }
+
+const TIME_PATTERN = /^([01]?\d|2[0-3]):[0-5]\d$/;
 
 function createOneCalendar(calDate = null) {
   const row = document.createElement('div');
   row.setAttribute('role', 'group');
+  row.className = 'watch-date';
   row.innerHTML = `
-    <input type="datetime-local" aria-label="Watch date">
+    <input type="date" aria-label="Watch date">
+    <input type="text" inputmode="numeric" placeholder="HH:MM" maxlength="5" aria-label="Watch time (24h)">
     <button type="button" class="secondary">Now</button>
     <button type="button" class="secondary outline" aria-label="Remove date">✕</button>`;
 
-  const [input, nowButton, removeButton] = row.children;
-  if (calDate !== null) {
-    input.value = toLocalInput(calDate);
-  }
-  input.addEventListener('input', updateWatchedCount);
+  const [dateInput, timeInput, nowButton, removeButton] = row.children;
+  const setValue = iso => [dateInput.value, timeInput.value] = iso === null ? ['', ''] : toLocalParts(iso);
+  setValue(calDate);
+
+  dateInput.addEventListener('input', updateWatchedCount);
+  timeInput.addEventListener('input', () => {
+    timeInput.setAttribute('aria-invalid', timeInput.value !== '' && !TIME_PATTERN.test(timeInput.value));
+  });
   nowButton.addEventListener('click', () => {
-    input.value = toLocalInput(new Date().toISOString());
+    setValue(new Date().toISOString());
+    timeInput.removeAttribute('aria-invalid');
     updateWatchedCount();
   });
   removeButton.addEventListener('click', () => {
     if ($('watched-dates').children.length === 1) {
-      input.value = '';
+      setValue(null);
     } else {
       row.remove();
     }
@@ -245,19 +253,26 @@ function createOneCalendar(calDate = null) {
   $('watched-dates').appendChild(row);
 }
 
-function dateInputs() {
-  return [...$('watched-dates').querySelectorAll('input')];
+// Watch dates as ISO strings; a missing or invalid time counts as 00:00
+function watchDates() {
+  return [...$('watched-dates').children]
+    .map(row => row.querySelectorAll('input'))
+    .filter(([date]) => date.value !== '')
+    .map(([date, time]) => {
+      const t = TIME_PATTERN.test(time.value) ? time.value.padStart(5, '0') : '00:00';
+      return new Date(`${date.value}T${t}`).toISOString();
+    });
 }
 
 function updateWatchedCount() {
-  $('watched_amount').textContent = dateInputs().filter(i => i.value !== '').length;
+  $('watched_amount').textContent = watchDates().length;
 }
 
 function getPatchData() {
   const rating = $('user-rating').value;
 
   return {
-    watchDates: dateInputs().filter(i => i.value !== '').map(i => new Date(i.value).toISOString()),
+    watchDates: watchDates(),
     overview: $('overview').value,
     review: $('review').value,
     rating: rating === '' ? '' : parseInt(rating),
