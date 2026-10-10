@@ -471,3 +471,10 @@ h2 .count {
   color: var(--pico-primary);
   font-weight: 600;
 }
+
+.relations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
