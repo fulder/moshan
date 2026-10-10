@@ -6,14 +6,14 @@ export async function createNavbar(showAlert = true) {
   document.getElementById('navbar').innerHTML = await response.text();
 
   document.getElementById('loginButton').addEventListener('click', login);
-  document.getElementById('logoutButton').addEventListener('click', logout);
+  document.querySelectorAll('[data-logout]').forEach(el => el.addEventListener('click', logout));
 
   const loggedIn = accessToken !== null;
   document.querySelectorAll('[data-auth]').forEach(el => el.hidden = !loggedIn);
   document.querySelectorAll('[data-guest]').forEach(el => el.hidden = loggedIn);
 
   if (loggedIn) {
-    document.getElementById('logoutButton').title = `Logout ${parsedToken.username}`;
+    document.querySelectorAll('[data-logout]').forEach(el => el.title = `Logout ${parsedToken.username}`);
   } else if (showAlert) {
     document.getElementById('logInAlert').hidden = false;
   }

@@ -10,6 +10,18 @@ nav form[role=search] {
   margin: 0;
 }
 
+nav .narrow-only {
+  display: none;
+}
+
+nav li.search form {
+  width: 20rem;
+}
+
+nav details.dropdown summary {
+  font-size: 1.4rem;
+}
+
 .brand img {
   height: 2.5rem;
   min-width: 2.5rem;
@@ -118,6 +130,30 @@ article > footer button {
   margin: 0;
 }
 
+/* Pico's container is only 700px below 1024px: fold the links into the menu */
+@media (max-width: 1023px) {
+  nav {
+    flex-wrap: nowrap;
+  }
+
+  nav > ul:last-child,
+  nav li.search {
+    flex: 1;
+  }
+
+  nav li.search form {
+    width: 100%;
+  }
+
+  nav .wide-only {
+    display: none;
+  }
+
+  nav .narrow-only {
+    display: list-item;
+  }
+}
+
 /* Status and rating side by side on every screen size */
 #item .grid {
   grid-template-columns: 1fr 1fr;
@@ -135,13 +171,12 @@ article > footer button {
     --pico-nav-element-spacing-horizontal: 0.4rem;
   }
 
-  nav > ul:last-child,
-  nav li:has(form[role=search]) {
-    flex: 1;
-  }
-
   nav form[role=search] input[type=submit] {
     display: none;
+  }
+
+  nav li.search input[type=search]:not(:last-child) {
+    border-radius: 5rem;
   }
 
   main.container {
