@@ -69,6 +69,16 @@ export async function loadMoreButton(list, loadMore) {
   await load();
 }
 
+// Loads every page into `list`; loadPage() returns false when there are no more pages.
+// For filtered lists, where the API keeps returning cursors to pages with nothing left.
+export async function loadAll(list, loadPage) {
+  list.setAttribute('aria-busy', 'true');
+  while (await loadPage()) {
+    // keep going
+  }
+  list.removeAttribute('aria-busy');
+}
+
 // Wires the #hideDone switch to hide 100% items in `list`, remembered across visits.
 export function hideDoneToggle(list) {
   const toggle = document.getElementById('hideDone');

@@ -1,7 +1,7 @@
 import {createNavbar} from './common/navbar.js';
 import {MoshanApi} from './api/moshan.js';
 import {isLoggedIn} from './common/auth.js';
-import {loadMoreButton} from './common/posters.js';
+import {loadAll} from './common/posters.js';
 
 createNavbar();
 
@@ -45,5 +45,5 @@ function createRow(item) {
 }
 
 if (isLoggedIn()) {
-  loadMoreButton(document.querySelector('table'), loadMore);
+  loadAll(document.querySelector('table'), loadMore);
 }
