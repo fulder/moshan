@@ -471,3 +471,15 @@ h2 .count {
   color: var(--pico-primary);
   font-weight: 600;
 }
+
+/* Phones: 3 posters per row */
+@media (max-width: 576px) {
+  .posters {
+    grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .posters small {
+    font-size: 0.75rem;
+  }
+}
