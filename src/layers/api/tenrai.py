@@ -79,6 +79,17 @@ class TenraiApi:
             ep_count = max(api_item.get("episodes") or 0, ep_count)
         return ep_count
 
+    @staticmethod
+    def watched_counts(ep_count, saved_ids):
+        # Only episodes 1..ep_count count (released ones while airing)
+        valid = {str(n) for n in range(1, ep_count + 1)}
+        return {
+            "watched_eps": len({str(i) for i in saved_ids} & valid),
+            "watched_specials": 0,
+            "ep_count": ep_count,
+            "special_count": 0,
+        }
+
     def _get(self, path):
         try:
             return utils.send_request(self.base_url, "GET", path)

@@ -37,26 +37,42 @@ class TvMazeApi:
         return self.count_episodes(self.get_show_episodes(show_id))
 
     @staticmethod
-    def count_episodes(episodes):
-        ep_count = 0
-        special_count = 0
-
+    def aired_episode_ids(episodes):
+        regular = set()
+        specials = set()
         for e in episodes:
             if (
-                e["airdate"] == ""
+                not e.get("airdate")
                 or dateutil.parser.parse(e["airdate"]) > datetime.now()
             ):
                 # Ignore not yet aired eps
                 continue
 
             if e["type"] == "regular":
-                ep_count += 1
+                regular.add(str(e["id"]))
             else:
-                special_count += 1
+                specials.add(str(e["id"]))
+        return regular, specials
 
+    @classmethod
+    def count_episodes(cls, episodes):
+        regular, specials = cls.aired_episode_ids(episodes)
         return {
-            "ep_count": ep_count,
-            "special_count": special_count,
+            "ep_count": len(regular),
+            "special_count": len(specials),
+        }
+
+    @classmethod
+    def watched_counts(cls, episodes, saved_ids):
+        # Only saved episodes that have aired count, so episodes saved early
+        # or removed from TVMaze can't push progress past 100%
+        regular, specials = cls.aired_episode_ids(episodes)
+        saved = {str(i) for i in saved_ids}
+        return {
+            "watched_eps": len(saved & regular),
+            "watched_specials": len(saved & specials),
+            "ep_count": len(regular),
+            "special_count": len(specials),
         }
 
     def _get(self, path):
