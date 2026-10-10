@@ -87,3 +87,15 @@ def test_prequel_ids():
     ]
 
     assert TenraiApi.prequel_ids(relations) == ["38524"]
+
+
+def test_requests_are_spaced(mocked_send_request, mocked_api, mocker):
+    sleep = mocker.patch("tenrai.time.sleep")
+    mocked_send_request.return_value = {"data": {}}
+
+    mocked_api.get_item(1)
+    mocked_api.get_item(2)
+
+    # The second call waits to stay under Tenrai's 4 requests/second
+    assert sleep.call_count == 1
+    assert 0 < sleep.call_args.args[0] <= 0.3

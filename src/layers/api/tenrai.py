@@ -5,10 +5,14 @@ import dateutil.parser
 import utils
 from loguru import logger
 
+# Tenrai allows 4 requests/second on the public tier; stay under it
+MIN_INTERVAL = 0.3
+
 
 class TenraiApi:
     def __init__(self):
         self.base_url = "https://api.tenrai.org/v1"
+        self._last_request = 0.0
 
     def get_item(self, anime_id):
         return self._get(f"/anime/{anime_id}")
@@ -115,6 +119,10 @@ class TenraiApi:
         }
 
     def _get(self, path):
+        wait = self._last_request + MIN_INTERVAL - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
+        self._last_request = time.monotonic()
         try:
             return utils.send_request(self.base_url, "GET", path)
         except utils.HttpError as e:
