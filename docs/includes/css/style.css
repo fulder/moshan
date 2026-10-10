@@ -118,9 +118,70 @@ article > footer button {
   margin: 0;
 }
 
+/* Status and rating side by side on every screen size */
+#item .grid {
+  grid-template-columns: 1fr 1fr;
+}
+
 @media (max-width: 576px) {
+  :root {
+    --pico-font-size: 93.75%;
+    --pico-form-element-spacing-vertical: 0.5rem;
+    --pico-form-element-spacing-horizontal: 0.75rem;
+  }
+
   nav {
     --pico-nav-element-spacing-vertical: 0.25rem;
+    --pico-nav-element-spacing-horizontal: 0.4rem;
+  }
+
+  nav > ul:last-child,
+  nav li:has(form[role=search]) {
+    flex: 1;
+  }
+
+  nav form[role=search] input[type=submit] {
+    display: none;
+  }
+
+  main.container {
+    padding-top: 0;
+  }
+
+  article {
+    --pico-block-spacing-horizontal: 0.75rem;
+    --pico-block-spacing-vertical: 0.75rem;
+  }
+
+  .review-head {
+    grid-template-columns: 90px 1fr;
+    align-items: start;
+  }
+
+  .review-head h2 {
+    font-size: 1.2rem;
+  }
+
+  .review-head hgroup,
+  .review-head p {
+    margin-bottom: 0.5rem;
+  }
+
+  .review-head button {
+    padding: 0.3rem 0.8rem;
+  }
+
+  #item label {
+    margin-bottom: 0.5rem;
+  }
+
+  #item textarea {
+    min-height: 0;
+    height: 2.75rem;
+  }
+
+  #item textarea:focus {
+    height: 6rem;
   }
 }
 
@@ -140,10 +201,6 @@ progress.far-behind {
   display: none;
 }
 
-.watch-date input[inputmode=numeric] {
-  max-width: 6rem;
-}
-
 button.danger {
   --pico-background-color: #d93526;
   --pico-border-color: #d93526;
@@ -153,4 +210,20 @@ button.danger {
 button.danger:hover {
   --pico-background-color: #b72a1e;
   --pico-border-color: #b72a1e;
+}
+
+.watch-date button {
+  flex: 0 0 auto;
+  padding-inline: 0.75rem;
+}
+
+.watch-date input[type=date] {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.watch-date input[inputmode=numeric] {
+  flex: 0 0 5rem;
+  padding-inline: 0.6rem;
+  text-align: center;
 }
