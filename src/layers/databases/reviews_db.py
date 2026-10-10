@@ -302,12 +302,17 @@ def _update_review(username, api_info, data, clean_whitelist):
             remove_names.append(f"#{o}")
             expression_attribute_names[f"#{o}"] = o
 
+    # An update can create the record (e.g. PUT on a new episode), so make
+    # sure it gets a created_at too
+    expression_attribute_names["#created_at"] = "created_at"
+    if "created_at" not in data:
+        set_names.append("#created_at=if_not_exists(#created_at,:updated_at)")
+
     expression_attribute_names["#backlog_date"] = "backlog_date"
     if data.get("status") != "backlog":
         remove_names.append("#backlog_date")
     else:
         set_names.append("#backlog_date=#created_at")
-        expression_attribute_names["#created_at"] = "created_at"
 
     if len(set_names) == 0 and len(remove_names) == 0:
         log.debug("No update needed, returning")
