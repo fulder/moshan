@@ -59,6 +59,9 @@ function createReview() {
   }
 }
 
+const CHEVRON_LEFT = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
+const CHEVRON_RIGHT = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+
 // Prequel/sequel links for anime (other seasons are separate MAL entries)
 async function showRelations() {
   let relations;
@@ -68,12 +71,18 @@ async function showRelations() {
     return;
   }
   const links = [];
-  for (const [relation, before, after] of [['Prequel', '‹ Prequel: ', ''], ['Sequel', 'Sequel: ', ' ›']]) {
+  for (const relation of ['Prequel', 'Sequel']) {
     const entries = relations.find(r => r.relation === relation)?.entry.filter(e => e.type === 'anime') ?? [];
     for (const entry of entries) {
       const a = document.createElement('a');
       a.href = `review.html?api_name=mal&api_id=${entry.mal_id}`;
-      a.textContent = `${before}${entry.name}${after}`;
+      a.title = relation;
+      a.textContent = entry.name;
+      if (relation === 'Prequel') {
+        a.insertAdjacentHTML('afterbegin', CHEVRON_LEFT);
+      } else {
+        a.insertAdjacentHTML('beforeend', CHEVRON_RIGHT);
+      }
       links.push(a);
     }
   }
