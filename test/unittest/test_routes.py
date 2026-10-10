@@ -21,6 +21,30 @@ def test_get_item(m_get_item, token, client, username):
 
 
 @patch("reviews_db.get_item")
+def test_get_item_next_episode(m_get_item, token, client):
+    m_get_item.return_value = {
+        "created_at": "CREATED_AT_DATE",
+        "api_cache": {
+            "next_episode": {
+                "season": 4,
+                "number": 1,
+                "airstamp": "2026-11-15T08:00:00+00:00",
+            }
+        },
+    }
+
+    response = client.get(
+        f"/items/tvmaze/{TEST_SHOW_ID}", headers={"Authorization": token}
+    )
+
+    assert response.json()["apiCache"]["nextEpisode"] == {
+        "season": 4,
+        "number": 1,
+        "airstamp": "2026-11-15T08:00:00+00:00",
+    }
+
+
+@patch("reviews_db.get_item")
 def test_not_found(m_get_item, client, token):
     m_get_item.side_effect = reviews_db.NotFoundError
 
