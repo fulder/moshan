@@ -419,6 +419,24 @@ def get_user_items(username, index_name=None, status_filter=None):
     return res
 
 
+def get_cached_airing_mal_ids():
+    # Anime whose cache still says airing; they drop off Tenrai's schedule
+    # after the finale, so the daily updater would otherwise never see it.
+    kwargs = {
+        "FilterExpression": Attr("api_info").begins_with("i_mal_")
+        & Attr("api_cache.status").is_in(["Currently Airing", "Not yet aired"])
+        & Attr("deleted_at").not_exists(),
+        "ProjectionExpression": "api_info",
+    }
+    ids = set()
+    while True:
+        res = _get_table().scan(**kwargs)
+        ids.update(i["api_info"].split("_")[2] for i in res.get("Items", []))
+        if "LastEvaluatedKey" not in res:
+            return ids
+        kwargs["ExclusiveStartKey"] = res["LastEvaluatedKey"]
+
+
 def put_item(item):
     _get_table().put_item(
         Item=item,
