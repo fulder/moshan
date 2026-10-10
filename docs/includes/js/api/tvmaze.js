@@ -25,8 +25,15 @@ export class TvMazeApi {
   }
 
   async getEpisode(qParams) {
-    const ret = await request(`${BASE_URL}/episodes/${qParams.episode_api_id}`);
-    return this.getMoshanEpisode(ret);
+    const [ret, episodes] = await Promise.all([
+      request(`${BASE_URL}/episodes/${qParams.episode_api_id}`),
+      request(`${BASE_URL}/shows/${qParams.item_api_id}/episodes?specials=1`),
+    ]);
+    const episode = this.getMoshanEpisode(ret);
+    const index = episodes.findIndex(e => e.id === ret.id);
+    episode.previousId = episodes[index - 1]?.id ?? null;
+    episode.nextId = index >= 0 ? episodes[index + 1]?.id ?? null : null;
+    return episode;
   }
 
   getMoshanItem(show) {
