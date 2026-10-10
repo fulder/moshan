@@ -61,7 +61,12 @@ def handler(event, context):
         )
 
     elif api_name == "mal":
-        api_item = tenrai_api.get_item(api_id).get("data", {})
+        res = tenrai_api.get_item(api_id)
+        if res is None:
+            # Gone from Tenrai (e.g. removed or merged on MAL): keep the cache
+            logger.bind(apiId=api_id).warning("Anime not found, skipping")
+            return
+        api_item = res.get("data", {})
         ep_count = tenrai_api.get_item_ep_count(api_id, api_item)
         api_cache = {
             "title": api_item.get("title"),
