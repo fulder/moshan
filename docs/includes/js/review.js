@@ -160,6 +160,7 @@ function createReviewPage(reviewItem) {
   $('user-rating').value = review.rating ?? '';
   $('user_added_date').textContent = review.createdAt ?? '–';
 
+  $('poster').addEventListener('error', () => $('poster').src = '/includes/img/image_not_available.png', {once: true});
   $('poster').src = reviewItem.imageUrl ?? '/includes/img/image_not_available.png';
   if (episodeReview) {
     // Episode stills are landscape: give them more room, hide the placeholder

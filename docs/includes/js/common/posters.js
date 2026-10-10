@@ -23,6 +23,8 @@ export function posterCard({href, image, title, progress}) {
   img.src = image || NO_IMAGE;
   img.alt = '';
   img.loading = 'lazy';
+  // Cached poster URLs go stale when the source moves them
+  img.addEventListener('error', () => img.src = NO_IMAGE, {once: true});
   a.appendChild(img);
 
   if (typeof progress === 'number') {
