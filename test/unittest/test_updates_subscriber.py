@@ -140,3 +140,19 @@ def test_known_sequel_not_announced_again(sent, mocker):
     # Start date changed: stored, but no second ping
     stored.assert_called_once()
     assert sent == []
+
+
+def test_missing_anime_is_skipped(mocker):
+    mocker.patch.object(
+        updates_subscriber.tenrai_api, "get_item", return_value=None
+    )
+    get_items = mocker.patch.object(updates_subscriber.reviews_db, "get_items")
+    event = {
+        "Records": [
+            {"Sns": {"Message": '{"api_name": "mal", "api_id": "62828"}'}}
+        ]
+    }
+
+    updates_subscriber.handler(event, None)
+
+    get_items.assert_not_called()
