@@ -147,11 +147,9 @@ def add_episode(
     username, api_name: ApiNameWithEpisodes, item_api_id, episode_api_id, data
 ):
     if api_name == ApiNameWithEpisodes.tvmaze.value:
-        api_res = tvmaze_api.get_episode(episode_api_id)
-        is_special = api_res["type"] != "regular"
+        tvmaze_api.get_episode(episode_api_id)
     elif api_name == ApiNameWithEpisodes.mal.value:
         tenrai_api.get_episode(item_api_id, episode_api_id)
-        is_special = False  # mal items are special not episodes
 
     item = reviews_db.get_item(
         username,
@@ -167,9 +165,7 @@ def add_episode(
         data,
     )
 
-    reviews_db.change_watched_eps(
-        username, api_name, item_api_id, 1, special=is_special
-    )
+    _recount_watched_eps(username, api_name, item_api_id)
 
     if not data.get("dates_watched"):
         return
@@ -205,6 +201,32 @@ def update_episode(
     _update_latest_watch_date(item, data, username, api_name, item_api_id)
 
 
+def _recount_watched_eps(username, api_name, item_api_id):
+    # Count from the saved episodes instead of +1/-1 so repeated adds or
+    # removes of the same episode can't make the counter drift.
+    episode_ids = [
+        e["episode_api_id"]
+        for e in reviews_db.get_episodes(username, api_name, item_api_id)
+    ]
+
+    special_ids = set()
+    if api_name == ApiNameWithEpisodes.tvmaze.value:
+        special_ids = {
+            str(e["id"])
+            for e in tvmaze_api.get_show_episodes(item_api_id)
+            if e["type"] != "regular"
+        }
+
+    watched_specials = len([i for i in episode_ids if i in special_ids])
+    reviews_db.set_watched_eps(
+        username,
+        api_name,
+        item_api_id,
+        len(episode_ids) - watched_specials,
+        watched_specials,
+    )
+
+
 def _update_latest_watch_date(item, data, username, api_name, item_api_id):
     # If episode watch date is changed check if its larger than current
     # item latest date and update item if that's the case
@@ -229,11 +251,9 @@ def delete_episode(
     username, api_name: ApiNameWithEpisodes, item_api_id, episode_api_id
 ):
     if api_name == ApiNameWithEpisodes.tvmaze.value:
-        api_res = tvmaze_api.get_episode(episode_api_id)
-        is_special = api_res["type"] != "regular"
+        tvmaze_api.get_episode(episode_api_id)
     elif api_name == ApiNameWithEpisodes.mal.value:
         tenrai_api.get_episode(item_api_id, episode_api_id)
-        is_special = False  # mal items are special not episodes
 
     reviews_db.delete_episode(
         username,
@@ -242,6 +262,4 @@ def delete_episode(
         episode_api_id,
     )
 
-    reviews_db.change_watched_eps(
-        username, api_name, item_api_id, -1, special=is_special
-    )
+    _recount_watched_eps(username, api_name, item_api_id)

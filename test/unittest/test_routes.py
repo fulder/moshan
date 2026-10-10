@@ -183,3 +183,45 @@ def test_get_episodes(m_get_eps, token, client, username):
             },
         ]
     }
+
+
+@patch.object(tvmaze.TvMazeApi, "get_show_episodes")
+@patch.object(tvmaze.TvMazeApi, "get_episode")
+@patch("reviews_db.set_watched_eps")
+@patch("reviews_db.get_episodes")
+@patch("reviews_db.add_episode")
+@patch("reviews_db.get_item")
+def test_post_episode_recounts_watched(
+    m_get_item,
+    m_add_ep,
+    m_get_eps,
+    m_set_watched,
+    m_get_ep,
+    m_show_eps,
+    token,
+    client,
+    username,
+):
+    m_get_item.return_value = {}
+    # Episode 3 is a special, counted separately
+    m_get_eps.return_value = [
+        {"episode_api_id": "1"},
+        {"episode_api_id": "2"},
+        {"episode_api_id": "3"},
+    ]
+    m_show_eps.return_value = [
+        {"id": 1, "type": "regular"},
+        {"id": 2, "type": "regular"},
+        {"id": 3, "type": "insignificant_special"},
+    ]
+
+    response = client.post(
+        f"/items/tvmaze/{TEST_SHOW_ID}/episodes",
+        headers={"Authorization": token},
+        json={"episode_api_id": "1"},
+    )
+
+    assert response.status_code == 204
+    m_set_watched.assert_called_once_with(
+        username, "tvmaze", TEST_SHOW_ID, 2, 1
+    )
