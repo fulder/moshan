@@ -359,3 +359,21 @@ tr.muted td:first-child::before {
   text-align: right;
   color: var(--pico-muted-color);
 }
+
+#views {
+  display: inline-flex;
+  width: auto;
+  margin-right: var(--pico-spacing);
+  vertical-align: middle;
+}
+
+#views button {
+  flex: none;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.inline-switch {
+  display: inline-block;
+  vertical-align: middle;
+}
