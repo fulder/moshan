@@ -359,7 +359,7 @@ function createEpisodesList(apiEpisodes) {
       row.title = 'Released, not watched';
     } else {
       row.className = 'muted';
-      row.title = 'Not aired yet';
+      row.title = 'Not released yet';
     }
     row.addEventListener('click', () => window.location.href = href);
 

@@ -144,6 +144,9 @@ function eventRow(event, now) {
   } else if (event.date <= now) {
     row.classList.add('unseen');
     row.title = 'Released, not watched';
+  } else {
+    row.classList.add('upcoming');
+    row.title = 'Not released yet';
   }
 
   const parts = [

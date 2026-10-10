@@ -331,6 +331,16 @@ button.danger:hover {
   color: #e8890c;
 }
 
+.calendar-row.upcoming::before,
+tr.muted td:first-child::before {
+  content: "○";
+  color: var(--pico-muted-color);
+}
+
+tr.muted td:first-child::before {
+  content: "○ ";
+}
+
 .unseen-mark {
   color: #e8890c;
 }
