@@ -338,36 +338,29 @@ def _update_review(username, api_info, data, clean_whitelist):
     )
 
 
-def change_watched_eps(username, api_name, api_id, change, special=False):
-    field_name = "ep"
-    if special:
-        field_name = "special"
-
+def set_watched_eps(username, api_name, api_id, watched_eps, watched_specials):
     api_info = f"i_{api_name}_{api_id}"
-
     item = _get_review(username, api_info)
-    count_v = item["api_cache"].get(f"{field_name}_count", 0)
-    if count_v == 0:
-        ep_progress = 0
-    else:
-        watched_v = item[f"watched_{field_name}s"]
-        ep_progress = (watched_v + (change)) / count_v
-    ep_progress = round(ep_progress * 100, 2)
+
+    values = {":we": watched_eps, ":ws": watched_specials}
+    for field, watched, key in (
+        ("ep", watched_eps, ":ep"),
+        ("special", watched_specials, ":sp"),
+    ):
+        count = item["api_cache"].get(f"{field}_count", 0)
+        progress = 0 if count == 0 else Decimal(watched) / Decimal(count)
+        values[key] = round(Decimal(progress) * 100, 2)
 
     _get_table().update_item(
         Key={
             "username": username,
             "api_info": api_info,
         },
-        UpdateExpression="SET #w=#w+:i, #p=:p",
-        ExpressionAttributeNames={
-            "#w": f"watched_{field_name}s",
-            "#p": f"{field_name}_progress",
-        },
-        ExpressionAttributeValues={
-            ":p": ep_progress,
-            ":i": change,
-        },
+        UpdateExpression=(
+            "SET watched_eps=:we, ep_progress=:ep, "
+            "watched_specials=:ws, special_progress=:sp"
+        ),
+        ExpressionAttributeValues=values,
     )
 
 
