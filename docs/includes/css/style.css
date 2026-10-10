@@ -319,8 +319,15 @@ button.danger:hover {
   color: var(--pico-primary);
 }
 
-#calendar {
+/* Heading and list form one centered block */
+.calendar-page {
   max-width: 640px;
+  margin: 0 auto;
+}
+
+.fit-center {
+  width: fit-content;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -408,7 +415,6 @@ h2 .count {
 
 .compact-table {
   width: auto;
-  margin: 0 auto;
 }
 
 .compact-table th,
@@ -433,4 +439,35 @@ h2 .count {
   .compact-table td:first-child {
     display: none;
   }
+}
+
+.calendar-intro {
+  margin-bottom: 0.25rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--pico-muted-color);
+}
+
+.legend li {
+  list-style: none;
+  margin: 0;
+}
+
+.watched-mark {
+  color: var(--pico-ins-color);
+}
+
+.upcoming-mark {
+  color: var(--pico-muted-color);
+}
+
+.premiere {
+  color: var(--pico-primary);
+  font-weight: 600;
 }
