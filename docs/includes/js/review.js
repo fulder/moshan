@@ -161,6 +161,11 @@ function createReviewPage(reviewItem) {
   $('user_added_date').textContent = review.createdAt ?? '–';
 
   $('poster').src = reviewItem.imageUrl ?? '/includes/img/image_not_available.png';
+  if (episodeReview) {
+    // Episode stills are landscape: give them more room, hide the placeholder
+    document.querySelector('.review-head').classList.add('episode');
+    $('poster').hidden = !reviewItem.imageUrl || reviewItem.imageUrl.includes('image_not_available');
+  }
   $('title').textContent = reviewItem.title || 'N/A';
   document.title = `${reviewItem.title || 'N/A'} - Moshan`;
 
