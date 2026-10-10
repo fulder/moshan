@@ -81,7 +81,8 @@ class ApiCache(BaseModel):
 class Review(BaseModel):
     api_name: str
     api_id: str
-    created_at: str
+    # Some old episodes were created by an update and have none
+    created_at: Optional[str] = None
 
     api_cache: Optional[ApiCache] = None
 
