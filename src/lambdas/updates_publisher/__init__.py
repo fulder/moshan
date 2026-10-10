@@ -51,12 +51,17 @@ def _check_tvmaze_updates():
 
 def _check_mal_updates():
     airing = tenrai_api.get_schedules()
+    scheduled = {str(a["mal_id"]) for a in airing}
 
-    for a in airing:
-        mal_id = a["mal_id"]
+    for mal_id in scheduled:
         try:
             reviews_db.get_items("mal", mal_id)
         except reviews_db.NotFoundError:
             continue
 
+        updates.publish_show_update("mal", mal_id)
+
+    # Cached as airing but off the schedule: finished (or not started yet).
+    # Refresh once so the finale is counted and the status turns finished.
+    for mal_id in reviews_db.get_cached_airing_mal_ids() - scheduled:
         updates.publish_show_update("mal", mal_id)

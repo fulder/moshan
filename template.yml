@@ -253,6 +253,15 @@ Resources:
                   - sns:Publish
                 Resource:
                   - !Ref ItemUpdatesTopic
+        # Finds anime still cached as airing (finale refresh)
+        - PolicyName: reviews_scan
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Scan
+                Resource:
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
 
   UpdatesPubFunction:
     Type: AWS::Serverless::Function
