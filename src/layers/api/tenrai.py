@@ -5,8 +5,9 @@ import dateutil.parser
 import utils
 from loguru import logger
 
-# Tenrai allows 4 requests/second on the public tier; stay under it
-MIN_INTERVAL = 0.3
+# Tenrai's public tier allows 4 requests/second and 120/minute; stay under
+# both (0.55 s apart is ~109/minute)
+MIN_INTERVAL = 0.55
 
 
 class TenraiApi:

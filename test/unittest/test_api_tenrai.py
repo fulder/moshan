@@ -96,6 +96,6 @@ def test_requests_are_spaced(mocked_send_request, mocked_api, mocker):
     mocked_api.get_item(1)
     mocked_api.get_item(2)
 
-    # The second call waits to stay under Tenrai's 4 requests/second
+    # The second call waits to stay under Tenrai's rate limits
     assert sleep.call_count == 1
-    assert 0 < sleep.call_args.args[0] <= 0.3
+    assert 0 < sleep.call_args.args[0] <= 0.55
