@@ -1,7 +1,7 @@
 import {createNavbar} from './common/navbar.js';
 import {MoshanApi} from './api/moshan.js';
 import {isLoggedIn} from './common/auth.js';
-import {infiniteScroll} from './common/posters.js';
+import {loadMoreButton} from './common/posters.js';
 
 createNavbar();
 
@@ -44,6 +44,6 @@ function createRow(item) {
   tableBody.appendChild(row);
 }
 
-if (isLoggedIn() && await loadMore()) {
-  infiniteScroll(loadMore);
+if (isLoggedIn()) {
+  loadMoreButton(document.querySelector('table'), loadMore);
 }

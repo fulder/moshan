@@ -21,7 +21,7 @@ export function posterCard({href, image, title, progress}) {
   img.loading = 'lazy';
   a.appendChild(img);
 
-  if (progress !== undefined) {
+  if (typeof progress === 'number') {
     const bar = document.createElement('progress');
     bar.max = 100;
     bar.value = progress;
@@ -46,17 +46,20 @@ export function itemCard(item, showProgress = false) {
   });
 }
 
-// Calls loadMore() when scrolled to the bottom. loadMore returns false when there is nothing more to load.
-export function infiniteScroll(loadMore) {
-  let loading = false;
-  let done = false;
+// Shows a "Load more" button after `list` while loadMore() returns true (more items available).
+export async function loadMoreButton(list, loadMore) {
+  const button = document.createElement('button');
+  button.className = 'secondary outline';
+  button.textContent = 'Load more';
+  button.hidden = true;
+  list.after(button);
 
-  document.addEventListener('scroll', async () => {
-    if (loading || done || window.innerHeight + window.scrollY < document.body.offsetHeight - 200) {
-      return;
-    }
-    loading = true;
-    done = (await loadMore()) === false;
-    loading = false;
-  });
+  async function load() {
+    button.setAttribute('aria-busy', 'true');
+    button.hidden = !(await loadMore());
+    button.removeAttribute('aria-busy');
+  }
+
+  button.addEventListener('click', load);
+  await load();
 }
