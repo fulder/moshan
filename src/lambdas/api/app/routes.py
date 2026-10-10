@@ -63,6 +63,7 @@ def add_item(username, api_name, api_id, data):
             "status": api_item.get("status"),
             "cache_updated": cache_updated,
             "image_url": image_url,
+            "next_episode": tvmaze_api.next_episode(api_item),
         }
         ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
     elif api_name == "mal":

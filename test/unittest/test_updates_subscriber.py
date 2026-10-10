@@ -55,3 +55,37 @@ def test_no_notify(sent, item, old_ep_count):
     updates_subscriber._notify_new_episodes(item, old_ep_count)
 
     assert sent == []
+
+
+def _season_item(status="finished", next_episode=None):
+    return {
+        "username": "me",
+        "status": status,
+        "api_cache": {"title": "Lupin", "next_episode": next_episode},
+    }
+
+
+PREMIERE = {"season": 4, "number": 1, "airstamp": "2026-11-15T08:00:00+00:00"}
+
+
+def test_notify_new_season(sent):
+    updates_subscriber._notify_new_season(
+        _season_item(next_episode=PREMIERE), None
+    )
+
+    assert sent == ["📅 Lupin: season 4 starts 2026-11-15"]
+
+
+@pytest.mark.parametrize(
+    "item,old_next",
+    [
+        (_season_item(next_episode=PREMIERE), PREMIERE),
+        (_season_item(next_episode={**PREMIERE, "number": 2}), None),
+        (_season_item(next_episode=None), PREMIERE),
+        (_season_item(status="dropped", next_episode=PREMIERE), None),
+    ],
+)
+def test_no_notify_new_season(sent, item, old_next):
+    updates_subscriber._notify_new_season(item, old_next)
+
+    assert sent == []

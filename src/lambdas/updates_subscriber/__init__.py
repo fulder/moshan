@@ -47,6 +47,7 @@ def handler(event, context):
             "special_count": episodes_info.get("special_count", 0),
             "cache_updated": cache_updated,
             "image_url": api_item.get("image", {}).get("original"),
+            "next_episode": tvmaze_api.next_episode(api_item),
         }
     elif api_name == "mal":
         api_item = tenrai_api.get_item(api_id).get("data", {})
@@ -76,6 +77,7 @@ def handler(event, context):
         ).debug("Updating item")
 
         old_ep_count = item["api_cache"].get("ep_count")
+        old_next_episode = item["api_cache"].get("next_episode")
         watched_eps = item.get("watched_eps", 0)
         watched_specials = item.get("watched_specials", 0)
 
@@ -91,6 +93,7 @@ def handler(event, context):
         reviews_db.put_item(item)
 
         _notify_new_episodes(item, old_ep_count)
+        _notify_new_season(item, old_next_episode)
 
 
 def _notify_new_episodes(item, old_ep_count):
@@ -112,6 +115,24 @@ def _notify_new_episodes(item, old_ep_count):
     telegram.send(
         f"{item['api_cache']['title']}: episode {new_ep_count} is out "
         f"({new_ep_count - watched_eps} unseen)"
+    )
+
+
+def _notify_new_season(item, old_next_episode):
+    if item["username"] != NOTIFY_USERNAME:
+        return
+    if item.get("status") == "dropped":
+        return
+
+    new = item["api_cache"].get("next_episode")
+    if not new or new.get("number") != 1:
+        return
+    if old_next_episode and old_next_episode.get("season") == new["season"]:
+        return
+
+    telegram.send(
+        f"📅 {item['api_cache']['title']}: season {new['season']} starts "
+        f"{new['airstamp'][:10]}"
     )
 
 
