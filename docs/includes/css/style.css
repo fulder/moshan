@@ -18,8 +18,19 @@ nav li.search form {
   width: 20rem;
 }
 
-nav details.dropdown summary {
-  font-size: 1.4rem;
+nav details.dropdown > summary:not([role]) {
+  display: flex;
+  align-items: center;
+  height: auto;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  background: none;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+nav details.dropdown > summary::after {
+  display: none;
 }
 
 .brand img {
