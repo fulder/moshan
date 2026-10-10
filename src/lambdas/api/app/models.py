@@ -66,6 +66,14 @@ class NextEpisode(BaseModel):
     airstamp: Optional[str] = None
 
 
+class Sequel(BaseModel):
+    mal_id: Optional[int] = None
+    title: Optional[str] = None
+    start: Optional[str] = None
+    status: Optional[str] = None
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+
 class ApiCache(BaseModel):
     special_count: Optional[int] = None
     release_date: Optional[str] = None
@@ -75,6 +83,7 @@ class ApiCache(BaseModel):
     status: Optional[str] = None
     ep_count: Optional[int] = None
     next_episode: Optional[NextEpisode] = None
+    sequel: Optional[Sequel] = None
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 

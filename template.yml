@@ -281,7 +281,8 @@ Resources:
       MemorySize: 2048
       Role: !GetAtt UpdatesPubFunctionRole.Arn
       Runtime: python3.13
-      Timeout: 120
+      # First sequel check looks up ~300 relations at Tenrai's rate limit
+      Timeout: 600
       Events:
         InvocationLevel:
           Type: Schedule

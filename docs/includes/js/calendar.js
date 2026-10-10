@@ -181,6 +181,25 @@ function releasedInRange(item) {
   return events.some(e => e.item === item && e.date >= start && e.date <= now);
 }
 
+// Announced anime sequels of shows in your list (found by the daily updater),
+// unless the sequel is already in the list itself
+function sequelEvents(item, listed) {
+  const sequel = item.apiCache.sequel;
+  if (item.apiName !== 'mal' || !sequel?.start || item.status === 'dropped' || listed.has(`mal/${sequel.malId}`)) {
+    return [];
+  }
+  const [year, month, day] = sequel.start.slice(0, 10).split('-').map(Number);
+  return [{
+    id: `sequel-${sequel.malId}`,
+    label: '',
+    premiere: 'New season',
+    date: new Date(year, month - 1, day),
+    hasTime: false,
+    item: {apiName: 'mal', apiId: String(sequel.malId), apiCache: {title: sequel.title}},
+    watched: false,
+  }];
+}
+
 async function itemEvents(item) {
   const getEpisodes = {tvmaze: tvmazeEpisodes, mal: malEpisodes}[item.apiName];
   if (getEpisodes === undefined) {
@@ -241,7 +260,8 @@ function eventRow(event, now) {
   if (event.premiere) {
     const star = document.createElement('span');
     star.className = 'premiere';
-    star.textContent = '★ Season premiere · ';
+    const text = typeof event.premiere === 'string' ? event.premiere : 'Season premiere';
+    star.textContent = `★ ${text}${event.label ? ' · ' : ''}`;
     row.lastChild.prepend(star);
   }
   return row;
@@ -314,6 +334,8 @@ async function load() {
   const watching = items.filter(i => ['watching', 'following'].includes(i.status));
 
   addEvents(items.filter(i => !watching.includes(i)).flatMap(premiereEvents));
+  const listed = new Set(items.map(i => `${i.apiName}/${i.apiId}`));
+  addEvents(items.flatMap(i => sequelEvents(i, listed)));
   await Promise.all([
     ...watching.map(itemEvents),
     ...items.filter(i => i.status === 'backlog').map(item => movieEvents(item, since).then(addEvents)),

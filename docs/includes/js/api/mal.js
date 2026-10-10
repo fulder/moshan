@@ -89,17 +89,19 @@ export class MalApi {
       date = new Date(episode.aired).toISOString().split('T')[0];
     }
 
-    return new MoshanEpisode(
+    const moshanEpisode = new MoshanEpisode(
       episode.mal_id,
       'mal',
       episode.mal_id,
       episode.title,
       date,
-      '/includes/img/image_not_available.png',
+      episode.images?.jpg?.image_url ?? '/includes/img/image_not_available.png',
       episode.mal_id > 1 ? episode.mal_id - 1 : null,
       episode.mal_id + 1,
       {},
       'extra_ep' in episode
     );
+    moshanEpisode.synopsis = episode.synopsis;
+    return moshanEpisode;
   }
 }

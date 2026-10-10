@@ -159,6 +159,7 @@ async function createEpisode() {
     episode.title = apiEpisode.title;
     episode.releaseDate = apiEpisode.releaseDate;
     episode.imageUrl = apiEpisode.imageUrl;
+    episode.synopsis = apiEpisode.synopsis;
     episode.status = apiEpisode.status;
     episode.previousId = apiEpisode.previousId;
     episode.nextId = apiEpisode.nextId;
