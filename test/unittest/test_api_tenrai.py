@@ -40,17 +40,19 @@ def test_get_schedules(mocked_send_request, mocked_api):
 
 
 @pytest.mark.parametrize(
-    "status,exp",
+    "status,planned,exp",
     [
-        ("Currently Airing", 8),
-        ("Finished Airing", 10),
+        ("Currently Airing", 10, 8),
+        ("Finished Airing", 10, 10),
+        ("Finished Airing", 6, 6),
+        ("Finished Airing", None, 8),
     ],
 )
-def test_get_item_ep_count(mocker, mocked_api, status, exp):
+def test_get_item_ep_count(mocker, mocked_api, status, planned, exp):
     mocker.patch.object(
         mocked_api, "get_episode_count", return_value={"ep_count": 8}
     )
-    api_item = {"status": status, "episodes": 10}
+    api_item = {"status": status, "episodes": planned}
     assert mocked_api.get_item_ep_count(1, api_item) == exp
 
 

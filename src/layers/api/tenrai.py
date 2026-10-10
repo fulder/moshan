@@ -76,7 +76,9 @@ class TenraiApi:
         # (api_item["episodes"]) would keep progress below 100%.
         ep_count = self.get_episode_count(anime_id)["ep_count"]
         if api_item.get("status") == "Finished Airing":
-            ep_count = max(api_item.get("episodes") or 0, ep_count)
+            # MAL's official total wins; Tenrai's list can hold episodes of a
+            # sequel entry (Shingeki no Kyojin S3 lists 22, MAL says 12)
+            ep_count = api_item.get("episodes") or ep_count
         return ep_count
 
     @staticmethod
