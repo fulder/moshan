@@ -14,12 +14,34 @@ class TenraiApi:
         return self._get(f"/anime/{anime_id}")
 
     def get_schedules(self):
-        ret = self._get("/schedules")
+        return self._get_all_pages("/schedules")
+
+    def get_season_anime(self):
+        # Airing this season and announced for the coming ones
+        return self._get_all_pages("/seasons/now") + self._get_all_pages(
+            "/seasons/upcoming"
+        )
+
+    def get_relations(self, anime_id):
+        return (self._get(f"/anime/{anime_id}/relations") or {}).get("data", [])
+
+    @staticmethod
+    def prequel_ids(relations):
+        return [
+            str(e["mal_id"])
+            for r in relations
+            if r["relation"] == "Prequel"
+            for e in r["entry"]
+            if e.get("type") == "anime"
+        ]
+
+    def _get_all_pages(self, path):
+        ret = self._get(path)
         data = ret["data"]
         last_page = ret["pagination"]["last_visible_page"]
 
         for i in range(2, last_page + 1):
-            ret = self._get(f"/schedules?page={i}")
+            ret = self._get(f"{path}?page={i}")
             data += ret["data"]
 
         return data

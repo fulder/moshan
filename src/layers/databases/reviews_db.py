@@ -449,6 +449,40 @@ def get_cached_airing_mal_ids():
         kwargs["ExclusiveStartKey"] = res["LastEvaluatedKey"]
 
 
+# Season anime already checked for prequels: {mal_id: [prequel mal_ids]}
+SEQUELS_KEY = {"username": "#meta", "api_info": "mal_sequels"}
+
+
+def get_checked_sequels():
+    res = _get_table().query(
+        KeyConditionExpression=Key("username").eq(SEQUELS_KEY["username"])
+        & Key("api_info").eq(SEQUELS_KEY["api_info"])
+    )
+    items = res.get("Items", [])
+    return dict(items[0].get("checked", {})) if items else {}
+
+
+def put_checked_sequels(checked):
+    _get_table().put_item(Item={**SEQUELS_KEY, "checked": checked})
+
+
+def set_api_cache_fields(username, api_name, api_id, fields):
+    names = {"#api_cache": "api_cache"}
+    values = {}
+    sets = []
+    for i, (k, v) in enumerate(fields.items()):
+        names[f"#c{i}"] = k
+        values[f":c{i}"] = v
+        sets.append(f"#api_cache.#c{i}=:c{i}")
+
+    _get_table().update_item(
+        Key={"username": username, "api_info": f"i_{api_name}_{api_id}"},
+        UpdateExpression="SET " + ", ".join(sets),
+        ExpressionAttributeNames=names,
+        ExpressionAttributeValues=values,
+    )
+
+
 def put_item(item):
     _get_table().put_item(
         Item=item,

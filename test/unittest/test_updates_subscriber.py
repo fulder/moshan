@@ -89,3 +89,54 @@ def test_no_notify_new_season(sent, item, old_next):
     updates_subscriber._notify_new_season(item, old_next)
 
     assert sent == []
+
+
+SEQUEL = {"mal_id": 10, "title": "S2", "start": "2027-01-05T00:00:00+00:00"}
+
+
+def _sequel_message():
+    return {"type": "sequel", "prequel_id": "5", "sequel": SEQUEL}
+
+
+def test_sequel_stored_and_announced(sent, mocker):
+    item = {
+        "username": "me",
+        "status": "finished",
+        "api_cache": {"title": "S1"},
+    }
+    mocker.patch.object(
+        updates_subscriber.reviews_db, "get_items", return_value=[item]
+    )
+    mocker.patch.object(
+        updates_subscriber.reviews_db,
+        "get_item",
+        side_effect=updates_subscriber.reviews_db.NotFoundError,
+    )
+    stored = mocker.patch.object(
+        updates_subscriber.reviews_db, "set_api_cache_fields"
+    )
+
+    updates_subscriber._handle_sequel(_sequel_message())
+
+    stored.assert_called_once_with("me", "mal", "5", {"sequel": SEQUEL})
+    assert sent == ["📅 S2 announced (after S1), starts 2027-01-05"]
+
+
+def test_known_sequel_not_announced_again(sent, mocker):
+    item = {
+        "username": "me",
+        "status": "finished",
+        "api_cache": {"title": "S1", "sequel": {**SEQUEL, "start": None}},
+    }
+    mocker.patch.object(
+        updates_subscriber.reviews_db, "get_items", return_value=[item]
+    )
+    stored = mocker.patch.object(
+        updates_subscriber.reviews_db, "set_api_cache_fields"
+    )
+
+    updates_subscriber._handle_sequel(_sequel_message())
+
+    # Start date changed: stored, but no second ping
+    stored.assert_called_once()
+    assert sent == []

@@ -29,3 +29,16 @@ def publish_show_update(api_name, api_id):
             }
         )
     )
+
+
+def publish_sequel(prequel_id, sequel):
+    logger.bind(prequelId=prequel_id, sequel=sequel).debug("Publish sequel")
+    _get_topic().publish(
+        Message=json.dumps(
+            {
+                "type": "sequel",
+                "prequel_id": prequel_id,
+                "sequel": sequel,
+            }
+        )
+    )
