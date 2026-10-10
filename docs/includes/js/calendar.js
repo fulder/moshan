@@ -7,10 +7,12 @@ import {TmdbApi} from './api/tmdb.js';
 createNavbar();
 
 const DAY = 24 * 60 * 60 * 1000;
-const PAST_DAYS = 7;
 const moshanApi = new MoshanApi();
 const calendar = document.getElementById('calendar');
 let futureDays = 7;
+let pastDays = 7;
+// Shows whose watched episodes were fetched
+const watchedLoaded = new Set();
 let events = [];
 let loading = true;
 
@@ -153,26 +155,55 @@ function premiereEvents(item) {
   }];
 }
 
-async function itemEvents(item, start) {
+function rangeStart() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() - pastDays);
+}
+
+// Watched state only matters for released episodes in view, so it is
+// fetched per show once one of its released episodes is in range
+async function loadWatched(item) {
+  if (watchedLoaded.has(item)) {
+    return;
+  }
+  watchedLoaded.add(item);
+  const qParams = {api_name: item.apiName, item_api_id: item.apiId};
+  const watched = await moshanApi.getEpisodes(qParams).catch(() => ({episodes: []}));
+  const ids = new Set(watched.episodes.map(e => String(e.episodeApiId)));
+  for (const event of events.filter(e => e.item === item)) {
+    event.watched = ids.has(event.id);
+  }
+}
+
+function releasedInRange(item) {
+  const start = rangeStart();
+  const now = new Date();
+  return events.some(e => e.item === item && e.date >= start && e.date <= now);
+}
+
+async function itemEvents(item) {
   const getEpisodes = {tvmaze: tvmazeEpisodes, mal: malEpisodes}[item.apiName];
   if (getEpisodes === undefined) {
-    return [];
+    return;
   }
   try {
     const episodes = await getEpisodes(item);
-    // Watched state only matters for released episodes in view
-    const now = new Date();
-    let watchedIds = new Set();
-    if (episodes.some(e => e.date >= start && e.date <= now)) {
-      const qParams = {api_name: item.apiName, item_api_id: item.apiId};
-      const watched = await moshanApi.getEpisodes(qParams).catch(() => ({episodes: []}));
-      watchedIds = new Set(watched.episodes.map(e => String(e.episodeApiId)));
+    addEvents(episodes.map(e => ({...e, item, watched: false})));
+    if (releasedInRange(item)) {
+      await loadWatched(item);
+      render();
     }
-    return episodes.map(e => ({...e, item, watched: watchedIds.has(e.id)}));
   } catch (error) {
     console.log(`Calendar: skipping ${item.apiCache.title}`, error);
-    return [];
   }
+}
+
+async function showEarlier() {
+  pastDays += 7;
+  render();
+  const items = new Set(events.filter(e => e.item.apiName !== 'tmdb').map(e => e.item));
+  await Promise.all([...items].filter(releasedInRange).map(loadWatched));
+  render();
 }
 
 function dayHeading(date, today) {
@@ -219,10 +250,17 @@ function eventRow(event, now) {
 function render() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const start = new Date(today.getTime() - PAST_DAYS * DAY);
+  const start = rangeStart();
   const end = new Date(today.getTime() + (futureDays + 1) * DAY);
 
   const sections = [];
+  const earlier = document.createElement('button');
+  earlier.className = 'secondary outline';
+  earlier.textContent = 'Show earlier';
+  earlier.hidden = !events.some(e => e.date < start);
+  earlier.addEventListener('click', showEarlier);
+  sections.push(earlier);
+
   let current = null;
   for (const event of events.filter(e => e.date >= start && e.date < end)) {
     const day = new Date(event.date.getFullYear(), event.date.getMonth(), event.date.getDate());
@@ -241,7 +279,7 @@ function render() {
     current.section.appendChild(eventRow(event, now));
   }
 
-  if (sections.length === 0 && !loading) {
+  if (sections.length === 1 && !loading) {
     const p = document.createElement('p');
     p.textContent = 'No episodes in this period.';
     sections.push(p);
@@ -272,13 +310,12 @@ function addEvents(newEvents) {
 
 async function load() {
   const since = new Date(Date.now() - 30 * DAY);
-  const start = new Date(Date.now() - (PAST_DAYS + 1) * DAY);
   const items = await allItems();
   const watching = items.filter(i => ['watching', 'following'].includes(i.status));
 
   addEvents(items.filter(i => !watching.includes(i)).flatMap(premiereEvents));
   await Promise.all([
-    ...watching.map(item => itemEvents(item, start).then(addEvents)),
+    ...watching.map(itemEvents),
     ...items.filter(i => i.status === 'backlog').map(item => movieEvents(item, since).then(addEvents)),
   ]);
   loading = false;
