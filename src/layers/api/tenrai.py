@@ -26,11 +26,11 @@ class TenraiApi:
 
     def get_episode(self, anime_id, episode_id):
         page = int(int(episode_id) / 100) + 1
-        eps = self.get_episodes(anime_id, page).get("data", {})
+        eps = (self.get_episodes(anime_id, page) or {}).get("data", [])
 
-        if not eps:
+        if not eps and page > 1:
             # Try getting previous page
-            eps = self.get_episodes(anime_id, page - 1).get("data", {})
+            eps = (self.get_episodes(anime_id, page - 1) or {}).get("data", [])
 
         if eps:
             last_id = eps[-1]["mal_id"]

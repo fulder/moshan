@@ -64,3 +64,14 @@ def test_watched_counts_only_released():
         "ep_count": 12,
         "special_count": 0,
     }
+
+
+def test_get_episode_empty_episode_list(mocked_send_request, mocked_api):
+    # Tenrai lists no episodes yet: allowed by the 25-episode margin
+    mocked_send_request.return_value = {
+        "pagination": {"last_visible_page": 1},
+        "data": [],
+    }
+
+    assert mocked_api.get_episode(33010, "1") is True
+    assert mocked_send_request.call_count == 1
