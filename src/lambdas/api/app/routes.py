@@ -76,7 +76,9 @@ def add_item(username, api_name, api_id, data):
             .get("jpg", {})
             .get("image_url"),
         }
-        ep_count_res = tenrai_api.get_episode_count(api_id)
+        ep_count_res = {
+            "ep_count": tenrai_api.get_item_ep_count(api_id, api_item)
+        }
 
     try:
         current_item = reviews_db.get_item(
@@ -219,12 +221,9 @@ def _recount_watched_eps(username, api_name, item_api_id):
             str(e["id"]) for e in api_episodes if e["type"] != "regular"
         }
     else:
-        api_ep_count = tenrai_api.get_item(item_api_id)["data"]["episodes"]
+        api_item = tenrai_api.get_item(item_api_id)["data"]
         counts = {
-            "ep_count": max(
-                api_ep_count or 0,
-                tenrai_api.get_episode_count(item_api_id)["ep_count"],
-            ),
+            "ep_count": tenrai_api.get_item_ep_count(item_api_id, api_item),
             "special_count": 0,
         }
 

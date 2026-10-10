@@ -78,7 +78,7 @@ export class MoshanApi {
       poster = `https://image.tmdb.org/t/p/w500/${poster}`;
     }
 
-    return new MoshanItem(
+    const item = new MoshanItem(
       data.apiId,
       poster,
       data.apiCache.title,
@@ -89,6 +89,8 @@ export class MoshanApi {
       'moshan',
       toReview(data)
     );
+    item.progress = {percent: data.epProgress, watched: data.watchedEps, total: data.apiCache.epCount};
+    return item;
   }
 
   updateItem (qParams, overview, review, status = '', rating = '', watchDates = []) {

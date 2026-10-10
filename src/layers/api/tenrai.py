@@ -71,6 +71,14 @@ class TenraiApi:
             "ep_count": ep_count,
         }
 
+    def get_item_ep_count(self, anime_id, api_item):
+        # While airing, count only released episodes; the planned total
+        # (api_item["episodes"]) would keep progress below 100%.
+        ep_count = self.get_episode_count(anime_id)["ep_count"]
+        if api_item.get("status") == "Finished Airing":
+            ep_count = max(api_item.get("episodes") or 0, ep_count)
+        return ep_count
+
     def _get(self, path):
         try:
             return utils.send_request(self.base_url, "GET", path)

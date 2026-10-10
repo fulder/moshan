@@ -11,6 +11,10 @@ export function itemImage(item) {
   return url.replace('original_untouched', 'medium_portrait');
 }
 
+export function progressClass(progress) {
+  return progress >= 100 ? 'done' : progress >= 50 ? 'behind' : 'far-behind';
+}
+
 export function posterCard({href, image, title, progress}) {
   const a = document.createElement('a');
   a.href = href;
@@ -26,7 +30,7 @@ export function posterCard({href, image, title, progress}) {
     bar.max = 100;
     bar.value = progress;
     bar.title = `${progress}%`;
-    bar.className = progress >= 100 ? 'done' : progress >= 50 ? 'behind' : 'far-behind';
+    bar.className = progressClass(progress);
     a.appendChild(bar);
   }
 
