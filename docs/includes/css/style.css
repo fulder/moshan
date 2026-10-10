@@ -319,8 +319,15 @@ button.danger:hover {
   color: var(--pico-primary);
 }
 
-#calendar {
+/* Heading and list form one centered block */
+.calendar-page {
   max-width: 640px;
+  margin: 0 auto;
+}
+
+.fit-center {
+  width: fit-content;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -408,7 +415,6 @@ h2 .count {
 
 .compact-table {
   width: auto;
-  margin: 0 auto;
 }
 
 .compact-table th,
