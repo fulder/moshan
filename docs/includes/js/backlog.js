@@ -45,5 +45,5 @@ function createRow(item) {
 }
 
 if (isLoggedIn()) {
-  loadAll(document.querySelector('table'), loadMore);
+  loadAll(document.querySelector('table'), loadMore, tableBody);
 }

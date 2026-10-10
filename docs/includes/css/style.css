@@ -389,3 +389,8 @@ tr.muted td:first-child::before {
   display: inline-block;
   vertical-align: middle;
 }
+
+h2 .count {
+  color: var(--pico-muted-color);
+  font-weight: normal;
+}
