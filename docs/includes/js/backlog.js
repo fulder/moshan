@@ -7,6 +7,7 @@ createNavbar();
 
 const moshanApi = new MoshanApi();
 const tableBody = document.getElementById('backlog-table-body');
+const TYPES = {tmdb: 'Movie', tvmaze: 'Show', mal: 'Anime'};
 const RELEASED = ['Released', 'Airing', 'Ended', 'Running', 'Finished Airing'];
 let cursor = '';
 
@@ -41,13 +42,14 @@ function createRow(item) {
     row.appendChild(td);
   }
 
-  // Source as its icon
+  // Type as its icon
+  const type = TYPES[item.apiName];
   const source = row.children[2];
   source.className = 'source';
   const icon = document.createElement('img');
-  icon.src = `/includes/icons/${item.apiName}.png`;
-  icon.alt = item.apiName;
-  icon.title = item.apiName;
+  icon.src = `/includes/icons/${type.toLowerCase()}.svg`;
+  icon.alt = type;
+  icon.title = type;
   source.appendChild(icon);
 
   tableBody.appendChild(row);
