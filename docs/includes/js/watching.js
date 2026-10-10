@@ -1,7 +1,7 @@
 import {createNavbar} from './common/navbar.js';
 import {MoshanApi} from './api/moshan.js';
 import {isLoggedIn} from './common/auth.js';
-import {hideDoneToggle, itemCard, loadMoreButton} from './common/posters.js';
+import {hideDoneToggle, itemCard, loadAll} from './common/posters.js';
 
 createNavbar();
 
@@ -19,5 +19,5 @@ async function loadMore() {
 }
 
 if (isLoggedIn()) {
-  loadMoreButton(list, loadMore);
+  loadAll(list, loadMore);
 }
