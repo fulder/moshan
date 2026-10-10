@@ -1,4 +1,10 @@
 :root {
+  --mark-watched: #2e9b4f;
+  --mark-unseen: #e8890c;
+  --mark-premiere: #8e44d9;
+}
+
+:root {
   --pico-font-size: 100%;
 }
 
@@ -94,7 +100,7 @@ tr.muted {
 
 tr.watched td:first-child::before {
   content: "✓ ";
-  color: var(--pico-ins-color);
+  color: var(--mark-watched);
 }
 
 tr.undated td:first-child::before {
@@ -104,7 +110,7 @@ tr.undated td:first-child::before {
 
 tr.unseen td:first-child::before {
   content: "● ";
-  color: #e8890c;
+  color: var(--mark-unseen);
 }
 
 tr.unseen td {
@@ -347,12 +353,12 @@ button.danger:hover {
 
 .calendar-row.watched::before {
   content: "✓";
-  color: var(--pico-ins-color);
+  color: var(--mark-watched);
 }
 
 .calendar-row.unseen::before {
   content: "●";
-  color: #e8890c;
+  color: var(--mark-unseen);
 }
 
 .calendar-row.upcoming::before,
@@ -366,7 +372,7 @@ tr.muted td:first-child::before {
 }
 
 .unseen-mark {
-  color: #e8890c;
+  color: var(--mark-unseen);
 }
 
 .calendar-row.unseen {
@@ -460,14 +466,30 @@ h2 .count {
 }
 
 .watched-mark {
-  color: var(--pico-ins-color);
+  color: var(--mark-watched);
 }
 
 .upcoming-mark {
   color: var(--pico-muted-color);
 }
 
-.premiere {
-  color: var(--pico-primary);
+.calendar-row .premiere,
+.legend .premiere {
+  color: var(--mark-premiere);
   font-weight: 600;
+}
+
+/* Desktop: legend in the empty space left of the list */
+@media (min-width: 1024px) {
+  .calendar-page {
+    position: relative;
+  }
+
+  .legend {
+    position: absolute;
+    right: calc(100% + 2rem);
+    top: 0;
+    flex-direction: column;
+    white-space: nowrap;
+  }
 }
