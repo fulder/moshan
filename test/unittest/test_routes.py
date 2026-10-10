@@ -210,6 +210,7 @@ def test_get_episodes(m_get_eps, token, client, username):
     }
 
 
+@patch.object(tvmaze.TvMazeApi, "get_item")
 @patch.object(tvmaze.TvMazeApi, "get_show_episodes")
 @patch.object(tvmaze.TvMazeApi, "get_episode")
 @patch("reviews_db.set_watched_eps")
@@ -223,11 +224,17 @@ def test_post_episode_recounts_watched(
     m_set_watched,
     m_get_ep,
     m_show_eps,
+    m_show,
     token,
     client,
     username,
 ):
     m_get_item.return_value = {}
+    m_show.return_value = {
+        "name": "Show",
+        "status": "Ended",
+        "image": {"original": "new.jpg"},
+    }
     # Episode 3 is a special, counted separately
     m_get_eps.return_value = [
         {"episode_api_id": "1"},
@@ -248,14 +255,13 @@ def test_post_episode_recounts_watched(
     )
 
     assert response.status_code == 204
-    m_set_watched.assert_called_once_with(
-        username,
-        "tvmaze",
-        TEST_SHOW_ID,
-        2,
-        1,
-        {"ep_count": 3, "special_count": 1},
-    )
+    args = m_set_watched.call_args.args
+    assert args[:5] == (username, "tvmaze", TEST_SHOW_ID, 2, 1)
+    # Counts and the rest of the cache are refreshed
+    assert args[5]["ep_count"] == 3
+    assert args[5]["special_count"] == 1
+    assert args[5]["image_url"] == "new.jpg"
+    assert args[5]["status"] == "Ended"
 
 
 @patch.object(tenrai.TenraiApi, "get_episode_count")
@@ -276,7 +282,13 @@ def test_delete_mal_episode_recounts_watched(
     username,
 ):
     # Stale cache said 24, the source now has 23
-    m_get_item.return_value = {"data": {"episodes": 23}}
+    m_get_item.return_value = {
+        "data": {
+            "episodes": 23,
+            "title": "Anime",
+            "images": {"jpg": {"image_url": "new.jpg"}},
+        }
+    }
     m_ep_count.return_value = {"ep_count": 23}
     m_get_eps.return_value = [
         {"episode_api_id": "1"},
@@ -290,11 +302,8 @@ def test_delete_mal_episode_recounts_watched(
 
     assert response.status_code == 204
     m_get_ep.assert_not_called()
-    m_set_watched.assert_called_once_with(
-        username,
-        "mal",
-        TEST_SHOW_ID,
-        2,
-        0,
-        {"ep_count": 23, "special_count": 0},
-    )
+    args = m_set_watched.call_args.args
+    assert args[:5] == (username, "mal", TEST_SHOW_ID, 2, 0)
+    assert args[5]["ep_count"] == 23
+    assert args[5]["special_count"] == 0
+    assert args[5]["image_url"] == "new.jpg"

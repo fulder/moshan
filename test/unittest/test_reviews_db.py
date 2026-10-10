@@ -33,3 +33,23 @@ def test_add_keeps_given_created_at(mocker):
     kwargs = table.update_item.call_args.kwargs
     assert "if_not_exists" not in kwargs["UpdateExpression"]
     assert "#created_at=:created_at" in kwargs["UpdateExpression"]
+
+
+def test_set_watched_eps_refreshes_cache_fields(mocker):
+    table = _update_kwargs(mocker)
+
+    reviews_db.set_watched_eps(
+        "me",
+        "mal",
+        "1",
+        6,
+        0,
+        {"ep_count": 12, "special_count": 0, "status": "Finished Airing"},
+    )
+
+    kwargs = table.update_item.call_args.kwargs
+    assert kwargs["ExpressionAttributeValues"][":ep"] == 50
+    # Reserved words like status go through attribute names
+    names = kwargs["ExpressionAttributeNames"]
+    assert "status" in names.values()
+    assert "#api_cache.#c2=:c2" in kwargs["UpdateExpression"]
