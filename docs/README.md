@@ -1,6 +1,6 @@
 # Description
 
-UI service is created using vanilla HTML and JS together with bootstrap for CSS.
+UI service is plain HTML and JS (ES modules, no build step) styled with [Pico CSS](https://picocss.com).
 
 # Deploy
 

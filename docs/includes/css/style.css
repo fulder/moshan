@@ -1,66 +1,295 @@
-.poster img {
-    min-height: 87%;
-    object-fit: cover;
+:root {
+  --pico-font-size: 100%;
 }
 
-.item img {
-    min-height: 87%;
-    object-fit: cover;
+nav, nav ul {
+  flex-wrap: wrap;
 }
 
-body {
-    max-width: 1200px;
-    margin: auto;
+nav form[role=search] {
+  margin: 0;
 }
 
-#episodesTable {
-    table-layout: fixed;
+nav .narrow-only {
+  display: none;
 }
 
-.episode-number-header {
-    width: 60px;
+nav li.search form {
+  width: 20rem;
 }
 
-.episode-date-header {
-    width: 100px;
+nav details.dropdown > summary:not([role]) {
+  display: flex;
+  align-items: center;
+  height: auto;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  background: none;
+  line-height: 0;
+  list-style: none;
+  color: var(--pico-color);
 }
 
-.episode-watched-header {
-    width: 130px;
+nav details.dropdown > summary::after,
+nav details.dropdown > summary::marker {
+  display: none;
+  content: "";
 }
 
-.episode-add-header {
-    width: 40px;
+nav li.narrow-only details {
+  display: flex;
 }
 
-#synopsisCardHeader {
-    cursor: pointer;
+nav details.dropdown > summary svg {
+  display: block;
 }
 
-.episodeRow {
-    cursor: pointer;
-    user-select: none;
+.brand img {
+  height: 2.5rem;
+  min-width: 2.5rem;
 }
 
-.navbar-logo {
-  width: 80px;
-  height: 80px;
+.alert {
+  padding: var(--pico-spacing);
+  border-left: 4px solid var(--pico-del-color);
+  background: var(--pico-card-sectioning-background-color);
 }
 
-.item-select {
-  width: auto;
+.posters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--pico-spacing);
+  margin-bottom: var(--pico-block-spacing-vertical);
 }
 
-.watch-history-pagination {
-  height: 40px;
+.posters a {
+  text-decoration: none;
 }
 
-.watch-history-select {
-  width: auto;
+.posters img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: var(--pico-border-radius);
 }
 
-.api-link {
+.posters progress {
+  margin: 0.25rem 0 0;
+}
+
+.posters small {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+tr[data-href] {
+  cursor: pointer;
+}
+
+tr.muted {
+  opacity: 0.5;
+}
+
+tr.watched td:first-child::before {
+  content: "✓ ";
+  color: var(--pico-ins-color);
+}
+
+tr.unseen td:first-child::before {
+  content: "● ";
+  color: #e8890c;
+}
+
+tr.unseen td {
+  font-weight: 600;
+}
+
+.review-head {
+  display: grid;
+  grid-template-columns: min(35%, 220px) 1fr;
+  gap: var(--pico-spacing);
+  margin-bottom: var(--pico-spacing);
+}
+
+.review-head h2 {
+  overflow-wrap: anywhere;
+}
+
+.review-head img {
+  width: 100%;
+  border-radius: var(--pico-border-radius);
+}
+
+.api-link img {
   width: 30px;
   height: 30px;
-  border-style: solid;
+}
+
+.pagination {
+  display: flex;
+  gap: var(--pico-spacing);
+  align-items: center;
+}
+
+.pagination select {
+  width: auto;
+  margin: 0;
+}
+
+#episodesTable td:nth-child(2) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 0;
+  width: 100%;
+}
+
+#episodesTable td:not(:nth-child(2)) {
+  white-space: nowrap;
+}
+
+article > footer {
+  display: flex;
+  gap: var(--pico-spacing);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+article > footer button {
+  margin: 0;
+}
+
+/* Pico's container is only 700px below 1024px: fold the links into the menu */
+@media (max-width: 1023px) {
+  nav {
+    flex-wrap: nowrap;
+  }
+
+  nav > ul:last-child,
+  nav li.search {
+    flex: 1;
+  }
+
+  nav li.search form {
+    width: 100%;
+  }
+
+  nav .wide-only {
+    display: none;
+  }
+
+  nav .narrow-only {
+    display: block;
+  }
+}
+
+/* Status and rating side by side on every screen size */
+#item .grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 576px) {
+  :root {
+    --pico-font-size: 93.75%;
+    --pico-form-element-spacing-vertical: 0.5rem;
+    --pico-form-element-spacing-horizontal: 0.75rem;
+  }
+
+  nav {
+    --pico-nav-element-spacing-vertical: 0.25rem;
+    --pico-nav-element-spacing-horizontal: 0.4rem;
+  }
+
+  nav form[role=search] input[type=submit] {
+    display: none;
+  }
+
+  nav li.search input[type=search]:not(:last-child) {
+    border-radius: 5rem;
+  }
+
+  main.container {
+    padding-top: 0;
+  }
+
+  article {
+    --pico-block-spacing-horizontal: 0.75rem;
+    --pico-block-spacing-vertical: 0.75rem;
+  }
+
+  .review-head {
+    grid-template-columns: 90px 1fr;
+    align-items: start;
+  }
+
+  .review-head h2 {
+    font-size: 1.2rem;
+  }
+
+  .review-head hgroup,
+  .review-head p {
+    margin-bottom: 0.5rem;
+  }
+
+  .review-head button {
+    padding: 0.3rem 0.8rem;
+  }
+
+  #item label {
+    margin-bottom: 0.5rem;
+  }
+
+  #item textarea {
+    min-height: 0;
+    height: 2.75rem;
+  }
+
+  #item textarea:focus {
+    height: 6rem;
+  }
+}
+
+progress.done {
+  --pico-progress-color: #2e9b4f;
+}
+
+progress.behind {
+  --pico-progress-color: #e8890c;
+}
+
+progress.far-behind {
+  --pico-progress-color: #d93526;
+}
+
+.posters.hide-done a:has(progress.done) {
+  display: none;
+}
+
+button.danger {
+  --pico-background-color: #d93526;
+  --pico-border-color: #d93526;
+  --pico-color: #fff;
+}
+
+button.danger:hover {
+  --pico-background-color: #b72a1e;
+  --pico-border-color: #b72a1e;
+}
+
+.watch-date button {
+  flex: 0 0 auto;
+  padding-inline: 0.75rem;
+}
+
+.watch-date input[type=date] {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.watch-date input[inputmode=numeric] {
+  flex: 0 0 5rem;
+  padding-inline: 0.6rem;
+  text-align: center;
 }

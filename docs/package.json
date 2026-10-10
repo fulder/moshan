@@ -1,7 +1,7 @@
 {
   "name": "moshan",
   "version": "1.0.0",
-  "description": "UI service is created using vanilla HTML and JS together with bootstrap for CSS.",
+  "description": "UI service is plain HTML and JS styled with Pico CSS.",
   "main": "index.js",
   "devDependencies": {
     "eslint": "^10.12.0",
