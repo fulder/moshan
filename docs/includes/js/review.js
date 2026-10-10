@@ -3,6 +3,7 @@ import {MoshanApi} from './api/moshan.js';
 import {createNavbar} from './common/navbar.js';
 import {isLoggedIn} from './common/auth.js';
 import {progressClass} from './common/posters.js';
+import {request} from './common/http.js';
 
 createNavbar();
 
@@ -58,6 +59,30 @@ function createReview() {
   }
 }
 
+// Prequel/sequel links for anime (other seasons are separate MAL entries)
+async function showRelations() {
+  let relations;
+  try {
+    relations = (await request(`https://api.tenrai.org/v1/anime/${qParams.api_id}/relations`)).data;
+  } catch {
+    return;
+  }
+  const links = [];
+  for (const [relation, before, after] of [['Prequel', '‹ Prequel: ', ''], ['Sequel', 'Sequel: ', ' ›']]) {
+    const entries = relations.find(r => r.relation === relation)?.entry.filter(e => e.type === 'anime') ?? [];
+    for (const entry of entries) {
+      const a = document.createElement('a');
+      a.href = `review.html?api_name=mal&api_id=${entry.mal_id}`;
+      a.textContent = `${before}${entry.name}${after}`;
+      links.push(a);
+    }
+  }
+  if (links.length) {
+    $('relations').replaceChildren(...links);
+    $('relations').hidden = false;
+  }
+}
+
 async function getMoshan(getFunc) {
   try {
     return await getFunc(qParams);
@@ -77,6 +102,9 @@ async function createItem() {
   }
 
   createReviewPage(item);
+  if (qParams.api_name === 'mal') {
+    showRelations();
+  }
 
   if (item.hasEpisodes) {
     $('datesFieldset').hidden = true;
