@@ -23,8 +23,10 @@ class TvMazeApi:
         return self._get(f"/shows/{show_id}/episodes?specials=1")
 
     def get_show_episodes_count(self, show_id):
-        episodes = self.get_show_episodes(show_id)
+        return self.count_episodes(self.get_show_episodes(show_id))
 
+    @staticmethod
+    def count_episodes(episodes):
         ep_count = 0
         special_count = 0
 

@@ -209,12 +209,23 @@ def _recount_watched_eps(username, api_name, item_api_id):
         for e in reviews_db.get_episodes(username, api_name, item_api_id)
     ]
 
+    # Refresh episode counts too: the daily updater skips finished shows,
+    # so their cached counts can be years old.
     special_ids = set()
     if api_name == ApiNameWithEpisodes.tvmaze.value:
+        api_episodes = tvmaze_api.get_show_episodes(item_api_id)
+        counts = tvmaze_api.count_episodes(api_episodes)
         special_ids = {
-            str(e["id"])
-            for e in tvmaze_api.get_show_episodes(item_api_id)
-            if e["type"] != "regular"
+            str(e["id"]) for e in api_episodes if e["type"] != "regular"
+        }
+    else:
+        api_ep_count = tenrai_api.get_item(item_api_id)["data"]["episodes"]
+        counts = {
+            "ep_count": max(
+                api_ep_count or 0,
+                tenrai_api.get_episode_count(item_api_id)["ep_count"],
+            ),
+            "special_count": 0,
         }
 
     watched_specials = len([i for i in episode_ids if i in special_ids])
@@ -224,6 +235,7 @@ def _recount_watched_eps(username, api_name, item_api_id):
         item_api_id,
         len(episode_ids) - watched_specials,
         watched_specials,
+        counts,
     )
 
 

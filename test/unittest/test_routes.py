@@ -211,9 +211,10 @@ def test_post_episode_recounts_watched(
         {"episode_api_id": "3"},
     ]
     m_show_eps.return_value = [
-        {"id": 1, "type": "regular"},
-        {"id": 2, "type": "regular"},
-        {"id": 3, "type": "insignificant_special"},
+        {"id": 1, "type": "regular", "airdate": "2020-01-01"},
+        {"id": 2, "type": "regular", "airdate": "2020-01-08"},
+        {"id": 3, "type": "insignificant_special", "airdate": "2020-01-09"},
+        {"id": 4, "type": "regular", "airdate": "2020-01-15"},
     ]
 
     response = client.post(
@@ -224,17 +225,35 @@ def test_post_episode_recounts_watched(
 
     assert response.status_code == 204
     m_set_watched.assert_called_once_with(
-        username, "tvmaze", TEST_SHOW_ID, 2, 1
+        username,
+        "tvmaze",
+        TEST_SHOW_ID,
+        2,
+        1,
+        {"ep_count": 3, "special_count": 1},
     )
 
 
+@patch.object(tenrai.TenraiApi, "get_episode_count")
+@patch.object(tenrai.TenraiApi, "get_item")
 @patch.object(tenrai.TenraiApi, "get_episode")
 @patch("reviews_db.set_watched_eps")
 @patch("reviews_db.get_episodes")
 @patch("reviews_db.delete_episode")
 def test_delete_mal_episode_recounts_watched(
-    m_delete_ep, m_get_eps, m_set_watched, m_get_ep, token, client, username
+    m_delete_ep,
+    m_get_eps,
+    m_set_watched,
+    m_get_ep,
+    m_get_item,
+    m_ep_count,
+    token,
+    client,
+    username,
 ):
+    # Stale cache said 24, the source now has 23
+    m_get_item.return_value = {"data": {"episodes": 23}}
+    m_ep_count.return_value = {"ep_count": 23}
     m_get_eps.return_value = [
         {"episode_api_id": "1"},
         {"episode_api_id": "2"},
@@ -246,4 +265,11 @@ def test_delete_mal_episode_recounts_watched(
     )
 
     assert response.status_code == 204
-    m_set_watched.assert_called_once_with(username, "mal", TEST_SHOW_ID, 2, 0)
+    m_set_watched.assert_called_once_with(
+        username,
+        "mal",
+        TEST_SHOW_ID,
+        2,
+        0,
+        {"ep_count": 23, "special_count": 0},
+    )
