@@ -319,9 +319,13 @@ button.danger:hover {
   color: var(--pico-primary);
 }
 
+#calendar {
+  max-width: 640px;
+}
+
 .calendar-row {
   display: grid;
-  grid-template-columns: 1.2em 1fr auto 3.5em;
+  grid-template-columns: 1.2em 3em minmax(0, max-content) 1fr;
   gap: 0.5rem;
   padding: 0.3rem 0;
   border-bottom: 1px solid var(--pico-muted-border-color);
@@ -361,15 +365,20 @@ tr.muted td:first-child::before {
   font-weight: 600;
 }
 
-.calendar-row span:first-child {
+.calendar-row .time {
+  color: var(--pico-muted-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.calendar-row .title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.calendar-row span:last-child {
-  text-align: right;
+.calendar-row .label {
   color: var(--pico-muted-color);
+  white-space: nowrap;
 }
 
 #views {
@@ -393,4 +402,32 @@ tr.muted td:first-child::before {
 h2 .count {
   color: var(--pico-muted-color);
   font-weight: normal;
+}
+
+.compact-table {
+  width: auto;
+}
+
+.compact-table th,
+.compact-table td {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.compact-table .source img {
+  width: 20px;
+  max-width: none;
+  vertical-align: middle;
+}
+
+/* Keep dates, prio and icon on one line; only the title wraps */
+.compact-table td:not(:nth-child(4)) {
+  white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+  .compact-table th:first-child,
+  .compact-table td:first-child {
+    display: none;
+  }
 }

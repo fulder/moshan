@@ -34,12 +34,21 @@ function createRow(item) {
   }
   row.addEventListener('click', () => window.location.href = href);
 
-  const values = [item.createdAt, item.rating, item.apiName, apiCache.title, apiCache.status, releaseDate];
+  const values = [item.createdAt?.split(' ')[0], item.rating, null, apiCache.title, apiCache.status, releaseDate];
   for (const value of values) {
     const td = document.createElement('td');
     td.textContent = value ?? '';
     row.appendChild(td);
   }
+
+  // Source as its icon
+  const source = row.children[2];
+  source.className = 'source';
+  const icon = document.createElement('img');
+  icon.src = `/includes/icons/${item.apiName}.png`;
+  icon.alt = item.apiName;
+  icon.title = item.apiName;
+  source.appendChild(icon);
 
   tableBody.appendChild(row);
 }
