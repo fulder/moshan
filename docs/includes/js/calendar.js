@@ -19,8 +19,11 @@ function pad(n) {
 }
 
 function episodeLabel(season, number) {
-  const label = `S${pad(season)}E${pad(number)}`;
-  return number === 1 && season > 1 ? `${label} · Season premiere` : label;
+  return `S${pad(season)}E${pad(number)}`;
+}
+
+function isPremiere(season, number) {
+  return number === 1 && season > 1;
 }
 
 async function allItems() {
@@ -58,6 +61,7 @@ async function tvmazeEpisodes(item) {
   return episodes.filter(e => e.airstamp).map(e => ({
     id: String(e.id),
     label: episodeLabel(e.season, e.number),
+    premiere: isPremiere(e.season, e.number),
     date: new Date(e.airstamp),
     hasTime: true,
   }));
@@ -141,6 +145,7 @@ function premiereEvents(item) {
   return [{
     id: `premiere-${item.apiId}`,
     label: episodeLabel(next.season, next.number),
+    premiere: isPremiere(next.season, next.number),
     date: new Date(next.airstamp),
     hasTime: true,
     item,
@@ -201,6 +206,12 @@ function eventRow(event, now) {
     span.className = name;
     span.textContent = text;
     row.appendChild(span);
+  }
+  if (event.premiere) {
+    const star = document.createElement('span');
+    star.className = 'premiere';
+    star.textContent = '★ Season premiere · ';
+    row.lastChild.prepend(star);
   }
   return row;
 }
