@@ -191,13 +191,14 @@ function eventRow(event, now) {
     row.title = 'Not released yet';
   }
 
-  const parts = [
-    event.item.apiCache.title,
-    event.label,
-    event.hasTime ? event.date.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}) : '',
-  ];
-  for (const text of parts) {
+  const parts = {
+    time: event.hasTime ? event.date.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}) : '',
+    title: event.item.apiCache.title,
+    label: event.label,
+  };
+  for (const [name, text] of Object.entries(parts)) {
     const span = document.createElement('span');
+    span.className = name;
     span.textContent = text;
     row.appendChild(span);
   }
