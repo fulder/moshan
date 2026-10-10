@@ -63,8 +63,17 @@ export class MalApi {
   }
 
   async getEpisode(qParams) {
-    const episode = await request(`${BASE_URL}/anime/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
-    return this.getMoshanEpisode(episode.data);
+    const url = `${BASE_URL}/anime/${qParams.item_api_id}/episodes`;
+    const nextNumber = parseInt(qParams.episode_api_id) + 1;
+    const [episode, hasNext] = await Promise.all([
+      request(`${url}/${qParams.episode_api_id}`),
+      request(`${url}/${nextNumber}`).then(() => true, () => false),
+    ]);
+    const moshanEpisode = this.getMoshanEpisode(episode.data);
+    if (!hasNext) {
+      moshanEpisode.nextId = null;
+    }
+    return moshanEpisode;
   }
 
   getMoshanEpisodes(episodes, last_page) {
