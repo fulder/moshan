@@ -2,31 +2,30 @@ import {login, logout} from './auth.js';
 import {accessToken, parsedToken} from './token.js';
 
 export async function createNavbar(showAlert = true) {
-    await loadHtml();
+  const response = await fetch('/includes/html/navbar.html');
+  document.getElementById('navbar').innerHTML = await response.text();
 
-    if (accessToken === null) {
-      document.getElementById('loginButton').classList.remove('d-none');
-      document.getElementById('profileDropdown').classList.add('d-none');
-      if (showAlert) {
-        document.getElementById('logInAlert').className = 'alert alert-danger';
-      }
-    } else {
-      document.getElementById('loginButton').classList.add('d-none');
-      document.getElementById('profileDropdown').classList.remove('d-none');
-      if (!showAlert) {
-        document.getElementById('logInAlert').className = 'd-none';
-      }
+  document.getElementById('loginButton').addEventListener('click', login);
+  document.getElementById('logoutButton').addEventListener('click', logout);
 
-      const profileDropDown = document.getElementById('profileDropdown');
-      profileDropDown.innerHTML = parsedToken.username;
+  const loggedIn = accessToken !== null;
+  document.querySelectorAll('[data-auth]').forEach(el => el.hidden = !loggedIn);
+  document.querySelectorAll('[data-guest]').forEach(el => el.hidden = loggedIn);
+
+  if (loggedIn) {
+    document.getElementById('logoutButton').title = `Logout ${parsedToken.username}`;
+  } else if (showAlert) {
+    document.getElementById('logInAlert').hidden = false;
+  }
+
+  for (const a of document.querySelectorAll('nav a')) {
+    if (a.pathname === window.location.pathname) {
+      a.setAttribute('aria-current', 'page');
     }
-}
+  }
 
-async function loadHtml() {
-    const response = await fetch('./../../includes/html/navbar.html');
-    const text = await response.text();
-    document.getElementById('navbar').innerHTML = text;
-
-    document.getElementById('loginButton').addEventListener('click', login);
-    document.getElementById('logoutButton').addEventListener('click', logout);
+  const search = new URLSearchParams(window.location.search).get('search');
+  if (search !== null) {
+    document.querySelector('nav input[name=search]').value = search;
+  }
 }

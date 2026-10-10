@@ -1,161 +1,125 @@
-import {axiosTokenInterceptor, MoshanItem, MoshanEpisode, Review} from './common.js';
+import {authHeaders, MoshanItem, MoshanEpisode, Review} from './common.js';
+import {request} from '../common/http.js';
+
+const BASE_URL = 'https://api.moshan.fulder.dev';
+
+function toReview(data) {
+  return new Review(
+    data.overview,
+    data.review,
+    data.rating,
+    data.datesWatched,
+    data.createdAt,
+    data.updatedAt,
+    data.status
+  );
+}
+
+function reviewData(overview, review, status, rating, watchDates) {
+  const data = {};
+  if (watchDates.length !== 0) {
+    data.datesWatched = watchDates;
+  }
+  if (overview !== '') {
+    data.overview = overview;
+  }
+  if (review !== '') {
+    data.review = review;
+  }
+  if (status !== '') {
+    data.status = status;
+  }
+  if (rating !== '') {
+    data.rating = rating;
+  }
+  return data;
+}
 
 export class MoshanApi {
-  constructor () {
-    this.apiAxios = axios.create({
-      baseURL: 'https://api.moshan.fulder.dev',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  async request (method, path, data) {
+    return request(`${BASE_URL}${path}`, {
+      method,
+      headers: await authHeaders(),
+      body: data === undefined ? undefined : JSON.stringify(data),
     });
-
-    this.apiAxios.interceptors.request.use(axiosTokenInterceptor,
-      function (error) {
-        console.log(error);
-        return Promise.reject(error);
-      });
   }
 
   getItems (sort = '', cursor = '', filter = '') {
-    let url = '/items';
-    if (sort !== '' || cursor !== '' || filter !== '') {
-      url += '?';
-    }
-
+    const params = new URLSearchParams();
     if (sort !== '') {
-      url += `sort=${sort}`;
+      params.set('sort', sort);
     }
     if (cursor !== '') {
-      url += `&cursor=${cursor}`;
+      params.set('cursor', cursor);
     }
     if (filter !== '') {
-      url += `&filter=${filter}`;
+      params.set('filter', filter);
     }
-
-    return this.apiAxios.get(url);
+    const query = params.toString();
+    return this.request('GET', query ? `/items?${query}` : '/items');
   }
 
   removeItem (qParams) {
-    return this.apiAxios.delete(`/items/${qParams.api_name}/${qParams.api_id}`);
+    return this.request('DELETE', `/items/${qParams.api_name}/${qParams.api_id}`);
   }
 
   addItem (qParams) {
-    let data = {
+    return this.request('POST', '/items', {
       itemApiId: qParams.api_id,
       apiName: qParams.api_name,
-    };
-    return this.apiAxios.post('/items', data);
+    });
   }
 
   async getItem (qParams) {
-    const ret = await this.apiAxios.get(`/items/${qParams.api_name}/${qParams.api_id}`);
+    const data = await this.request('GET', `/items/${qParams.api_name}/${qParams.api_id}`);
 
-    const review = new Review(
-        ret.data.overview,
-        ret.data.review,
-        ret.data.rating,
-        ret.data.datesWatched,
-        ret.data.createdAt,
-        ret.data.updatedAt,
-        ret.data.status
-    );
-
-    let poster = ret.data.apiCache.imageUrl;
-
+    let poster = data.apiCache.imageUrl;
     if (poster && !poster.includes('http')) {
-      poster = `https://image.tmdb.org/t/p/w500/${ret.data.apiCache.imageUrl}`;
+      poster = `https://image.tmdb.org/t/p/w500/${poster}`;
     }
 
-    console.log(ret.data);
-
     return new MoshanItem(
-      ret.data.apiId,
+      data.apiId,
       poster,
-      ret.data.apiCache.title,
-      ret.data.apiCache.releaseDate,
-      ret.data.apiCache.status,
+      data.apiCache.title,
+      data.apiCache.releaseDate,
+      data.apiCache.status,
       '',
-      'epCount' in ret.data.apiCache && ret.data.apiCache.epCount != 0,
+      'epCount' in data.apiCache && data.apiCache.epCount != 0,
       'moshan',
-      review
+      toReview(data)
     );
   }
 
   updateItem (qParams, overview, review, status = '', rating = '', watchDates = []) {
-    const data = {};
-    if (watchDates.length !== 0 ) {
-      data.datesWatched = watchDates;
-    }
-    if (overview !== '') {
-      data.overview = overview;
-    }
-    if (review !== '') {
-      data.review = review;
-    }
-    if (status !== '') {
-      data.status = status;
-    }
-    if (rating !== '') {
-      data.rating = rating;
-    }
-    return this.apiAxios.put(`/items/${qParams.api_name}/${qParams.api_id}`, data);
+    return this.request('PUT', `/items/${qParams.api_name}/${qParams.api_id}`,
+      reviewData(overview, review, status, rating, watchDates));
   }
 
   addEpisode (qParams) {
-    const data = {
+    return this.request('POST', `/items/${qParams.api_name}/${qParams.item_api_id}/episodes`, {
       episodeApiId: qParams.episode_api_id,
-    };
-    return this.apiAxios.post(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`, data);
+    });
   }
 
   removeEpisode (qParams) {
-    return this.apiAxios.delete(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
+    return this.request('DELETE', `/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`);
   }
 
   async getEpisode (qParams) {
-    const ret = await this.apiAxios.get(`/items/${qParams.api_name}/${qParams.api_id}/episodes/${qParams.episode_api_id}`);
+    const data = await this.request('GET', `/items/${qParams.api_name}/${qParams.api_id}/episodes/${qParams.episode_api_id}`);
 
-    const review = new Review(
-        ret.data.overview,
-        ret.data.review,
-        ret.data.rating,
-        ret.data.datesWatched,
-        ret.data.createdAt,
-        ret.data.updatedAt,
-        ret.data.status
-    );
-
-    const ep = new MoshanEpisode(
-      ret.data.apiId,
-      'moshan',
-      ret.data.episodeApiId
-    );
-    ep.review = review;
+    const ep = new MoshanEpisode(data.apiId, 'moshan', data.episodeApiId);
+    ep.review = toReview(data);
     return ep;
   }
 
   getEpisodes (qParams) {
-    return this.apiAxios.get(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes`);
+    return this.request('GET', `/items/${qParams.api_name}/${qParams.item_api_id}/episodes`);
   }
 
   updateEpisode (qParams, overview, review, status = '', rating = '', watchDates = []) {
-    const data = {};
-    if (watchDates.length !== 0 ) {
-      data.datesWatched = watchDates;
-    }
-    if (overview !== '') {
-      data.overview = overview;
-    }
-    if (review !== '') {
-      data.review = review;
-    }
-    if (status !== '') {
-      data.status = status;
-    }
-    if (rating !== '') {
-      data.rating = rating;
-    }
-    console.debug(this);
-    return this.apiAxios.put(`/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`, data);
+    return this.request('PUT', `/items/${qParams.api_name}/${qParams.item_api_id}/episodes/${qParams.episode_api_id}`,
+      reviewData(overview, review, status, rating, watchDates));
   }
 }

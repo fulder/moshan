@@ -1,66 +1,125 @@
-.poster img {
-    min-height: 87%;
-    object-fit: cover;
+:root {
+  --pico-font-size: 100%;
 }
 
-.item img {
-    min-height: 87%;
-    object-fit: cover;
+nav, nav ul {
+  flex-wrap: wrap;
 }
 
-body {
-    max-width: 1200px;
-    margin: auto;
+nav form[role=search] {
+  margin: 0;
 }
 
-#episodesTable {
-    table-layout: fixed;
+.brand img {
+  height: 2.5rem;
+  min-width: 2.5rem;
 }
 
-.episode-number-header {
-    width: 60px;
+.alert {
+  padding: var(--pico-spacing);
+  border-left: 4px solid var(--pico-del-color);
+  background: var(--pico-card-sectioning-background-color);
 }
 
-.episode-date-header {
-    width: 100px;
+.posters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--pico-spacing);
+  margin-bottom: var(--pico-block-spacing-vertical);
 }
 
-.episode-watched-header {
-    width: 130px;
+.posters a {
+  text-decoration: none;
 }
 
-.episode-add-header {
-    width: 40px;
+.posters img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: var(--pico-border-radius);
 }
 
-#synopsisCardHeader {
-    cursor: pointer;
+.posters progress {
+  margin: 0.25rem 0 0;
 }
 
-.episodeRow {
-    cursor: pointer;
-    user-select: none;
+.posters small {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.navbar-logo {
-  width: 80px;
-  height: 80px;
+tr[data-href] {
+  cursor: pointer;
 }
 
-.item-select {
-  width: auto;
+tr.muted {
+  opacity: 0.5;
 }
 
-.watch-history-pagination {
-  height: 40px;
+tr.watched td:first-child::before {
+  content: "✓ ";
+  color: var(--pico-ins-color);
 }
 
-.watch-history-select {
-  width: auto;
+.review-head {
+  display: grid;
+  grid-template-columns: min(35%, 220px) 1fr;
+  gap: var(--pico-spacing);
+  margin-bottom: var(--pico-spacing);
 }
 
-.api-link {
+.review-head h2 {
+  overflow-wrap: anywhere;
+}
+
+.review-head img {
+  width: 100%;
+  border-radius: var(--pico-border-radius);
+}
+
+.api-link img {
   width: 30px;
   height: 30px;
-  border-style: solid;
+}
+
+.pagination {
+  display: flex;
+  gap: var(--pico-spacing);
+  align-items: center;
+}
+
+.pagination select {
+  width: auto;
+  margin: 0;
+}
+
+#episodesTable td:nth-child(2) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 0;
+  width: 100%;
+}
+
+#episodesTable td:not(:nth-child(2)) {
+  white-space: nowrap;
+}
+
+article > footer {
+  display: flex;
+  gap: var(--pico-spacing);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+article > footer button {
+  margin: 0;
+}
+
+@media (max-width: 576px) {
+  nav {
+    --pico-nav-element-spacing-vertical: 0.25rem;
+  }
 }
