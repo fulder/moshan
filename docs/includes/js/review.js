@@ -22,6 +22,8 @@ const moshanApi = new MoshanApi();
 const api = getApiByName(qParams.api_name);
 
 const watchHistoryEpisodeIDs = [];
+// Episodes added without a watch date, e.g. paused mid-episode
+const undatedEpisodeIDs = [];
 let totalPages = 0;
 let savedPatchData;
 const episodeReview = qParams.episode_api_id !== null;
@@ -82,6 +84,9 @@ async function createItem() {
     const moshanEpisodes = await getMoshan(moshanApi.getEpisodes.bind(moshanApi)) ?? {episodes: []};
     for (const episode of moshanEpisodes.episodes) {
       watchHistoryEpisodeIDs.push(parseInt(episode.episodeApiId));
+      if (!episode.datesWatched?.length) {
+        undatedEpisodeIDs.push(parseInt(episode.episodeApiId));
+      }
     }
 
     if (qParams.api_name == 'mal' && (item.status === 'Currently Airing' || apiEpisodes.episodes.length == 0)) {
@@ -335,7 +340,10 @@ function createEpisodesList(apiEpisodes) {
 
     const row = document.createElement('tr');
     row.dataset.href = href;
-    if (watchHistoryEpisodeIDs.includes(moshanEpisode.id)) {
+    if (undatedEpisodeIDs.includes(moshanEpisode.id)) {
+      row.className = 'undated';
+      row.title = 'Added, no watch date';
+    } else if (watchHistoryEpisodeIDs.includes(moshanEpisode.id)) {
       row.className = 'watched';
     } else if (moshanEpisode.aired) {
       row.className = 'unseen';
