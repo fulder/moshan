@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 import reviews_db
+import tenrai
 import tvmaze
 import utils
 
@@ -225,3 +226,24 @@ def test_post_episode_recounts_watched(
     m_set_watched.assert_called_once_with(
         username, "tvmaze", TEST_SHOW_ID, 2, 1
     )
+
+
+@patch.object(tenrai.TenraiApi, "get_episode")
+@patch("reviews_db.set_watched_eps")
+@patch("reviews_db.get_episodes")
+@patch("reviews_db.delete_episode")
+def test_delete_mal_episode_recounts_watched(
+    m_delete_ep, m_get_eps, m_set_watched, m_get_ep, token, client, username
+):
+    m_get_eps.return_value = [
+        {"episode_api_id": "1"},
+        {"episode_api_id": "2"},
+    ]
+
+    response = client.delete(
+        f"/items/mal/{TEST_SHOW_ID}/episodes/3",
+        headers={"Authorization": token},
+    )
+
+    assert response.status_code == 204
+    m_set_watched.assert_called_once_with(username, "mal", TEST_SHOW_ID, 2, 0)
