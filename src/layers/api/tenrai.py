@@ -26,11 +26,11 @@ class TenraiApi:
 
     def get_episode(self, anime_id, episode_id):
         page = int(int(episode_id) / 100) + 1
-        eps = self.get_episodes(anime_id, page).get("data", {})
+        eps = (self.get_episodes(anime_id, page) or {}).get("data", [])
 
-        if not eps:
+        if not eps and page > 1:
             # Try getting previous page
-            eps = self.get_episodes(anime_id, page - 1).get("data", {})
+            eps = (self.get_episodes(anime_id, page - 1) or {}).get("data", [])
 
         if eps:
             last_id = eps[-1]["mal_id"]
@@ -76,7 +76,9 @@ class TenraiApi:
         # (api_item["episodes"]) would keep progress below 100%.
         ep_count = self.get_episode_count(anime_id)["ep_count"]
         if api_item.get("status") == "Finished Airing":
-            ep_count = max(api_item.get("episodes") or 0, ep_count)
+            # MAL's official total wins; Tenrai's list can hold episodes of a
+            # sequel entry (Shingeki no Kyojin S3 lists 22, MAL says 12)
+            ep_count = api_item.get("episodes") or ep_count
         return ep_count
 
     @staticmethod
