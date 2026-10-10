@@ -2,6 +2,7 @@ import {getApiByName} from './api/common.js';
 import {MoshanApi} from './api/moshan.js';
 import {createNavbar} from './common/navbar.js';
 import {isLoggedIn} from './common/auth.js';
+import {progressClass} from './common/posters.js';
 
 createNavbar();
 
@@ -175,6 +176,14 @@ function createReviewPage(reviewItem) {
   }
   if (apiUrl !== undefined) {
     $('link').innerHTML = `<a class="api-link" href="${apiUrl}" target="_blank"><img src="/includes/icons/${qParams.api_name}.png" alt="${qParams.api_name}"></a>`;
+  }
+
+  const progress = reviewItem.progress;
+  if (!episodeReview && typeof progress?.percent === 'number' && progress.total) {
+    $('progress').value = progress.percent;
+    $('progress').className = progressClass(progress.percent);
+    $('progressText').textContent = `${progress.watched ?? 0} / ${progress.total} episodes watched (${progress.percent}%)`;
+    $('progressInfo').hidden = false;
   }
 
   if (reviewItem.synopsis) {
