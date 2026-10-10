@@ -11,7 +11,18 @@ class TvMazeApi:
         logger.bind(baseUrl=self.base_url).debug("Initialized TvMazeApi")
 
     def get_item(self, show_id):
-        return self._get(f"/shows/{show_id}")
+        return self._get(f"/shows/{show_id}?embed=nextepisode")
+
+    @staticmethod
+    def next_episode(show):
+        ep = show.get("_embedded", {}).get("nextepisode")
+        if not ep or not ep.get("airstamp"):
+            return None
+        return {
+            "season": ep.get("season"),
+            "number": ep.get("number"),
+            "airstamp": ep["airstamp"],
+        }
 
     def get_episode(self, episode_id):
         return self._get(f"/episodes/{episode_id}")

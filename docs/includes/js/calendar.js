@@ -12,27 +12,52 @@ const moshanApi = new MoshanApi();
 const calendar = document.getElementById('calendar');
 let futureDays = 7;
 let events = [];
+let loading = true;
 
 function pad(n) {
   return String(n).padStart(2, '0');
 }
 
-async function allItems(sort, filter) {
+function episodeLabel(season, number) {
+  const label = `S${pad(season)}E${pad(number)}`;
+  return number === 1 && season > 1 ? `${label} · Season premiere` : label;
+}
+
+async function allItems() {
   const items = [];
   let cursor = '';
   do {
-    const res = await moshanApi.getItems(sort, cursor, filter);
+    const res = await moshanApi.getItems('', cursor);
     items.push(...res.items);
     cursor = res.endCursor;
   } while (cursor);
   return items;
 }
 
+// Tenrai rate limits parallel calls, so its requests go one at a time
+let tenraiQueue = Promise.resolve();
+function tenrai(path) {
+  const result = tenraiQueue.then(async () => {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await request(`https://api.tenrai.org/v1/anime/${path}`);
+      } catch (error) {
+        if (error.status !== 429 || attempt >= 3) {
+          throw error;
+        }
+        await new Promise(resolve => setTimeout(resolve, 2000 * (attempt + 1)));
+      }
+    }
+  });
+  tenraiQueue = result.catch(() => {});
+  return result;
+}
+
 async function tvmazeEpisodes(item) {
   const episodes = await request(`https://api.tvmaze.com/shows/${item.apiId}/episodes`);
   return episodes.filter(e => e.airstamp).map(e => ({
     id: String(e.id),
-    label: `S${pad(e.season)}E${pad(e.number)}`,
+    label: episodeLabel(e.season, e.number),
     date: new Date(e.airstamp),
     hasTime: true,
   }));
@@ -41,20 +66,17 @@ async function tvmazeEpisodes(item) {
 // Tenrai only lists released episodes, so upcoming ones are projected weekly
 // from the last one until the planned episode count.
 async function malEpisodes(item) {
-  const base = `https://api.tenrai.org/v1/anime/${item.apiId}`;
-  const anime = (await request(base)).data;
+  const anime = (await tenrai(item.apiId)).data;
   const time = anime.broadcast?.timezone === 'Asia/Tokyo' ? anime.broadcast.time : null;
   const airDate = day => new Date(`${day}T${time ?? '00:00'}:00+09:00`);
 
-  const released = [];
-  let page = 1;
-  let lastPage = 1;
-  do {
-    const res = await request(`${base}/episodes?page=${page}`);
-    released.push(...res.data);
-    lastPage = res.pagination.last_visible_page;
-    page++;
-  } while (page <= lastPage);
+  // Only the last page matters: it holds the most recent episodes
+  let res = await tenrai(`${item.apiId}/episodes?page=1`);
+  const lastPage = res.pagination.last_visible_page;
+  if (lastPage > 1) {
+    res = await tenrai(`${item.apiId}/episodes?page=${lastPage}`);
+  }
+  const released = res.data;
 
   const episodes = released.filter(e => e.aired).map(e => ({
     id: String(e.mal_id),
@@ -64,7 +86,7 @@ async function malEpisodes(item) {
   }));
 
   if (anime.status !== 'Finished Airing') {
-    let number = released.length;
+    let number = released.length > 0 ? released[released.length - 1].mal_id : 0;
     let date = episodes.length > 0
       ? episodes[episodes.length - 1].date
       : anime.aired?.from && new Date(airDate(anime.aired.from.slice(0, 10)) - 7 * DAY);
@@ -109,18 +131,38 @@ async function movieEvents(item, since) {
   }
 }
 
-async function itemEvents(item) {
+// Shows not being watched only appear for an announced new season
+// (next_episode is cached by the daily updater, so no extra calls).
+function premiereEvents(item) {
+  const next = item.apiCache.nextEpisode;
+  if (item.apiName !== 'tvmaze' || !next?.airstamp || next.number !== 1 || item.status === 'dropped') {
+    return [];
+  }
+  return [{
+    id: `premiere-${item.apiId}`,
+    label: episodeLabel(next.season, next.number),
+    date: new Date(next.airstamp),
+    hasTime: true,
+    item,
+    watched: false,
+  }];
+}
+
+async function itemEvents(item, start) {
   const getEpisodes = {tvmaze: tvmazeEpisodes, mal: malEpisodes}[item.apiName];
   if (getEpisodes === undefined) {
     return [];
   }
   try {
-    const qParams = {api_name: item.apiName, item_api_id: item.apiId};
-    const [episodes, watched] = await Promise.all([
-      getEpisodes(item),
-      moshanApi.getEpisodes(qParams).catch(() => ({episodes: []})),
-    ]);
-    const watchedIds = new Set(watched.episodes.map(e => String(e.episodeApiId)));
+    const episodes = await getEpisodes(item);
+    // Watched state only matters for released episodes in view
+    const now = new Date();
+    let watchedIds = new Set();
+    if (episodes.some(e => e.date >= start && e.date <= now)) {
+      const qParams = {api_name: item.apiName, item_api_id: item.apiId};
+      const watched = await moshanApi.getEpisodes(qParams).catch(() => ({episodes: []}));
+      watchedIds = new Set(watched.episodes.map(e => String(e.episodeApiId)));
+    }
     return episodes.map(e => ({...e, item, watched: watchedIds.has(e.id)}));
   } catch (error) {
     console.log(`Calendar: skipping ${item.apiCache.title}`, error);
@@ -187,7 +229,7 @@ function render() {
     current.section.appendChild(eventRow(event, now));
   }
 
-  if (sections.length === 0) {
+  if (sections.length === 0 && !loading) {
     const p = document.createElement('p');
     p.textContent = 'No episodes in this period.';
     sections.push(p);
@@ -206,17 +248,28 @@ function render() {
   calendar.replaceChildren(...sections);
 }
 
+// Rows appear as each show loads instead of after all of them
+function addEvents(newEvents) {
+  if (newEvents.length === 0) {
+    return;
+  }
+  events.push(...newEvents);
+  events.sort((a, b) => a.date - b.date);
+  render();
+}
+
 async function load() {
   const since = new Date(Date.now() - 30 * DAY);
-  const [watching, backlog] = await Promise.all([
-    allItems('latestWatchDate', 'inProgress'),
-    allItems('rating', 'onlyBacklog'),
+  const start = new Date(Date.now() - (PAST_DAYS + 1) * DAY);
+  const items = await allItems();
+  const watching = items.filter(i => ['watching', 'following'].includes(i.status));
+
+  addEvents(items.filter(i => !watching.includes(i)).flatMap(premiereEvents));
+  await Promise.all([
+    ...watching.map(item => itemEvents(item, start).then(addEvents)),
+    ...items.filter(i => i.status === 'backlog').map(item => movieEvents(item, since).then(addEvents)),
   ]);
-  events = (await Promise.all([
-    ...watching.map(itemEvents),
-    ...backlog.map(item => movieEvents(item, since)),
-  ])).flat();
-  events.sort((a, b) => a.date - b.date);
+  loading = false;
   calendar.removeAttribute('aria-busy');
   render();
 }
