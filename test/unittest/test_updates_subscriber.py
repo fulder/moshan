@@ -28,6 +28,7 @@ def sent(monkeypatch):
 def _item(username="me", status="watching", ep_count=12, watched_eps=10):
     return {
         "username": username,
+        "api_info": "i_mal_52991",
         "status": status,
         "watched_eps": watched_eps,
         "api_cache": {"title": "Frieren", "ep_count": ep_count},
@@ -35,9 +36,13 @@ def _item(username="me", status="watching", ep_count=12, watched_eps=10):
 
 
 def test_notify_new_episode(sent):
-    updates_subscriber._notify_new_episodes(_item(), 11)
+    updates_subscriber._notify_new_episodes(_item(), 11, 12)
 
-    assert sent == ["Frieren: episode 12 is out (2 unseen)"]
+    assert sent == [
+        "Frieren: episode 12 is out (2 unseen)\n"
+        "https://moshan.fulder.dev/review.html"
+        "?api_name=mal&api_id=52991&episode_api_id=12"
+    ]
 
 
 @pytest.mark.parametrize(
@@ -60,6 +65,7 @@ def test_no_notify(sent, item, old_ep_count):
 def _season_item(status="finished", next_episode=None):
     return {
         "username": "me",
+        "api_info": "i_tvmaze_50701",
         "status": status,
         "api_cache": {"title": "Lupin", "next_episode": next_episode},
     }
@@ -73,7 +79,10 @@ def test_notify_new_season(sent):
         _season_item(next_episode=PREMIERE), None
     )
 
-    assert sent == ["📅 Lupin: season 4 starts 2026-11-15"]
+    assert sent == [
+        "📅 Lupin: season 4 starts 2026-11-15\n"
+        "https://moshan.fulder.dev/review.html?api_name=tvmaze&api_id=50701"
+    ]
 
 
 @pytest.mark.parametrize(
@@ -119,7 +128,10 @@ def test_sequel_stored_and_announced(sent, mocker):
     updates_subscriber._handle_sequel(_sequel_message())
 
     stored.assert_called_once_with("me", "mal", "5", {"sequel": SEQUEL})
-    assert sent == ["📅 S2 announced (after S1), starts 2027-01-05"]
+    assert sent == [
+        "📅 S2 announced (after S1), starts 2027-01-05\n"
+        "https://moshan.fulder.dev/review.html?api_name=mal&api_id=10"
+    ]
 
 
 def test_known_sequel_not_announced_again(sent, mocker):
