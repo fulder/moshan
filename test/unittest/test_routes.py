@@ -265,6 +265,7 @@ def test_delete_mal_episode_recounts_watched(
     )
 
     assert response.status_code == 204
+    m_get_ep.assert_not_called()
     m_set_watched.assert_called_once_with(
         username,
         "mal",
