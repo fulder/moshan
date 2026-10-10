@@ -1,12 +1,13 @@
 import {createNavbar} from './common/navbar.js';
 import {MoshanApi} from './api/moshan.js';
 import {isLoggedIn} from './common/auth.js';
-import {itemCard, loadMoreButton} from './common/posters.js';
+import {hideDoneToggle, itemCard, loadMoreButton} from './common/posters.js';
 
 createNavbar();
 
 const moshanApi = new MoshanApi();
 const list = document.getElementById('watching');
+hideDoneToggle(list);
 let cursor = '';
 
 async function loadMore() {

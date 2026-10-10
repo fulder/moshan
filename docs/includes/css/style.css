@@ -135,3 +135,7 @@ progress.behind {
 progress.far-behind {
   --pico-progress-color: #d93526;
 }
+
+.posters.hide-done a:has(progress.done) {
+  display: none;
+}

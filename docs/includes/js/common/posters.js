@@ -64,3 +64,23 @@ export async function loadMoreButton(list, loadMore) {
   button.addEventListener('click', load);
   await load();
 }
+
+// Wires the #hideDone switch to hide 100% items in `list`, remembered across visits.
+export function hideDoneToggle(list) {
+  const toggle = document.getElementById('hideDone');
+  try {
+    toggle.checked = localStorage.getItem('moshan_hide_done') === 'true';
+  } catch {
+    // storage unavailable, default to showing everything
+  }
+  list.classList.toggle('hide-done', toggle.checked);
+
+  toggle.addEventListener('change', () => {
+    list.classList.toggle('hide-done', toggle.checked);
+    try {
+      localStorage.setItem('moshan_hide_done', toggle.checked);
+    } catch {
+      // ignore
+    }
+  });
+}
