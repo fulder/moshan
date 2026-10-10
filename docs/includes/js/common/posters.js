@@ -51,6 +51,26 @@ export function itemCard(item, showProgress = false) {
   });
 }
 
+// Shows the number of items in `list` next to the page heading: "visible of total"
+// when some are hidden, "+" when more pages can be loaded.
+export function updateCount(list, more = false) {
+  const counter = document.getElementById('itemCount');
+  if (counter === null) {
+    return;
+  }
+  const items = [...list.children];
+  if (items.length === 0 && more) {
+    counter.textContent = ''; // still loading
+    return;
+  }
+  const visible = items.filter(el => el.checkVisibility()).length;
+  let text = visible === items.length ? `${items.length}` : `${visible} of ${items.length}`;
+  if (more) {
+    text += '+';
+  }
+  counter.textContent = text;
+}
+
 // Shows a "Load more" button after `list` while loadMore() returns true (more items available).
 export async function loadMoreButton(list, loadMore) {
   const button = document.createElement('button');
@@ -63,6 +83,7 @@ export async function loadMoreButton(list, loadMore) {
     button.setAttribute('aria-busy', 'true');
     button.hidden = !(await loadMore());
     button.removeAttribute('aria-busy');
+    updateCount(list, !button.hidden);
   }
 
   button.addEventListener('click', load);
@@ -71,12 +92,14 @@ export async function loadMoreButton(list, loadMore) {
 
 // Loads every page into `list`; loadPage() returns false when there are no more pages.
 // For filtered lists, where the API keeps returning cursors to pages with nothing left.
-export async function loadAll(list, loadPage) {
+export async function loadAll(list, loadPage, items = list) {
+  updateCount(items, true);
   list.setAttribute('aria-busy', 'true');
   while (await loadPage()) {
     // keep going
   }
   list.removeAttribute('aria-busy');
+  updateCount(items);
 }
 
 // Wires the #hideDone switch to hide 100% items in `list`, remembered across visits.
@@ -91,6 +114,7 @@ export function hideDoneToggle(list) {
 
   toggle.addEventListener('change', () => {
     list.classList.toggle('hide-done', toggle.checked);
+    updateCount(list);
     try {
       localStorage.setItem('moshan_hide_done', toggle.checked);
     } catch {
