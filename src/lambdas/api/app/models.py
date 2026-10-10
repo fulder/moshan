@@ -60,6 +60,12 @@ class Filter(CamelStrEnum):
     only_backlog = auto()
 
 
+class NextEpisode(BaseModel):
+    season: Optional[int] = None
+    number: Optional[int] = None
+    airstamp: Optional[str] = None
+
+
 class ApiCache(BaseModel):
     special_count: Optional[int] = None
     release_date: Optional[str] = None
@@ -68,6 +74,7 @@ class ApiCache(BaseModel):
     title: Optional[str] = None
     status: Optional[str] = None
     ep_count: Optional[int] = None
+    next_episode: Optional[NextEpisode] = None
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
