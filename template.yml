@@ -27,6 +27,9 @@ Parameters:
   TelegramUsername:
     Type: String
     Default: ""
+    Description: >-
+      moshan username (as stored in the reviews table, e.g. m_fulder) whose
+      shows trigger Telegram pings; not the Telegram name
 
 
 Resources:
