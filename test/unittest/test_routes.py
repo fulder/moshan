@@ -210,20 +210,6 @@ def test_get_episodes(m_get_eps, token, client, username):
     }
 
 
-@patch("reviews_db.get_episodes")
-def test_get_episodes_without_created_at(m_get_eps, token, client):
-    m_get_eps.return_value = [
-        {"api_name": "mal", "api_id": "40028", "episode_api_id": "4"},
-    ]
-
-    response = client.get(
-        "/items/mal/40028/episodes", headers={"Authorization": token}
-    )
-
-    assert response.status_code == 200
-    assert response.json()["episodes"][0]["episodeApiId"] == "4"
-
-
 @patch.object(tvmaze.TvMazeApi, "get_show_episodes")
 @patch.object(tvmaze.TvMazeApi, "get_episode")
 @patch("reviews_db.set_watched_eps")
