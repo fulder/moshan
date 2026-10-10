@@ -338,16 +338,23 @@ def _update_review(username, api_info, data, clean_whitelist):
     )
 
 
-def set_watched_eps(username, api_name, api_id, watched_eps, watched_specials):
+def set_watched_eps(
+    username, api_name, api_id, watched_eps, watched_specials, counts
+):
+    """Store watched counters and progress, refreshing the cached
+    ep_count/special_count from `counts` (fresh from the source API)."""
     api_info = f"i_{api_name}_{api_id}"
-    item = _get_review(username, api_info)
 
-    values = {":we": watched_eps, ":ws": watched_specials}
-    for field, watched, key in (
-        ("ep", watched_eps, ":ep"),
-        ("special", watched_specials, ":sp"),
+    values = {
+        ":we": watched_eps,
+        ":ws": watched_specials,
+        ":ec": counts["ep_count"],
+        ":sc": counts["special_count"],
+    }
+    for watched, count, key in (
+        (watched_eps, counts["ep_count"], ":ep"),
+        (watched_specials, counts["special_count"], ":sp"),
     ):
-        count = item["api_cache"].get(f"{field}_count", 0)
         progress = 0 if count == 0 else Decimal(watched) / Decimal(count)
         values[key] = round(Decimal(progress) * 100, 2)
 
@@ -358,7 +365,8 @@ def set_watched_eps(username, api_name, api_id, watched_eps, watched_specials):
         },
         UpdateExpression=(
             "SET watched_eps=:we, ep_progress=:ep, "
-            "watched_specials=:ws, special_progress=:sp"
+            "watched_specials=:ws, special_progress=:sp, "
+            "api_cache.ep_count=:ec, api_cache.special_count=:sc"
         ),
         ExpressionAttributeValues=values,
     )
