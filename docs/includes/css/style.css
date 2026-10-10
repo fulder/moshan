@@ -97,6 +97,11 @@ tr.watched td:first-child::before {
   color: var(--pico-ins-color);
 }
 
+tr.undated td:first-child::before {
+  content: "◐ ";
+  color: var(--pico-primary);
+}
+
 tr.unseen td:first-child::before {
   content: "● ";
   color: #e8890c;
