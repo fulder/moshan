@@ -25,12 +25,23 @@ nav details.dropdown > summary:not([role]) {
   padding: 0.25rem 0.5rem;
   border: none;
   background: none;
-  font-size: 1.5rem;
-  line-height: 1;
+  line-height: 0;
+  list-style: none;
+  color: var(--pico-color);
 }
 
-nav details.dropdown > summary::after {
+nav details.dropdown > summary::after,
+nav details.dropdown > summary::marker {
   display: none;
+  content: "";
+}
+
+nav li.narrow-only details {
+  display: flex;
+}
+
+nav details.dropdown > summary svg {
+  display: block;
 }
 
 .brand img {
@@ -84,6 +95,15 @@ tr.muted {
 tr.watched td:first-child::before {
   content: "✓ ";
   color: var(--pico-ins-color);
+}
+
+tr.unseen td:first-child::before {
+  content: "● ";
+  color: #e8890c;
+}
+
+tr.unseen td {
+  font-weight: 600;
 }
 
 .review-head {
@@ -161,7 +181,7 @@ article > footer button {
   }
 
   nav .narrow-only {
-    display: list-item;
+    display: block;
   }
 }
 

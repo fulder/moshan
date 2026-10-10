@@ -337,6 +337,12 @@ function createEpisodesList(apiEpisodes) {
     row.dataset.href = href;
     if (watchHistoryEpisodeIDs.includes(moshanEpisode.id)) {
       row.className = 'watched';
+    } else if (moshanEpisode.aired) {
+      row.className = 'unseen';
+      row.title = 'Released, not watched';
+    } else {
+      row.className = 'muted';
+      row.title = 'Not aired yet';
     }
     row.addEventListener('click', () => window.location.href = href);
 
