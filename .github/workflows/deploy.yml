@@ -58,4 +58,7 @@ jobs:
           sam deploy --parameter-overrides \
             DomainName="moshan.fulder.dev" \
             TmdbToken=${{ secrets.TMDB_TOKEN }} \
-            LocalCognitoClient=${{ secrets.LOCAL_COGNITO_CLIENT }}
+            LocalCognitoClient=${{ secrets.LOCAL_COGNITO_CLIENT }} \
+            TelegramBotToken=${{ secrets.TELEGRAM_BOT_TOKEN }} \
+            TelegramChatId=${{ secrets.TELEGRAM_CHAT_ID }} \
+            TelegramUsername=${{ secrets.TELEGRAM_USERNAME }}
