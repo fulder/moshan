@@ -123,3 +123,15 @@ article > footer button {
     --pico-nav-element-spacing-vertical: 0.25rem;
   }
 }
+
+progress.done {
+  --pico-progress-color: #2e9b4f;
+}
+
+progress.behind {
+  --pico-progress-color: #e8890c;
+}
+
+progress.far-behind {
+  --pico-progress-color: #d93526;
+}

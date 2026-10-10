@@ -26,6 +26,7 @@ export function posterCard({href, image, title, progress}) {
     bar.max = 100;
     bar.value = progress;
     bar.title = `${progress}%`;
+    bar.className = progress >= 100 ? 'done' : progress >= 50 ? 'behind' : 'far-behind';
     a.appendChild(bar);
   }
 
