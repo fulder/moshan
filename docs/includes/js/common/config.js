@@ -1,15 +1,16 @@
-let internalClientId, internalRedirectBaseUrl;
+let internalClientId = '1ra91kse5btmpmt3tmran2441a';
+let internalRedirectBaseUrl = 'https://moshan.fulder.dev';
 
-
-try {
-  // hack for local config
-  const { localClientId, localRedirectBaseUrl } = await import('./configLocal.js');
-
-  internalClientId = localClientId;
-  internalRedirectBaseUrl = localRedirectBaseUrl;
-} catch {
-  internalClientId = '1ra91kse5btmpmt3tmran2441a';
-  internalRedirectBaseUrl= 'https://moshan.fulder.dev';
+// Optional local config, only looked for on localhost so the live site
+// doesn't log a failed module load
+if (window.location.hostname === 'localhost') {
+  try {
+    const { localClientId, localRedirectBaseUrl } = await import('./configLocal.js');
+    internalClientId = localClientId;
+    internalRedirectBaseUrl = localRedirectBaseUrl;
+  } catch {
+    // no configLocal.js, keep production values
+  }
 }
 
 
