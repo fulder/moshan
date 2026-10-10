@@ -15,6 +15,19 @@ Parameters:
   LocalCognitoClient:
     Type: String
 
+  TelegramBotToken:
+    Type: String
+    Default: ""
+    NoEcho: true
+
+  TelegramChatId:
+    Type: String
+    Default: ""
+
+  TelegramUsername:
+    Type: String
+    Default: ""
+
 
 Resources:
   Certificate:
@@ -288,6 +301,9 @@ Resources:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
           TMDB_TOKEN: !Ref TmdbToken
+          TELEGRAM_BOT_TOKEN: !Ref TelegramBotToken
+          TELEGRAM_CHAT_ID: !Ref TelegramChatId
+          TELEGRAM_USERNAME: !Ref TelegramUsername
       Layers:
         - !Ref ApiLayer
         - !Ref DatabasesLayer

@@ -1,8 +1,10 @@
 import json
+import os
 from datetime import datetime
 from decimal import Decimal
 
 import reviews_db
+import telegram
 import tenrai
 import tmdb
 import tvmaze
@@ -14,6 +16,8 @@ setup_logger()
 tmdb_api = tmdb.TmdbApi()
 tvmaze_api = tvmaze.TvMazeApi()
 tenrai_api = tenrai.TenraiApi()
+
+NOTIFY_USERNAME = os.getenv("TELEGRAM_USERNAME")
 
 
 def handler(event, context):
@@ -75,6 +79,7 @@ def handler(event, context):
             apiCache=item["api_cache"],
         ).debug("Updating item")
 
+        old_ep_count = item["api_cache"].get("ep_count")
         watched_eps = item.get("watched_eps", 0)
         watched_specials = item.get("watched_specials", 0)
 
@@ -88,6 +93,30 @@ def handler(event, context):
         }
 
         reviews_db.put_item(item)
+
+        _notify_new_episodes(item, old_ep_count)
+
+
+def _notify_new_episodes(item, old_ep_count):
+    if item["username"] != NOTIFY_USERNAME:
+        return
+    if item.get("status") not in ("following", "watching"):
+        return
+
+    new_ep_count = item["api_cache"].get("ep_count")
+    if old_ep_count is None or new_ep_count is None:
+        return
+    if new_ep_count <= old_ep_count:
+        return
+
+    watched_eps = item.get("watched_eps", 0)
+    if watched_eps >= new_ep_count:
+        return
+
+    telegram.send(
+        f"{item['api_cache']['title']}: episode {new_ep_count} is out "
+        f"({new_ep_count - watched_eps} unseen)"
+    )
 
 
 def _get_item_counts(episodes_info, watched_eps, watched_specials):
