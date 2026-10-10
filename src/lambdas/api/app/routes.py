@@ -261,11 +261,7 @@ def _update_latest_watch_date(item, data, username, api_name, item_api_id):
 def delete_episode(
     username, api_name: ApiNameWithEpisodes, item_api_id, episode_api_id
 ):
-    if api_name == ApiNameWithEpisodes.tvmaze.value:
-        tvmaze_api.get_episode(episode_api_id)
-    elif api_name == ApiNameWithEpisodes.mal.value:
-        tenrai_api.get_episode(item_api_id, episode_api_id)
-
+    # No source lookup: episodes removed from TVMaze/Tenrai must stay deletable
     reviews_db.delete_episode(
         username,
         api_name,
