@@ -122,6 +122,14 @@ tr.unseen td {
   overflow-wrap: anywhere;
 }
 
+.review-head.episode {
+  grid-template-columns: min(50%, 400px) 1fr;
+}
+
+.review-head.episode:has(#poster[hidden]) {
+  grid-template-columns: 1fr;
+}
+
 .review-head img {
   width: 100%;
   border-radius: var(--pico-border-radius);
@@ -227,6 +235,10 @@ article > footer button {
   .review-head {
     grid-template-columns: 90px 1fr;
     align-items: start;
+  }
+
+  .review-head.episode {
+    grid-template-columns: 1fr;
   }
 
   .review-head h2 {

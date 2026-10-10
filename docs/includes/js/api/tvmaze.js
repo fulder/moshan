@@ -74,7 +74,7 @@ export class TvMazeApi {
 
     let poster = '/includes/img/image_not_available.png';
     if (episode.image !== null && episode.image !== undefined && episode.image.medium !== undefined) {
-      poster = episode.image.medium;
+      poster = episode.image.original ?? episode.image.medium;
     }
 
     return new MoshanEpisode(
