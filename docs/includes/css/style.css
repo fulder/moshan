@@ -477,6 +477,7 @@ h2 .count {
   flex-direction: column;
   gap: 0.25rem;
   font-size: 0.9rem;
+}
 
 /* Phones: 3 posters per row */
 @media (max-width: 576px) {
