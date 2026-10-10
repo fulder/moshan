@@ -61,4 +61,5 @@ jobs:
             LocalCognitoClient=${{ secrets.LOCAL_COGNITO_CLIENT }} \
             TelegramBotToken=${{ secrets.TELEGRAM_BOT_TOKEN }} \
             TelegramChatId=${{ secrets.TELEGRAM_CHAT_ID }} \
-            TelegramUsername=${{ secrets.TELEGRAM_USERNAME }}
+            TelegramUsername=${{ secrets.TELEGRAM_USERNAME }} \
+            AlarmEmail=${{ secrets.ALARM_EMAIL }}
