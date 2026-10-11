@@ -1,21 +1,8 @@
-import os
-import sys
 from decimal import Decimal
 
 import pytest
 
-SUB_PATH = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    "..",
-    "..",
-    "src",
-    "lambdas",
-    "updates_subscriber",
-)
-sys.path.append(SUB_PATH)
-sys.path.append(os.path.dirname(SUB_PATH))
-
-import updates_subscriber  # noqa: E402
+import updates_subscriber
 
 
 @pytest.fixture

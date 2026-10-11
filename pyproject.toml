@@ -30,41 +30,20 @@ black = "^26.10.0"
 isort = "^9.0.2"
 flake8 = "^7.4.1"
 
-[tool.poetry.group.layers-api]
+[tool.poetry.group.lambda]
 optional = true
 
-[tool.poetry.group.layers-api.dependencies]
-requests = "^2.34.2"
-
-[tool.poetry.group.layers-databases]
-optional = true
-
-[tool.poetry.group.layers-databases.dependencies]
-python-dateutil = "^2.9.0"
+[tool.poetry.group.lambda.dependencies]
 dynamodb-json = "^1.4"
-
-[tool.poetry.group.layers-fastapi]
-optional = true
-
-[tool.poetry.group.layers-fastapi.dependencies]
 fastapi = "^0.142.2"
 fastapi-utils = "^0.8.0"
+loguru = "^0.7.3"
 mangum = "^0.22.0"
 pydantic = "^2.13.5"
-typing-inspect = "^0.9.0"
-
-[tool.poetry.group.layers-utils]
-optional = true
-
-[tool.poetry.group.layers-utils.dependencies]
-loguru = "^0.7.3"
-
-[tool.poetry.group.api]
-optional = true
-
-[tool.poetry.group.api.dependencies]
 pyjwt = "^2.15.1"
-requests = "^2.31.0"
+python-dateutil = "^2.9.0"
+requests = "^2.34.2"
+typing-inspect = "^0.9.0"
 
 [build-system]
 requires = ["poetry-core"]

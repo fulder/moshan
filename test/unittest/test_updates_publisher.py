@@ -1,18 +1,4 @@
-import os
-import sys
-
-PUB_PATH = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    "..",
-    "..",
-    "src",
-    "lambdas",
-    "updates_publisher",
-)
-sys.path.append(PUB_PATH)
-sys.path.append(os.path.dirname(PUB_PATH))
-
-import updates_publisher  # noqa: E402
+import updates_publisher
 
 
 def test_mal_updates_refresh_finished_airing(mocker):

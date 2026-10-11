@@ -1,8 +1,9 @@
 from unittest.mock import MagicMock
 
 import pytest
-import utils
 from requests import HTTPError
+
+import utils
 
 
 def _failing(mocker, status, body):

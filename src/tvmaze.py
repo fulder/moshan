@@ -1,8 +1,9 @@
 from datetime import datetime
 
 import dateutil.parser
-import utils
 from loguru import logger
+
+import utils
 
 
 class TvMazeApi:
