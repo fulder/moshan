@@ -210,7 +210,8 @@ Resources:
         - !Ref DatabasesLayer
         - !Ref UtilsLayer
         - !Ref FastApiLayer
-      MemorySize: 1024
+      # /items is CPU-bound (botocore parsing ~1 MB pages); 2048 MB = full vCPU
+      MemorySize: 2048
       Role: !GetAtt ApiFunctionRole.Arn
       Runtime: python3.13
       Timeout: 10
