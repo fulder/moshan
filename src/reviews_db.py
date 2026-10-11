@@ -359,8 +359,8 @@ def _update_review(username, api_info, data, clean_whitelist):
     log.debug("Starting update review")
 
     remove_names = []
-    for o in OPTIONAL_FIELDS:
-        if data.get(o) is None and o in clean_whitelist:
+    for o in clean_whitelist:
+        if data.get(o) is None:
             remove_names.append(f"#{o}")
             expression_attribute_names[f"#{o}"] = o
 

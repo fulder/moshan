@@ -381,3 +381,60 @@ def test_get_items(m_get_all_items, token, client, username):
     m_get_all_items.assert_called_once_with(
         username, "latest_watch_date", "abc", "in_progress"
     )
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_episodes")
+def test_put_item_without_dates_uses_latest_episode(
+    m_get_eps, m_update_item, token, client, username
+):
+    m_get_eps.return_value = [
+        {"dates_watched": ["2024-01-01T20:00:00.000Z"]},
+        {"dates_watched": ["2025-03-04T21:00:00.000Z"]},
+        {},
+    ]
+
+    response = client.put(
+        f"/items/tvmaze/{TEST_SHOW_ID}",
+        headers={"Authorization": token},
+        json={"status": "following"},
+    )
+
+    assert response.status_code == 204
+    data = m_update_item.call_args.args[3]
+    assert data["latest_watch_date"] == "2025-03-04T21:00:00.000Z"
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_episodes")
+def test_put_item_without_dates_or_episodes_drops_from_history(
+    m_get_eps, m_update_item, token, client
+):
+    m_get_eps.return_value = []
+
+    client.put(
+        f"/items/tvmaze/{TEST_SHOW_ID}",
+        headers={"Authorization": token},
+        json={"status": "following"},
+    )
+
+    data = m_update_item.call_args.args[3]
+    assert data["latest_watch_date"] is None
+    assert (
+        "latest_watch_date" in m_update_item.call_args.kwargs["clean_whitelist"]
+    )
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_episodes")
+def test_put_item_with_dates_skips_episodes(
+    m_get_eps, m_update_item, token, client
+):
+    client.put(
+        f"/items/tmdb/{TEST_SHOW_ID}",
+        headers={"Authorization": token},
+        json={"datesWatched": ["2024-01-01T20:00:00.000Z"]},
+    )
+
+    m_get_eps.assert_not_called()
+    assert "latest_watch_date" not in m_update_item.call_args.args[3]
