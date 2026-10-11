@@ -17,7 +17,8 @@ const TOP = 16; // room for the scale label above the bars
 const AXIS = 20; // room for month labels below the bars
 let watches = [];
 // Watches per collection without a real date (1970 placeholders), not charted
-const undated = {};
+let undated = {};
+const STORED = 'moshan_stats_watches';
 let range = '12';
 
 const tip = document.createElement('div');
@@ -157,10 +158,10 @@ function savedRange() {
   }
 }
 
-async function load() {
-  const res = await moshanApi.getWatches();
+function show(rawWatches) {
   watches = [];
-  for (const watch of res.watches) {
+  undated = {};
+  for (const watch of rawWatches) {
     const date = new Date(watch.date);
     // Older dates are placeholders (1970 = watched, date unknown)
     if (date.getFullYear() >= 2000) {
@@ -170,8 +171,27 @@ async function load() {
     }
   }
   stats.removeAttribute('aria-busy');
-  range = savedRange();
   render();
+}
+
+// Draws the last visit's data right away, then redraws with fresh data
+async function load() {
+  range = savedRange();
+  try {
+    const stored = JSON.parse(localStorage.getItem(STORED));
+    if (stored) {
+      show(stored);
+    }
+  } catch {
+    // nothing stored yet
+  }
+  const res = await moshanApi.getWatches();
+  show(res.watches);
+  try {
+    localStorage.setItem(STORED, JSON.stringify(res.watches));
+  } catch {
+    // quota exceeded: next visit just waits for the API
+  }
   // Drawn at the real width so labels keep their size on phones
   new ResizeObserver(() => render()).observe(stats);
 }

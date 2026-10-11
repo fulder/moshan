@@ -4,6 +4,7 @@ import {isLoggedIn} from './common/auth.js';
 import {request} from './common/http.js';
 import {tmdbRequest} from './api/tmdb.js';
 import {tenrai} from './common/tenrai.js';
+import {cached} from './common/cache.js';
 import {posterCard} from './common/posters.js';
 
 createNavbar();
@@ -126,7 +127,7 @@ async function collectionTips(apiName, items) {
   await Promise.all(seeds.map(async seed => {
     let result;
     try {
-      result = await SOURCES[apiName](seed);
+      result = await cached(`tips_${apiName}_${seed.apiId}`, 24 * 60 * 60 * 1000, () => SOURCES[apiName](seed));
     } catch (error) {
       console.log(`Tips: skipping ${seed.apiCache.title}`, error);
       return;

@@ -4,6 +4,7 @@ import {isLoggedIn} from './common/auth.js';
 import {request} from './common/http.js';
 import {TmdbApi} from './api/tmdb.js';
 import {tenrai} from './common/tenrai.js';
+import {cached} from './common/cache.js';
 
 createNavbar();
 
@@ -95,8 +96,8 @@ async function malEpisodes(item) {
 // Backlog movies released recently or not yet; fetched fresh since
 // upcoming release dates often move.
 async function movieEvents(item, since) {
-  const cached = item.apiCache.releaseDate;
-  if (item.apiName !== 'tmdb' || (cached && new Date(cached) < since)) {
+  const known = item.apiCache.releaseDate;
+  if (item.apiName !== 'tmdb' || (known && new Date(known) < since)) {
     return [];
   }
   try {
@@ -189,8 +190,10 @@ async function itemEvents(item) {
     return;
   }
   try {
-    const episodes = await getEpisodes(item);
-    addEvents(episodes.map(e => ({...e, item, watched: false})));
+    // Schedules change rarely: cached a few hours (dates as timestamps)
+    const episodes = await cached(`calendar_${item.apiName}_${item.apiId}`, 6 * 60 * 60 * 1000,
+      async () => (await getEpisodes(item)).map(e => ({...e, date: e.date.getTime()})));
+    addEvents(episodes.map(e => ({...e, date: new Date(e.date), item, watched: false})));
     if (releasedInRange(item)) {
       await loadWatched(item);
       render();
