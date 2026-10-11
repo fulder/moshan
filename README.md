@@ -3,7 +3,7 @@
 Watch history for movies, shows and anime in one place. It's made for self-hosting in your
 own AWS account; there is no public service to sign up for.
 
-https://github.com/user-attachments/assets/63d9b7f2-512c-46d7-abe1-cb1c9e2c225b
+https://github.com/user-attachments/assets/f0e1dbe1-9e5b-4209-b499-64d904ce7804
 
 - **One search, three sources:** TMDB for movies, TVMaze for shows, MyAnimeList (via Tenrai) for anime.
 - **Watching:** progress per show, counted from aired episodes only; an Upcoming tab for sequels that haven't aired yet.
