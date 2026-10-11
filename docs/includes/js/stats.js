@@ -16,6 +16,8 @@ const HEIGHT = 160;
 const TOP = 16; // room for the scale label above the bars
 const AXIS = 20; // room for month labels below the bars
 let watches = [];
+// Watches per collection without a real date (1970 placeholders), not charted
+const undated = {};
 let range = '12';
 
 const tip = document.createElement('div');
@@ -110,6 +112,9 @@ function chart(collection, months, counts) {
   heading.textContent = `${collection.title} `;
   const small = document.createElement('small');
   small.textContent = `${total} ${collection.unit}`;
+  if (undated[collection.apiName]) {
+    small.textContent += ` · ${undated[collection.apiName]} without a date`;
+  }
   heading.appendChild(small);
   section.append(heading, svg);
   return section;
@@ -154,10 +159,16 @@ function savedRange() {
 
 async function load() {
   const res = await moshanApi.getWatches();
-  watches = res.watches
-    .map(w => ({...w, date: new Date(w.date)}))
+  watches = [];
+  for (const watch of res.watches) {
+    const date = new Date(watch.date);
     // Older dates are placeholders (1970 = watched, date unknown)
-    .filter(w => w.date.getFullYear() >= 2000);
+    if (date.getFullYear() >= 2000) {
+      watches.push({...watch, date});
+    } else {
+      undated[watch.apiName] = (undated[watch.apiName] ?? 0) + 1;
+    }
+  }
   stats.removeAttribute('aria-busy');
   range = savedRange();
   render();
