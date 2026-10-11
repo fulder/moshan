@@ -55,6 +55,38 @@ def test_set_watched_eps_refreshes_cache_fields(mocker):
     assert "#api_cache.#c2=:c2" in kwargs["UpdateExpression"]
 
 
+def test_get_watch_dates(mocker):
+    client = MagicMock()
+    mocker.patch.object(reviews_db, "_get_client", return_value=client)
+    client.get_paginator.return_value.paginate.return_value = [
+        {
+            "Items": [
+                {
+                    "api_info": {"S": "e_mal_1_4"},
+                    "dates_watched": {"L": [{"S": "2026-10-01T20:00:00Z"}]},
+                },
+                {
+                    "api_info": {"S": "i_tmdb_550"},
+                    "dates_watched": {
+                        "L": [
+                            {"S": "2020-01-01T20:00:00Z"},
+                            {"S": "2025-01-01"},
+                        ]
+                    },
+                },
+            ]
+        }
+    ]
+
+    res = reviews_db.get_watch_dates("me")
+
+    assert res == [
+        {"api_name": "mal", "api_id": "1", "date": "2026-10-01T20:00:00Z"},
+        {"api_name": "tmdb", "api_id": "550", "date": "2020-01-01T20:00:00Z"},
+        {"api_name": "tmdb", "api_id": "550", "date": "2025-01-01"},
+    ]
+
+
 def test_get_all_items_filter_without_sort(mocker):
     table = _update_kwargs(mocker)
     table.query.return_value = {

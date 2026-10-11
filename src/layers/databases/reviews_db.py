@@ -213,6 +213,32 @@ def get_items(api_name, api_id):
     return res["Items"]
 
 
+def get_watch_dates(username):
+    """Every watch date of the user's movies and episodes, for statistics"""
+    paginator = _get_client().get_paginator("query")
+    page_iterator = paginator.paginate(
+        TableName=REVIEWS_DATABASE_NAME,
+        KeyConditionExpression="username = :username",
+        ExpressionAttributeValues={":username": {"S": username}},
+        FilterExpression=(
+            "attribute_exists(dates_watched)"
+            " AND attribute_not_exists(deleted_at)"
+        ),
+        ProjectionExpression="api_info, dates_watched",
+    )
+
+    res = []
+    for p in page_iterator:
+        for i in p["Items"]:
+            i = json_util.loads(i)
+            _, api_name, api_id = i["api_info"].split("_")[:3]
+            for date in i["dates_watched"]:
+                res.append(
+                    {"api_name": api_name, "api_id": api_id, "date": date}
+                )
+    return res
+
+
 def get_episodes(username, api_name, item_api_id):
     api_info = f"e_{api_name}_{item_api_id}_"
 
