@@ -8,7 +8,7 @@ from urllib.parse import quote, unquote
 import boto3
 import dateutil.parser
 from boto3.dynamodb.conditions import Attr, Key
-from dynamodb_json import json_util
+from boto3.dynamodb.types import TypeDeserializer
 from loguru import logger
 
 from decimal_encoder import DecimalEncoder
@@ -229,6 +229,26 @@ def get_items(api_name, api_id):
     return res["Items"]
 
 
+_deserializer = TypeDeserializer()
+
+
+def _plain(value):
+    if isinstance(value, Decimal):
+        return (
+            int(value) if value == value.to_integral_value() else float(value)
+        )
+    if isinstance(value, dict):
+        return {k: _plain(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_plain(v) for v in value]
+    return value
+
+
+def _from_dynamodb(item):
+    """Low-level client item as plain Python, numbers as int/float"""
+    return _plain({k: _deserializer.deserialize(v) for k, v in item.items()})
+
+
 def get_watch_dates(username):
     """Every watch date of the user's movies and episodes, for statistics"""
     paginator = _get_client().get_paginator("query")
@@ -246,7 +266,7 @@ def get_watch_dates(username):
     res = []
     for p in page_iterator:
         for i in p["Items"]:
-            i = json_util.loads(i)
+            i = _from_dynamodb(i)
             _, api_name, api_id = i["api_info"].split("_")[:3]
             for date in i["dates_watched"]:
                 res.append(
@@ -280,7 +300,7 @@ def get_episodes(username, api_name, item_api_id):
     res = []
     for p in page_iterator:
         for i in p["Items"]:
-            i = json_util.loads(i)
+            i = _from_dynamodb(i)
             i["api_name"] = api_name
             i["api_id"] = item_api_id
             i["episode_api_id"] = i["api_info"].split("_")[3]
@@ -468,7 +488,7 @@ def get_user_items(username, index_name=None, status_filter=None):
     res = []
     for p in page_iterator:
         for i in p["Items"]:
-            i = json_util.loads(i)
+            i = _from_dynamodb(i)
             res.append(i)
     return res
 

@@ -172,20 +172,6 @@ wheels = [
 ]
 
 [[package]]
-name = "dynamodb-json"
-version = "1.4.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "boto3" },
-    { name = "simplejson" },
-    { name = "six" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/6f/65/7216f2111c4e47ffb44b6415334c221d5543ce2a85c8d80e155e7cb06851/dynamodb_json-1.4.2.tar.gz", hash = "sha256:a304b4117877f3697af5554158e5034c3c48973a3ba49ecf49dddb09ac502b03", size = 9288, upload-time = "2024-05-18T17:58:14.757Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d2/06/1b30b1e89ff8e86215e8e0fb1cbf3004976f5435b9dcafc3c1f7623e2a77/dynamodb_json-1.4.2-py2.py3-none-any.whl", hash = "sha256:b78259bb13cf96695ab6554d6616341ace4e2530e24cedb738a01a7cef828309", size = 9470, upload-time = "2024-05-18T17:58:13.209Z" },
-]
-
-[[package]]
 name = "flake8"
 version = "7.4.1"
 source = { registry = "https://pypi.org/simple" }
@@ -312,7 +298,6 @@ dev = [
 ]
 lambda = [
     { name = "aws-lambda-powertools" },
-    { name = "dynamodb-json" },
     { name = "loguru" },
     { name = "pydantic" },
     { name = "pyjwt" },
@@ -337,7 +322,6 @@ pytest = [
 dev = [{ name = "boto3", specifier = ">=1.43.0,<2" }]
 lambda = [
     { name = "aws-lambda-powertools", specifier = ">=3.35.0,<4" },
-    { name = "dynamodb-json", specifier = ">=1.4,<2" },
     { name = "loguru", specifier = ">=0.7.3,<0.8" },
     { name = "pydantic", specifier = ">=2.13.5,<3" },
     { name = "pyjwt", specifier = ">=2.15.1,<3" },
@@ -637,15 +621,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/9b/ec/7c692cde9125b77e84b307354d4fb705f98b8ccad59a036d5957ca75bfc3/s3transfer-0.17.0.tar.gz", hash = "sha256:9edeb6d1c3c2f89d6050348548834ad8289610d886e5bf7b7207728bd43ce33a", size = 155337, upload-time = "2026-04-29T22:07:36.33Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/87/72/c6c32d2b657fa3dad1de340254e14390b1e334ce38268b7ad51abda3c8c2/s3transfer-0.17.0-py3-none-any.whl", hash = "sha256:ce3801712acf4ad3e89fb9990df97b4972e93f4b3b0004d214be5bce12814c20", size = 86811, upload-time = "2026-04-29T22:07:34.966Z" },
-]
-
-[[package]]
-name = "simplejson"
-version = "3.19.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c0/5c/61e2afbe62bbe2e328d4d1f426f6e39052b73eddca23b5ba524026561250/simplejson-3.19.1.tar.gz", hash = "sha256:6277f60848a7d8319d27d2be767a7546bc965535b28070e310b3a9af90604a4c", size = 85207, upload-time = "2023-04-06T20:38:16.783Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/56/40/c58cd470a57af4affa87da639a9d9d339a0d5898d98faa608ac43f3e191e/simplejson-3.19.1-py3-none-any.whl", hash = "sha256:4710806eb75e87919b858af0cba4ffedc01b463edc3982ded7b55143f39e41e1", size = 56990, upload-time = "2023-04-06T20:38:14.566Z" },
 ]
 
 [[package]]
