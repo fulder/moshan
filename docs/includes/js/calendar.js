@@ -139,9 +139,10 @@ async function movieEvents(item, since) {
 
 // Shows not being watched only appear for an announced new season
 // (next_episode is cached by the daily updater, so no extra calls).
+// Dropped and backlog shows are left out.
 function premiereEvents(item) {
   const next = item.apiCache.nextEpisode;
-  if (item.apiName !== 'tvmaze' || !next?.airstamp || next.number !== 1 || item.status === 'dropped') {
+  if (item.apiName !== 'tvmaze' || !next?.airstamp || next.number !== 1 || ['dropped', 'backlog'].includes(item.status)) {
     return [];
   }
   return [{
@@ -182,10 +183,10 @@ function releasedInRange(item) {
 }
 
 // Announced anime sequels of shows in your list (found by the daily updater),
-// unless the sequel is already in the list itself
+// unless the sequel is already in the list itself or the show is dropped/backlog
 function sequelEvents(item, listed) {
   const sequel = item.apiCache.sequel;
-  if (item.apiName !== 'mal' || !sequel?.start || item.status === 'dropped' || listed.has(`mal/${sequel.malId}`)) {
+  if (item.apiName !== 'mal' || !sequel?.start || ['dropped', 'backlog'].includes(item.status) || listed.has(`mal/${sequel.malId}`)) {
     return [];
   }
   const [year, month, day] = sequel.start.slice(0, 10).split('-').map(Number);
