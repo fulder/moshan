@@ -5,16 +5,17 @@ import {checkToken, accessToken} from '../common/token.js';
 
 let checkTokenPromise = null;
 
-/* exported axiosTokenInterceptor */
-export async function axiosTokenInterceptor (config) {
+export async function authHeaders () {
   if (checkTokenPromise === null) {
     checkTokenPromise = checkToken();
   }
 
   await checkTokenPromise;
   checkTokenPromise = null;
-  config.headers.Authorization = accessToken;
-  return config;
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': accessToken,
+  };
 }
 
 export function MoshanItems(collection_name) {

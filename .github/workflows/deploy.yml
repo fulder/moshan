@@ -6,11 +6,10 @@ on:
       - main
     paths:
       - '.github/workflows/deploy.yml'
-      - 'src/lambdas/**'
-      - 'src/layers/**'
+      - 'src/**'
       - 'samconfig.toml'
       - 'template.yml'
-      - 'poetry.lock'
+      - 'uv.lock'
       - 'pyproject.toml'
 
 permissions:
@@ -38,17 +37,10 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOY_ROLE_ARN }}
           role-session-name: GitHubDeploySession
 
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+
       - name: Export requirements
-        shell: bash
-        run: |
-          pip install poetry
-          poetry self add poetry-plugin-export
-          mkdir ./src/layers/fastapi
-          poetry export --with api --output ./src/lambdas/api/requirements.txt
-          poetry export --with layers-api --output ./src/layers/api/requirements.txt
-          poetry export --with layers-databases --output ./src/layers/databases/requirements.txt
-          poetry export --with layers-fastapi --output ./src/layers/fastapi/requirements.txt
-          poetry export --with layers-utils --output ./src/layers/utils/requirements.txt
+        run: uv export --frozen --only-group lambda --no-hashes --output-file src/requirements.txt
 
       - name: build
         run: sam build --use-container
@@ -58,4 +50,8 @@ jobs:
           sam deploy --parameter-overrides \
             DomainName="moshan.fulder.dev" \
             TmdbToken=${{ secrets.TMDB_TOKEN }} \
-            LocalCognitoClient=${{ secrets.LOCAL_COGNITO_CLIENT }}
+            LocalCognitoClient=${{ secrets.LOCAL_COGNITO_CLIENT }} \
+            TelegramBotToken=${{ secrets.TELEGRAM_BOT_TOKEN }} \
+            TelegramChatId=${{ secrets.TELEGRAM_CHAT_ID }} \
+            TelegramUsername=${{ secrets.TELEGRAM_USERNAME }} \
+            AlarmEmail=${{ secrets.ALARM_EMAIL }}

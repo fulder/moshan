@@ -1,7 +1,8 @@
 import os
 
-import utils
 from loguru import logger
+
+import utils
 
 TMDB_TOKEN = os.getenv("TMDB_TOKEN")
 

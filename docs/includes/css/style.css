@@ -1,66 +1,581 @@
-.poster img {
-    min-height: 87%;
-    object-fit: cover;
+:root {
+  --pico-font-size: 100%;
 }
 
-.item img {
-    min-height: 87%;
-    object-fit: cover;
+nav, nav ul {
+  flex-wrap: wrap;
 }
 
-body {
-    max-width: 1200px;
-    margin: auto;
+nav form[role=search] {
+  margin: 0;
 }
 
-#episodesTable {
-    table-layout: fixed;
+nav .narrow-only {
+  display: none;
 }
 
-.episode-number-header {
-    width: 60px;
+nav li.search form {
+  width: 20rem;
 }
 
-.episode-date-header {
-    width: 100px;
+nav details.dropdown > summary:not([role]) {
+  display: flex;
+  align-items: center;
+  height: auto;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  background: none;
+  line-height: 0;
+  list-style: none;
+  color: var(--pico-color);
 }
 
-.episode-watched-header {
-    width: 130px;
+nav details.dropdown > summary::after,
+nav details.dropdown > summary::marker {
+  display: none;
+  content: "";
 }
 
-.episode-add-header {
-    width: 40px;
+nav li.narrow-only details {
+  display: flex;
 }
 
-#synopsisCardHeader {
-    cursor: pointer;
+nav details.dropdown > summary svg {
+  display: block;
 }
 
-.episodeRow {
-    cursor: pointer;
-    user-select: none;
+.brand img {
+  height: 2.5rem;
+  min-width: 2.5rem;
 }
 
-.navbar-logo {
-  width: 80px;
-  height: 80px;
+.alert {
+  padding: var(--pico-spacing);
+  border-left: 4px solid var(--pico-del-color);
+  background: var(--pico-card-sectioning-background-color);
 }
 
-.item-select {
-  width: auto;
+.posters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--pico-spacing);
+  margin-bottom: var(--pico-block-spacing-vertical);
 }
 
-.watch-history-pagination {
-  height: 40px;
+.posters a {
+  text-decoration: none;
 }
 
-.watch-history-select {
-  width: auto;
+.posters img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: var(--pico-border-radius);
 }
 
-.api-link {
+.posters a[aria-busy=true] {
+  position: relative;
+}
+
+/* Tip lookup in progress: spinner over the poster, not beside it */
+.posters a[aria-busy=true]::before {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  margin: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-size: contain;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.posters a[aria-busy=true] img {
+  opacity: 0.4;
+}
+
+.posters progress {
+  margin: 0.25rem 0 0;
+}
+
+.posters small {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Messages inside a poster grid span the full row */
+.posters > p {
+  grid-column: 1 / -1;
+}
+
+tr[data-href] {
+  cursor: pointer;
+}
+
+tr.muted {
+  opacity: 0.5;
+}
+
+tr.watched td:first-child::before {
+  content: "✓ ";
+  color: var(--pico-ins-color);
+}
+
+tr.undated td:first-child::before {
+  content: "◐ ";
+  color: var(--pico-primary);
+}
+
+tr.unseen td:first-child::before {
+  content: "● ";
+  color: #e8890c;
+}
+
+tr.unseen td {
+  font-weight: 600;
+}
+
+.review-head {
+  display: grid;
+  grid-template-columns: min(35%, 220px) 1fr;
+  gap: var(--pico-spacing);
+  margin-bottom: var(--pico-spacing);
+}
+
+.review-head h2 {
+  overflow-wrap: anywhere;
+}
+
+.review-head.episode {
+  grid-template-columns: min(50%, 400px) 1fr;
+}
+
+.review-head.episode:has(#poster[hidden]) {
+  grid-template-columns: 1fr;
+}
+
+.review-head img {
+  width: 100%;
+  border-radius: var(--pico-border-radius);
+}
+
+.api-link img {
   width: 30px;
   height: 30px;
-  border-style: solid;
+}
+
+.pagination {
+  display: flex;
+  gap: var(--pico-spacing);
+  align-items: center;
+}
+
+.pagination select {
+  width: auto;
+  margin: 0;
+}
+
+#episodesTable td:nth-child(2) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 0;
+  width: 100%;
+}
+
+#episodesTable td:not(:nth-child(2)) {
+  white-space: nowrap;
+}
+
+article > footer {
+  display: flex;
+  gap: var(--pico-spacing);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+article > footer button {
+  margin: 0;
+}
+
+/* Pico's container is only 700px below 1024px: fold the links into the menu */
+@media (max-width: 1023px) {
+  nav {
+    flex-wrap: nowrap;
+  }
+
+  nav > ul:last-child,
+  nav li.search {
+    flex: 1;
+  }
+
+  nav li.search form {
+    width: 100%;
+  }
+
+  nav .wide-only {
+    display: none;
+  }
+
+  nav .narrow-only {
+    display: block;
+  }
+}
+
+/* Status and rating side by side on every screen size */
+#item .grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 576px) {
+  :root {
+    --pico-font-size: 93.75%;
+    --pico-form-element-spacing-vertical: 0.5rem;
+    --pico-form-element-spacing-horizontal: 0.75rem;
+  }
+
+  nav {
+    --pico-nav-element-spacing-vertical: 0.25rem;
+    --pico-nav-element-spacing-horizontal: 0.4rem;
+  }
+
+  nav form[role=search] input[type=submit] {
+    display: none;
+  }
+
+  nav li.search input[type=search]:not(:last-child) {
+    border-radius: 5rem;
+  }
+
+  main.container {
+    padding-top: 0;
+  }
+
+  article {
+    --pico-block-spacing-horizontal: 0.75rem;
+    --pico-block-spacing-vertical: 0.75rem;
+  }
+
+  .review-head {
+    grid-template-columns: 90px 1fr;
+    align-items: start;
+  }
+
+  .review-head.episode {
+    grid-template-columns: 1fr;
+  }
+
+  .review-head h2 {
+    font-size: 1.2rem;
+  }
+
+  .review-head hgroup,
+  .review-head p {
+    margin-bottom: 0.5rem;
+  }
+
+  .review-head button {
+    padding: 0.3rem 0.8rem;
+  }
+
+  #item label {
+    margin-bottom: 0.5rem;
+  }
+
+  #item textarea {
+    min-height: 0;
+    height: 2.75rem;
+  }
+
+  #item textarea:focus {
+    height: 6rem;
+  }
+}
+
+progress.done {
+  --pico-progress-color: #2e9b4f;
+}
+
+progress.behind {
+  --pico-progress-color: #e8890c;
+}
+
+progress.far-behind {
+  --pico-progress-color: #d93526;
+}
+
+.posters.hide-done a:has(progress.done) {
+  display: none;
+}
+
+button.danger {
+  --pico-background-color: #d93526;
+  --pico-border-color: #d93526;
+  --pico-color: #fff;
+}
+
+button.danger:hover {
+  --pico-background-color: #b72a1e;
+  --pico-border-color: #b72a1e;
+}
+
+.watch-date button {
+  flex: 0 0 auto;
+  padding-inline: 0.75rem;
+}
+
+.watch-date input[type=date] {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.watch-date input[inputmode=numeric] {
+  flex: 0 0 5rem;
+  padding-inline: 0.6rem;
+  text-align: center;
+}
+
+.calendar-day h4 {
+  margin: var(--pico-spacing) 0 0.25rem;
+}
+
+.calendar-day.today h4 {
+  color: var(--pico-primary);
+}
+
+/* Heading and list form one centered block */
+.calendar-page {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.fit-center {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.calendar-row {
+  display: grid;
+  grid-template-columns: 1.2em 3em minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+  color: inherit;
+  text-decoration: none;
+}
+
+.calendar-row::before {
+  content: "";
+}
+
+.calendar-row.watched::before {
+  content: "✓";
+  color: var(--pico-ins-color);
+}
+
+.calendar-row.unseen::before {
+  content: "●";
+  color: #e8890c;
+}
+
+.calendar-row.upcoming::before,
+tr.muted td:first-child::before {
+  content: "○";
+  color: var(--pico-muted-color);
+}
+
+tr.muted td:first-child::before {
+  content: "○ ";
+}
+
+.unseen-mark {
+  color: #e8890c;
+}
+
+.calendar-row.unseen {
+  font-weight: 600;
+}
+
+.calendar-row .time {
+  color: var(--pico-muted-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.calendar-row .title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-row .label {
+  color: var(--pico-muted-color);
+  white-space: nowrap;
+  text-align: right;
+}
+
+#views {
+  display: inline-flex;
+  width: auto;
+  margin-right: var(--pico-spacing);
+  vertical-align: middle;
+}
+
+#views button {
+  flex: none;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.inline-switch {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+h2 .count {
+  color: var(--pico-muted-color);
+  font-weight: normal;
+}
+
+.compact-table {
+  width: auto;
+}
+
+.compact-table th,
+.compact-table td {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.compact-table .source img {
+  width: 20px;
+  max-width: none;
+  vertical-align: middle;
+}
+
+/* Keep dates, prio and icon on one line; only the title wraps */
+.compact-table td:not(:nth-child(4)) {
+  white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+  .compact-table th:first-child,
+  .compact-table td:first-child {
+    display: none;
+  }
+}
+
+.calendar-intro {
+  margin-bottom: 0.25rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--pico-muted-color);
+}
+
+.legend li {
+  list-style: none;
+  margin: 0;
+}
+
+.watched-mark {
+  color: var(--pico-ins-color);
+}
+
+.upcoming-mark {
+  color: var(--pico-muted-color);
+}
+
+.premiere {
+  color: var(--pico-primary);
+  font-weight: 600;
+}
+
+.tip-reason small {
+  color: var(--pico-muted-color);
+}
+
+.relations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* Phones: 3 posters per row */
+@media (max-width: 576px) {
+  .posters {
+    grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .posters small {
+    font-size: 0.75rem;
+  }
+}
+
+.icon {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+}
+
+#episodeNav .icon {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+/* Stats: one monthly bar chart per collection */
+.stats-chart {
+  margin-bottom: 2rem;
+}
+
+.stats-chart h3 {
+  margin-bottom: 0.25rem;
+}
+
+.stats-chart h3 small {
+  color: var(--pico-muted-color);
+  font-weight: normal;
+}
+
+.stats-chart svg {
+  display: block;
+  overflow: visible;
+}
+
+.stats-chart .bar {
+  fill: var(--pico-primary);
+}
+
+.stats-chart .hit:hover + .bar,
+.stats-chart .bar:hover {
+  fill: var(--pico-primary-hover);
+}
+
+.stats-chart .grid {
+  stroke: var(--pico-muted-border-color);
+}
+
+.stats-chart text {
+  fill: var(--pico-muted-color);
+  font-size: 11px;
+}
+
+#statsTip {
+  position: fixed;
+  pointer-events: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--pico-border-radius);
+  background: var(--pico-card-background-color);
+  box-shadow: var(--pico-card-box-shadow);
+  color: var(--pico-color);
+  font-size: 0.8rem;
 }

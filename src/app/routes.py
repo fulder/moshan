@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import dateutil.parser
+
 import reviews_db
 import tenrai
 import tmdb
@@ -38,6 +39,32 @@ def get_item(username, api_name, api_id):
     return w_ret
 
 
+def _now():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _tvmaze_cache(api_item):
+    image = api_item.get("image")
+    return {
+        "title": api_item.get("name"),
+        "release_date": api_item.get("premiered"),
+        "status": api_item.get("status"),
+        "cache_updated": _now(),
+        "image_url": image.get("original") if image else None,
+        "next_episode": tvmaze_api.next_episode(api_item),
+    }
+
+
+def _mal_cache(api_item):
+    return {
+        "title": api_item.get("title"),
+        "release_date": api_item.get("aired", {}).get("from"),
+        "status": api_item.get("status"),
+        "cache_updated": _now(),
+        "image_url": api_item.get("images", {}).get("jpg", {}).get("image_url"),
+    }
+
+
 def add_item(username, api_name, api_id, data):
     ep_count_res = None
     api_cache = None
@@ -53,30 +80,14 @@ def add_item(username, api_name, api_id, data):
         }
     elif api_name == "tvmaze":
         api_item = tvmaze_api.get_item(api_id)
-        image = api_item.get("image")
-        image_url = None
-        if image is not None:
-            image_url = image.get("original")
-        api_cache = {
-            "title": api_item.get("name"),
-            "release_date": api_item.get("premiered"),
-            "status": api_item.get("status"),
-            "cache_updated": cache_updated,
-            "image_url": image_url,
-        }
+        api_cache = _tvmaze_cache(api_item)
         ep_count_res = tvmaze_api.get_show_episodes_count(api_id)
     elif api_name == "mal":
         api_item = tenrai_api.get_item(api_id).get("data", {})
-        api_cache = {
-            "title": api_item.get("title"),
-            "release_date": api_item.get("aired", {}).get("from"),
-            "status": api_item.get("status"),
-            "cache_updated": cache_updated,
-            "image_url": api_item.get("images", {})
-            .get("jpg", {})
-            .get("image_url"),
+        api_cache = _mal_cache(api_item)
+        ep_count_res = {
+            "ep_count": tenrai_api.get_item_ep_count(api_id, api_item)
         }
-        ep_count_res = tenrai_api.get_episode_count(api_id)
 
     try:
         current_item = reviews_db.get_item(
@@ -147,11 +158,9 @@ def add_episode(
     username, api_name: ApiNameWithEpisodes, item_api_id, episode_api_id, data
 ):
     if api_name == ApiNameWithEpisodes.tvmaze.value:
-        api_res = tvmaze_api.get_episode(episode_api_id)
-        is_special = api_res["type"] != "regular"
+        tvmaze_api.get_episode(episode_api_id)
     elif api_name == ApiNameWithEpisodes.mal.value:
         tenrai_api.get_episode(item_api_id, episode_api_id)
-        is_special = False  # mal items are special not episodes
 
     item = reviews_db.get_item(
         username,
@@ -167,9 +176,7 @@ def add_episode(
         data,
     )
 
-    reviews_db.change_watched_eps(
-        username, api_name, item_api_id, 1, special=is_special
-    )
+    _recount_watched_eps(username, api_name, item_api_id)
 
     if not data.get("dates_watched"):
         return
@@ -205,6 +212,40 @@ def update_episode(
     _update_latest_watch_date(item, data, username, api_name, item_api_id)
 
 
+def _recount_watched_eps(username, api_name, item_api_id):
+    # Count from the saved episodes instead of +1/-1, and only those the
+    # source lists as aired, so repeated adds, episodes saved early or ones
+    # removed upstream can't skew progress. Also refreshes the cache (counts,
+    # title, poster, status): finished shows can be years old.
+    episode_ids = [
+        e["episode_api_id"]
+        for e in reviews_db.get_episodes(username, api_name, item_api_id)
+    ]
+
+    if api_name == ApiNameWithEpisodes.tvmaze.value:
+        api_episodes = tvmaze_api.get_show_episodes(item_api_id)
+        c = tvmaze_api.watched_counts(api_episodes, episode_ids)
+        cache = _tvmaze_cache(tvmaze_api.get_item(item_api_id))
+    else:
+        api_item = tenrai_api.get_item(item_api_id)["data"]
+        ep_count = tenrai_api.get_item_ep_count(item_api_id, api_item)
+        c = tenrai_api.watched_counts(ep_count, episode_ids)
+        cache = _mal_cache(api_item)
+
+    reviews_db.set_watched_eps(
+        username,
+        api_name,
+        item_api_id,
+        c["watched_eps"],
+        c["watched_specials"],
+        {
+            **cache,
+            "ep_count": c["ep_count"],
+            "special_count": c["special_count"],
+        },
+    )
+
+
 def _update_latest_watch_date(item, data, username, api_name, item_api_id):
     # If episode watch date is changed check if its larger than current
     # item latest date and update item if that's the case
@@ -228,13 +269,7 @@ def _update_latest_watch_date(item, data, username, api_name, item_api_id):
 def delete_episode(
     username, api_name: ApiNameWithEpisodes, item_api_id, episode_api_id
 ):
-    if api_name == ApiNameWithEpisodes.tvmaze.value:
-        api_res = tvmaze_api.get_episode(episode_api_id)
-        is_special = api_res["type"] != "regular"
-    elif api_name == ApiNameWithEpisodes.mal.value:
-        tenrai_api.get_episode(item_api_id, episode_api_id)
-        is_special = False  # mal items are special not episodes
-
+    # No source lookup: episodes removed from TVMaze/Tenrai must stay deletable
     reviews_db.delete_episode(
         username,
         api_name,
@@ -242,6 +277,4 @@ def delete_episode(
         episode_api_id,
     )
 
-    reviews_db.change_watched_eps(
-        username, api_name, item_api_id, -1, special=is_special
-    )
+    _recount_watched_eps(username, api_name, item_api_id)

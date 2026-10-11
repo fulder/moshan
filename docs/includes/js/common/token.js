@@ -1,4 +1,5 @@
 import {clientId, cognitoDomainName} from './config.js';
+import {postForm} from './http.js';
 
 export let accessToken = localStorage.getItem('moshan_access_token');
 export let parsedToken = null;
@@ -25,21 +26,13 @@ export async function checkToken () {
 }
 
 async function refreshToken () {
-  const requestData = new URLSearchParams({
-    grant_type: 'refresh_token',
-    client_id: clientId,
-    refresh_token: localStorage.getItem('moshan_refresh_token'),
-  }).toString();
-  const options = {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  };
-
   try {
-    const response = await axios.post(`https://${cognitoDomainName}/oauth2/token`, requestData, options);
+    const data = await postForm(`https://${cognitoDomainName}/oauth2/token`, {
+      grant_type: 'refresh_token',
+      client_id: clientId,
+      refresh_token: localStorage.getItem('moshan_refresh_token'),
+    });
 
-    const data = response.data;
     localStorage.setItem('moshan_access_token', data.access_token);
 
     if (data.refresh_token !== undefined) {

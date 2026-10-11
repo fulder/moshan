@@ -1,14 +1,21 @@
 from datetime import datetime
-from enum import auto
+from enum import StrEnum, auto
 from typing import List, Optional
 
-from fastapi_utils.enums import CamelStrEnum
 from pydantic import BaseModel, ConfigDict
 
 
 def to_camel(snake_str):
     s = snake_str.split("_")
     return s[0] + "".join(x.title() for x in s[1:])
+
+
+class CamelStrEnum(StrEnum):
+    """auto() values are the camelCase member names"""
+
+    @staticmethod
+    def _generate_next_value_(name, start, count, last_values):
+        return to_camel(name)
 
 
 class Status(CamelStrEnum):
@@ -60,6 +67,20 @@ class Filter(CamelStrEnum):
     only_backlog = auto()
 
 
+class NextEpisode(BaseModel):
+    season: Optional[int] = None
+    number: Optional[int] = None
+    airstamp: Optional[str] = None
+
+
+class Sequel(BaseModel):
+    mal_id: Optional[int] = None
+    title: Optional[str] = None
+    start: Optional[str] = None
+    status: Optional[str] = None
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+
 class ApiCache(BaseModel):
     special_count: Optional[int] = None
     release_date: Optional[str] = None
@@ -68,6 +89,8 @@ class ApiCache(BaseModel):
     title: Optional[str] = None
     status: Optional[str] = None
     ep_count: Optional[int] = None
+    next_episode: Optional[NextEpisode] = None
+    sequel: Optional[Sequel] = None
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
@@ -109,6 +132,17 @@ class Reviews(BaseModel):
 
 class EpisodeReviews(BaseModel):
     episodes: List[EpisodeReview]
+
+
+class Watch(BaseModel):
+    api_name: str
+    api_id: str
+    date: str
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+
+class Watches(BaseModel):
+    watches: List[Watch]
 
 
 def review_data_to_dict(data: ReviewData):

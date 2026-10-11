@@ -8,9 +8,10 @@ from urllib.parse import quote, unquote
 import boto3
 import dateutil.parser
 from boto3.dynamodb.conditions import Attr, Key
-from decimal_encoder import DecimalEncoder
 from dynamodb_json import json_util
 from loguru import logger
+
+from decimal_encoder import DecimalEncoder
 
 REVIEWS_DATABASE_NAME = os.getenv("REVIEWS_DATABASE_NAME")
 OPTIONAL_FIELDS = [
@@ -149,10 +150,25 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
+# What the list pages show; less for botocore to parse, the slow part of
+# /items (review texts, watch dates etc. come with the single item)
+LIST_FIELDS = [
+    "api_info",
+    "created_at",
+    "status",
+    "rating",
+    "latest_watch_date",
+    "ep_progress",
+    "api_cache",
+]
+
+
 def get_all_items(username, sort=None, cursor=None, filter=None):
     kwargs = {
         "KeyConditionExpression": Key("username").eq(username),
         "FilterExpression": Attr("deleted_at").not_exists(),
+        "ProjectionExpression": ", ".join(f"#{f}" for f in LIST_FIELDS),
+        "ExpressionAttributeNames": {f"#{f}": f for f in LIST_FIELDS},
     }
     if sort is not None:
         kwargs["IndexName"] = sort
@@ -172,10 +188,10 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         kwargs["FilterExpression"] &= Attr("status").is_in(
             ["following", "watching"]
         )
-        del kwargs["Limit"]
+        kwargs.pop("Limit", None)
     elif filter == "only_backlog":
         kwargs["FilterExpression"] &= Attr("status").eq("backlog")
-        del kwargs["Limit"]
+        kwargs.pop("Limit", None)
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
@@ -211,6 +227,32 @@ def get_items(api_name, api_id):
         raise NotFoundError(f"Item with api_info: {api_info} not found.")
 
     return res["Items"]
+
+
+def get_watch_dates(username):
+    """Every watch date of the user's movies and episodes, for statistics"""
+    paginator = _get_client().get_paginator("query")
+    page_iterator = paginator.paginate(
+        TableName=REVIEWS_DATABASE_NAME,
+        KeyConditionExpression="username = :username",
+        ExpressionAttributeValues={":username": {"S": username}},
+        FilterExpression=(
+            "attribute_exists(dates_watched)"
+            " AND attribute_not_exists(deleted_at)"
+        ),
+        ProjectionExpression="api_info, dates_watched",
+    )
+
+    res = []
+    for p in page_iterator:
+        for i in p["Items"]:
+            i = json_util.loads(i)
+            _, api_name, api_id = i["api_info"].split("_")[:3]
+            for date in i["dates_watched"]:
+                res.append(
+                    {"api_name": api_name, "api_id": api_id, "date": date}
+                )
+    return res
 
 
 def get_episodes(username, api_name, item_api_id):
@@ -302,12 +344,17 @@ def _update_review(username, api_info, data, clean_whitelist):
             remove_names.append(f"#{o}")
             expression_attribute_names[f"#{o}"] = o
 
+    # An update can create the record (e.g. PUT on a new episode), so make
+    # sure it gets a created_at too
+    expression_attribute_names["#created_at"] = "created_at"
+    if "created_at" not in data:
+        set_names.append("#created_at=if_not_exists(#created_at,:updated_at)")
+
     expression_attribute_names["#backlog_date"] = "backlog_date"
     if data.get("status") != "backlog":
         remove_names.append("#backlog_date")
     else:
         set_names.append("#backlog_date=#created_at")
-        expression_attribute_names["#created_at"] = "created_at"
 
     if len(set_names) == 0 and len(remove_names) == 0:
         log.debug("No update needed, returning")
@@ -338,36 +385,44 @@ def _update_review(username, api_info, data, clean_whitelist):
     )
 
 
-def change_watched_eps(username, api_name, api_id, change, special=False):
-    field_name = "ep"
-    if special:
-        field_name = "special"
-
+def set_watched_eps(
+    username, api_name, api_id, watched_eps, watched_specials, cache
+):
+    """Store watched counters and progress, refreshing the given api_cache
+    fields (at least ep_count/special_count, fresh from the source API)."""
     api_info = f"i_{api_name}_{api_id}"
 
-    item = _get_review(username, api_info)
-    count_v = item["api_cache"].get(f"{field_name}_count", 0)
-    if count_v == 0:
-        ep_progress = 0
-    else:
-        watched_v = item[f"watched_{field_name}s"]
-        ep_progress = (watched_v + (change)) / count_v
-    ep_progress = round(ep_progress * 100, 2)
+    values = {
+        ":we": watched_eps,
+        ":ws": watched_specials,
+    }
+    for watched, count, key in (
+        (watched_eps, cache["ep_count"], ":ep"),
+        (watched_specials, cache["special_count"], ":sp"),
+    ):
+        progress = 0 if count == 0 else Decimal(watched) / Decimal(count)
+        values[key] = round(Decimal(progress) * 100, 2)
+
+    sets = [
+        "watched_eps=:we",
+        "ep_progress=:ep",
+        "watched_specials=:ws",
+        "special_progress=:sp",
+    ]
+    names = {"#api_cache": "api_cache"}
+    for i, (k, v) in enumerate(cache.items()):
+        names[f"#c{i}"] = k
+        values[f":c{i}"] = v
+        sets.append(f"#api_cache.#c{i}=:c{i}")
 
     _get_table().update_item(
         Key={
             "username": username,
             "api_info": api_info,
         },
-        UpdateExpression="SET #w=#w+:i, #p=:p",
-        ExpressionAttributeNames={
-            "#w": f"watched_{field_name}s",
-            "#p": f"{field_name}_progress",
-        },
-        ExpressionAttributeValues={
-            ":p": ep_progress,
-            ":i": change,
-        },
+        UpdateExpression="SET " + ", ".join(sets),
+        ExpressionAttributeNames=names,
+        ExpressionAttributeValues=values,
     )
 
 
@@ -416,6 +471,58 @@ def get_user_items(username, index_name=None, status_filter=None):
             i = json_util.loads(i)
             res.append(i)
     return res
+
+
+def get_cached_airing_mal_ids():
+    # Anime whose cache still says airing; they drop off Tenrai's schedule
+    # after the finale, so the daily updater would otherwise never see it.
+    kwargs = {
+        "FilterExpression": Attr("api_info").begins_with("i_mal_")
+        & Attr("api_cache.status").is_in(["Currently Airing", "Not yet aired"])
+        & Attr("deleted_at").not_exists(),
+        "ProjectionExpression": "api_info",
+    }
+    ids = set()
+    while True:
+        res = _get_table().scan(**kwargs)
+        ids.update(i["api_info"].split("_")[2] for i in res.get("Items", []))
+        if "LastEvaluatedKey" not in res:
+            return ids
+        kwargs["ExclusiveStartKey"] = res["LastEvaluatedKey"]
+
+
+# Season anime already checked for prequels: {mal_id: [prequel mal_ids]}
+SEQUELS_KEY = {"username": "#meta", "api_info": "mal_sequels"}
+
+
+def get_checked_sequels():
+    res = _get_table().query(
+        KeyConditionExpression=Key("username").eq(SEQUELS_KEY["username"])
+        & Key("api_info").eq(SEQUELS_KEY["api_info"])
+    )
+    items = res.get("Items", [])
+    return dict(items[0].get("checked", {})) if items else {}
+
+
+def put_checked_sequels(checked):
+    _get_table().put_item(Item={**SEQUELS_KEY, "checked": checked})
+
+
+def set_api_cache_fields(username, api_name, api_id, fields):
+    names = {"#api_cache": "api_cache"}
+    values = {}
+    sets = []
+    for i, (k, v) in enumerate(fields.items()):
+        names[f"#c{i}"] = k
+        values[f":c{i}"] = v
+        sets.append(f"#api_cache.#c{i}=:c{i}")
+
+    _get_table().update_item(
+        Key={"username": username, "api_info": f"i_{api_name}_{api_id}"},
+        UpdateExpression="SET " + ", ".join(sets),
+        ExpressionAttributeNames=names,
+        ExpressionAttributeValues=values,
+    )
 
 
 def put_item(item):

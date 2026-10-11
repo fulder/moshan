@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 import reviews_db
+import tenrai
 import tvmaze
 import utils
 
@@ -17,6 +18,30 @@ def test_get_item(m_get_item, token, client, username):
     )
 
     assert response.status_code == 200
+
+
+@patch("reviews_db.get_item")
+def test_get_item_next_episode(m_get_item, token, client):
+    m_get_item.return_value = {
+        "created_at": "CREATED_AT_DATE",
+        "api_cache": {
+            "next_episode": {
+                "season": 4,
+                "number": 1,
+                "airstamp": "2026-11-15T08:00:00+00:00",
+            }
+        },
+    }
+
+    response = client.get(
+        f"/items/tvmaze/{TEST_SHOW_ID}", headers={"Authorization": token}
+    )
+
+    assert response.json()["apiCache"]["nextEpisode"] == {
+        "season": 4,
+        "number": 1,
+        "airstamp": "2026-11-15T08:00:00+00:00",
+    }
 
 
 @patch("reviews_db.get_item")
@@ -183,3 +208,176 @@ def test_get_episodes(m_get_eps, token, client, username):
             },
         ]
     }
+
+
+@patch.object(tvmaze.TvMazeApi, "get_item")
+@patch.object(tvmaze.TvMazeApi, "get_show_episodes")
+@patch.object(tvmaze.TvMazeApi, "get_episode")
+@patch("reviews_db.set_watched_eps")
+@patch("reviews_db.get_episodes")
+@patch("reviews_db.add_episode")
+@patch("reviews_db.get_item")
+def test_post_episode_recounts_watched(
+    m_get_item,
+    m_add_ep,
+    m_get_eps,
+    m_set_watched,
+    m_get_ep,
+    m_show_eps,
+    m_show,
+    token,
+    client,
+    username,
+):
+    m_get_item.return_value = {}
+    m_show.return_value = {
+        "name": "Show",
+        "status": "Ended",
+        "image": {"original": "new.jpg"},
+    }
+    # Episode 3 is a special, counted separately
+    m_get_eps.return_value = [
+        {"episode_api_id": "1"},
+        {"episode_api_id": "2"},
+        {"episode_api_id": "3"},
+    ]
+    m_show_eps.return_value = [
+        {"id": 1, "type": "regular", "airdate": "2020-01-01"},
+        {"id": 2, "type": "regular", "airdate": "2020-01-08"},
+        {"id": 3, "type": "insignificant_special", "airdate": "2020-01-09"},
+        {"id": 4, "type": "regular", "airdate": "2020-01-15"},
+    ]
+
+    response = client.post(
+        f"/items/tvmaze/{TEST_SHOW_ID}/episodes",
+        headers={"Authorization": token},
+        json={"episode_api_id": "1"},
+    )
+
+    assert response.status_code == 204
+    args = m_set_watched.call_args.args
+    assert args[:5] == (username, "tvmaze", TEST_SHOW_ID, 2, 1)
+    # Counts and the rest of the cache are refreshed
+    assert args[5]["ep_count"] == 3
+    assert args[5]["special_count"] == 1
+    assert args[5]["image_url"] == "new.jpg"
+    assert args[5]["status"] == "Ended"
+
+
+@patch.object(tenrai.TenraiApi, "get_episode_count")
+@patch.object(tenrai.TenraiApi, "get_item")
+@patch.object(tenrai.TenraiApi, "get_episode")
+@patch("reviews_db.set_watched_eps")
+@patch("reviews_db.get_episodes")
+@patch("reviews_db.delete_episode")
+def test_delete_mal_episode_recounts_watched(
+    m_delete_ep,
+    m_get_eps,
+    m_set_watched,
+    m_get_ep,
+    m_get_item,
+    m_ep_count,
+    token,
+    client,
+    username,
+):
+    # Stale cache said 24, the source now has 23
+    m_get_item.return_value = {
+        "data": {
+            "episodes": 23,
+            "title": "Anime",
+            "images": {"jpg": {"image_url": "new.jpg"}},
+        }
+    }
+    m_ep_count.return_value = {"ep_count": 23}
+    m_get_eps.return_value = [
+        {"episode_api_id": "1"},
+        {"episode_api_id": "2"},
+    ]
+
+    response = client.delete(
+        f"/items/mal/{TEST_SHOW_ID}/episodes/3",
+        headers={"Authorization": token},
+    )
+
+    assert response.status_code == 204
+    m_get_ep.assert_not_called()
+    args = m_set_watched.call_args.args
+    assert args[:5] == (username, "mal", TEST_SHOW_ID, 2, 0)
+    assert args[5]["ep_count"] == 23
+    assert args[5]["special_count"] == 0
+    assert args[5]["image_url"] == "new.jpg"
+
+
+@patch("reviews_db.get_watch_dates")
+def test_get_watches(m_get_watch_dates, token, client):
+    m_get_watch_dates.return_value = [
+        {"api_name": "mal", "api_id": "1", "date": "2026-10-01T20:00:00Z"}
+    ]
+
+    response = client.get("/watches", headers={"Authorization": token})
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "watches": [
+            {"apiName": "mal", "apiId": "1", "date": "2026-10-01T20:00:00Z"}
+        ]
+    }
+
+
+def test_missing_token(client):
+    response = client.get("/items")
+
+    assert response.status_code == 401
+
+
+def test_invalid_sort(client, token):
+    response = client.get("/items?sort=nope", headers={"Authorization": token})
+
+    assert response.status_code == 422
+
+
+def test_invalid_body(client, token):
+    response = client.post(
+        "/items", headers={"Authorization": token}, json={"api_name": "x"}
+    )
+
+    assert response.status_code == 422
+
+
+@patch("reviews_db.get_all_items")
+def test_get_items(m_get_all_items, token, client, username):
+    m_get_all_items.return_value = {
+        "items": [
+            {
+                "api_name": "mal",
+                "api_id": "1",
+                "created_at": "2024-01-01 10:00:00",
+                "ep_progress": 50,
+                "api_info": "i_mal_1",
+            }
+        ],
+        "end_cursor": "abc",
+    }
+
+    response = client.get(
+        "/items?sort=latestWatchDate&filter=inProgress&cursor=abc",
+        headers={"Authorization": token, "Accept-Encoding": "gzip"},
+    )
+
+    assert response.status_code == 200
+    assert response.headers["Content-Encoding"] == "gzip"
+    assert response.json() == {
+        "items": [
+            {
+                "apiName": "mal",
+                "apiId": "1",
+                "createdAt": "2024-01-01 10:00:00",
+                "epProgress": 50.0,
+            }
+        ],
+        "endCursor": "abc",
+    }
+    m_get_all_items.assert_called_once_with(
+        username, "latest_watch_date", "abc", "in_progress"
+    )

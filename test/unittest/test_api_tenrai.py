@@ -1,4 +1,5 @@
 import pytest
+
 from tenrai import TenraiApi
 
 
@@ -37,3 +38,65 @@ def test_get_schedules(mocked_send_request, mocked_api):
 
     a = mocked_api.get_schedules()
     assert a == exp_res
+
+
+@pytest.mark.parametrize(
+    "status,planned,exp",
+    [
+        ("Currently Airing", 10, 8),
+        ("Finished Airing", 10, 10),
+        ("Finished Airing", 6, 6),
+        ("Finished Airing", None, 8),
+    ],
+)
+def test_get_item_ep_count(mocker, mocked_api, status, planned, exp):
+    mocker.patch.object(
+        mocked_api, "get_episode_count", return_value={"ep_count": 8}
+    )
+    api_item = {"status": status, "episodes": planned}
+    assert mocked_api.get_item_ep_count(1, api_item) == exp
+
+
+def test_watched_counts_only_released():
+    # 13 saved ahead of release, -1 is a stray
+    saved = ["1", "2", "12", "13", "-1"]
+
+    assert TenraiApi.watched_counts(12, saved) == {
+        "watched_eps": 3,
+        "watched_specials": 0,
+        "ep_count": 12,
+        "special_count": 0,
+    }
+
+
+def test_get_episode_empty_episode_list(mocked_send_request, mocked_api):
+    # Tenrai lists no episodes yet: allowed by the 25-episode margin
+    mocked_send_request.return_value = {
+        "pagination": {"last_visible_page": 1},
+        "data": [],
+    }
+
+    assert mocked_api.get_episode(33010, "1") is True
+    assert mocked_send_request.call_count == 1
+
+
+def test_prequel_ids():
+    relations = [
+        {"relation": "Prequel", "entry": [{"mal_id": 38524, "type": "anime"}]},
+        {"relation": "Adaptation", "entry": [{"mal_id": 1, "type": "manga"}]},
+        {"relation": "Sequel", "entry": [{"mal_id": 48583, "type": "anime"}]},
+    ]
+
+    assert TenraiApi.prequel_ids(relations) == ["38524"]
+
+
+def test_requests_are_spaced(mocked_send_request, mocked_api, mocker):
+    sleep = mocker.patch("tenrai.time.sleep")
+    mocked_send_request.return_value = {"data": {}}
+
+    mocked_api.get_item(1)
+    mocked_api.get_item(2)
+
+    # The second call waits to stay under Tenrai's rate limits
+    assert sleep.call_count == 1
+    assert 0 < sleep.call_args.args[0] <= 0.55

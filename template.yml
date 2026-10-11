@@ -15,6 +15,29 @@ Parameters:
   LocalCognitoClient:
     Type: String
 
+  TelegramBotToken:
+    Type: String
+    Default: ""
+    NoEcho: true
+
+  TelegramChatId:
+    Type: String
+    Default: ""
+
+  TelegramUsername:
+    Type: String
+    Default: ""
+    Description: >-
+      moshan username (as stored in the reviews table, e.g. m_fulder) whose
+      shows trigger Telegram pings; not the Telegram name
+
+  AlarmEmail:
+    Type: String
+    Default: ""
+    Description: Email that gets the update Lambda alarms (empty = no alarms)
+
+Conditions:
+  HasAlarmEmail: !Not [!Equals [!Ref AlarmEmail, ""]]
 
 Resources:
   Certificate:
@@ -101,46 +124,6 @@ Resources:
           HostedZoneId: !Ref HostedZoneId
         SecurityPolicy: TLS_1_2
 
-  ApiLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: api
-      ContentUri: src/layers/api
-      CompatibleRuntimes:
-        - python3.13
-    Metadata:
-      BuildMethod: python3.13
-
-  DatabasesLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: databases
-      ContentUri: src/layers/databases
-      CompatibleRuntimes:
-        - python3.13
-    Metadata:
-      BuildMethod: python3.13
-
-  UtilsLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: utils
-      ContentUri: src/layers/utils
-      CompatibleRuntimes:
-        - python3.13
-    Metadata:
-      BuildMethod: python3.13
-
-  FastApiLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: fastapi
-      ContentUri: src/layers/fastapi
-      CompatibleRuntimes:
-        - python3.13
-    Metadata:
-      BuildMethod: python3.13
-
   DatabasePolicy:
     Type: 'AWS::IAM::Policy'
     Properties:
@@ -175,19 +158,15 @@ Resources:
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src/lambdas/api
+      CodeUri: ./src
       Handler: app.handler
       Environment:
         Variables:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
           TMDB_TOKEN: !Ref TmdbToken
-      Layers:
-        - !Ref ApiLayer
-        - !Ref DatabasesLayer
-        - !Ref UtilsLayer
-        - !Ref FastApiLayer
-      MemorySize: 1024
+      # /items is CPU-bound (botocore parsing ~1 MB pages); 2048 MB = full vCPU
+      MemorySize: 2048
       Role: !GetAtt ApiFunctionRole.Arn
       Runtime: python3.13
       Timeout: 10
@@ -240,26 +219,32 @@ Resources:
                   - sns:Publish
                 Resource:
                   - !Ref ItemUpdatesTopic
+        # Finds anime still cached as airing (finale refresh)
+        - PolicyName: reviews_scan
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Scan
+                Resource:
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/reviews"
 
   UpdatesPubFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src/lambdas/updates_publisher
-      Handler: __init__.handler
+      CodeUri: ./src
+      Handler: updates_publisher.handler
       Environment:
         Variables:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
           UPDATES_TOPIC_ARN: !Ref ItemUpdatesTopic
           TMDB_TOKEN: !Ref TmdbToken
-      Layers:
-        - !Ref ApiLayer
-        - !Ref DatabasesLayer
-        - !Ref UtilsLayer
       MemorySize: 2048
       Role: !GetAtt UpdatesPubFunctionRole.Arn
       Runtime: python3.13
-      Timeout: 120
+      # First sequel check looks up ~300 relations at Tenrai's rate limit
+      Timeout: 600
       Events:
         InvocationLevel:
           Type: Schedule
@@ -281,17 +266,16 @@ Resources:
   UpdatesSubFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src/lambdas/updates_subscriber
-      Handler: __init__.handler
+      CodeUri: ./src
+      Handler: updates_subscriber.handler
       Environment:
         Variables:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
           TMDB_TOKEN: !Ref TmdbToken
-      Layers:
-        - !Ref ApiLayer
-        - !Ref DatabasesLayer
-        - !Ref UtilsLayer
+          TELEGRAM_BOT_TOKEN: !Ref TelegramBotToken
+          TELEGRAM_CHAT_ID: !Ref TelegramChatId
+          TELEGRAM_USERNAME: !Ref TelegramUsername
       MemorySize: 1024
       Role: !GetAtt UpdatesSubFunctionRole.Arn
       Runtime: python3.13
@@ -301,3 +285,69 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref ItemUpdatesTopic
+
+  # Alarms: email when the daily updates fail or stop running
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Condition: HasAlarmEmail
+    Properties:
+      Subscription:
+        - Protocol: email
+          Endpoint: !Ref AlarmEmail
+
+  UpdatesPubErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: HasAlarmEmail
+    Properties:
+      AlarmDescription: Daily updates publisher failed or timed out
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref UpdatesPubFunction
+      Statistic: Sum
+      Period: 3600
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlarmTopic
+
+  UpdatesPubNotRunningAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: HasAlarmEmail
+    Properties:
+      AlarmDescription: Daily updates publisher has not run for 2 days
+      Namespace: AWS/Lambda
+      MetricName: Invocations
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref UpdatesPubFunction
+      Statistic: Sum
+      Period: 86400
+      EvaluationPeriods: 2
+      Threshold: 1
+      ComparisonOperator: LessThanThreshold
+      TreatMissingData: breaching
+      AlarmActions:
+        - !Ref AlarmTopic
+
+  UpdatesSubErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: HasAlarmEmail
+    Properties:
+      AlarmDescription: Update worker failed on an item
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref UpdatesSubFunction
+      Statistic: Sum
+      Period: 3600
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlarmTopic
