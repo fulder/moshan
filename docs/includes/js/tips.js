@@ -166,6 +166,14 @@ async function load() {
   await Promise.all(Object.keys(SOURCES).map(apiName => collectionTips(apiName, items)));
 }
 
+// Back from a show tip: the page comes from the back/forward cache with
+// the clicked card still busy
+window.addEventListener('pageshow', event => {
+  if (event.persisted) {
+    document.querySelectorAll('.posters a[aria-busy]').forEach(card => card.removeAttribute('aria-busy'));
+  }
+});
+
 if (isLoggedIn()) {
   load();
 }
