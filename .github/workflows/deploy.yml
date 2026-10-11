@@ -9,7 +9,7 @@ on:
       - 'src/**'
       - 'samconfig.toml'
       - 'template.yml'
-      - 'poetry.lock'
+      - 'uv.lock'
       - 'pyproject.toml'
 
 permissions:
@@ -37,12 +37,10 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOY_ROLE_ARN }}
           role-session-name: GitHubDeploySession
 
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+
       - name: Export requirements
-        shell: bash
-        run: |
-          pip install poetry
-          poetry self add poetry-plugin-export
-          poetry export --with lambda --output ./src/requirements.txt
+        run: uv export --frozen --only-group lambda --no-hashes --output-file src/requirements.txt
 
       - name: build
         run: sam build --use-container
