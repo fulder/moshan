@@ -120,12 +120,33 @@ def add_item(username, api_name, api_id, data):
 
 
 def update_item(username, api_name, api_id, data):
+    clean_whitelist = reviews_db.OPTIONAL_FIELDS
+    if not data.get("dates_watched"):
+        # No own watch dates (any more): History falls back to the latest
+        # episode watch, or drops the item if there is none
+        data["latest_watch_date"] = _latest_episode_watch(
+            username, api_name, api_id
+        )
+        clean_whitelist = clean_whitelist + ["latest_watch_date"]
     reviews_db.update_item(
         username,
         api_name,
         api_id,
         data,
+        clean_whitelist=clean_whitelist,
     )
+
+
+def _latest_episode_watch(username, api_name, api_id):
+    dates = [
+        dateutil.parser.parse(d)
+        for ep in reviews_db.get_episodes(username, api_name, api_id)
+        for d in ep.get("dates_watched", [])
+    ]
+    if not dates:
+        return None
+    latest = max(dates).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return latest.replace("000Z", "Z")
 
 
 def delete_item(username, api_name, api_id):

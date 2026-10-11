@@ -125,3 +125,20 @@ def test_from_dynamodb_plain_numbers():
         "api_cache": {"ep_count": 12, "x": None},
     }
     assert type(reviews_db._from_dynamodb(item)["watched_eps"]) is int
+
+
+def test_update_item_removes_whitelisted_latest_watch_date(mocker):
+    table = _update_kwargs(mocker)
+
+    reviews_db.update_item(
+        "me",
+        "tvmaze",
+        "1",
+        {"status": "following", "latest_watch_date": None},
+        clean_whitelist=reviews_db.OPTIONAL_FIELDS + ["latest_watch_date"],
+    )
+
+    kwargs = table.update_item.call_args.kwargs
+    remove = kwargs["UpdateExpression"].split(" REMOVE ")[1]
+    assert "#latest_watch_date" in remove
+    assert "#status" not in remove
