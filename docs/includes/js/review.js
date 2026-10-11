@@ -63,6 +63,29 @@ function createReview() {
 const CHEVRON_LEFT = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
 const CHEVRON_RIGHT = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
 
+// Opened from Tips: which of your rated titles recommended this one
+function showTipReason() {
+  let tip;
+  try {
+    tip = JSON.parse(sessionStorage.getItem('moshan_tip'));
+  } catch {
+    return;
+  }
+  if (!tip || tip.apiName !== qParams.api_name || tip.apiId !== qParams.api_id || qParams.episode_api_id) {
+    return;
+  }
+  const label = document.createElement('small');
+  label.textContent = 'Tip, because you liked:';
+  const links = tip.because.sort((a, b) => b.rating - a.rating).map(seed => {
+    const a = document.createElement('a');
+    a.href = seed.href;
+    a.textContent = `${seed.title} · ${seed.rating}/10`;
+    return a;
+  });
+  $('tipReason').replaceChildren(label, ...links);
+  $('tipReason').hidden = false;
+}
+
 // Prequel/sequel links for anime (other seasons are separate MAL entries)
 async function showRelations() {
   let relations;
@@ -112,6 +135,7 @@ async function createItem() {
   }
 
   createReviewPage(item);
+  showTipReason();
   if (qParams.api_name === 'mal') {
     showRelations();
   }

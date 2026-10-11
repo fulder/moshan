@@ -89,16 +89,6 @@ nav details.dropdown > summary svg {
   grid-column: 1 / -1;
 }
 
-/* Tips: why a title is recommended, up to two lines */
-.posters small.because {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  white-space: normal;
-  color: var(--pico-muted-color);
-  font-size: 0.75rem;
-}
-
 tr[data-href] {
   cursor: pointer;
 }
@@ -485,6 +475,10 @@ h2 .count {
 .premiere {
   color: var(--pico-primary);
   font-weight: 600;
+}
+
+.tip-reason small {
+  color: var(--pico-muted-color);
 }
 
 .relations {
