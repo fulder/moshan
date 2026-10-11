@@ -88,7 +88,13 @@ async function openTmdbShow(rec) {
 
 function tipCard(rec) {
   const card = posterCard({href: rec.href ?? '#', image: rec.image, title: rec.title});
-  card.title = `Because you liked ${rec.because.slice(0, 3).join(', ')}`;
+  // Which of your rated titles led here; the tooltip has them all
+  const because = document.createElement('small');
+  because.className = 'because';
+  const more = rec.because.length > 2 ? ` +${rec.because.length - 2}` : '';
+  because.textContent = `Because you liked ${rec.because.slice(0, 2).join(', ')}${more}`;
+  card.appendChild(because);
+  card.title = `Because you liked ${rec.because.join(', ')}`;
   if (rec.tmdbTv) {
     card.addEventListener('click', event => {
       event.preventDefault();
