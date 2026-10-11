@@ -6,7 +6,7 @@ export function itemImage(item) {
     return NO_IMAGE;
   }
   if (item.apiName === 'tmdb' && !url.includes('http')) {
-    return `https://image.tmdb.org/t/p/w500/${url}`;
+    return `https://image.tmdb.org/t/p/w342/${url}`;
   }
   return url.replace('original_untouched', 'medium_portrait');
 }
