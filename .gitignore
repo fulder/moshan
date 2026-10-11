@@ -11,4 +11,6 @@ scripts/
 configLocal.js
 
 .pytest-cache
-.ideasrc/requirements.txt
+.idea
+src/requirements.txt
+
