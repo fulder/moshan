@@ -150,10 +150,25 @@ def _get_review(username, api_info, include_deleted=False):
     return res["Items"][0]
 
 
+# What the list pages show; less for botocore to parse, the slow part of
+# /items (review texts, watch dates etc. come with the single item)
+LIST_FIELDS = [
+    "api_info",
+    "created_at",
+    "status",
+    "rating",
+    "latest_watch_date",
+    "ep_progress",
+    "api_cache",
+]
+
+
 def get_all_items(username, sort=None, cursor=None, filter=None):
     kwargs = {
         "KeyConditionExpression": Key("username").eq(username),
         "FilterExpression": Attr("deleted_at").not_exists(),
+        "ProjectionExpression": ", ".join(f"#{f}" for f in LIST_FIELDS),
+        "ExpressionAttributeNames": {f"#{f}": f for f in LIST_FIELDS},
     }
     if sort is not None:
         kwargs["IndexName"] = sort
