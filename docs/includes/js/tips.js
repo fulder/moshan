@@ -80,22 +80,28 @@ async function openTmdbShow(rec) {
     const ids = await tmdbRequest(`/tv/${rec.tmdbTv}/external_ids`);
     const param = ids.tvdb_id ? `thetvdb=${ids.tvdb_id}` : `imdb=${ids.imdb_id}`;
     const show = await request(`https://api.tvmaze.com/lookup/shows?${param}`);
+    rememberReason(rec, 'tvmaze', show.id);
     window.location.href = `review.html?api_name=tvmaze&api_id=${show.id}`;
   } catch {
     window.location.href = `results.html?search=${encodeURIComponent(rec.title)}`;
   }
 }
 
+// The review page shows which of your titles led to the tip
+function rememberReason(rec, apiName, apiId) {
+  try {
+    sessionStorage.setItem('moshan_tip', JSON.stringify({apiName, apiId: String(apiId), because: rec.because}));
+  } catch {
+    // reason just isn't shown
+  }
+}
+
 function tipCard(rec) {
   const card = posterCard({href: rec.href ?? '#', image: rec.image, title: rec.title});
-  // Which of your rated titles led here; the tooltip has them all
-  const because = document.createElement('small');
-  because.className = 'because';
-  const more = rec.because.length > 2 ? ` +${rec.because.length - 2}` : '';
-  because.textContent = `Because you liked ${rec.because.slice(0, 2).join(', ')}${more}`;
-  card.appendChild(because);
-  card.title = `Because you liked ${rec.because.join(', ')}`;
-  if (rec.tmdbTv) {
+  card.title = `Because you liked ${rec.because.map(b => b.title).join(', ')}`;
+  if (rec.href) {
+    card.addEventListener('click', () => rememberReason(rec, rec.apiName, rec.key));
+  } else if (rec.tmdbTv) {
     card.addEventListener('click', event => {
       event.preventDefault();
       card.setAttribute('aria-busy', 'true');
@@ -129,9 +135,13 @@ async function collectionTips(apiName, items) {
       listed.add(result.self);
     }
     for (const r of result.recs) {
-      const rec = recs.get(r.key) ?? {...r, score: 0, because: []};
+      const rec = recs.get(r.key) ?? {...r, apiName, score: 0, because: []};
       rec.score += (seed.rating - 6) * r.strength;
-      rec.because.push(seed.apiCache.title);
+      rec.because.push({
+        title: seed.apiCache.title,
+        rating: seed.rating,
+        href: `review.html?api_name=${seed.apiName}&api_id=${seed.apiId}`,
+      });
       recs.set(r.key, rec);
     }
   }));
