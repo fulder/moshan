@@ -4,6 +4,7 @@ import jwt
 import reviews_db
 import utils
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.gzip import GZipMiddleware
 from log import setup_logger
 from loguru import logger
 from mangum import Mangum
@@ -27,6 +28,8 @@ from .models import (
 )
 
 app = FastAPI()
+# API Gateway HTTP APIs don't compress; the full item list is ~1.7 MB a page
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 setup_logger()
 
