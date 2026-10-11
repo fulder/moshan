@@ -85,3 +85,15 @@ def test_get_watch_dates(mocker):
         {"api_name": "tmdb", "api_id": "550", "date": "2020-01-01T20:00:00Z"},
         {"api_name": "tmdb", "api_id": "550", "date": "2025-01-01"},
     ]
+
+
+def test_get_all_items_filter_without_sort(mocker):
+    table = _update_kwargs(mocker)
+    table.query.return_value = {
+        "Items": [{"api_info": "i_mal_1", "status": "following"}]
+    }
+
+    res = reviews_db.get_all_items("me", filter="in_progress")
+
+    assert "IndexName" not in table.query.call_args.kwargs
+    assert res["items"][0]["api_id"] == "1"

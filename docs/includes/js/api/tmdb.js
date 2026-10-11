@@ -6,6 +6,10 @@ const HEADERS = {
   'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjM2Q1MGM4ZWJiYWQ3MTdhYTA4OWFlNjQ2ZWZkMDAwMiIsInN1YiI6IjYwMDBhZDY3NDIwMjI4MDAzZWU5MWExZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.QpoM4q7TZMkkMmN58-XcmNAygfOZOFNsvPFe-L88cVo',
 };
 
+export function tmdbRequest(path) {
+  return request(`${BASE_URL}${path}`, {headers: HEADERS});
+}
+
 export class TmdbApi {
   async search (qParams) {
     const res = await request(`${BASE_URL}/search/movie?query=${encodeURIComponent(qParams.search)}`, {headers: HEADERS});
