@@ -1,14 +1,21 @@
 from datetime import datetime
-from enum import auto
+from enum import StrEnum, auto
 from typing import List, Optional
 
-from fastapi_utils.enums import CamelStrEnum
 from pydantic import BaseModel, ConfigDict
 
 
 def to_camel(snake_str):
     s = snake_str.split("_")
     return s[0] + "".join(x.title() for x in s[1:])
+
+
+class CamelStrEnum(StrEnum):
+    """auto() values are the camelCase member names"""
+
+    @staticmethod
+    def _generate_next_value_(name, start, count, last_values):
+        return to_camel(name)
 
 
 class Status(CamelStrEnum):

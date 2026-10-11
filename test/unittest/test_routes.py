@@ -323,3 +323,61 @@ def test_get_watches(m_get_watch_dates, token, client):
             {"apiName": "mal", "apiId": "1", "date": "2026-10-01T20:00:00Z"}
         ]
     }
+
+
+def test_missing_token(client):
+    response = client.get("/items")
+
+    assert response.status_code == 401
+
+
+def test_invalid_sort(client, token):
+    response = client.get("/items?sort=nope", headers={"Authorization": token})
+
+    assert response.status_code == 422
+
+
+def test_invalid_body(client, token):
+    response = client.post(
+        "/items", headers={"Authorization": token}, json={"api_name": "x"}
+    )
+
+    assert response.status_code == 422
+
+
+@patch("reviews_db.get_all_items")
+def test_get_items(m_get_all_items, token, client, username):
+    m_get_all_items.return_value = {
+        "items": [
+            {
+                "api_name": "mal",
+                "api_id": "1",
+                "created_at": "2024-01-01 10:00:00",
+                "ep_progress": 50,
+                "api_info": "i_mal_1",
+            }
+        ],
+        "end_cursor": "abc",
+    }
+
+    response = client.get(
+        "/items?sort=latestWatchDate&filter=inProgress&cursor=abc",
+        headers={"Authorization": token, "Accept-Encoding": "gzip"},
+    )
+
+    assert response.status_code == 200
+    assert response.headers["Content-Encoding"] == "gzip"
+    assert response.json() == {
+        "items": [
+            {
+                "apiName": "mal",
+                "apiId": "1",
+                "createdAt": "2024-01-01 10:00:00",
+                "epProgress": 50.0,
+            }
+        ],
+        "endCursor": "abc",
+    }
+    m_get_all_items.assert_called_once_with(
+        username, "latest_watch_date", "abc", "in_progress"
+    )
