@@ -4,6 +4,7 @@ import {createNavbar} from './common/navbar.js';
 import {isLoggedIn} from './common/auth.js';
 import {progressClass} from './common/posters.js';
 import {request} from './common/http.js';
+import {localDateTime} from './common/dates.js';
 
 createNavbar();
 
@@ -196,7 +197,7 @@ function createReviewPage(reviewItem) {
   $('review').value = review.review ?? '';
   $('user-status').value = review.status ?? '';
   $('user-rating').value = review.rating ?? '';
-  $('user_added_date').textContent = review.createdAt ?? '–';
+  $('user_added_date').textContent = localDateTime(review.createdAt) ?? '–';
 
   $('poster').addEventListener('error', () => $('poster').src = '/includes/img/image_not_available.png', {once: true});
   $('poster').src = reviewItem.imageUrl ?? '/includes/img/image_not_available.png';
