@@ -108,3 +108,20 @@ def test_get_all_items_projects_list_fields(mocker):
     kwargs = table.query.call_args.kwargs
     assert "#review" not in kwargs["ProjectionExpression"]
     assert kwargs["ExpressionAttributeNames"]["#api_cache"] == "api_cache"
+
+
+def test_from_dynamodb_plain_numbers():
+    item = {
+        "ep_progress": {"N": "33.33"},
+        "watched_eps": {"N": "5"},
+        "dates_watched": {"L": [{"S": "2024-01-01"}]},
+        "api_cache": {"M": {"ep_count": {"N": "12"}, "x": {"NULL": True}}},
+    }
+
+    assert reviews_db._from_dynamodb(item) == {
+        "ep_progress": 33.33,
+        "watched_eps": 5,
+        "dates_watched": ["2024-01-01"],
+        "api_cache": {"ep_count": 12, "x": None},
+    }
+    assert type(reviews_db._from_dynamodb(item)["watched_eps"]) is int

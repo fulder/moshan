@@ -23,7 +23,6 @@ lint = [
 ]
 lambda = [
     "aws-lambda-powertools>=3.35.0,<4",
-    "dynamodb-json>=1.4,<2",
     "loguru>=0.7.3,<0.8",
     "pydantic>=2.13.5,<3",
     "pyjwt>=2.15.1,<3",
