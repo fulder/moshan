@@ -373,9 +373,9 @@ let watchCount = null;
 
 function updateWatchedCount() {
   const count = watchDates().length;
-  // First watch date on an item: it has been watched, so mark it finished
-  // (shown before saving, so it can still be changed)
-  if (!episodeReview && watchCount === 0 && count > 0) {
+  // First watch date on an item or episode: it has been watched, so mark it
+  // finished (shown before saving, so it can still be changed)
+  if (watchCount === 0 && count > 0) {
     $('user-status').value = 'finished';
   }
   watchCount = count;
