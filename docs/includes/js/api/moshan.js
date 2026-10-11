@@ -41,6 +41,8 @@ export class MoshanApi {
       method,
       headers: await authHeaders(),
       body: data === undefined ? undefined : JSON.stringify(data),
+      // A save started while leaving the page still completes
+      keepalive: method !== 'GET',
     });
   }
 

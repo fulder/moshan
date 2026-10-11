@@ -13,7 +13,13 @@ const qParams = new QueryParams(urlParams);
 
 const $ = id => document.getElementById(id);
 
-$('saveButton').addEventListener('click', saveButtonClicked);
+$('saveButton').addEventListener('click', () => save());
+$('user-status').addEventListener('change', () => save());
+$('user-rating').addEventListener('change', () => save());
+for (const id of ['overview', 'review']) {
+  $(id).addEventListener('input', () => scheduleSave(2000));
+  $(id).addEventListener('blur', () => save());
+}
 $('addButton').addEventListener('click', addButtonClicked);
 $('removeButton').addEventListener('click', removeButtonClicked);
 $('newCalendarButton').addEventListener('click', () => createOneCalendar());
@@ -35,10 +41,16 @@ if (isLoggedIn()) {
   createReview();
 }
 
+// Unsaved changes are saved on the way out; only a save that can't start
+// yet (another one still running) needs the user to wait
 window.onbeforeunload = function () {
-  if (savedPatchData !== undefined && JSON.stringify(savedPatchData) !== JSON.stringify(getPatchData())) {
-    return 'Are you sure you want to leave?';
+  if (!hasChanges()) {
+    return;
   }
+  if (saveRunning) {
+    return 'Still saving, leave anyway?';
+  }
+  save();
 };
 
 function QueryParams(urlParams) {
@@ -316,13 +328,21 @@ function createOneCalendar(calDate = null) {
   setValue(calDate);
 
   dateInput.addEventListener('input', updateWatchedCount);
+  // change fires once a full date is picked, not on every keystroke
+  dateInput.addEventListener('change', () => save());
   timeInput.addEventListener('input', () => {
     timeInput.setAttribute('aria-invalid', timeInput.value !== '' && !TIME_PATTERN.test(timeInput.value));
+  });
+  timeInput.addEventListener('change', () => {
+    if (timeInput.value === '' || TIME_PATTERN.test(timeInput.value)) {
+      save();
+    }
   });
   nowButton.addEventListener('click', () => {
     setValue(new Date().toISOString());
     timeInput.removeAttribute('aria-invalid');
     updateWatchedCount();
+    save();
   });
   removeButton.addEventListener('click', () => {
     if ($('watched-dates').children.length === 1) {
@@ -331,6 +351,7 @@ function createOneCalendar(calDate = null) {
       row.remove();
     }
     updateWatchedCount();
+    save();
   });
 
   $('watched-dates').appendChild(row);
@@ -405,14 +426,60 @@ function removeButtonClicked(evt) {
   });
 }
 
-function saveButtonClicked(evt) {
+// Changes save by themselves: choices at once, text after a pause or when
+// leaving the box. One save at a time; changes made meanwhile follow after.
+let saveTimer = null;
+let saveRunning = false;
+let saveAgain = false;
+
+function hasChanges() {
+  return savedPatchData !== undefined && JSON.stringify(savedPatchData) !== JSON.stringify(getPatchData());
+}
+
+function scheduleSave(delayMs) {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, delayMs);
+}
+
+function setSaveState(text, failed = false) {
+  $('saveState').textContent = text;
+  $('saveButton').hidden = !failed;
+}
+
+async function save() {
+  clearTimeout(saveTimer);
+  if (saveRunning) {
+    saveAgain = true;
+    return;
+  }
+  if (!hasChanges()) {
+    return;
+  }
   const data = getPatchData();
   const updateFunc = episodeReview ? moshanApi.updateEpisode : moshanApi.updateItem;
 
-  withBusy(evt.target, async () => {
+  saveRunning = true;
+  setSaveState('Saving…');
+  try {
+    // Changing anything on a title not in the list adds it first, as Add does
+    if (!$('addButton').hidden) {
+      const addFunc = episodeReview ? moshanApi.addEpisode : moshanApi.addItem;
+      await addFunc.call(moshanApi, qParams);
+      $('addButton').hidden = true;
+      $('removeButton').hidden = false;
+    }
     await updateFunc.call(moshanApi, qParams, data.overview, data.review, data.status, data.rating, data.watchDates);
     savedPatchData = data;
-  });
+    setSaveState('Saved ✓');
+  } catch (error) {
+    console.log(error);
+    setSaveState('Not saved', true);
+  }
+  saveRunning = false;
+  if (saveAgain) {
+    saveAgain = false;
+    save();
+  }
 }
 
 function createEpisodesList(apiEpisodes) {
