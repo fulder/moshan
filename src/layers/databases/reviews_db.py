@@ -172,10 +172,10 @@ def get_all_items(username, sort=None, cursor=None, filter=None):
         kwargs["FilterExpression"] &= Attr("status").is_in(
             ["following", "watching"]
         )
-        del kwargs["Limit"]
+        kwargs.pop("Limit", None)
     elif filter == "only_backlog":
         kwargs["FilterExpression"] &= Attr("status").eq("backlog")
-        del kwargs["Limit"]
+        kwargs.pop("Limit", None)
 
     if cursor is not None:
         kwargs["ExclusiveStartKey"] = json.loads(unquote(cursor))
