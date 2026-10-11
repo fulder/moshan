@@ -6,8 +6,7 @@ on:
       - main
     paths:
       - '.github/workflows/deploy.yml'
-      - 'src/lambdas/**'
-      - 'src/layers/**'
+      - 'src/**'
       - 'samconfig.toml'
       - 'template.yml'
       - 'poetry.lock'
@@ -43,12 +42,7 @@ jobs:
         run: |
           pip install poetry
           poetry self add poetry-plugin-export
-          mkdir ./src/layers/fastapi
-          poetry export --with api --output ./src/lambdas/api/requirements.txt
-          poetry export --with layers-api --output ./src/layers/api/requirements.txt
-          poetry export --with layers-databases --output ./src/layers/databases/requirements.txt
-          poetry export --with layers-fastapi --output ./src/layers/fastapi/requirements.txt
-          poetry export --with layers-utils --output ./src/layers/utils/requirements.txt
+          poetry export --with lambda --output ./src/requirements.txt
 
       - name: build
         run: sam build --use-container

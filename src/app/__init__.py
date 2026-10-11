@@ -1,15 +1,16 @@
 from typing import Optional
 
 import jwt
-import reviews_db
-import utils
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.gzip import GZipMiddleware
-from log import setup_logger
 from loguru import logger
 from mangum import Mangum
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import JSONResponse, Response
+
+import reviews_db
+import utils
+from log import setup_logger
 
 from . import routes
 from .models import (

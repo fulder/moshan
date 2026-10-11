@@ -3,13 +3,14 @@ import os
 from datetime import datetime
 from decimal import Decimal
 
+from loguru import logger
+
 import reviews_db
 import telegram
 import tenrai
 import tmdb
 import tvmaze
 from log import setup_logger
-from loguru import logger
 
 setup_logger()
 

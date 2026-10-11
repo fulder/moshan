@@ -10,16 +10,7 @@ os.environ["LOG_LEVEL"] = "DEBUG"
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 SRC_PATH = os.path.join(CURRENT_DIR, "..", "..", "src")
 
-UTILS_PATH = os.path.join(SRC_PATH, "layers", "utils")
-DATABASES_PATH = os.path.join(SRC_PATH, "layers", "databases")
-API_PATH = os.path.join(SRC_PATH, "layers", "api")
-
-API_LAMBDA_PATH = os.path.join(SRC_PATH, "lambdas", "api")
-
-sys.path.append(UTILS_PATH)
-sys.path.append(DATABASES_PATH)
-sys.path.append(API_PATH)
-sys.path.append(API_LAMBDA_PATH)
+sys.path.append(SRC_PATH)
 
 from app import app  # noqa
 

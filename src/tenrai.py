@@ -2,8 +2,9 @@ import time
 from datetime import datetime
 
 import dateutil.parser
-import utils
 from loguru import logger
+
+import utils
 
 # Tenrai's public tier allows 4 requests/second and 120/minute; stay under
 # both (0.55 s apart is ~109/minute)
