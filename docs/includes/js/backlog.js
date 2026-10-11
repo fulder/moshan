@@ -2,6 +2,7 @@ import {createNavbar} from './common/navbar.js';
 import {MoshanApi} from './api/moshan.js';
 import {isLoggedIn} from './common/auth.js';
 import {loadAll} from './common/posters.js';
+import {localDateTime} from './common/dates.js';
 
 createNavbar();
 
@@ -35,7 +36,7 @@ function createRow(item) {
   }
   row.addEventListener('click', () => window.location.href = href);
 
-  const values = [item.createdAt?.split(' ')[0], item.rating, null, apiCache.title, apiCache.status, releaseDate];
+  const values = [localDateTime(item.createdAt, false), item.rating, null, apiCache.title, apiCache.status, releaseDate];
   for (const value of values) {
     const td = document.createElement('td');
     td.textContent = value ?? '';
