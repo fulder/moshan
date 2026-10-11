@@ -97,3 +97,14 @@ def test_get_all_items_filter_without_sort(mocker):
 
     assert "IndexName" not in table.query.call_args.kwargs
     assert res["items"][0]["api_id"] == "1"
+
+
+def test_get_all_items_projects_list_fields(mocker):
+    table = _update_kwargs(mocker)
+    table.query.return_value = {"Items": []}
+
+    reviews_db.get_all_items("me", sort="rating", filter="only_backlog")
+
+    kwargs = table.query.call_args.kwargs
+    assert "#review" not in kwargs["ProjectionExpression"]
+    assert kwargs["ExpressionAttributeNames"]["#api_cache"] == "api_cache"
