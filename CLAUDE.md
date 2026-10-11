@@ -4,62 +4,65 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Moshan ("watch-history.moshan.tv") is a personal watch-history/review tracker for
-TV shows, movies, and anime. It's an AWS SAM (Serverless Application Model) app:
-a FastAPI backend running on Lambda behind API Gateway, backed by DynamoDB, plus
-a static vanilla HTML/JS/Bootstrap frontend in `docs/` (served separately, e.g.
-GitHub Pages — see `docs/CNAME`).
+Moshan is a personal watch-history/review tracker for TV shows, movies and
+anime: an AWS SAM app with a Python Lambda API (Powertools
+`APIGatewayHttpResolver`) behind an API Gateway HTTP API, DynamoDB, and a
+static vanilla JS + Pico CSS frontend in `docs/` on GitHub Pages
+(moshan.fulder.dev; API at api.moshan.fulder.dev).
 
 The backend aggregates data from three external media APIs depending on
 `api_name`: `tmdb` (movies), `tvmaze` (TV shows), `mal` (anime, via Tenrai —
-see `src/layers/api/tenrai.py`).
+see `src/tenrai.py`).
 
 ## Commands
 
-Backend (Python, Poetry-managed):
-* `make test` — installs required poetry groups and runs the unit test suite (`test/unittest`)
-* Run a single unit test: `poetry run pytest test/unittest/test_routes.py::test_get_item -vv`
-* `make apitest` — runs live API integration tests against the deployed API (`test/apitest`); requires `TOKEN=<TEST_USER_TOKEN>` env var (a valid Cognito JWT)
-* `make format` — runs `black`, `isort`, then `flake8` (line length 80, black profile for isort)
-* `make deploy-provision` — deploys `template_provision.yml` (the DynamoDB table stack) via `sam deploy`
+Backend (Python, uv-managed; groups in `pyproject.toml`: `lambda`, `pytest`,
+`lint`, `dev`):
+* `make test` — unit tests (`test/unittest`)
+* Single test: `uv run --group pytest --group lambda pytest test/unittest/test_routes.py::test_get_item -vv`
+* `make apitest` — live API tests (`test/apitest`); needs `TOKEN=<Cognito JWT>`
+* `make format` — black, isort, flake8 (line length 80)
+* `make deploy-provision` — deploys `template_provision.yml` (the DynamoDB table stack)
+* Deploy is CI only (`deploy.yml` on push to main): `uv export --only-group
+  lambda` → `src/requirements.txt`, `sam build --use-container`, `sam deploy`.
+  To test a build locally without SAM installed, run `sam build` inside the
+  `public.ecr.aws/sam/build-python3.13` Docker image.
 
-Frontend (`docs/`, vanilla JS + Bootstrap):
-* `npm install`
-* `make lint` / `make lintfix` (from `docs/Makefile`, via eslint)
+Frontend (`docs/`): `npm install`, `make lint` / `make lintfix` (eslint).
 
 ## Architecture
 
-**Lambda layers vs. lambdas**: Shared code lives in `src/layers/{api,databases,utils}`
-and is attached to each Lambda function as an AWS Lambda Layer (see `template.yml`).
-Each layer's dependencies are their own optional Poetry dependency group
-(`layers-api`, `layers-databases`, `layers-utils`, `layers-fastapi`), which is why
-`make test` installs several groups at once. Because layers are just added to
-`sys.path` (see `test/unittest/conftest.py`), imports across the codebase are
-flat/unqualified (e.g. `import tenrai`, `import reviews_db`), not package-relative.
+**One code bundle, no layers**: all code lives flat in `src/` and is the
+`CodeUri` of all three Lambdas (only the handler differs), so imports are
+flat (`import tenrai`, `import reviews_db`); tests put `src/` on `sys.path`
+(`test/unittest/conftest.py`).
 
-**Three Lambda functions** (`src/lambdas/`), all sharing the layers above:
-* `api` — the FastAPI app (`src/lambdas/api/app`) handling all HTTP routes, mounted via Mangum. `app/__init__.py` wires routes and does lightweight JWT parsing (signature verification is handled upstream by the Cognito authorizer in API Gateway, not in app code). `app/routes.py` contains the actual business logic per route.
-* `updates_publisher` — polls the three external APIs for changes/schedules and publishes SNS notifications (`ItemUpdatesTopic`) for shows present in the reviews DB.
-* `updates_subscriber` — consumes those SNS notifications and refreshes the cached `api_cache` fields (title, status, episode counts, etc.) on the corresponding DynamoDB item.
+**Three Lambda functions**:
+* `app.handler` — the API (`src/app`): `__init__.py` wires routes, auth
+  middleware (decodes the JWT for `username` only; the signature is checked by
+  the Cognito authorizer in API Gateway), pydantic validation (422) and
+  camelCase JSON via `models.py`; `routes.py` holds the logic. Tests call the
+  handler with HTTP API v2 events via the small client in `conftest.py`.
+* `updates_publisher.handler` — daily: polls the external APIs for changes and
+  publishes SNS notifications (`ItemUpdatesTopic`) for listed items.
+* `updates_subscriber.handler` — consumes those and refreshes `api_cache`
+  (title, status, episode counts…) and sends Telegram pings.
 
-**External API clients** (`src/layers/api/`): `tmdb.py`, `tvmaze.py`, `tenrai.py`
-each wrap one third-party API behind a small class with `get_item`/`get_episode*`
-methods. `utils.py` provides shared HTTP plumbing (`send_request`, `HttpError`)
-and `MediaRequestThread`/`merge_media_api_info_from_items`, which fan out
-requests to multiple APIs concurrently and merge results. The `mal` api_name
-maps to `TenraiApi` (Tenrai is a Jikan-schema-compatible anime API; Jikan itself
-had repeated 504s/instability, see git history around the `tenrai.py` migration).
+**External API clients**: `src/tmdb.py`, `tvmaze.py`, `tenrai.py`; shared
+HTTP plumbing (`send_request`, `HttpError`) in `src/utils.py`.
 
-**Data model**: DynamoDB single-table (`reviews`), accessed through
-`src/layers/databases/reviews_db.py`. Items are keyed by `(username, api_name, api_id)`;
-episodes are stored as a related sub-collection per item.
+**Data model**: DynamoDB single table `reviews` via `src/reviews_db.py`,
+keyed `(username, api_info)` with `api_info` = `i_<api>_<id>` for items and
+`e_<api>_<id>_<ep>` for episodes. `/items` uses a `ProjectionExpression`
+(`LIST_FIELDS`): add a field there if a list page needs it.
 
-**Infra as code**: `template.yml` defines the full stack (Cognito user pool for
-auth, HTTP API Gateway with a Cognito JWT authorizer, the three Lambda functions,
-the SNS topic, IAM roles/policies). `template_provision.yml` defines the
-DynamoDB table separately (deployed independently via `make deploy-provision`)
-so the table survives app stack redeploys. `template_cognito_cert.yml` handles
-the ACM certificate for the Cognito custom domain.
+**Infra**: `template.yml` (Cognito, HTTP API + JWT authorizer, Lambdas, SNS,
+alarms); `template_provision.yml` (table, deployed separately);
+`template_cognito_cert.yml` (ACM cert).
+
+**Cost**: the AWS bill is near zero and should stay that way; state the cost
+impact of infra changes. `/items` is CPU-bound (botocore parsing ~1 MB
+DynamoDB pages), which is why the API Lambda has 2048 MB (a full vCPU).
 
 ## Workflow tips
 
@@ -78,3 +81,6 @@ the ACM certificate for the Cognito custom domain.
 - "Page is slow": measure before changing. Ask the user to run a console
   one-liner summarizing `performance.getEntriesByType('resource')` per
   host/path (count + finish time), not to paste a HAR.
+- To split API server time from download time, time `fetch` until the
+  headers arrive vs `await r.json()` in the console (gzip is on, so the
+  download is rarely the slow part).
