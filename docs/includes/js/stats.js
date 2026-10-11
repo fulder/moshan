@@ -156,7 +156,8 @@ async function load() {
   const res = await moshanApi.getWatches();
   watches = res.watches
     .map(w => ({...w, date: new Date(w.date)}))
-    .filter(w => !isNaN(w.date));
+    // Older dates are placeholders (1970 = watched, date unknown)
+    .filter(w => w.date.getFullYear() >= 2000);
   stats.removeAttribute('aria-busy');
   range = savedRange();
   render();
