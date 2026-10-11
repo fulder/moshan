@@ -22,6 +22,7 @@ from .models import (
     ReviewData,
     Reviews,
     Sort,
+    Watches,
     review_data_to_dict,
 )
 
@@ -52,6 +53,11 @@ def get_items(
     cursor: Optional[str] = None,
 ):
     return routes.get_items(request.state.username, sort, cursor, filter)
+
+
+@app.get("/watches", response_model=Watches)
+def get_watches(request: Request):
+    return {"watches": reviews_db.get_watch_dates(request.state.username)}
 
 
 @app.get(

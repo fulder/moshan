@@ -59,6 +59,10 @@ export class MoshanApi {
     return this.request('GET', query ? `/items?${query}` : '/items');
   }
 
+  getWatches () {
+    return this.request('GET', '/watches');
+  }
+
   removeItem (qParams) {
     return this.request('DELETE', `/items/${qParams.api_name}/${qParams.api_id}`);
   }

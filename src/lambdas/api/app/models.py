@@ -127,6 +127,17 @@ class EpisodeReviews(BaseModel):
     episodes: List[EpisodeReview]
 
 
+class Watch(BaseModel):
+    api_name: str
+    api_id: str
+    date: str
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+
+class Watches(BaseModel):
+    watches: List[Watch]
+
+
 def review_data_to_dict(data: ReviewData):
     data = data.model_dump(
         exclude={"api_name", "item_api_id", "episode_api_id"}
