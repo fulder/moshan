@@ -1,6 +1,7 @@
 # Moshan
 
-Watch history for movies, shows and anime in one place: [moshan.fulder.dev](https://moshan.fulder.dev)
+Watch history for movies, shows and anime in one place. It's made for self-hosting in your
+own AWS account; there is no public service to sign up for.
 
 https://github.com/user-attachments/assets/63d9b7f2-512c-46d7-abe1-cb1c9e2c225b
 
