@@ -73,6 +73,27 @@ nav details.dropdown > summary svg {
   border-radius: var(--pico-border-radius);
 }
 
+.posters a[aria-busy=true] {
+  position: relative;
+}
+
+/* Tip lookup in progress: spinner over the poster, not beside it */
+.posters a[aria-busy=true]::before {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  margin: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-size: contain;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.posters a[aria-busy=true] img {
+  opacity: 0.4;
+}
+
 .posters progress {
   margin: 0.25rem 0 0;
 }
