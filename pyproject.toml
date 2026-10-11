@@ -1,53 +1,42 @@
-[tool.poetry]
+[project]
 name = "moshan"
 version = "0.1.0"
 description = ""
-authors = ["fulder <misad90@gmail.com>"]
+authors = [{ name = "fulder", email = "misad90@gmail.com" }]
+requires-python = ">=3.13,<4"
 readme = "README.md"
-package-mode = false
 
-[tool.poetry.dependencies]
-python = "^3.13"
+[dependency-groups]
+dev = [
+    "boto3>=1.43.0,<2",
+    "httpx>=0.28.1,<0.29",
+]
+pytest = [
+    "pytest>=9.1.1,<10",
+    "pytest-cov>=7.1.0,<8",
+    "pytest-html>=4.2.0,<5",
+    "pytest-mock>=3.16.0,<4",
+]
+lint = [
+    "black>=26.10.0,<27",
+    "isort>=9.0.2,<10",
+    "flake8>=7.4.1,<8",
+]
+lambda = [
+    "dynamodb-json>=1.4,<2",
+    "fastapi>=0.142.2,<0.143",
+    "fastapi-utils>=0.8.0,<0.9",
+    "loguru>=0.7.3,<0.8",
+    "mangum>=0.22.0,<0.23",
+    "pydantic>=2.13.5,<3",
+    "pyjwt>=2.15.1,<3",
+    "python-dateutil>=2.9.0,<3",
+    "requests>=2.34.2,<3",
+    "typing-inspect>=0.9.0,<0.10",
+]
 
-[tool.poetry.group.dev.dependencies]
-boto3 = "^1.43.0"
-httpx = "^0.28.1"
-
-[tool.poetry.group.pytest]
-optional = true
-
-[tool.poetry.group.pytest.dependencies]
-pytest = "^9.1.1"
-pytest-cov = "^7.1.0"
-pytest-html = "^4.2.0"
-pytest-mock = "^3.16.0"
-
-[tool.poetry.group.lint]
-optional = true
-
-[tool.poetry.group.lint.dependencies]
-black = "^26.10.0"
-isort = "^9.0.2"
-flake8 = "^7.4.1"
-
-[tool.poetry.group.lambda]
-optional = true
-
-[tool.poetry.group.lambda.dependencies]
-dynamodb-json = "^1.4"
-fastapi = "^0.142.2"
-fastapi-utils = "^0.8.0"
-loguru = "^0.7.3"
-mangum = "^0.22.0"
-pydantic = "^2.13.5"
-pyjwt = "^2.15.1"
-python-dateutil = "^2.9.0"
-requests = "^2.34.2"
-typing-inspect = "^0.9.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.uv]
+package = false
 
 [tool.pytest.ini_options]
 addopts = "--cov-report html --cov=src -vv"

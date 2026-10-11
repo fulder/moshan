@@ -1,12 +1,10 @@
 .PHONY: test
 test:
-	poetry install --with pytest,dev,lambda
-	poetry run pytest test/unittest
+	uv run --group pytest --group lambda pytest test/unittest
 
 .PHONY: apitest
 apitest:
-	poetry install --with pytest,dev
-	PYTHONPATH=test poetry run pytest test/apitest -vv
+	PYTHONPATH=test uv run --group pytest pytest test/apitest -vv
 
 .PHONY: deploy-provision
 deploy-provision:
@@ -14,7 +12,6 @@ deploy-provision:
 
 .PHONY: format
 format:
-	poetry install --with lint
-	poetry run black .
-	poetry run isort .
-	poetry run flake8 .
+	uv run --group lint black .
+	uv run --group lint isort .
+	uv run --group lint flake8 .
