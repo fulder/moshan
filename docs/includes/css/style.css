@@ -579,3 +579,13 @@ h2 .count {
   color: var(--pico-color);
   font-size: 0.8rem;
 }
+
+.credits {
+  margin: 0.5rem 0 0;
+  color: var(--pico-muted-color);
+}
+
+.credits img {
+  height: 0.75em;
+  vertical-align: baseline;
+}
