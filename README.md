@@ -15,6 +15,13 @@ https://github.com/user-attachments/assets/f0e1dbe1-9e5b-4209-b499-64d904ce7804
 Backend: Python Lambda (Powertools) behind API Gateway, DynamoDB, deployed with AWS SAM.
 Frontend: vanilla JS + Pico CSS in `docs/`, served by GitHub Pages.
 
+## Data sources
+
+- <a href="https://www.themoviedb.org"><img src="docs/includes/img/tmdb.svg" alt="TMDB" height="12"></a>
+  Movies. This product uses the TMDB API but is not endorsed or certified by TMDB.
+- [TVmaze](https://www.tvmaze.com): shows, under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+- [Tenrai](https://tenrai.org): anime, with data from [MyAnimeList](https://myanimelist.net).
+
 ## Self-hosting
 
 Not tested from a fresh fork, so expect to adjust. You need an AWS account, a domain and
