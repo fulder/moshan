@@ -1,5 +1,6 @@
 import os
 import sys
+from decimal import Decimal
 
 import pytest
 
@@ -168,3 +169,13 @@ def test_missing_anime_is_skipped(mocker):
     updates_subscriber.handler(event, None)
 
     get_items.assert_not_called()
+
+
+def test_progress_is_storable_in_dynamodb():
+    from boto3.dynamodb.types import TypeSerializer
+
+    progress = updates_subscriber._get_progress(1, 3)
+
+    assert progress == Decimal("33.33")
+    TypeSerializer().serialize(progress)
+    assert updates_subscriber._get_progress(0, 0) == 0

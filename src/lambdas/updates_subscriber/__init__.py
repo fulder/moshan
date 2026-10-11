@@ -227,8 +227,8 @@ def _notify_sequel(item, sequel):
 
 
 def _get_progress(watched, count):
-    progress = 0
-    if count != 0:
-        progress = watched / count
-
-    return Decimal(round(progress * 100, 2))
+    # Decimal throughout: a rounded float like 33.33 isn't exact and DynamoDB
+    # rejects it (decimal.Inexact)
+    if count == 0:
+        return Decimal(0)
+    return round(Decimal(watched) / Decimal(count) * 100, 2)
