@@ -72,3 +72,9 @@ the ACM certificate for the Cognito custom domain.
 - Bulk data fixes: browser-console scripts using
   `localStorage.moshan_access_token`, dry run first. Re-adding an existing
   episode (POST) triggers a recount without touching its data.
+- Third-party data (TVMaze/Tenrai/TMDB) is cached in localStorage via
+  `docs/includes/js/common/cache.js` (`moshan_cache_` prefix, per-call TTL);
+  the user's own data is always fetched fresh. Hard refresh doesn't clear it.
+- "Page is slow": measure before changing. Ask the user to run a console
+  one-liner summarizing `performance.getEntriesByType('resource')` per
+  host/path (count + finish time), not to paste a HAR.
