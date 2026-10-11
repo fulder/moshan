@@ -2,7 +2,7 @@
 
 Watch history for movies, shows and anime in one place: [moshan.fulder.dev](https://moshan.fulder.dev)
 
-VIDEO_URL
+https://github.com/user-attachments/assets/63d9b7f2-512c-46d7-abe1-cb1c9e2c225b
 
 - **One search, three sources:** TMDB for movies, TVMaze for shows, MyAnimeList (via Tenrai) for anime.
 - **Watching:** progress per show, counted from aired episodes only; an Upcoming tab for sequels that haven't aired yet.
