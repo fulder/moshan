@@ -1,4 +1,3 @@
-import json
 from threading import Lock, Thread
 
 import requests
@@ -85,10 +84,18 @@ def send_request(base_url, method, path, headers=None):
         res.raise_for_status()
         return res.json()
     except HTTPError as e:
-        logger.bind(
-            statusCode=e.response.status_code,
-            content=json.loads(e.response.content.decode()),
-            url=url,
-            method=method,
-        ).error("Error during request")
-        raise HttpError(e.response.status_code)
+        status = e.response.status_code
+        try:
+            content = e.response.json()
+        except ValueError:
+            # e.g. an HTML error page from a proxy
+            content = e.response.text[:500]
+        log = logger.bind(
+            statusCode=status, content=content, url=url, method=method
+        )
+        # Callers handle these (missing item, rate limit retry)
+        if status in (404, 429):
+            log.warning("Error during request")
+        else:
+            log.error("Error during request")
+        raise HttpError(status)
