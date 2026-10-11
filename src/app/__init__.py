@@ -1,12 +1,12 @@
 from typing import Optional
 
 import jwt
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.gzip import GZipMiddleware
-from loguru import logger
-from mangum import Mangum
-from starlette.exceptions import HTTPException as StarletteHTTPException
-from starlette.responses import JSONResponse, Response
+from aws_lambda_powertools.event_handler import APIGatewayHttpResolver, Response
+from aws_lambda_powertools.event_handler.exceptions import (
+    NotFoundError,
+    ServiceError,
+)
+from pydantic import BaseModel, ValidationError
 
 import reviews_db
 import utils
@@ -28,199 +28,177 @@ from .models import (
     review_data_to_dict,
 )
 
-app = FastAPI()
-# API Gateway HTTP APIs don't compress; the full item list is ~1.7 MB a page
-app.add_middleware(GZipMiddleware, minimum_size=1000)
+app = APIGatewayHttpResolver(strip_prefixes=["/prod"])
 
 setup_logger()
 
-
-@app.exception_handler(StarletteHTTPException)
-async def http_exception_handler(request, exc):
-    logger.bind(
-        statusCode=exc.status_code,
-        detail=exc.detail,
-        method=request.method,
-        path=request.url.path,
-        headers=dict(request.headers),
-        queryParams=dict(request.query_params),
-        pathParams=dict(request.path_params),
-    ).debug("API exception")
-    return JSONResponse(str(exc.detail), status_code=exc.status_code)
-
-
-@app.get("/items", response_model=Reviews, response_model_exclude_none=True)
-def get_items(
-    request: Request,
-    sort: Optional[Sort] = None,
-    filter: Optional[Filter] = None,
-    cursor: Optional[str] = None,
-):
-    return routes.get_items(request.state.username, sort, cursor, filter)
-
-
-@app.get("/watches", response_model=Watches)
-def get_watches(request: Request):
-    return {"watches": reviews_db.get_watch_dates(request.state.username)}
-
-
-@app.get(
-    "/items/{api_name}/{item_api_id}",
-    response_model=Review,
-    response_model_exclude_none=True,
+NOT_FOUND_MSG = (
+    "Item with api_id: {} not found. Please add the item before posting episode"
 )
-def get_item(request: Request, api_name: str, item_api_id: str):
+
+
+class UnprocessableError(ServiceError):
+    def __init__(self, msg):
+        super().__init__(422, msg)
+
+
+def _auth(app, next_middleware):
+    auth_header = app.current_event.headers.get("authorization")
+    if auth_header is None:
+        return Response(401, "text/plain", "Missing Authorization Header")
+    decoded = jwt.decode(auth_header, options={"verify_signature": False})
+    app.append_context(username=decoded["username"])
+    return next_middleware(app)
+
+
+app.use(middlewares=[_auth])
+
+
+def _username():
+    return app.context["username"]
+
+
+def _body(model):
     try:
-        return routes.get_item(request.state.username, api_name, item_api_id)
+        return model.model_validate(app.current_event.json_body or {})
+    except ValidationError as e:
+        raise UnprocessableError(str(e))
+
+
+def _enum(enum, value):
+    if value is None:
+        return None
+    try:
+        return enum(value)
+    except ValueError:
+        raise UnprocessableError(f"Invalid value: {value}")
+
+
+def _dump(model: type[BaseModel], data, exclude_none=True):
+    return model.model_validate(data).model_dump(
+        mode="json", by_alias=True, exclude_none=exclude_none
+    )
+
+
+def _no_content():
+    return Response(204, None, None)
+
+
+@app.exception_handler(utils.HttpError)
+def http_error(e):
+    return Response(e.code, "text/plain", str(e))
+
+
+@app.get("/items", compress=True)
+def get_items():
+    query = app.current_event.query_string_parameters or {}
+    sort: Optional[Sort] = _enum(Sort, query.get("sort"))
+    filter: Optional[Filter] = _enum(Filter, query.get("filter"))
+    items = routes.get_items(_username(), sort, query.get("cursor"), filter)
+    return _dump(Reviews, items)
+
+
+@app.get("/watches", compress=True)
+def get_watches():
+    watches = reviews_db.get_watch_dates(_username())
+    return _dump(Watches, {"watches": watches}, exclude_none=False)
+
+
+@app.get("/items/<api_name>/<item_api_id>")
+def get_item(api_name, item_api_id):
+    try:
+        item = routes.get_item(_username(), api_name, item_api_id)
     except reviews_db.NotFoundError:
-        raise HTTPException(status_code=404)
+        raise NotFoundError("Not Found")
+    return _dump(Review, item)
 
 
-@app.delete("/items/{api_name}/{item_api_id}", status_code=204)
-def delete_item(request: Request, api_name: str, item_api_id: str):
-    routes.delete_item(request.state.username, api_name, item_api_id)
+@app.delete("/items/<api_name>/<item_api_id>")
+def delete_item(api_name, item_api_id):
+    routes.delete_item(_username(), api_name, item_api_id)
+    return _no_content()
 
 
-@app.put("/items/{api_name}/{item_api_id}", status_code=204)
-def update_item(
-    request: Request, api_name: str, item_api_id: str, data: ReviewData
-):
+@app.put("/items/<api_name>/<item_api_id>")
+def update_item(api_name, item_api_id):
+    data = _body(ReviewData)
     routes.update_item(
-        request.state.username,
-        api_name,
-        item_api_id,
-        review_data_to_dict(data),
+        _username(), api_name, item_api_id, review_data_to_dict(data)
     )
+    return _no_content()
 
 
-@app.post("/items", status_code=204)
-def add_item(request: Request, item: PostItem):
-    try:
-        routes.add_item(
-            request.state.username,
-            item.api_name.value,
-            item.item_api_id,
-            review_data_to_dict(item),
-        )
-    except utils.HttpError as e:
-        raise HTTPException(status_code=e.code)
-
-
-@app.get(
-    "/items/{api_name}/{item_api_id}/episodes",
-    response_model=EpisodeReviews,
-    response_model_exclude_none=True,
-)
-def get_episodes(request: Request, api_name: str, item_api_id: str):
-    return routes.get_episodes(
-        request.state.username,
-        api_name,
-        item_api_id,
+@app.post("/items")
+def add_item():
+    item = _body(PostItem)
+    routes.add_item(
+        _username(),
+        item.api_name.value,
+        item.item_api_id,
+        review_data_to_dict(item),
     )
+    return _no_content()
 
 
-@app.post("/items/{api_name}/{item_api_id}/episodes", status_code=204)
-def add_episode(
-    request: Request,
-    api_name: ApiNameWithEpisodes,
-    item_api_id,
-    episode: PostEpisode,
-):
+@app.get("/items/<api_name>/<item_api_id>/episodes", compress=True)
+def get_episodes(api_name, item_api_id):
+    episodes = routes.get_episodes(_username(), api_name, item_api_id)
+    return _dump(EpisodeReviews, episodes)
+
+
+@app.post("/items/<api_name>/<item_api_id>/episodes")
+def add_episode(api_name, item_api_id):
+    api_name = _enum(ApiNameWithEpisodes, api_name)
+    episode = _body(PostEpisode)
     try:
         routes.add_episode(
-            request.state.username,
+            _username(),
             api_name.value,
             item_api_id,
             episode.episode_api_id,
             review_data_to_dict(episode),
         )
-    except utils.HttpError as e:
-        raise HTTPException(status_code=e.code)
     except reviews_db.NotFoundError:
-        err_msg = (
-            f"Item with api_id: {item_api_id} not found. "
-            "Please add the item before posting episode"
-        )
-        raise HTTPException(status_code=404, detail=err_msg)
+        raise NotFoundError(NOT_FOUND_MSG.format(item_api_id))
+    return _no_content()
 
 
-@app.get(
-    "/items/{api_name}/{item_api_id}/episodes/{episode_api_id}",
-    response_model=EpisodeReview,
-    response_model_exclude_none=True,
-)
-def get_episode(
-    request: Request, api_name: str, item_api_id: str, episode_api_id: str
-):
+@app.get("/items/<api_name>/<item_api_id>/episodes/<episode_api_id>")
+def get_episode(api_name, item_api_id, episode_api_id):
     try:
-        return routes.get_episode(
-            request.state.username,
-            api_name,
-            item_api_id,
-            episode_api_id,
+        episode = routes.get_episode(
+            _username(), api_name, item_api_id, episode_api_id
         )
     except reviews_db.NotFoundError:
-        raise HTTPException(status_code=404)
+        raise NotFoundError("Not Found")
+    return _dump(EpisodeReview, episode)
 
 
-@app.put(
-    "/items/{api_name}/{item_api_id}/episodes/{episode_api_id}",
-    status_code=204,
-)
-def update_episode(
-    request: Request,
-    api_name: ApiNameWithEpisodes,
-    item_api_id: str,
-    episode_api_id: str,
-    data: ReviewData,
-):
+@app.put("/items/<api_name>/<item_api_id>/episodes/<episode_api_id>")
+def update_episode(api_name, item_api_id, episode_api_id):
+    api_name = _enum(ApiNameWithEpisodes, api_name)
+    data = _body(ReviewData)
     try:
         routes.update_episode(
-            request.state.username,
+            _username(),
             api_name.value,
             item_api_id,
             episode_api_id,
             review_data_to_dict(data),
         )
-    except utils.HttpError as e:
-        raise HTTPException(status_code=e.code)
     except reviews_db.NotFoundError:
-        err_msg = (
-            f"Item with api_id: {item_api_id} not found. "
-            "Please add the item before posting episode"
-        )
-        raise HTTPException(status_code=404, detail=err_msg)
+        raise NotFoundError(NOT_FOUND_MSG.format(item_api_id))
+    return _no_content()
 
 
-@app.delete(
-    "/items/{api_name}/{item_api_id}/episodes/{episode_api_id}",
-    status_code=204,
-)
-def delete_episode(
-    request: Request,
-    api_name: ApiNameWithEpisodes,
-    item_api_id: str,
-    episode_api_id: str,
-):
-    try:
-        routes.delete_episode(
-            request.state.username,
-            api_name.value,
-            item_api_id,
-            episode_api_id,
-        )
-    except utils.HttpError as e:
-        raise HTTPException(status_code=e.code)
+@app.delete("/items/<api_name>/<item_api_id>/episodes/<episode_api_id>")
+def delete_episode(api_name, item_api_id, episode_api_id):
+    api_name = _enum(ApiNameWithEpisodes, api_name)
+    routes.delete_episode(
+        _username(), api_name.value, item_api_id, episode_api_id
+    )
+    return _no_content()
 
 
-@app.middleware("http")
-async def parse_token(request: Request, call_next):
-    auth_header = request.headers.get("authorization")
-    if auth_header is None:
-        return Response(content="Missing Authorization Header", status_code=401)
-    decoded = jwt.decode(auth_header, options={"verify_signature": False})
-    request.state.username = decoded["username"]
-    return await call_next(request)
-
-
-handler = Mangum(app, api_gateway_base_path="/prod")
+def handler(event, context):
+    return app.resolve(event, context)
