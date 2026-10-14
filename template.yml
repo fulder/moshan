@@ -291,6 +291,30 @@ Resources:
           Properties:
             Topic: !Ref ItemUpdatesTopic
 
+  # Weekly Telegram list of shows with aired episodes not yet seen
+  UnseenDigestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src
+      Handler: unseen_digest.handler
+      Environment:
+        Variables:
+          REVIEWS_DATABASE_NAME: reviews
+          LOG_LEVEL: INFO
+          TELEGRAM_BOT_TOKEN: !Ref TelegramBotToken
+          TELEGRAM_CHAT_ID: !Ref TelegramChatId
+          TELEGRAM_USERNAME: !Ref TelegramUsername
+      MemorySize: 1024
+      Role: !GetAtt UpdatesSubFunctionRole.Arn
+      Runtime: python3.13
+      Timeout: 60
+      Events:
+        Weekly:
+          Type: Schedule
+          Properties:
+            # Sundays 17:00 UTC
+            Schedule: cron(0 17 ? * SUN *)
+
   # Alarms: email when the daily updates fail or stop running
   AlarmTopic:
     Type: AWS::SNS::Topic
