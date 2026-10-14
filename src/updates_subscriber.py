@@ -19,14 +19,7 @@ tvmaze_api = tvmaze.TvMazeApi()
 tenrai_api = tenrai.TenraiApi()
 
 NOTIFY_USERNAME = os.getenv("TELEGRAM_USERNAME")
-REVIEW_URL = "https://moshan.fulder.dev/review.html"
-
-
-def _url(api_name, api_id, episode_id=None):
-    url = f"{REVIEW_URL}?api_name={api_name}&api_id={api_id}"
-    if episode_id is not None:
-        url += f"&episode_api_id={episode_id}"
-    return url
+_url = telegram.review_url
 
 
 def handler(event, context):
