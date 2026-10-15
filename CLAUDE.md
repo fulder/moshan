@@ -33,11 +33,11 @@ Frontend (`docs/`): `npm install`, `make lint` / `make lintfix` (eslint).
 ## Architecture
 
 **One code bundle, no layers**: all code lives flat in `src/` and is the
-`CodeUri` of all three Lambdas (only the handler differs), so imports are
+`CodeUri` of all four Lambdas (only the handler differs), so imports are
 flat (`import tenrai`, `import reviews_db`); tests put `src/` on `sys.path`
 (`test/unittest/conftest.py`).
 
-**Three Lambda functions**:
+**Four Lambda functions**:
 * `app.handler` — the API (`src/app`): `__init__.py` wires routes, auth
   middleware (decodes the JWT for `username` only; the signature is checked by
   the Cognito authorizer in API Gateway), pydantic validation (422) and
@@ -47,6 +47,8 @@ flat (`import tenrai`, `import reviews_db`); tests put `src/` on `sys.path`
   publishes SNS notifications (`ItemUpdatesTopic`) for listed items.
 * `updates_subscriber.handler` — consumes those and refreshes `api_cache`
   (title, status, episode counts…) and sends Telegram pings.
+* `unseen_digest.handler` — weekly: one Telegram message listing shows with
+  aired episodes not yet seen (Watching/Following/Finished).
 
 **External API clients**: `src/tmdb.py`, `tvmaze.py`, `tenrai.py`; shared
 HTTP plumbing (`send_request`, `HttpError`) in `src/utils.py`.
