@@ -312,8 +312,8 @@ Resources:
         Weekly:
           Type: Schedule
           Properties:
-            # Sundays 17:00 UTC
-            Schedule: cron(0 17 ? * SUN *)
+            # Fridays 17:00 UTC
+            Schedule: cron(0 17 ? * FRI *)
 
   # Alarms: email when the daily updates fail or stop running
   AlarmTopic:
