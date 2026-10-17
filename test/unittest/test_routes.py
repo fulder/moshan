@@ -642,3 +642,59 @@ def test_also_for_deletes_episode_only_if_there(
     )
 
     assert [c.args[0] for c in m_delete_ep.call_args_list] == ["TEST_USER"]
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_item")
+def test_also_for_edited_date_replaces_hers(
+    m_get_item, m_update_item, token, client, monkeypatch
+):
+    # Autosave: the date was first saved at 00:00, then the time was typed
+    monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
+    m_get_item.side_effect = _items_by_user(
+        {"dates_watched": ["2026-10-17T22:00:00.000Z"]},
+        {
+            "dates_watched": [
+                "2020-01-01T20:00:00.000Z",
+                "2026-10-17T22:00:00.000Z",
+            ]
+        },
+    )
+
+    client.put(
+        f"/items/tmdb/{TEST_SHOW_ID}?alsoFor=OTHER",
+        headers={"Authorization": token},
+        json={"datesWatched": ["2026-10-17T21:14:00Z"]},
+    )
+
+    username, _, _, data = m_update_item.call_args_list[1].args
+    assert username == "OTHER"
+    assert data["dates_watched"] == [
+        "2020-01-01T20:00:00.000Z",
+        "2026-10-17T21:14:00.000Z",
+    ]
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_episodes")
+@patch("reviews_db.get_item")
+def test_also_for_removed_last_date_drops_from_history(
+    m_get_item, m_get_eps, m_update_item, token, client, monkeypatch
+):
+    monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
+    m_get_eps.return_value = []
+    m_get_item.side_effect = _items_by_user(
+        {"dates_watched": ["2026-10-17T22:00:00.000Z"]},
+        {"dates_watched": ["2026-10-17T22:00:00.000Z"]},
+    )
+
+    client.put(
+        f"/items/tmdb/{TEST_SHOW_ID}?alsoFor=OTHER",
+        headers={"Authorization": token},
+        json={"datesWatched": []},
+    )
+
+    call = m_update_item.call_args_list[1]
+    assert call.args[0] == "OTHER"
+    assert call.args[3]["dates_watched"] is None
+    assert call.args[3]["latest_watch_date"] is None
