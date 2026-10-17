@@ -487,18 +487,27 @@ def test_also_for_needs_admin(m_update_item, token, client, monkeypatch):
     m_update_item.assert_not_called()
 
 
+def _items_by_user(mine, hers):
+    return lambda username, *args, **kwargs: dict(
+        mine if username == "TEST_USER" else hers
+    )
+
+
 @patch("reviews_db.update_item")
 @patch("reviews_db.get_item")
 def test_also_for_merges_dates_keeps_review(
     m_get_item, m_update_item, token, client, monkeypatch
 ):
     monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
-    m_get_item.return_value = {
-        "rating": 9,
-        "review": "hers",
-        "status": "finished",
-        "dates_watched": ["2020-01-01T20:00:00.000Z"],
-    }
+    m_get_item.side_effect = _items_by_user(
+        {},
+        {
+            "rating": 9,
+            "review": "hers",
+            "status": "finished",
+            "dates_watched": ["2020-01-01T20:00:00.000Z"],
+        },
+    )
 
     response = client.put(
         f"/items/tmdb/{TEST_SHOW_ID}?alsoFor=OTHER",
@@ -519,19 +528,65 @@ def test_also_for_merges_dates_keeps_review(
 
 @patch("reviews_db.update_item")
 @patch("reviews_db.get_item")
-def test_also_for_without_new_dates_writes_nothing(
+def test_also_for_copies_only_the_rewatch(
     m_get_item, m_update_item, token, client, monkeypatch
 ):
     monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
-    m_get_item.return_value = {"dates_watched": ["2024-01-01T20:00:00.000Z"]}
+    m_get_item.side_effect = _items_by_user(
+        {"dates_watched": ["1970-01-01T20:00:00.000Z"]}, {}
+    )
 
     client.put(
         f"/items/tmdb/{TEST_SHOW_ID}?alsoFor=OTHER",
         headers={"Authorization": token},
-        json={"datesWatched": ["2024-01-01T20:00:00Z"]},
+        json={
+            "datesWatched": [
+                "1970-01-01T20:00:00.000Z",
+                "2026-10-18T20:00:00Z",
+            ]
+        },
+    )
+
+    username, _, _, data = m_update_item.call_args_list[1].args
+    assert username == "OTHER"
+    assert data["dates_watched"] == ["2026-10-18T20:00:00.000Z"]
+    assert data["status"] == "finished"
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_item")
+def test_also_for_without_new_dates_writes_nothing(
+    m_get_item, m_update_item, token, client, monkeypatch
+):
+    monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
+    m_get_item.side_effect = _items_by_user(
+        {"dates_watched": ["2024-01-01T20:00:00.000Z"]}, {}
+    )
+
+    client.put(
+        f"/items/tmdb/{TEST_SHOW_ID}?alsoFor=OTHER",
+        headers={"Authorization": token},
+        json={"review": "edit", "datesWatched": ["2024-01-01T20:00:00Z"]},
     )
 
     assert [c.args[0] for c in m_update_item.call_args_list] == ["TEST_USER"]
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_item")
+@patch("reviews_db.get_episodes")
+def test_put_without_also_for_skips_extra_read(
+    m_get_eps, m_get_item, m_update_item, token, client
+):
+    m_get_eps.return_value = []
+
+    client.put(
+        f"/items/tmdb/{TEST_SHOW_ID}",
+        headers={"Authorization": token},
+        json={"datesWatched": ["2024-01-01T20:00:00Z"]},
+    )
+
+    m_get_item.assert_not_called()
 
 
 @patch("app.routes._recount_watched_eps")

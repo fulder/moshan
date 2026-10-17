@@ -47,8 +47,8 @@ if (isLoggedIn()) {
   }
 }
 
-// Watched together (admin only): adds, episode removals and watch dates are
-// also logged for the other account. Stays on until unticked.
+// Watched together (admin only): adds, episode removals and newly added watch
+// dates are also logged for the other account. Stays on until unticked.
 async function showAlsoFor() {
   let users, admin;
   try {
@@ -74,11 +74,6 @@ async function showAlsoFor() {
       }
     } catch {
       // not remembered, still applies on this page
-    }
-    // Ticked after logging: copy what is already saved
-    if (box.checked && $('addButton').hidden && savedPatchData !== undefined) {
-      savedPatchData = {};
-      save();
     }
   });
   $('alsoForLabel').hidden = false;

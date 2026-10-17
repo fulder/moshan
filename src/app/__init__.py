@@ -74,6 +74,11 @@ def _read_username():
     return _query().get("user") or _username()
 
 
+# Only dates added by this save go to the other account, not older watches
+def _new_dates(data, before):
+    return [d for d in data.get("dates_watched") or [] if d not in before]
+
+
 # Watched together: the admin's writes are also copied to this account
 def _also_for():
     target = _query().get("alsoFor")
@@ -156,10 +161,11 @@ def delete_item(api_name, item_api_id):
 def update_item(api_name, item_api_id):
     data = review_data_to_dict(_body(ReviewData))
     also_for = _also_for()
+    before = also_for and routes.watch_dates(_username(), api_name, item_api_id)
     routes.update_item(_username(), api_name, item_api_id, dict(data))
     if also_for:
         routes.mirror_item(
-            also_for, api_name, item_api_id, data.get("dates_watched")
+            also_for, api_name, item_api_id, _new_dates(data, before)
         )
     return _no_content()
 
@@ -169,6 +175,9 @@ def add_item():
     item = _body(PostItem)
     data = review_data_to_dict(item)
     also_for = _also_for()
+    before = also_for and routes.watch_dates(
+        _username(), item.api_name.value, item.item_api_id
+    )
     routes.add_item(
         _username(),
         item.api_name.value,
@@ -180,7 +189,7 @@ def add_item():
             also_for,
             item.api_name.value,
             item.item_api_id,
-            data.get("dates_watched"),
+            _new_dates(data, before),
         )
     return _no_content()
 
@@ -197,6 +206,9 @@ def add_episode(api_name, item_api_id):
     episode = _body(PostEpisode)
     data = review_data_to_dict(episode)
     also_for = _also_for()
+    before = also_for and routes.watch_dates(
+        _username(), api_name.value, item_api_id, episode.episode_api_id
+    )
     try:
         routes.add_episode(
             _username(),
@@ -213,7 +225,7 @@ def add_episode(api_name, item_api_id):
             api_name.value,
             item_api_id,
             episode.episode_api_id,
-            data.get("dates_watched"),
+            _new_dates(data, before),
         )
     return _no_content()
 
@@ -234,6 +246,9 @@ def update_episode(api_name, item_api_id, episode_api_id):
     api_name = _enum(ApiNameWithEpisodes, api_name)
     data = review_data_to_dict(_body(ReviewData))
     also_for = _also_for()
+    before = also_for and routes.watch_dates(
+        _username(), api_name.value, item_api_id, episode_api_id
+    )
     try:
         routes.update_episode(
             _username(),
@@ -250,7 +265,7 @@ def update_episode(api_name, item_api_id, episode_api_id):
             api_name.value,
             item_api_id,
             episode_api_id,
-            data.get("dates_watched"),
+            _new_dates(data, before),
         )
     return _no_content()
 

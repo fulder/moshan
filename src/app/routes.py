@@ -302,7 +302,21 @@ def delete_episode(
 
 
 # Watched together: copies a watch to another account. Only the title,
-# episode and watch dates; their own review, rating and status stay theirs.
+# episode and the dates just added (not older watches, e.g. before a
+# rewatch); their own review, rating and status stay theirs.
+def watch_dates(username, api_name, api_id, episode_api_id=None):
+    try:
+        if episode_api_id is None:
+            review = reviews_db.get_item(username, api_name, api_id)
+        else:
+            review = reviews_db.get_episode(
+                username, api_name, api_id, episode_api_id
+            )
+    except reviews_db.NotFoundError:
+        return []
+    return review.get("dates_watched") or []
+
+
 def mirror_item(username, api_name, api_id, dates):
     try:
         item = reviews_db.get_item(username, api_name, api_id)
