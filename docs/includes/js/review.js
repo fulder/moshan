@@ -1,10 +1,12 @@
 import {getApiByName} from './api/common.js';
 import {MoshanApi} from './api/moshan.js';
-import {createNavbar} from './common/navbar.js';
+import {createNavbar, getUsers} from './common/navbar.js';
 import {isLoggedIn} from './common/auth.js';
 import {progressClass} from './common/posters.js';
 import {request} from './common/http.js';
 import {localDateTime} from './common/dates.js';
+import {viewingUser} from './common/viewing.js';
+import {parsedToken} from './common/token.js';
 
 createNavbar();
 
@@ -36,9 +38,55 @@ const undatedEpisodeIDs = [];
 let totalPages = 0;
 let savedPatchData;
 const episodeReview = qParams.episode_api_id !== null;
+const readOnly = viewingUser !== null;
 
 if (isLoggedIn()) {
   createReview();
+  if (!readOnly) {
+    showAlsoFor();
+  }
+}
+
+// Watched together (admin only): adds, episode removals and newly added watch
+// dates are also logged for the other account. Stays on until unticked.
+async function showAlsoFor() {
+  let users, admin;
+  try {
+    ({users, admin} = await getUsers());
+  } catch {
+    return;
+  }
+  const other = users.find(user => user !== parsedToken.username);
+  if (!admin || other === undefined) {
+    return;
+  }
+  const box = $('alsoFor');
+  $('alsoForName').textContent = other;
+  box.checked = localStorage.getItem('moshan_also_for') === other;
+  moshanApi.alsoFor = box.checked ? other : null;
+  box.addEventListener('change', () => {
+    moshanApi.alsoFor = box.checked ? other : null;
+    try {
+      if (box.checked) {
+        localStorage.setItem('moshan_also_for', other);
+      } else {
+        localStorage.removeItem('moshan_also_for');
+      }
+    } catch {
+      // not remembered, still applies on this page
+    }
+  });
+  $('alsoForLabel').hidden = false;
+}
+
+// Someone else's profile: shown, not editable
+function makeReadOnly() {
+  for (const id of ['user-status', 'user-rating', 'overview', 'review']) {
+    $(id).disabled = true;
+  }
+  $('datesFieldset').disabled = true;
+  $('addButton').hidden = true;
+  $('removeButton').hidden = true;
 }
 
 // Unsaved changes are saved on the way out; only a save that can't start
@@ -298,6 +346,10 @@ function createReviewPage(reviewItem) {
   }
   updateWatchedCount();
 
+  if (readOnly) {
+    makeReadOnly();
+  }
+
   $('item').hidden = false;
   $('loading').hidden = true;
 
@@ -448,6 +500,9 @@ function setSaveState(text, failed = false) {
 
 async function save() {
   clearTimeout(saveTimer);
+  if (readOnly) {
+    return;
+  }
   if (saveRunning) {
     saveAgain = true;
     return;

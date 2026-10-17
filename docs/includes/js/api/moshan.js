@@ -1,5 +1,6 @@
 import {authHeaders, MoshanItem, MoshanEpisode, Review} from './common.js';
 import {request} from '../common/http.js';
+import {viewingUser} from '../common/viewing.js';
 
 const BASE_URL = 'https://api.moshan.fulder.dev';
 
@@ -36,8 +37,17 @@ function reviewData(overview, review, status, rating, watchDates) {
 }
 
 export class MoshanApi {
+  // Watched together: the admin's writes are also logged for this user
+  alsoFor = null;
+
   async request (method, path, data) {
-    return request(`${BASE_URL}${path}`, {
+    const url = new URL(`${BASE_URL}${path}`);
+    if (method === 'GET' && viewingUser !== null) {
+      url.searchParams.set('user', viewingUser);
+    } else if (method !== 'GET' && this.alsoFor !== null) {
+      url.searchParams.set('alsoFor', this.alsoFor);
+    }
+    return request(url.toString(), {
       method,
       headers: await authHeaders(),
       body: data === undefined ? undefined : JSON.stringify(data),
@@ -59,6 +69,10 @@ export class MoshanApi {
     }
     const query = params.toString();
     return this.request('GET', query ? `/items?${query}` : '/items');
+  }
+
+  getUsers () {
+    return this.request('GET', '/users');
   }
 
   getWatches () {

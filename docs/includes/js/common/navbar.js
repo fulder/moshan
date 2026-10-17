@@ -1,5 +1,8 @@
 import {login, logout} from './auth.js';
 import {accessToken, parsedToken} from './token.js';
+import {cached} from './cache.js';
+import {viewingUser, viewUser} from './viewing.js';
+import {MoshanApi} from '../api/moshan.js';
 
 // Data source credits in every page footer (TMDB's terms require its logo and notice)
 function addCredits() {
@@ -19,6 +22,46 @@ function addCredits() {
   footer.appendChild(credits);
 }
 
+// Accounts and whether you are the admin, from GET /users
+export function getUsers() {
+  return cached(`users_${parsedToken.username}`, 24 * 60 * 60 * 1000, () => new MoshanApi().getUsers());
+}
+
+// Switch between the accounts' profiles; others are shown read-only
+async function addProfiles() {
+  if (viewingUser !== null) {
+    document.getElementById('viewingName').textContent = viewingUser;
+    document.getElementById('viewingAlert').hidden = false;
+  }
+
+  let users;
+  try {
+    ({users} = await getUsers());
+  } catch {
+    return;
+  }
+  if (users.length < 2) {
+    return;
+  }
+  const shown = viewingUser ?? parsedToken.username;
+  const links = () => users.map(user => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.dataset.view = user;
+    a.textContent = user === parsedToken.username ? `${user} (you)` : user;
+    if (user === shown) {
+      a.setAttribute('aria-current', 'true');
+    }
+    const li = document.createElement('li');
+    li.appendChild(a);
+    return li;
+  });
+  document.getElementById('profileName').textContent = shown;
+  document.getElementById('profileList').replaceChildren(...links());
+  document.getElementById('profileListNarrow').replaceWith(...links());
+  document.getElementById('profiles').hidden = false;
+}
+
 export async function createNavbar(showAlert = true) {
   addCredits();
   const response = await fetch('/includes/html/navbar.html');
@@ -31,8 +74,17 @@ export async function createNavbar(showAlert = true) {
   document.querySelectorAll('[data-auth]').forEach(el => el.hidden = !loggedIn);
   document.querySelectorAll('[data-guest]').forEach(el => el.hidden = loggedIn);
 
+  document.getElementById('navbar').addEventListener('click', evt => {
+    const view = evt.target.closest('[data-view]');
+    if (view !== null) {
+      evt.preventDefault();
+      viewUser(view.dataset.view);
+    }
+  });
+
   if (loggedIn) {
     document.querySelectorAll('[data-logout]').forEach(el => el.title = `Logout ${parsedToken.username}`);
+    addProfiles();
   } else if (showAlert) {
     document.getElementById('logInAlert').hidden = false;
   }

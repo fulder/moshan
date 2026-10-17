@@ -1,6 +1,7 @@
 import {createNavbar} from './common/navbar.js';
 import {MoshanApi} from './api/moshan.js';
 import {isLoggedIn} from './common/auth.js';
+import {viewingUser} from './common/viewing.js';
 
 createNavbar();
 
@@ -18,7 +19,8 @@ const AXIS = 20; // room for month labels below the bars
 let watches = [];
 // Watches per collection without a real date (1970 placeholders), not charted
 let undated = {};
-const STORED = 'moshan_stats_watches';
+// Per profile, so viewing someone else doesn't flash or overwrite yours
+const STORED = viewingUser === null ? 'moshan_stats_watches' : `moshan_stats_watches_${viewingUser}`;
 let range = '12';
 
 const tip = document.createElement('div');
