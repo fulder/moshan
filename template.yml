@@ -31,6 +31,13 @@ Parameters:
       moshan username (as stored in the reviews table, e.g. m_fulder) whose
       shows trigger Telegram pings; not the Telegram name
 
+  AdminUsername:
+    Type: String
+    Default: ""
+    Description: >-
+      moshan username that can also log watches for other accounts
+      (watched together)
+
   AlarmEmail:
     Type: String
     Default: ""
@@ -159,6 +166,16 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        # GET /users: the accounts that can be viewed
+        - PolicyName: cognito_list_users
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cognito-idp:ListUsers
+                Resource:
+                  - !GetAtt CognitoUserPool.Arn
 
   ApiFunction:
     Type: AWS::Serverless::Function
@@ -170,11 +187,14 @@ Resources:
           REVIEWS_DATABASE_NAME: reviews
           LOG_LEVEL: INFO
           TMDB_TOKEN: !Ref TmdbToken
+          USER_POOL_ID: !Ref CognitoUserPool
+          ADMIN_USERNAME: !Ref AdminUsername
       # /items is CPU-bound (botocore parsing ~1 MB pages); 2048 MB = full vCPU
       MemorySize: 2048
       Role: !GetAtt ApiFunctionRole.Arn
       Runtime: python3.13
-      Timeout: 10
+      # A watch copied to another account repeats the Tenrai calls (0.55 s each)
+      Timeout: 20
       Events:
         GetMethod:
           Type: HttpApi

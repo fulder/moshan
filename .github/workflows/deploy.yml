@@ -52,4 +52,5 @@ jobs:
             TelegramBotToken=${{ secrets.TELEGRAM_BOT_TOKEN }} \
             TelegramChatId=${{ secrets.TELEGRAM_CHAT_ID }} \
             TelegramUsername=${{ secrets.TELEGRAM_USERNAME }} \
+            AdminUsername=${{ secrets.TELEGRAM_USERNAME }} \
             AlarmEmail=${{ secrets.ALARM_EMAIL }}

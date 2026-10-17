@@ -37,7 +37,8 @@ a [TMDB](https://www.themoviedb.org/settings/api) API read token.
    --parameter-overrides DomainName=<domain> GitHubRepoPath=<you>/moshan`
 4. Add GitHub secrets: `DEPLOY_ROLE_ARN` (the role from step 3), `TMDB_TOKEN`,
    `LOCAL_COGNITO_CLIENT` (Cognito app client for local dev; a placeholder works).
-   Optional: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_USERNAME` for pings,
+   Optional: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_USERNAME` for pings
+   (that moshan user is also the admin who can log watches for other accounts),
    `ALARM_EMAIL` for alarms.
 5. Push to `main`: the `deploy` workflow runs. While the stack is created, add the ACM
    validation record for `api.<domain>` at your DNS provider, then point `api.<domain>`

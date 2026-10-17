@@ -438,3 +438,152 @@ def test_put_item_with_dates_skips_episodes(
 
     m_get_eps.assert_not_called()
     assert "latest_watch_date" not in m_update_item.call_args.args[3]
+
+
+@patch("reviews_db.get_watch_dates")
+def test_get_other_users_data(m_get_watch_dates, token, client):
+    m_get_watch_dates.return_value = []
+
+    client.get("/watches?user=OTHER", headers={"Authorization": token})
+
+    m_get_watch_dates.assert_called_once_with("OTHER")
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_episodes")
+def test_write_ignores_user_param(m_get_eps, m_update_item, token, client):
+    m_get_eps.return_value = []
+
+    client.put(
+        f"/items/tvmaze/{TEST_SHOW_ID}?user=OTHER",
+        headers={"Authorization": token},
+        json={"status": "following"},
+    )
+
+    assert m_update_item.call_args.args[0] == "TEST_USER"
+
+
+@patch("users.usernames")
+def test_get_users(m_usernames, token, client, monkeypatch):
+    monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
+    m_usernames.return_value = ["OTHER", "TEST_USER"]
+
+    response = client.get("/users", headers={"Authorization": token})
+
+    assert response.json() == {"users": ["OTHER", "TEST_USER"], "admin": True}
+
+
+@patch("reviews_db.update_item")
+def test_also_for_needs_admin(m_update_item, token, client, monkeypatch):
+    monkeypatch.setenv("ADMIN_USERNAME", "SOMEONE_ELSE")
+
+    response = client.put(
+        f"/items/tmdb/{TEST_SHOW_ID}?alsoFor=OTHER",
+        headers={"Authorization": token},
+        json={"datesWatched": ["2024-01-01T20:00:00.000Z"]},
+    )
+
+    assert response.status_code == 403
+    m_update_item.assert_not_called()
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_item")
+def test_also_for_merges_dates_keeps_review(
+    m_get_item, m_update_item, token, client, monkeypatch
+):
+    monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
+    m_get_item.return_value = {
+        "rating": 9,
+        "review": "hers",
+        "status": "finished",
+        "dates_watched": ["2020-01-01T20:00:00.000Z"],
+    }
+
+    response = client.put(
+        f"/items/tmdb/{TEST_SHOW_ID}?alsoFor=OTHER",
+        headers={"Authorization": token},
+        json={"review": "mine", "datesWatched": ["2024-01-01T20:00:00Z"]},
+    )
+
+    assert response.status_code == 204
+    username, _, _, data = m_update_item.call_args_list[1].args
+    assert username == "OTHER"
+    assert data["review"] == "hers"
+    assert data["rating"] == 9
+    assert data["dates_watched"] == [
+        "2020-01-01T20:00:00.000Z",
+        "2024-01-01T20:00:00.000Z",
+    ]
+
+
+@patch("reviews_db.update_item")
+@patch("reviews_db.get_item")
+def test_also_for_without_new_dates_writes_nothing(
+    m_get_item, m_update_item, token, client, monkeypatch
+):
+    monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
+    m_get_item.return_value = {"dates_watched": ["2024-01-01T20:00:00.000Z"]}
+
+    client.put(
+        f"/items/tmdb/{TEST_SHOW_ID}?alsoFor=OTHER",
+        headers={"Authorization": token},
+        json={"datesWatched": ["2024-01-01T20:00:00Z"]},
+    )
+
+    assert [c.args[0] for c in m_update_item.call_args_list] == ["TEST_USER"]
+
+
+@patch("app.routes._recount_watched_eps")
+@patch.object(tvmaze.TvMazeApi, "get_episode")
+@patch("reviews_db.add_episode")
+@patch("reviews_db.get_episode")
+@patch("reviews_db.get_item")
+def test_also_for_adds_episode(
+    m_get_item,
+    m_get_ep,
+    m_add_ep,
+    m_tvmaze_ep,
+    m_recount,
+    token,
+    client,
+    monkeypatch,
+):
+    monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
+    m_get_item.return_value = {}
+    m_get_ep.side_effect = reviews_db.NotFoundError
+
+    response = client.post(
+        f"/items/tvmaze/{TEST_SHOW_ID}/episodes?alsoFor=OTHER",
+        headers={"Authorization": token},
+        json={"episode_api_id": "1"},
+    )
+
+    assert response.status_code == 204
+    assert [c.args[0] for c in m_add_ep.call_args_list] == [
+        "TEST_USER",
+        "OTHER",
+    ]
+    # Source checked once, for the admin's own add
+    m_tvmaze_ep.assert_called_once()
+    assert [c.args[0] for c in m_recount.call_args_list] == [
+        "TEST_USER",
+        "OTHER",
+    ]
+
+
+@patch("app.routes._recount_watched_eps")
+@patch("reviews_db.delete_episode")
+@patch("reviews_db.get_episode")
+def test_also_for_deletes_episode_only_if_there(
+    m_get_ep, m_delete_ep, m_recount, token, client, monkeypatch
+):
+    monkeypatch.setenv("ADMIN_USERNAME", "TEST_USER")
+    m_get_ep.side_effect = reviews_db.NotFoundError
+
+    client.delete(
+        f"/items/tvmaze/{TEST_SHOW_ID}/episodes/1?alsoFor=OTHER",
+        headers={"Authorization": token},
+    )
+
+    assert [c.args[0] for c in m_delete_ep.call_args_list] == ["TEST_USER"]
