@@ -43,22 +43,22 @@ async function addProfiles() {
   if (users.length < 2) {
     return;
   }
+  // A link to each profile not shown right now
   const shown = viewingUser ?? parsedToken.username;
-  const links = () => users.map(user => {
+  const links = () => users.filter(user => user !== shown).map(user => {
     const a = document.createElement('a');
     a.href = '#';
     a.dataset.view = user;
-    a.textContent = user === parsedToken.username ? `${user} (you)` : user;
-    if (user === shown) {
-      a.setAttribute('aria-current', 'true');
-    }
+    a.textContent = user === parsedToken.username ? 'My profile' : user;
+    a.title = user === parsedToken.username ? 'Back to your profile' : `View ${user}'s profile (read-only)`;
+    return a;
+  });
+  document.getElementById('profiles').replaceChildren(...links());
+  document.getElementById('profileListNarrow').replaceWith(...links().map(a => {
     const li = document.createElement('li');
     li.appendChild(a);
     return li;
-  });
-  document.getElementById('profileName').textContent = shown;
-  document.getElementById('profileList').replaceChildren(...links());
-  document.getElementById('profileListNarrow').replaceWith(...links());
+  }));
   document.getElementById('profiles').hidden = false;
 }
 
