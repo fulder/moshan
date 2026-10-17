@@ -47,8 +47,9 @@ if (isLoggedIn()) {
   }
 }
 
-// Watched together (admin only): adds, episode removals and newly added watch
-// dates are also logged for the other account. Stays on until unticked.
+// Watched together (admin only): adds, episode removals and the watch dates
+// added, edited or removed are also logged for the other account. Stays on
+// until unticked.
 async function showAlsoFor() {
   let users, admin;
   try {

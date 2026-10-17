@@ -74,9 +74,13 @@ def _read_username():
     return _query().get("user") or _username()
 
 
-# Only dates added by this save go to the other account, not older watches
-def _new_dates(data, before):
-    return [d for d in data.get("dates_watched") or [] if d not in before]
+# Only what this save changed goes to the other account: dates added and
+# removed (an edited date is both), never older watches
+def _date_changes(data, before):
+    after = data.get("dates_watched") or []
+    added = [d for d in after if d not in before]
+    removed = [d for d in before if d not in after]
+    return added, removed
 
 
 # Watched together: the admin's writes are also copied to this account
@@ -165,7 +169,7 @@ def update_item(api_name, item_api_id):
     routes.update_item(_username(), api_name, item_api_id, dict(data))
     if also_for:
         routes.mirror_item(
-            also_for, api_name, item_api_id, _new_dates(data, before)
+            also_for, api_name, item_api_id, *_date_changes(data, before)
         )
     return _no_content()
 
@@ -189,7 +193,7 @@ def add_item():
             also_for,
             item.api_name.value,
             item.item_api_id,
-            _new_dates(data, before),
+            *_date_changes(data, before),
         )
     return _no_content()
 
@@ -225,7 +229,7 @@ def add_episode(api_name, item_api_id):
             api_name.value,
             item_api_id,
             episode.episode_api_id,
-            _new_dates(data, before),
+            *_date_changes(data, before),
         )
     return _no_content()
 
@@ -265,7 +269,7 @@ def update_episode(api_name, item_api_id, episode_api_id):
             api_name.value,
             item_api_id,
             episode_api_id,
-            _new_dates(data, before),
+            *_date_changes(data, before),
         )
     return _no_content()
 
