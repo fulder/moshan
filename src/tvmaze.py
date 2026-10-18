@@ -25,6 +25,11 @@ class TvMazeApi:
             "airstamp": ep["airstamp"],
         }
 
+    @staticmethod
+    def runtime(show):
+        """Minutes per episode"""
+        return show.get("averageRuntime") or show.get("runtime")
+
     def get_episode(self, episode_id):
         return self._get(f"/episodes/{episode_id}")
 

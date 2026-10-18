@@ -250,29 +250,41 @@ def _from_dynamodb(item):
 
 
 def get_watch_dates(username):
-    """Every watch date of the user's movies and episodes, for statistics"""
+    """Every watch date of the user's movies and episodes, for statistics,
+    with the item's runtime (minutes per movie or episode) when known"""
     paginator = _get_client().get_paginator("query")
     page_iterator = paginator.paginate(
         TableName=REVIEWS_DATABASE_NAME,
         KeyConditionExpression="username = :username",
-        ExpressionAttributeValues={":username": {"S": username}},
+        ExpressionAttributeValues={
+            ":username": {"S": username},
+            ":item": {"S": "i_"},
+        },
+        # Items without dates still hold the runtime of their episodes
         FilterExpression=(
-            "attribute_exists(dates_watched)"
+            "(attribute_exists(dates_watched) OR begins_with(api_info, :item))"
             " AND attribute_not_exists(deleted_at)"
         ),
-        ProjectionExpression="api_info, dates_watched",
+        ProjectionExpression="api_info, dates_watched, #c.#r",
+        ExpressionAttributeNames={"#c": "api_cache", "#r": "runtime"},
     )
 
-    res = []
+    watches = []
+    runtimes = {}
     for p in page_iterator:
         for i in p["Items"]:
             i = _from_dynamodb(i)
             _, api_name, api_id = i["api_info"].split("_")[:3]
-            for date in i["dates_watched"]:
-                res.append(
+            if i["api_info"].startswith("i_"):
+                runtime = i.get("api_cache", {}).get("runtime")
+                runtimes[(api_name, api_id)] = runtime
+            for date in i.get("dates_watched", []):
+                watches.append(
                     {"api_name": api_name, "api_id": api_id, "date": date}
                 )
-    return res
+    for w in watches:
+        w["runtime"] = runtimes.get((w["api_name"], w["api_id"]))
+    return watches
 
 
 def get_episodes(username, api_name, item_api_id):

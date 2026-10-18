@@ -138,6 +138,7 @@ class Watch(BaseModel):
     api_name: str
     api_id: str
     date: str
+    runtime: Optional[int] = None
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
