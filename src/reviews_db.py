@@ -256,15 +256,11 @@ def get_watch_dates(username):
     page_iterator = paginator.paginate(
         TableName=REVIEWS_DATABASE_NAME,
         KeyConditionExpression="username = :username",
-        ExpressionAttributeValues={
-            ":username": {"S": username},
-            ":item": {"S": "i_"},
-        },
-        # Items without dates still hold the runtime of their episodes
-        FilterExpression=(
-            "(attribute_exists(dates_watched) OR begins_with(api_info, :item))"
-            " AND attribute_not_exists(deleted_at)"
-        ),
+        ExpressionAttributeValues={":username": {"S": username}},
+        # Not filtering on api_info: DynamoDB rejects key attributes in a
+        # query's FilterExpression. Items without dates still hold the
+        # runtime of their episodes.
+        FilterExpression="attribute_not_exists(deleted_at)",
         ProjectionExpression="api_info, dates_watched, #c.#r",
         ExpressionAttributeNames={"#c": "api_cache", "#r": "runtime"},
     )

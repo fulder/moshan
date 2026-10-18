@@ -90,6 +90,10 @@ def test_get_watch_dates(mocker):
 
     res = reviews_db.get_watch_dates("me")
 
+    # Key attributes aren't allowed in a query's FilterExpression
+    kwargs = client.get_paginator.return_value.paginate.call_args.kwargs
+    assert "api_info" not in kwargs["FilterExpression"]
+
     mal1 = {"api_name": "mal", "api_id": "1", "runtime": None}
     mal2 = {"api_name": "mal", "api_id": "2", "runtime": 24}
     tmdb = {"api_name": "tmdb", "api_id": "550", "runtime": 139}
