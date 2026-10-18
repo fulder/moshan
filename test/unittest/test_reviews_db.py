@@ -65,8 +65,18 @@ def test_get_watch_dates(mocker):
                     "api_info": {"S": "e_mal_1_4"},
                     "dates_watched": {"L": [{"S": "2026-10-01T20:00:00Z"}]},
                 },
+                {"api_info": {"S": "i_mal_1"}},
+                {
+                    "api_info": {"S": "i_mal_2"},
+                    "api_cache": {"M": {"runtime": {"N": "24"}}},
+                },
+                {
+                    "api_info": {"S": "e_mal_2_1"},
+                    "dates_watched": {"L": [{"S": "2026-10-02T20:00:00Z"}]},
+                },
                 {
                     "api_info": {"S": "i_tmdb_550"},
+                    "api_cache": {"M": {"runtime": {"N": "139"}}},
                     "dates_watched": {
                         "L": [
                             {"S": "2020-01-01T20:00:00Z"},
@@ -80,10 +90,14 @@ def test_get_watch_dates(mocker):
 
     res = reviews_db.get_watch_dates("me")
 
+    mal1 = {"api_name": "mal", "api_id": "1", "runtime": None}
+    mal2 = {"api_name": "mal", "api_id": "2", "runtime": 24}
+    tmdb = {"api_name": "tmdb", "api_id": "550", "runtime": 139}
     assert res == [
-        {"api_name": "mal", "api_id": "1", "date": "2026-10-01T20:00:00Z"},
-        {"api_name": "tmdb", "api_id": "550", "date": "2020-01-01T20:00:00Z"},
-        {"api_name": "tmdb", "api_id": "550", "date": "2025-01-01"},
+        {**mal1, "date": "2026-10-01T20:00:00Z"},
+        {**mal2, "date": "2026-10-02T20:00:00Z"},
+        {**tmdb, "date": "2020-01-01T20:00:00Z"},
+        {**tmdb, "date": "2025-01-01"},
     ]
 
 

@@ -312,7 +312,12 @@ def test_delete_mal_episode_recounts_watched(
 @patch("reviews_db.get_watch_dates")
 def test_get_watches(m_get_watch_dates, token, client):
     m_get_watch_dates.return_value = [
-        {"api_name": "mal", "api_id": "1", "date": "2026-10-01T20:00:00Z"}
+        {
+            "api_name": "mal",
+            "api_id": "1",
+            "date": "2026-10-01T20:00:00Z",
+            "runtime": 24,
+        }
     ]
 
     response = client.get("/watches", headers={"Authorization": token})
@@ -320,7 +325,12 @@ def test_get_watches(m_get_watch_dates, token, client):
     assert response.status_code == 200
     assert response.json() == {
         "watches": [
-            {"apiName": "mal", "apiId": "1", "date": "2026-10-01T20:00:00Z"}
+            {
+                "apiName": "mal",
+                "apiId": "1",
+                "date": "2026-10-01T20:00:00Z",
+                "runtime": 24,
+            }
         ]
     }
 

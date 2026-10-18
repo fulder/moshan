@@ -1,3 +1,4 @@
+import re
 import time
 from datetime import datetime
 
@@ -108,6 +109,16 @@ class TenraiApi:
             # sequel entry (Shingeki no Kyojin S3 lists 22, MAL says 12)
             ep_count = api_item.get("episodes") or ep_count
         return ep_count
+
+    @staticmethod
+    def runtime(api_item):
+        """Minutes per episode from MAL's duration, e.g. "1 hr 21 min" """
+        duration = api_item.get("duration") or ""
+        hours = re.search(r"(\d+) hr", duration)
+        minutes = re.search(r"(\d+) min", duration)
+        total = int(hours[1]) * 60 if hours else 0
+        total += int(minutes[1]) if minutes else 0
+        return total or None
 
     @staticmethod
     def watched_counts(ep_count, saved_ids):

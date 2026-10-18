@@ -52,6 +52,7 @@ def _tvmaze_cache(api_item):
         "cache_updated": _now(),
         "image_url": image.get("original") if image else None,
         "next_episode": tvmaze_api.next_episode(api_item),
+        "runtime": tvmaze_api.runtime(api_item),
     }
 
 
@@ -62,6 +63,7 @@ def _mal_cache(api_item):
         "status": api_item.get("status"),
         "cache_updated": _now(),
         "image_url": api_item.get("images", {}).get("jpg", {}).get("image_url"),
+        "runtime": tenrai_api.runtime(api_item),
     }
 
 
@@ -77,6 +79,7 @@ def add_item(username, api_name, api_id, data):
             "status": api_item.get("status"),
             "cache_updated": cache_updated,
             "image_url": api_item.get("poster_path"),
+            "runtime": api_item.get("runtime") or None,
         }
     elif api_name == "tvmaze":
         api_item = tvmaze_api.get_item(api_id)

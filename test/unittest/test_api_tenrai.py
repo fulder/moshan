@@ -100,3 +100,11 @@ def test_requests_are_spaced(mocked_send_request, mocked_api, mocker):
     # The second call waits to stay under Tenrai's rate limits
     assert sleep.call_count == 1
     assert 0 < sleep.call_args.args[0] <= 0.55
+
+
+def test_tenrai_runtime():
+    assert TenraiApi.runtime({"duration": "24 min per ep"}) == 24
+    assert TenraiApi.runtime({"duration": "1 hr 21 min"}) == 81
+    assert TenraiApi.runtime({"duration": "2 hr"}) == 120
+    assert TenraiApi.runtime({"duration": "Unknown"}) is None
+    assert TenraiApi.runtime({}) is None
