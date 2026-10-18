@@ -553,10 +553,15 @@ h2 .count {
 
 .stats-chart .bar {
   fill: var(--pico-primary);
+  /* The column's hit target handles hover, also over the bar */
+  pointer-events: none;
 }
 
-.stats-chart .hit:hover + .bar,
-.stats-chart .bar:hover {
+.stats-chart .hit {
+  pointer-events: all;
+}
+
+.stats-chart .hit:hover + .bar {
   fill: var(--pico-primary-hover);
 }
 
