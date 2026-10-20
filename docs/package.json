@@ -4,7 +4,7 @@
   "description": "UI service is plain HTML and JS styled with Pico CSS.",
   "main": "index.js",
   "devDependencies": {
-    "eslint": "^10.12.0",
+    "eslint": "^10.13.0",
     "http-server": "^14.1.1"
   },
   "scripts": {
