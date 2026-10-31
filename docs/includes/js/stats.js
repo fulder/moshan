@@ -14,8 +14,9 @@ const COLLECTIONS = [
 ];
 const SVG = 'http://www.w3.org/2000/svg';
 const HEIGHT = 160;
-const TOP = 16; // room for the scale label above the bars
+const TOP = 8; // room for the top tick label
 const AXIS = 20; // room for month labels below the bars
+const LEFT = 28; // room for the tick labels left of the bars
 let watches = [];
 // Watches per collection without a real date (1970 placeholders), not charted
 let undated = {};
@@ -67,7 +68,7 @@ function bars() {
   const months = monthsSince(first);
   // Label every month for a year, else each January
   const monthly = months.length <= 13;
-  const slot = stats.clientWidth / months.length;
+  const slot = (stats.clientWidth - LEFT) / months.length;
   return months.map((month, i) => ({
     start: month,
     key: monthKey(month),
@@ -102,33 +103,46 @@ function barPath(x, y, w, h) {
   return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
 }
 
-function niceMax(value) {
-  const step = 10 ** Math.floor(Math.log10(Math.max(value, 1)));
-  return Math.ceil(value / step) * step;
+// Whole-number tick step (1, 2, 5 × 10^n) giving at most 4 gridlines above 0
+function tickStep(value) {
+  const raw = Math.max(value, 1) / 4;
+  const pow = 10 ** Math.floor(Math.log10(raw));
+  const step = [1, 2, 5, 10].map(m => m * pow).find(s => s >= raw);
+  return Math.max(1, step);
+}
+
+// Average per bar, e.g. "0.4", "3.5", "12"
+function average(total, bars) {
+  const avg = total / bars;
+  return avg >= 10 ? String(Math.round(avg)) : String(Math.round(avg * 10) / 10);
 }
 
 function chart(collection, buckets, counts) {
   const values = buckets.map(b => counts.get(b.key) ?? {count: 0, minutes: 0});
   const total = values.reduce((a, b) => a + b.count, 0);
   const minutes = values.reduce((a, b) => a + b.minutes, 0);
-  const max = niceMax(Math.max(...values.map(v => v.count)));
+  const peak = Math.max(...values.map(v => v.count));
+  const step = tickStep(peak);
+  const max = Math.max(step, Math.ceil(peak / step) * step);
   const width = stats.clientWidth;
   const bottom = HEIGHT - AXIS;
   const plot = bottom - TOP;
-  const slot = width / buckets.length;
+  const slot = (width - LEFT) / buckets.length;
+  const per = range === '30' ? 'day' : 'month';
   const gap = Math.min(2, slot / 4);
 
   const svg = el('svg', {width, height: HEIGHT, role: 'img',
-    'aria-label': `${collection.title}: ${total} ${collection.unit} watched per month`});
-  for (const y of [TOP, TOP + plot / 2, bottom]) {
-    svg.appendChild(el('line', {class: 'grid', x1: 0, x2: width, y1: y, y2: y}));
+    'aria-label': `${collection.title}: ${total} ${collection.unit} watched per ${per}`});
+  for (let tick = 0; tick <= max; tick += step) {
+    const y = bottom - tick / max * plot;
+    svg.appendChild(el('line', {class: 'grid', x1: LEFT, x2: width, y1: y, y2: y}));
+    const label = el('text', {x: LEFT - 6, y: y + 4, 'text-anchor': 'end'});
+    label.textContent = tick;
+    svg.appendChild(label);
   }
-  const scale = el('text', {x: 0, y: TOP - 4});
-  scale.textContent = `${max} / ${range === '30' ? 'day' : 'month'}`;
-  svg.appendChild(scale);
 
   buckets.forEach((bucket, i) => {
-    const x = i * slot;
+    const x = LEFT + i * slot;
     if (bucket.label) {
       const label = el('text', {x: x + slot / 2, y: HEIGHT - 4, 'text-anchor': 'middle'});
       label.textContent = bucket.label;
@@ -160,7 +174,9 @@ function chart(collection, buckets, counts) {
   if (minutes) {
     small.textContent += ` · ${duration(minutes)}`;
   }
-  if (undated[collection.apiName]) {
+  small.textContent += ` · avg ${average(total, buckets.length)} / ${per}`;
+  // Undated watches have no place in a time range, only in the all-time total
+  if (range === 'all' && undated[collection.apiName]) {
     small.textContent += ` · ${undated[collection.apiName]} without a date`;
   }
   heading.appendChild(small);
