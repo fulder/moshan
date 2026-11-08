@@ -177,7 +177,7 @@ tr.unseen td {
   margin: 0;
 }
 
-#episodesTable td:nth-child(2) {
+#episodes table td:nth-child(2) {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -185,7 +185,7 @@ tr.unseen td {
   width: 100%;
 }
 
-#episodesTable td:not(:nth-child(2)) {
+#episodes table td:not(:nth-child(2)) {
   white-space: nowrap;
 }
 
