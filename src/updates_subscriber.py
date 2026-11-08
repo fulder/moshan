@@ -35,6 +35,8 @@ def handler(event, context):
     count_watched = None
     # Newest aired episode, linked from the new episode ping
     latest_episode = None
+    # Newest aired special (id, name), linked from the new special ping
+    latest_special = None
     cache_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if api_name == "tmdb":
         api_item = tmdb_api.get_item(api_id)
@@ -65,10 +67,16 @@ def handler(event, context):
         count_watched = lambda ids: tvmaze_api.watched_counts(  # noqa: E731
             api_episodes, ids
         )
-        aired, _ = tvmaze_api.aired_episode_ids(api_episodes)
+        aired, specials = tvmaze_api.aired_episode_ids(api_episodes)
         aired_regular = [e["id"] for e in api_episodes if str(e["id"]) in aired]
         if aired_regular:
             latest_episode = aired_regular[-1]
+        aired_specials = [e for e in api_episodes if str(e["id"]) in specials]
+        if aired_specials:
+            latest_special = (
+                aired_specials[-1]["id"],
+                aired_specials[-1]["name"],
+            )
 
     elif api_name == "mal":
         res = tenrai_api.get_item(api_id)
@@ -111,6 +119,7 @@ def handler(event, context):
 
         old_ep_count = item["api_cache"].get("ep_count")
         old_next_episode = item["api_cache"].get("next_episode")
+        old_special_count = item["api_cache"].get("special_count")
         count_info = {}
         if count_watched is not None:
             # Recount from the saved episodes, fixing any old drift
@@ -135,6 +144,7 @@ def handler(event, context):
         reviews_db.put_item(item)
 
         _notify_new_episodes(item, old_ep_count, latest_episode)
+        _notify_new_special(item, old_special_count, latest_special)
         _notify_new_season(item, old_next_episode)
 
 
@@ -159,6 +169,29 @@ def _notify_new_episodes(item, old_ep_count, latest_episode=None):
         f"{item['api_cache']['title']}: episode {new_ep_count} is out "
         f"({new_ep_count - watched_eps} unseen)\n"
         f"{_url(api_name, api_id, latest_episode)}"
+    )
+
+
+def _notify_new_special(item, old_special_count, latest_special):
+    if item["username"] != NOTIFY_USERNAME:
+        return
+    # Finished too: a special after the end (reunion etc.) is easy to miss
+    if item.get("status") not in ("following", "watching", "finished"):
+        return
+
+    new_special_count = item["api_cache"].get("special_count")
+    if old_special_count is None or new_special_count is None:
+        return
+    if new_special_count <= old_special_count or latest_special is None:
+        return
+    if item.get("watched_specials", 0) >= new_special_count:
+        return
+
+    special_id, name = latest_special
+    _, api_name, api_id = item["api_info"].split("_", 2)
+    telegram.send(
+        f"{item['api_cache']['title']}: special \"{name}\" is out\n"
+        f"{_url(api_name, api_id, special_id)}"
     )
 
 

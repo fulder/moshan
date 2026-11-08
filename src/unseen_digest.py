@@ -31,7 +31,12 @@ def handler(event, context):
 
 
 def _unseen(items):
-    items = [i for i in items if i.get("status") in STATUSES and _left(i) > 0]
+    items = [
+        i
+        for i in items
+        if i.get("status") in STATUSES
+        and (_left(i) > 0 or _specials_left(i) > 0)
+    ]
     return sorted(items, key=lambda i: i["api_cache"]["title"].lower())
 
 
@@ -40,15 +45,23 @@ def _left(item):
     return ep_count - item.get("watched_eps", 0)
 
 
+def _specials_left(item):
+    special_count = item.get("api_cache", {}).get("special_count") or 0
+    return special_count - item.get("watched_specials", 0)
+
+
 def _line(item):
     _, api_name, api_id = item["api_info"].split("_", 2)
-    left = _left(item)
     title = html.escape(item["api_cache"]["title"])
     url = html.escape(telegram.review_url(api_name, api_id))
-    return (
-        f'• <a href="{url}">{title}</a>: '
-        f"{left} episode{'s' if left != 1 else ''} left"
-    )
+    parts = []
+    for left, noun in (
+        (_left(item), "episode"),
+        (_specials_left(item), "special"),
+    ):
+        if left > 0:
+            parts.append(f"{left} {noun}{'s' if left != 1 else ''}")
+    return f'• <a href="{url}">{title}</a>: {" + ".join(parts)} left'
 
 
 def _split(lines):

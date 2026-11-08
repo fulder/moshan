@@ -315,6 +315,13 @@ function createReviewPage(reviewItem) {
     $('progressText').textContent = `${progress.watched ?? 0} / ${progress.total} episodes watched (${progress.percent}%)`;
     $('progressInfo').hidden = false;
   }
+  const specials = reviewItem.specialProgress;
+  if (!episodeReview && typeof specials?.percent === 'number' && specials.total) {
+    $('specialProgress').value = specials.percent;
+    $('specialProgress').className = progressClass(specials.percent);
+    $('specialProgressText').textContent = `${specials.watched ?? 0} / ${specials.total} specials watched`;
+    $('specialProgressInfo').hidden = false;
+  }
 
   if (reviewItem.synopsis) {
     $('synopsis').innerHTML = reviewItem.synopsis;

@@ -29,9 +29,10 @@ def test_watched_counts_only_aired_known():
         {"id": 2, "type": "regular", "airdate": "2020-01-08"},
         {"id": 3, "type": "significant_special", "airdate": "2020-01-09"},
         {"id": 4, "type": "regular", "airdate": "2099-01-01"},
+        {"id": 5, "type": "insignificant_special", "airdate": "2020-01-10"},
     ]
-    # 4 saved before airing, 999 removed from TVMaze: neither counts
-    saved = ["1", "3", "4", "999"]
+    # 4 saved before airing, 999 removed from TVMaze, 5 is a recap: none count
+    saved = ["1", "3", "4", "5", "999"]
 
     assert TvMazeApi.watched_counts(episodes, saved) == {
         "watched_eps": 1,

@@ -112,7 +112,7 @@ def add_item(username, api_name, api_id, data):
         data["ep_progress"] = current_item.get("ep_progress", 0)
         data["special_progress"] = current_item.get("special_progress", 0)
         data["watched_eps"] = current_item.get("watched_eps", 0)
-        data["watched_special"] = current_item.get("watched_special", 0)
+        data["watched_specials"] = current_item.get("watched_specials", 0)
 
     reviews_db.add_item(
         username,

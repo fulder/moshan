@@ -244,7 +244,7 @@ def test_post_episode_recounts_watched(
     m_show_eps.return_value = [
         {"id": 1, "type": "regular", "airdate": "2020-01-01"},
         {"id": 2, "type": "regular", "airdate": "2020-01-08"},
-        {"id": 3, "type": "insignificant_special", "airdate": "2020-01-09"},
+        {"id": 3, "type": "significant_special", "airdate": "2020-01-09"},
         {"id": 4, "type": "regular", "airdate": "2020-01-15"},
     ]
 

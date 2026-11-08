@@ -35,6 +35,23 @@ def test_digest_lists_unseen(mocker, sent):
             _item("Dropped", status="dropped"),
             _item("Backlog", status="backlog", watched_eps=0),
             _item("Movie", ep_count=None, watched_eps=0),
+            {
+                **_item("Derry", ep_count=8, watched_eps=8, mal_id=3),
+                "watched_specials": 0,
+                "api_cache": {
+                    "title": "Derry",
+                    "ep_count": 8,
+                    "special_count": 1,
+                },
+            },
+            {
+                **_item("Both", ep_count=3, watched_eps=0, mal_id=4),
+                "api_cache": {
+                    "title": "Both",
+                    "ep_count": 3,
+                    "special_count": 2,
+                },
+            },
         ],
     )
 
@@ -43,6 +60,8 @@ def test_digest_lists_unseen(mocker, sent):
     url = "https://moshan.fulder.dev/review.html?api_name=mal&amp;api_id="
     assert sent == [
         "📺 You still haven't seen:\n"
+        f'• <a href="{url}4">Both</a>: 3 episodes + 2 specials left\n'
+        f'• <a href="{url}3">Derry</a>: 1 special left\n'
         f'• <a href="{url}1">frieren &amp; co</a>: 2 episodes left\n'
         f'• <a href="{url}1">One left</a>: 1 episode left\n'
         f'• <a href="{url}2">Severance</a>: 10 episodes left'

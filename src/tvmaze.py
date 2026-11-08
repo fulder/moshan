@@ -56,7 +56,8 @@ class TvMazeApi:
 
             if e["type"] == "regular":
                 regular.add(str(e["id"]))
-            else:
+            elif e["type"] == "significant_special":
+                # Insignificant specials (recaps, making-ofs) aren't counted
                 specials.add(str(e["id"]))
         return regular, specials
 
