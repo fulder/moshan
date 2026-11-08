@@ -545,41 +545,50 @@ async function save() {
   }
 }
 
+function episodeRow(episode) {
+  const moshanEpisode = api.getMoshanEpisode(episode);
+
+  let href = `review.html?api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_api_id=${moshanEpisode.id}`;
+  if (episode.extra_ep) {
+    href += '&extra_ep=true';
+  }
+
+  const row = document.createElement('tr');
+  row.dataset.href = href;
+  if (undatedEpisodeIDs.includes(moshanEpisode.id)) {
+    row.className = 'undated';
+    row.title = 'Added, no watch date';
+  } else if (watchHistoryEpisodeIDs.includes(moshanEpisode.id)) {
+    row.className = 'watched';
+  } else if (episode.type === 'insignificant_special' && moshanEpisode.aired) {
+    // Recaps and extras aren't counted in progress, so not flagged as unseen
+    row.title = 'Extra, not counted';
+  } else if (moshanEpisode.aired) {
+    row.className = 'unseen';
+    row.title = 'Released, not watched';
+  } else {
+    row.className = 'muted';
+    row.title = 'Not released yet';
+  }
+  row.addEventListener('click', () => window.location.href = href);
+
+  for (const value of [moshanEpisode.number, moshanEpisode.title, moshanEpisode.releaseDate]) {
+    const td = document.createElement('td');
+    td.textContent = value ?? '';
+    row.appendChild(td);
+  }
+  return row;
+}
+
 function createEpisodesList(apiEpisodes) {
   $('episodes').hidden = false;
 
-  const rows = apiEpisodes.episodes.map(episode => {
-    const moshanEpisode = api.getMoshanEpisode(episode);
-
-    let href = `review.html?api_name=${qParams.api_name}&api_id=${qParams.api_id}&episode_api_id=${moshanEpisode.id}`;
-    if (episode.extra_ep) {
-      href += '&extra_ep=true';
-    }
-
-    const row = document.createElement('tr');
-    row.dataset.href = href;
-    if (undatedEpisodeIDs.includes(moshanEpisode.id)) {
-      row.className = 'undated';
-      row.title = 'Added, no watch date';
-    } else if (watchHistoryEpisodeIDs.includes(moshanEpisode.id)) {
-      row.className = 'watched';
-    } else if (moshanEpisode.aired) {
-      row.className = 'unseen';
-      row.title = 'Released, not watched';
-    } else {
-      row.className = 'muted';
-      row.title = 'Not released yet';
-    }
-    row.addEventListener('click', () => window.location.href = href);
-
-    for (const value of [moshanEpisode.number, moshanEpisode.title, moshanEpisode.releaseDate]) {
-      const td = document.createElement('td');
-      td.textContent = value ?? '';
-      row.appendChild(td);
-    }
-    return row;
-  });
-  $('episodeTableBody').replaceChildren(...rows);
+  // TVMaze specials get their own table on top, so they aren't missed between episodes
+  const isSpecial = episode => episode.type !== undefined && episode.type !== 'regular';
+  const specials = apiEpisodes.episodes.filter(isSpecial);
+  $('specialTableBody').replaceChildren(...specials.map(episodeRow));
+  $('specials').hidden = specials.length === 0;
+  $('episodeTableBody').replaceChildren(...apiEpisodes.episodes.filter(e => !isSpecial(e)).map(episodeRow));
 
   totalPages = apiEpisodes.total_pages;
   $('episodePages').hidden = totalPages <= 1;
