@@ -306,6 +306,11 @@ progress.far-behind {
   --pico-progress-color: #d93526;
 }
 
+/* Secondary to the episode bar on the review page */
+.special-progress progress {
+  height: 0.3rem;
+}
+
 .posters.hide-done a:has(progress.done) {
   display: none;
 }

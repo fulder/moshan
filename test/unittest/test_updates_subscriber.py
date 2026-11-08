@@ -50,6 +50,47 @@ def test_no_notify(sent, item, old_ep_count):
     assert sent == []
 
 
+def _special_item(status="following", special_count=2, watched_specials=1):
+    return {
+        "username": "me",
+        "api_info": "i_tvmaze_61324",
+        "status": status,
+        "watched_specials": watched_specials,
+        "api_cache": {
+            "title": "IT: Welcome to Derry",
+            "special_count": special_count,
+        },
+    }
+
+
+def test_notify_new_special(sent):
+    updates_subscriber._notify_new_special(
+        _special_item(status="finished"), 1, (3366125, "A Story of Derry")
+    )
+
+    assert sent == [
+        'IT: Welcome to Derry: special "A Story of Derry" is out\n'
+        "https://moshan.fulder.dev/review.html"
+        "?api_name=tvmaze&api_id=61324&episode_api_id=3366125"
+    ]
+
+
+@pytest.mark.parametrize(
+    "item,old_special_count",
+    [
+        (_special_item(), 2),
+        (_special_item(), None),
+        (_special_item(status="backlog"), 1),
+        (_special_item(status="dropped"), 1),
+        (_special_item(watched_specials=2), 1),
+    ],
+)
+def test_no_notify_new_special(sent, item, old_special_count):
+    updates_subscriber._notify_new_special(item, old_special_count, (1, "x"))
+
+    assert sent == []
+
+
 def _season_item(status="finished", next_episode=None):
     return {
         "username": "me",

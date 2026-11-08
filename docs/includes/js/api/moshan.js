@@ -110,6 +110,7 @@ export class MoshanApi {
       toReview(data)
     );
     item.progress = {percent: data.epProgress, watched: data.watchedEps, total: data.apiCache.epCount};
+    item.specialProgress = {percent: data.specialProgress, watched: data.watchedSpecials, total: data.apiCache.specialCount};
     return item;
   }
 
